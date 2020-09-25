@@ -1,0 +1,34 @@
+.appHeader {
+  // padding: 1rem 2rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  @media only screen and (max-width: 480px) {
+    padding-bottom: 0;
+    // height: 100px !important;
+    // margin-bottom: 1rem;
+    margin-bottom: 15px;
+  }
+  width: 100%;
+  // height: 57px;
+  height: 100%;
+  background-color: #f1f5f8;
+  /*box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.1);*/
+  /*display: flex;
+    justify-content: space-between;*/
+  img {
+    max-height: 30px;
+    display: inline-block;
+    @media only screen and (max-width: 480px) {
+      padding-bottom: 0;
+      max-height: 30px;
+    }
+  }
+}
+
+.connect {
+  font-size: 24px;
+  color: #a7a7a7;
+  display: inline-block;
+  padding: 2px;
+  white-space: nowrap;
+}

@@ -1,0 +1,60 @@
+td{
+  text-align: left
+}
+.divIinline{
+  display: inline-block;
+  text-align: center;
+  padding: 1rem;
+  margin-right: 3rem;
+}
+.divider{
+  content: "";
+  border-bottom: 2px solid gray;
+  width: 80%;
+ height: 0px;
+}
+.buyPlan{
+  margin-left:30%;
+  padding-top: 1rem;
+  margin-top: 1rem
+}
+.content{
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 3%;
+}
+.full{
+  width: 100%;
+}
+.toLeft{
+  float: left;
+  position: relative;
+  padding-bottom: 0.2rem;
+}
+.toLeft2{
+  position: relative;
+  padding-bottom: 0.2rem;
+  margin: 10px auto;
+}
+.table{
+  
+  margin-top:5%;
+}
+.antBtn{
+  // background-color: green;
+  background-color: #38A169 !important;
+  border-color: #38A169 !important;
+  color: white;
+}
+PaystackButton{
+  background-color: green;
+}
+.btne:hover{
+  background-color: white;
+  color:green;
+}
+.img-header{
+ max-width: 50% !important;
+ margin: 5px auto !important;
+}
+
