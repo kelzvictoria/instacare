@@ -9,7 +9,7 @@ import "./custom.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "./fontawesome";
 import "./modal.css";
-import $ from "jquery";
+//import $ from "jquery";
 import * as serviceWorker from "./serviceWorker";
 
 import Home from "./pages/home/Home";

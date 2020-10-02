@@ -191,9 +191,7 @@ class Home extends Component<
           <option value="28">28 Years</option>
           <option value="29">29 Years</option>
           <option value="30">30 Years</option>
-          <option value="31" selected={true}>
-            31 Years
-          </option>
+          <option value="31">31 Years</option>
           <option value="32">32 Years</option>
           <option value="33">33 Years</option>
           <option value="34">34 Years</option>
@@ -293,9 +291,7 @@ class Home extends Component<
           <option value="28">28 Years</option>
           <option value="29">29 Years</option>
           <option value="30">30 Years</option>
-          <option value="31" selected={true}>
-            31 Years
-          </option>
+          <option value="31">31 Years</option>
           <option value="32">32 Years</option>
           <option value="33">33 Years</option>
           <option value="34">34 Years</option>
@@ -392,9 +388,7 @@ class Home extends Component<
             <option value="28">28 Years</option>
             <option value="29">29 Years</option>
             <option value="30">30 Years</option>
-            <option value="31" selected={true}>
-              31 Years
-            </option>
+            <option value="31">31 Years</option>
             <option value="32">32 Years</option>
             <option value="33">33 Years</option>
             <option value="34">34 Years</option>
@@ -483,9 +477,7 @@ class Home extends Component<
             <option value="28">28 Years</option>
             <option value="29">29 Years</option>
             <option value="30">30 Years</option>
-            <option value="31" selected={true}>
-              31 Years
-            </option>
+            <option value="31">31 Years</option>
             <option value="32">32 Years</option>
             <option value="33">33 Years</option>
             <option value="34">34 Years</option>
@@ -582,9 +574,7 @@ class Home extends Component<
             <option value="28">28 Years</option>
             <option value="29">29 Years</option>
             <option value="30">30 Years</option>
-            <option value="31" selected={true}>
-              31 Years
-            </option>
+            <option value="31">31 Years</option>
             <option value="32">32 Years</option>
             <option value="33">33 Years</option>
             <option value="34">34 Years</option>
@@ -673,9 +663,7 @@ class Home extends Component<
             <option value="28">28 Years</option>
             <option value="29">29 Years</option>
             <option value="30">30 Years</option>
-            <option value="31" selected={true}>
-              31 Years
-            </option>
+            <option value="31">31 Years</option>
             <option value="32">32 Years</option>
             <option value="33">33 Years</option>
             <option value="34">34 Years</option>
@@ -772,9 +760,7 @@ class Home extends Component<
             <option value="28">28 Years</option>
             <option value="29">29 Years</option>
             <option value="30">30 Years</option>
-            <option value="31" selected={true}>
-              31 Years
-            </option>
+            <option value="31">31 Years</option>
             <option value="32">32 Years</option>
             <option value="33">33 Years</option>
             <option value="34">34 Years</option>
@@ -893,9 +879,7 @@ class Home extends Component<
               <option value="28">28 Years</option>
               <option value="29">29 Years</option>
               <option value="30">30 Years</option>
-              <option value="31" selected={true}>
-                31 Years
-              </option>
+              <option value="31">31 Years</option>
               <option value="32">32 Years</option>
               <option value="33">33 Years</option>
               <option value="34">34 Years</option>
@@ -1004,9 +988,7 @@ class Home extends Component<
               <option value="28">28 Years</option>
               <option value="29">29 Years</option>
               <option value="30">30 Years</option>
-              <option value="31" selected={true}>
-                31 Years
-              </option>
+              <option value="31">31 Years</option>
               <option value="32">32 Years</option>
               <option value="33">33 Years</option>
               <option value="34">34 Years</option>
@@ -1151,9 +1133,7 @@ class Home extends Component<
               <option value="28">28 Years</option>
               <option value="29">29 Years</option>
               <option value="30">30 Years</option>
-              <option value="31" selected={true}>
-                31 Years
-              </option>
+              <option value="31">31 Years</option>
               <option value="32">32 Years</option>
               <option value="33">33 Years</option>
               <option value="34">34 Years</option>
@@ -1262,9 +1242,7 @@ class Home extends Component<
               <option value="28">28 Years</option>
               <option value="29">29 Years</option>
               <option value="30">30 Years</option>
-              <option value="31" selected={true}>
-                31 Years
-              </option>
+              <option value="31">31 Years</option>
               <option value="32">32 Years</option>
               <option value="33">33 Years</option>
               <option value="34">34 Years</option>
@@ -1373,9 +1351,7 @@ class Home extends Component<
               <option value="28">28 Years</option>
               <option value="29">29 Years</option>
               <option value="30">30 Years</option>
-              <option value="31" selected={true}>
-                31 Years
-              </option>
+              <option value="31">31 Years</option>
               <option value="32">32 Years</option>
               <option value="33">33 Years</option>
               <option value="34">34 Years</option>
@@ -1484,9 +1460,7 @@ class Home extends Component<
               <option value="28">28 Years</option>
               <option value="29">29 Years</option>
               <option value="30">30 Years</option>
-              <option value="31" selected={true}>
-                31 Years
-              </option>
+              <option value="31">31 Years</option>
               <option value="32">32 Years</option>
               <option value="33">33 Years</option>
               <option value="34">34 Years</option>
@@ -1595,9 +1569,7 @@ class Home extends Component<
               <option value="28">28 Years</option>
               <option value="29">29 Years</option>
               <option value="30">30 Years</option>
-              <option value="31" selected={true}>
-                31 Years
-              </option>
+              <option value="31">31 Years</option>
               <option value="32">32 Years</option>
               <option value="33">33 Years</option>
               <option value="34">34 Years</option>
@@ -1706,9 +1678,7 @@ class Home extends Component<
               <option value="28">28 Years</option>
               <option value="29">29 Years</option>
               <option value="30">30 Years</option>
-              <option value="31" selected={true}>
-                31 Years
-              </option>
+              <option value="31">31 Years</option>
               <option value="32">32 Years</option>
               <option value="33">33 Years</option>
               <option value="34">34 Years</option>
@@ -1797,6 +1767,7 @@ class Home extends Component<
 
   handleNavigation = (e: any) => {
     let currentPage = this.props.page;
+    // console.log("currentPage:", currentPage);
     const targetId = e.target.id;
     if (targetId === "next") {
       if (currentPage == 3 && this.props.responses.state == "") {
@@ -1807,24 +1778,15 @@ class Home extends Component<
         this.submitResponses();
         return;
       }
-      /*if (!this.validateEmail(this.props.responses.email)) {
-                const email: any = document.querySelector("input[type=email]");
-                email.focus();
-                message.error("Please enter a valid email");
-                return;
-            }
-            if(currentPage==3 &&this.props.responses.state==""){
-               const budget: any = document.querySelector("input[type=number]");
-                budget.focus();
-                message.error("Please provide a budget of least N20,000");
-                return
-            }*/
       this.changePage("next");
+      // console.log('changePage("next")', this.props.page);
     } else if (targetId === "prev") {
       if (currentPage <= this.props.minPage) {
+        // console.log("currentPage <= this.props.minPage");
         return;
       }
       this.changePage("prev");
+      // console.log('changePage("prev")', this.props.page);
     }
   };
 
@@ -1929,12 +1891,6 @@ class Home extends Component<
     });
     console.log(this.props.responses.state);
   };
-  /* validateEmail=(email:any) =>{
-        if(emailRegex({exact: true}).test(email)){
-            return true;
-        }
-        return false;
-    }*/
 
   covers = (val: any) => {
     console.log(typeof val);
@@ -1944,38 +1900,6 @@ class Home extends Component<
     });
     console.log(this.props.covers);
   };
-
-  /*
-      hello =()=>{
-          if(this.props.responses.adult==2 && this.props.responses.children==0 && this.props.responses.infants==0){
-          console.log("hello couples")
-         
-         let changeToCouple =() =>{
-            this.props.dispatch({type: actions.CHANGE_PLAN_TYPE, data: {value:"couple"}})
-        }
-          confirm({
-            title: 'would you like a couples plan?',
-            content: '(because you selected a plan for two adults)',
-            okText: 'Yes',
-            okType: 'primary',
-            okButtonProps: {
-              disabled: false,
-            },
-            cancelText: 'No',
-            onOk() {
-               changeToCouple();
-            },
-            onCancel() {
-              console.log('Cancel');
-            },
-          });
-        
-      }
-      else{
-          console.log("moved on to family")
-      }
-      }
-      */
   updateLocation = (location: any) => {
     this.props.dispatch({
       type: actions.UPDATE_TEXT_RESPONSE,
@@ -1996,7 +1920,7 @@ class Home extends Component<
                   type="radio"
                   value="m"
                   name="radio-group-gender"
-                  checked={this.defaultGender()}
+                  defaultChecked={this.defaultGender()}
                   className="radio-group-gender"
                 ></input>
                 <span>
@@ -2048,7 +1972,7 @@ class Home extends Component<
             ></input>
           </div>
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <div className="col-md-12">
             <button
               className="btn btn-primary btn-large view-plans btn-demo"
@@ -2058,7 +1982,7 @@ class Home extends Component<
               Continue
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     );
 
@@ -2073,7 +1997,7 @@ class Home extends Component<
                   value="single"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.state.numOfPersons === "single"}
+                  defaultChecked={this.state.numOfPersons === "single"}
                   onClick={this.handleNumOfPeopleChange}
                   id="single"
                 ></input>
@@ -2093,7 +2017,7 @@ class Home extends Component<
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.state.numOfPersons === "couple"}
+                  defaultChecked={this.state.numOfPersons === "couple"}
                   onClick={this.handleNumOfPeopleChange}
                 ></input>
                 <span className="num-div-inner">
@@ -2112,7 +2036,7 @@ class Home extends Component<
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.state.numOfPersons === "fam-of-3"}
+                  defaultChecked={this.state.numOfPersons === "fam-of-3"}
                   onClick={this.handleNumOfPeopleChange}
                   // onClick={(e) =>
                   //   this.handleNumOfPeopleChange("fam-of-3")
@@ -2137,7 +2061,7 @@ class Home extends Component<
                   type="radio"
                   value="fam-of-4"
                   name="numOfPeople"
-                  checked={this.state.numOfPersons === "fam-of-4"}
+                  defaultChecked={this.state.numOfPersons === "fam-of-4"}
                   onClick={this.handleNumOfPeopleChange}
                   className="radio-group-num"
                 ></input>
@@ -2156,7 +2080,7 @@ class Home extends Component<
                   type="radio"
                   value="parents"
                   name="numOfPeople"
-                  checked={this.state.numOfPersons === "parents"}
+                  defaultChecked={this.state.numOfPersons === "parents"}
                   onClick={this.handleNumOfPeopleChange}
                   className="radio-group-num"
                 ></input>
@@ -2176,7 +2100,7 @@ class Home extends Component<
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.state.numOfPersons === "others"}
+                  defaultChecked={this.state.numOfPersons === "others"}
                   onClick={this.toggleOthersInput}
                 ></input>
                 <span className="num-div-inner">
@@ -2202,8 +2126,21 @@ class Home extends Component<
                 </Modal.Header>
                 <Modal.Body>
                   {this.showOthersInput()}
-                  <div className="form-group">
-                    <div className="col-md-12">
+                  {/* <div className="form-group">
+                    <div className="col-md-6">
+                      {this.props.page != 1 ? (
+                        <button
+                          className="btn btn-primary btn-large view-plans btn-demo"
+                          onClick={this.handleNavigation}
+                          id="prev"
+                        >
+                          Previous
+                        </button>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                    <div className="col-md-6">
                       <button
                         className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
                         onClick={this.handleNavigation}
@@ -2212,7 +2149,7 @@ class Home extends Component<
                         Continue
                       </button>
                     </div>
-                  </div>
+                  </div> */}
                 </Modal.Body>
               </Modal>
             </div>
@@ -2247,8 +2184,21 @@ class Home extends Component<
           {this.state.numOfPersons == "parents" ? this.showParentsInput() : ""}
         </div>
 
-        <div className="form-group">
-          <div className="col-md-12">
+        {/* <div className="form-group">
+          <div className="col-md-6">
+            {this.props.page != 1 ? (
+              <button
+                className="btn btn-primary btn-large view-plans btn-demo"
+                onClick={this.handleNavigation}
+                id="prev"
+              >
+                Previous
+              </button>
+            ) : (
+              ""
+            )}
+          </div>
+          <div className="col-md-6">
             <button
               className="btn btn-primary btn-large view-plans btn-demo"
               data-toggle="modal"
@@ -2258,23 +2208,25 @@ class Home extends Component<
               Continue
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     );
 
-    if (this.props.page === 1) {
+    if (this.props.page === 1 || this.props.page === 0) {
       return page1;
     } else if (this.props.page === 2) {
       return page2;
     } /*else if (this.props.page === 3) {
       return page3;
     }*/
-
+    console.log("this.props.page", this.props.page);
     return <p>Not enough responses collected!</p>;
   }
 
   render() {
     let current = this.props.page - 1;
+
+    //console.log("current:", current, "this.props.page:", this.props.page);
     return (
       <React.Fragment>
         <div className="main">
@@ -2316,7 +2268,7 @@ class Home extends Component<
                               type="radio"
                               value="m"
                               name="radio-group-gender"
-                              checked={this.defaultGender()}
+                              defaultChecked={this.defaultGender()}
                               className="radio-group-gender"
                             ></input>
                             <span>
@@ -2388,10 +2340,6 @@ class Home extends Component<
                     show={this.state.isOpen}
                     onHide={this.toggleModal}
                   >
-                    {/* <Modal.Header
-                      translate="true"
-                      //closeButton
-                    ></Modal.Header> */}
                     <Modal.Body>
                       <form
                         name="modalForm"
@@ -2399,21 +2347,31 @@ class Home extends Component<
                         className="form steppers"
                       >
                         <div className="modal-head" id="modal-head">
-                          {/* {this.props.page != 1 ? ( */}
-                          <Button
-                            onClick={this.handleNavigation}
-                            id="prev"
-                            type="default"
-                          >
-                            <FontAwesomeIcon className="" icon={faArrowLeft} />
-                          </Button>
-                          {/* ) : (
-                             console.log("page 1")
-                          )} */}
+                          {/* {this.props.page != 1 ? (
+                            <Button
+                              onClick={this.handleNavigation}
+                              id="prev"
+                              type="default"
+                            >
+                              <FontAwesomeIcon
+                                className=""
+                                icon={faArrowLeft}
+                              />
+                            </Button>
+                          ) : (
+                            ""
+                          )}*/}
 
                           <div className="modal-title">
-                            <p>{this.steps[current].p}</p>
-                            <h3>{this.steps[current].h3}</h3>
+                            {current >= 0 ? (
+                              <div>
+                                <p>{this.steps[current].p}</p>
+                                <h3>{this.steps[current].h3}</h3>
+                              </div>
+                            ) : (
+                              ""
+                            )}
+
                             <Steps current={current}>
                               {this.steps.map((step, i) => {
                                 return <Step key={i} />;
@@ -2422,6 +2380,38 @@ class Home extends Component<
                           </div>
                         </div>
                         {this.renderQuizPages()}
+                        <div className="nav-row row">
+                          <div className="col-md-6">
+                            <div className="form-group">
+                              {this.props.page != 1 ? (
+                                <button
+                                  className="btn btn-primary btn-large view-plans btn-demo"
+                                  onClick={this.handleNavigation}
+                                  id="prev"
+                                >
+                                  Previous
+                                </button>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </div>
+                          <div
+                            className={
+                              this.props.page != 1 ? "col-md-6" : "col-md-12"
+                            }
+                          >
+                            <div className="form-group">
+                              <button
+                                className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+                                onClick={this.handleNavigation}
+                                id="next"
+                              >
+                                Continue
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                         {/*here*/}
                       </form>
                     </Modal.Body>
