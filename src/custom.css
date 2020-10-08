@@ -559,7 +559,8 @@ button.close:after {
   }
 
   .form h3 {
-    font-size: 1.4rem !important;
+    font-size: 1rem !important;
+    margin-top: 0.5rem;
   }
   i.gender.icons-gender.male.me {
     margin-left: 1.5rem !important;
@@ -585,5 +586,117 @@ button.close:after {
   }
   .AppHeader_appHeader__2t96E {
     padding-top: 1rem !important;
+  }
+
+  .home-gender,
+  .home-fullname,
+  .home-phonenum,
+  .home-view-btn {
+    display: none;
+  }
+
+  .mobile-view-steps,
+  .mobile-view-phone,
+  .mobile-view-cont-btn {
+    display: block !important;
+  }
+
+  .mobile-view-phone input.form-control,
+  .mobile-view-cont-btn button {
+    height: 50px;
+  }
+
+  .home-frm {
+    padding-top: 20px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    padding-bottom: 10px !important;
+  }
+
+  #firstPage,
+  #secondPage {
+    padding-top: 0.5rem;
+  }
+
+  .input-phone,
+  .desktop {
+    display: none;
+  }
+
+  ._1hzhf {
+    display: none;
+  }
+  .ant-steps-item-title::after {
+    left: 0% !important;
+  }
+
+  .mobile {
+    display: block !important;
+  }
+  div#thirdPage {
+    padding: 25px 0px 0px 0px !important;
+  }
+}
+
+#thirdPage .col-md-3 {
+  width: 22%;
+  max-width: 22%;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-right: 0.25rem;
+  margin-left: 0.25rem;
+}
+
+#thirdPage .row {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+
+button.form-control.state-btn {
+  border-radius: 22px;
+}
+
+.mobile-view-cont-btn,
+.mobile-view-steps,
+.mobile-view-phone {
+  display: none;
+}
+
+.state-btn {
+  border-radius: 55px !important;
+  border: 1px solid #03aa7d !important;
+}
+
+div#thirdPage {
+  padding: 25px;
+}
+
+.state-btn:focus {
+  color: #fff !important;
+  background-color: #03aa7d !important;
+}
+
+.mobile {
+  display: none;
+}
+
+@media (min-width: 768px) and (max-width: 999px) {
+  .svg-and-text,
+  .quiz {
+    max-width: 50% !important;
+    width: 50% !important;
+  }
+
+  .ant-col.svg-img-div.ant-col-xs-24.ant-col-md-8 {
+    display: none;
+  }
+  .banner-text {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .svg-and-text {
+    display: none !important;
   }
 }
