@@ -4,7 +4,7 @@ import { options } from "./Options";
 export const Select = () => {
   return (
     <div>
-      <select className="form-control" placeholder="Select Age">
+      <select name="" className="form-control" placeholder="Select Age">
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}

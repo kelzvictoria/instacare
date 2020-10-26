@@ -89,6 +89,83 @@ export const filterReducer = createReducer(state, {
   RESET_PLANS: (state, actions) => {
     state.compare.fetching = actions.data;
   },
+  TOGGLE_DESKTOP_MODAL: (state, actions) => {
+    state.quiz.isOpen = actions.data.value;
+  },
+  TOGGLE_MOBILE_MODAL: (state, actions) => {
+    state.quiz.isMobileViewModalOpen = actions.data.value;
+  },
+  TOGGLE_OTHERS_MODAL: (state, actions) => {
+    state.quiz.isOthersInputOpen = actions.data.value;
+  },
+  UPDATE_GENDER: (state, actions) => {
+    state.quiz.responses.gender = actions.data.value;
+  },
+  UPDATE_TYPE: (state, actions) => {
+    state.quiz.responses.type = actions.data.value;
+  },
+  TOGGLE_DESKTOP_VIEW: (state, actions) => {
+    state.quiz.isDesktopView = actions.data.value;
+  },
+  UPDATE_PHONE: (state, actions) => {
+    state.quiz.responses.phone_num = actions.data.value;
+  },
+  UPDATE_FULL_NAME: (state, actions) => {
+    state.quiz.responses.full_name = actions.data.value;
+  },
+  UPDATE_INDIVIDUAL_AGE: (state, action) => {
+    // state.quiz.responses.individual_age = actions.data.value;
+    if (action.data.key) {
+      state.quiz.responses[action.data.key] = action.data.value;
+    }
+    console.log("state.quiz.responses:", state.quiz.responses);
+    return state;
+  },
+  UPDATE_FATHER_AGE: (state, actions) => {
+    state.quiz.responses.father_age = actions.data.value;
+  },
+  UPDATE_MOTHER_AGE: (state, actions) => {
+    state.quiz.responses.mother_age = actions.data.value;
+  },
+  UPDATE_GRAND_FATHER_AGE: (state, actions) => {
+    state.quiz.responses.grand_father_age = actions.data.value;
+  },
+  UPDATE_GRAND_MOTHER_AGE: (state, actions) => {
+    state.quiz.responses.grand_mother_age = actions.data.value;
+  },
+  UPDATE_FATHER_IN_LAW_AGE: (state, actions) => {
+    state.quiz.responses.father_in_law_age = actions.data.value;
+  },
+  UPDATE_MOTHER_IN_LAW_AGE: (state, actions) => {
+    state.quiz.responses.mother_in_law_age = actions.data.value;
+  },
+  UPDATE_SPOUSE_AGE: (state, actions) => {
+    state.quiz.responses.spouse_age = actions.data.value;
+  },
+  UPDATE_CHILD_1_AGE: (state, actions) => {
+    state.quiz.responses.child_1_age = actions.data.value;
+  },
+  UPDATE_CHILD_2_AGE: (state, actions) => {
+    state.quiz.responses.child_2_age = actions.data.value;
+  },
+  UPDATE_CHILD_3_AGE: (state, actions) => {
+    state.quiz.responses.child_3_age = actions.data.value;
+  },
+  UPDATE_CHILD_4_AGE: (state, actions) => {
+    state.quiz.responses.child_4_age = actions.data.value;
+  },
+  UPDATE_CHILD_5_AGE: (state, actions) => {
+    state.quiz.responses.child_5_age = actions.data.value;
+  },
+  UPDATE_CHILD_6_AGE: (state, actions) => {
+    state.quiz.responses.child_6_age = actions.data.value;
+  },
+  UPDATE_CHILD_7_AGE: (state, actions) => {
+    state.quiz.responses.child_7_age = actions.data.value;
+  },
+  UPDATE_CHILD_8_AGE: (state, actions) => {
+    state.quiz.responses.child_8_age = actions.data.value;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -106,3 +183,27 @@ createAction("UPDATE_BUDGET");
 createAction("TOGGLE_FAMILY_PLAN_SELECTED");
 createAction("UPDATE_COVERS");
 createAction("RESET_PLANS");
+createAction("TOGGLE_DESKTOP_MODAL");
+createAction("TOGGLE_MOBILE_MODAL");
+createAction("TOGGLE_OTHERS_MODAL");
+createAction("UPDATE_GENDER");
+createAction("UPDATE_TYPE");
+createAction("TOGGLE_DESKTOP_VIEW");
+createAction("UPDATE_PHONE");
+createAction("UPDATE_FULL_NAME");
+createAction("UPDATE_INDIVIDUAL_AGE");
+createAction("UPDATE_FATHER_AGE");
+createAction("UPDATE_MOTHER_AGE");
+createAction("UPDATE_GRAND_FATHER_AGE");
+createAction("UPDATE_GRAND_MOTHER_AGE");
+createAction("UPDATE_FATHER_IN_LAW_AGE");
+createAction("UPDATE_MOTHER_IN_LAW_AGE");
+createAction("UPDATE_SPOUSE_AGE");
+createAction("UPDATE_CHILD_1_AGE");
+createAction("UPDATE_CHILD_2_AGE");
+createAction("UPDATE_CHILD_3_AGE");
+createAction("UPDATE_CHILD_4_AGE");
+createAction("UPDATE_CHILD_5_AGE");
+createAction("UPDATE_CHILD_6_AGE");
+createAction("UPDATE_CHILD_7_AGE");
+createAction("UPDATE_CHILD_8_AGE");

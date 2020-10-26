@@ -38,9 +38,9 @@ button.btn.btn-primary.btn-large {
   margin-left: 15px;
 }
 
-.main {
+/* .main {
   background-color: #e6fcf6;
-}
+} */
 
 .form-div {
   background-color: #fff;
@@ -61,6 +61,7 @@ button.btn.btn-primary.btn-large {
 
 .ant-row.banner-content {
   padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .svg-and-text {
@@ -526,7 +527,7 @@ button.close:after {
   }
 
   .Home_content__1-Kmv {
-    margin-top: 4rem !important;
+    margin-top: 1rem !important;
   }
 
   .modal-title {
@@ -636,6 +637,60 @@ button.close:after {
   div#thirdPage {
     padding: 25px 0px 0px 0px !important;
   }
+
+  .banner-bottom {
+    display: none;
+  }
+
+  .row.first-row.go-right {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .mt6 {
+    margin-top: 4rem;
+  }
+
+  .mt3 {
+    margin-top: 3rem;
+  }
+
+  .hide {
+    display: none !important;
+  }
+
+  .mb-minus1 {
+    margin-bottom: -1rem !important;
+  }
+
+  .top-plans-content {
+    margin-bottom: 4rem;
+  }
+
+  .top-plan {
+    min-height: 500px !important;
+  }
+
+  .top-plans-content {
+    min-height: 550px !important;
+  }
+
+  .provider-name-div {
+    max-width: 50% !important;
+  }
+  .provider-logo-div {
+    max-width: 33.33% !important;
+  }
+  .view-provider-details {
+    max-width: 16.6% !important;
+  }
+
+  .hmo-def h5 {
+    text-align: left !important;
+  }
+  .home-frm.form-div {
+    margin-top: 1rem;
+  }
 }
 
 #thirdPage .col-md-3 {
@@ -681,11 +736,10 @@ div#thirdPage {
 }
 
 @media (min-width: 768px) and (max-width: 999px) {
-  .svg-and-text,
-  .quiz {
+  /* .svg-and-text {
     max-width: 50% !important;
     width: 50% !important;
-  }
+  } */
 
   .ant-col.svg-img-div.ant-col-xs-24.ant-col-md-8 {
     display: none;
@@ -693,10 +747,295 @@ div#thirdPage {
   .banner-text {
     width: 100% !important;
   }
+  .banner-container {
+    width: 46.67% !important;
+    max-width: 46.67% !important;
+    top: 6.3rem !important;
+  }
+
+  .quiz {
+    width: 53.33% !important;
+    max-width: 53.33% !important;
+  }
+
+  .banner-bottom .row .col-md-4 {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .col-md-4.card {
+    flex: 0 0 100% !important;
+    padding: 0px !important;
+    padding-left: 4.5rem !important;
+  }
+
+  .banner-bottom .row div:nth-child(2),
+  .banner-bottom .row div:nth-child(3) {
+    margin-top: 0.5rem !important;
+  }
+
+  .card svg {
+    margin-top: 0.5rem !important;
+  }
+
+  .card span {
+    margin-top: 0.2rem !important;
+  }
+
+  .svg-and-text {
+    padding-top: 0rem !important;
+    height: 100% !important;
+  }
+
+  .Home_banner__93PqY .Home_bannerContent__1ylL5 {
+    padding-left: 0rem !important;
+  }
+
+  .Home_textHeading__26RD2 {
+    padding-left: 0rem !important;
+    font-size: 1.25rem !important;
+  }
+
+  .row.first-row {
+    margin-bottom: 2.8rem !important;
+  }
+
+  .col-md-6.check-prem {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100%;
+  }
+
+  h5,
+  .h5 {
+    font-size: 1rem !important;
+  }
+
+  .second-row .ml-2,
+  .mx-2 {
+    margin-left: 0.8rem !important;
+  }
+
+  .row .top-plan {
+    height: 300px !important;
+  }
+
+  .hmo-logo {
+    max-height: 50px !important;
+    max-width: 50px !important;
+  }
+  .provider-div.col-md-12.row {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    padding-left: 0px !important;
+  }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 569px) and (max-width: 767px) {
+  .banner-bottom {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
   .svg-and-text {
     display: none !important;
+  }
+
+  .provider-div .col-md-2 {
+    width: 13.33% !important;
+    max-width: 13.33% !important;
+  }
+
+  .provider-name-div {
+    width: 73.34% !important;
+    max-width: 73.34% !important;
+  }
+
+  .top-plans-content {
+    margin-bottom: 4rem;
+  }
+}
+
+.svg-and-text {
+  height: 300px;
+}
+
+.banner-text {
+  height: 100% !important;
+}
+
+.col-md-4.card {
+  width: 30% !important;
+  max-width: 30% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  padding: 1rem;
+  border: 0px !important;
+  border-radius: 0.5rem !important;
+}
+
+.card-text {
+  margin-left: 0.5rem;
+}
+
+.banner-icon {
+  font-size: 25px !important;
+}
+
+.banner-div {
+  background-color: #e6fcf6;
+}
+
+.breadcrmb {
+  text-align: left;
+}
+
+.hmo-logo {
+  max-height: 54px;
+  max-width: 100px;
+}
+
+.float-left {
+  text-align: left !important;
+}
+
+.float-right {
+  text-align: right !important;
+}
+
+.plans-header {
+  height: 1rem;
+}
+
+.first-row,
+.second-row,
+.third-row {
+  height: 4rem;
+}
+
+.full-width {
+}
+
+.type-div {
+  float: right;
+}
+
+.go-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.check-prem .btn {
+  height: 100%;
+}
+
+.check-prem p {
+  margin-bottom: 0px;
+}
+
+.check-prem {
+  height: 3rem;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.row.first-row {
+  margin-bottom: 1rem;
+}
+
+img.hmo-logo {
+  margin-right: 2rem;
+}
+
+.top-plans-content {
+  background: #f1f3f5;
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+
+.row.top-plan {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  padding: 1rem;
+}
+
+span.type {
+  background: #eef0f2;
+  vertical-align: middle;
+  height: 1.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  border-radius: 0.8rem;
+}
+
+.bed-icon,
+.gift-icon {
+  background-color: #f4f5f7;
+  height: 2rem;
+  width: 2rem !important;
+  padding-top: 0.2rem;
+  padding-bottom: 0.3rem;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+  border-radius: 0.8rem;
+}
+
+.gift-icon {
+  background-color: #f4f5f7;
+}
+
+.providers {
+  display: flex;
+  flex-direction: column;
+  border-bottom: solid 0.8px rgba(23, 43, 77, 0.2);
+}
+
+.hmo-providers {
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+
+button.provider-details-btn {
+  background: #fff;
+  border: 0px;
+  font-size: 18px;
+}
+
+.col-md-4.hmo-providers {
+  padding-right: 0px !important;
+  border: solid 0.8px rgba(23, 43, 77, 0.2);
+}
+
+.col-md-12.row.plans-container {
+  margin-left: 0px;
+  margin-right: 0px;
+  padding-left: 0px;
+  margin-right: 0px;
+}
+
+.provider-div.col-md-12.row {
+  border-bottom: solid 0.8px rgba(23, 43, 77, 0.2);
+  padding-top: 0.5rem;
+  align-items: center;
+}
+
+.information {
+  margin-top: 4rem;
+  text-align: justify;
+}
+
+.information p {
+  font-size: 16px;
+}
+
+@media (min-width: 768px) {
+  .col-md-8.top-plans-content {
+    max-width: 64.666667%;
+    margin-right: 2%;
   }
 }
