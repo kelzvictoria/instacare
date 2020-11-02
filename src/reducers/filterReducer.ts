@@ -8,7 +8,7 @@ export const filterReducer = createReducer(state, {
       state.quiz.page++;
     } else if (action.data === "prev") {
       state.quiz.page--;
-      console.log("state.quiz.page--", state.quiz.page--);
+      //console.log("state.quiz.page--", state.quiz.page--);
     }
     return state;
   },
@@ -39,7 +39,14 @@ export const filterReducer = createReducer(state, {
     return state;
   },
   RESET_RESPONSES: (state, action) => {
-    state.quiz.responses = action.data;
+    //console.log("action.data", action.data);
+
+    for (let key in action.data) {
+      state.quiz.responses[key] = action.data[key];
+    }
+
+    //state.quiz.responses = action.data;
+    //console.log("state.quiz.responses", state.quiz.responses);
   },
   UPDATE_PLANS: (state, action) => {
     if (action.data.length === 0) {
@@ -118,7 +125,6 @@ export const filterReducer = createReducer(state, {
     if (action.data.key) {
       state.quiz.responses[action.data.key] = action.data.value;
     }
-    console.log("state.quiz.responses:", state.quiz.responses);
     return state;
   },
   UPDATE_FATHER_AGE: (state, actions) => {
@@ -166,6 +172,24 @@ export const filterReducer = createReducer(state, {
   UPDATE_CHILD_8_AGE: (state, actions) => {
     state.quiz.responses.child_8_age = actions.data.value;
   },
+  UPDATE_SON_CHECKED: (state, actions) => {
+    state.quiz.isSonCheckboxChecked = actions.data.value;
+  },
+  UPDATE_DAUGHTER_CHECKED: (state, actions) => {
+    state.quiz.isDaughterCheckboxChecked = actions.data.value;
+  },
+  INCREMENT_SON_COUNT: (state, actions) => {
+    state.quiz.sonCount = actions.data.value;
+  },
+  DECREMENT_SON_COUNT: (state, actions) => {
+    state.quiz.sonCount = actions.data.value;
+  },
+  INCREMENT_DAUGHTER_COUNT: (state, actions) => {
+    state.quiz.daughterCount = actions.data.value;
+  },
+  DECREMENT_DAUGHTER_COUNT: (state, actions) => {
+    state.quiz.daughterCount = actions.data.value;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -207,3 +231,9 @@ createAction("UPDATE_CHILD_5_AGE");
 createAction("UPDATE_CHILD_6_AGE");
 createAction("UPDATE_CHILD_7_AGE");
 createAction("UPDATE_CHILD_8_AGE");
+createAction("UPDATE_SON_CHECKED");
+createAction("UPDATE_DAUGHTER_CHECKED");
+createAction("INCREMENT_SON_COUNT");
+createAction("DECREMENT_SON_COUNT");
+createAction("INCREMENT_DAUGHTER_COUNT");
+createAction("DECREMENT_DAUGHTER_COUNT");

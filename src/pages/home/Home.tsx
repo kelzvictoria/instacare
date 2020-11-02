@@ -33,6 +33,8 @@ import * as actions from "../../utils/actions";
 import { Select } from "./Select";
 import { sections } from "./sections";
 
+import { options } from "./Options";
+
 const { Step } = Steps;
 const { Meta } = Card;
 
@@ -49,9 +51,14 @@ interface QuizProps {
   isMobileViewModalOpen: boolean;
   isOthersInputOpen: boolean;
   isDesktopView: boolean;
+  isSonCheckboxChecked: boolean;
+  isDaughterCheckboxChecked: boolean;
+  sonCount: 1;
+  daughterCount: 1;
   responses: {
     [x: string]: any;
     budget: number;
+    num_of_people: number,
     type: string;
     firstName: string;
     lastName: string;
@@ -64,7 +71,7 @@ interface QuizProps {
     gender: string;
     full_name: string;
     phone_num: string;
-    individual_age: string;
+    individual_age: number;
     father_age: string;
     mother_age: string;
     grand_father_age: string;
@@ -86,19 +93,16 @@ interface QuizProps {
 
 class Home extends Component<
   QuizProps,
-  {
-    numOfPersons: any;
-    gender: string;
-  }
+  {}
 > {
+  //private sonCheck = React.createRef<HTMLInputElement>();
   constructor(props) {
     super(props);
-    this.state = {
-      numOfPersons: "parents",
-      gender: "m"
-    };
-
-    this.handleNumOfPeopleChange = this.handleNumOfPeopleChange.bind(this);
+    this.handleType = this.handleType.bind(this);
+    this.decrementSonCount = this.decrementSonCount.bind(this);
+    this.incrementSonCount = this.incrementSonCount.bind(this);
+    this.decrementDaughterCount = this.decrementDaughterCount.bind(this);
+    this.incrementDaughterCount = this.incrementDaughterCount.bind(this);
   }
 
   steps: { p: string; h3: string }[] = [
@@ -176,14 +180,10 @@ class Home extends Component<
   ];
 
   toggleModal = () => {
-    // this.setState({
-    //   isOpen: !this.props.isOpen,
-    // });
     this.props.dispatch({
       type: actions.TOGGLE_DESKTOP_MODAL,
       data: { key: "isOpen", value: !this.props.isOpen}
     });
-    //console.log(this.props.isOpen);
   };
 
   mobileToggleModal = () => {
@@ -207,11 +207,14 @@ class Home extends Component<
   };
 
   changePage = (action: string) => {
+    //console.log('called me?');
+    
     this.props.dispatch({ type: actions.CHANGE_PAGE, data: action });
   };
 
   componentDidMount() {
     document.title = "Instacare - Home";
+
   }
 
   defaultGender() {
@@ -222,6 +225,7 @@ class Home extends Component<
     // this.setState ({
     //   gender: val
     // })
+   // console.log('this:', this, "this.props:", this.props)
     this.props.dispatch({
       type: actions.UPDATE_GENDER,
       data: { key: "gender", value: val }
@@ -243,6 +247,10 @@ class Home extends Component<
   }
 
   handleIndividualAge(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+    
     this.props.dispatch({
       type: actions.UPDATE_INDIVIDUAL_AGE,
       data: { key: "individual_age", value: val }
@@ -250,6 +258,10 @@ class Home extends Component<
   }
 
   handleFatherAge(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_FATHER_AGE,
       data: { key: "father_age", value: val }
@@ -257,6 +269,10 @@ class Home extends Component<
   }
 
   handleMotherAge(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+    
     this.props.dispatch({
       type: actions.UPDATE_MOTHER_AGE,
       data: { key: "mother_age", value: val }
@@ -264,6 +280,10 @@ class Home extends Component<
   }
 
   handleGrandFatherAge(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+    
     this.props.dispatch({
       type: actions.UPDATE_GRAND_FATHER_AGE,
       data: { key: "phone_num", value: val }
@@ -271,6 +291,10 @@ class Home extends Component<
   }
 
   handleGrandMotherAge(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_GRAND_MOTHER_AGE,
       data: { key: "grand_mother_age", value: val }
@@ -278,6 +302,10 @@ class Home extends Component<
   }
 
   handleFatherInLawAge(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_FATHER_IN_LAW_AGE,
       data: { key: "father_in_law_age", value: val }
@@ -285,6 +313,10 @@ class Home extends Component<
   }
 
   handleMotherInLawAge(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_MOTHER_IN_LAW_AGE,
       data: { key: "mother_in_law_age", value: val }
@@ -292,6 +324,10 @@ class Home extends Component<
   }
   
   handleSpouseAge(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_SPOUSE_AGE,
       data: { key: "spouse_age", value: val }
@@ -299,6 +335,10 @@ class Home extends Component<
   }
 
   handleChild1Age(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_CHILD_1_AGE,
       data: { key: "child_1_age", value: val }
@@ -306,6 +346,10 @@ class Home extends Component<
   }
 
   handleChild2Age(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_CHILD_2_AGE,
       data: { key: "child_2_age", value: val }
@@ -313,6 +357,10 @@ class Home extends Component<
   }
 
   handleChild3Age(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_CHILD_3_AGE,
       data: { key: "child_3_age", value: val }
@@ -320,6 +368,10 @@ class Home extends Component<
   }
 
   handleChild4Age(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    } 
+
     this.props.dispatch({
       type: actions.UPDATE_CHILD_4_AGE,
       data: { key: "child_4_age", value: val }
@@ -334,6 +386,10 @@ class Home extends Component<
   }
 
   handleChild6Age(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_CHILD_6_AGE,
       data: { key: "child_6_age", value: val }
@@ -341,6 +397,10 @@ class Home extends Component<
   }
 
   handleChild7Age(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_CHILD_7_AGE,
       data: { key: "child_7_age", value: val }
@@ -348,10 +408,83 @@ class Home extends Component<
   }
 
   handleChild8Age(val) {
+    if (this.props.responses.type != "others") {
+      this.resetAges()
+    }
+
     this.props.dispatch({
       type: actions.UPDATE_CHILD_8_AGE,
       data: { key: "child_8_age", value: val }
     });
+  }
+
+  resetAges() {
+    this.props.dispatch({
+      type: actions.RESET_RESPONSES,
+      data: {
+        individual_age : 0,
+        father_age : 0,
+        mother_age: 0,
+        grand_father_age: 0,
+        grand_mother_age: 0,
+        father_in_law_age: 0,
+        mother_in_law_age: 0,
+        spouse_age: 0,
+        child_1_age: 0,
+        child_2_age: 0,
+        child_3_age: 0,
+        child_4_age: 0,
+        child_5_age: 0,
+        child_6_age: 0,
+        child_7_age: 0,
+        child_8_age: 0,
+      }
+    })
+
+    
+  }
+
+  handleType(val) {
+    //let id = document.getElementById(val.target.id) as HTMLInputElement;
+    this.props.dispatch({
+      type: actions.UPDATE_TYPE,
+      data: { key: "type", value: val.target.id }
+    })
+  }
+
+  handleNumOfPeopleCount() {
+
+    if (this.props.responses.type == "couple") {
+      this.props.responses.num_of_people = 
+      this.props.responses.num_of_people + 1
+    }
+
+    if (this.props.responses.type == "fam-of-3") {
+      this.props.responses.num_of_people = 
+      this.props.responses.num_of_people + 2
+    }
+
+    if (this.props.responses.type == "parents") {
+      this.props.responses.num_of_people = 
+      this.props.responses.num_of_people + 1
+    }
+
+    if (this.props.responses.type == "others") {
+      this.props.responses.num_of_people = 0;
+      
+    }
+
+
+    console.log(
+      `
+      this.props.responses.num_of_people
+      + this.props.sonCount
+      + this.props.daughterCount
+      `,
+      this.props.responses.num_of_people
+    + this.props.sonCount
+    + this.props.daughterCount
+    )
   }
 
   preventDefault(e: React.FormEvent<HTMLFormElement>) {
@@ -362,7 +495,23 @@ class Home extends Component<
     const singleInput = (
       <div id="single-control">
         <label>Select Age</label>
-        <Select key="single_age" />
+        <select
+          name="individual"
+          className="form-control children-age"
+          onChange = {
+            (e) => {
+              this.handleIndividualAge(e.target.value)
+            }
+          }
+          value = {this.props.responses.individual_age}
+          placeholder="Select Age"
+        >
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
       </div>
     );
 
@@ -373,7 +522,23 @@ class Home extends Component<
     const couplesInput = (
       <div id="couples-control" className="col-md-6">
         <label>Age of the Eldest member</label>
-        <Select key="couples_age" />
+        <select
+            name="spouse_age"
+            className="form-control children-age"
+            value = {this.props.responses.spouse_age}
+            onChange = {
+              (e) => {
+                this.handleSpouseAge(e.target.value)
+              }
+            }
+            placeholder="Select Age"
+          >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
       </div>
     );
 
@@ -385,11 +550,43 @@ class Home extends Component<
       <div id="famOf3-controls" className="row">
         <div className="col-md-6">
           <label>Age of the Eldest member</label>
-          <Select key="fam_of_3_eldest_age" />
+          <select
+              name="spouse_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleSpouseAge(e.target.value)
+                }
+              }
+              value = {this.props.responses.spouse_age}
+              placeholder="Select Age"
+            >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
         </div>
         <div className="col-md-6">
           <label>Select Age of Child</label>
-          <Select key="fam_of_3_child_age" />
+          <select
+              name="child_1_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild1Age(e.target.value)
+                }
+              }
+              value = {this.props.responses.child_1_age}
+              placeholder="Select Age"
+            >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
         </div>
       </div>
     );
@@ -401,11 +598,43 @@ class Home extends Component<
       <div id="famOf4-controls" className="row">
         <div className="col-md-6">
           <label>Age of the Eldest member</label>
-          <Select key="fam_of_4_adult_age" />
+          <select
+              name="spouse_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleSpouseAge(e.target.value)
+                }
+              }
+              value = {this.props.responses.spouse_age}
+              placeholder="Select Age"
+            >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+          </select>
         </div>
         <div className="col-md-6">
           <label>Age of the Eldest Child</label>
-          <Select key="fam_of_4_child_age" />
+          <select
+              name="child_1_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild1Age(e.target.value)
+                }
+              }
+              value = {this.props.responses.child_1_age}
+              placeholder="Select Age"
+            >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+          </select>
         </div>
       </div>
     );
@@ -417,7 +646,23 @@ class Home extends Component<
       <div id="parents-control">
         <div className="col-md-6">
           <label>Age of the Eldest member</label>
-          <Select key="parent_age" />
+          <select
+              name="father_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleFatherAge(e.target.value)
+                }
+              }
+              value = {this.props.responses.father_age}
+              placeholder="Select Age"
+            >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="col-md-6"></div>
@@ -448,7 +693,23 @@ class Home extends Component<
           </div>
 
           <div className="col-md-6">
-            <Select key="self_age" />
+          <select
+              name="individual_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleIndividualAge(e.target.value)
+                }
+              }
+              value = {this.props.responses.individual_age}
+              placeholder="Select Age"
+            >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
           </div>
         </div>
         <div className="col-md-12 row spouse">
@@ -469,7 +730,23 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-            <Select key="spouse_age" />
+          <select
+              name="spouse_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleSpouseAge(e.target.value)
+                }
+              }
+              value={this.props.responses.spouse_age}
+              placeholder="Select Age"
+            >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
           </div>
         </div>
         <div className="col-md-12 son">
@@ -481,14 +758,149 @@ class Home extends Component<
                   value="son"
                   className="chkMembers"
                   defaultChecked={false}
-                  // onClick={}
+                  onChange={
+                    (e)=>{
+                      this.handleSonBoxChecked(e.target.value)
+                    }
+                  }
                   id="son"
                 ></input>
 
-                <span>Son</span>
+                <span className="controls" >Son
+                  <div className= { this.props.isSonCheckboxChecked ? "show-controls counter-controls" : "hide-controls" }>
+                    <button 
+                    className="minus" 
+                    id="dec-son"
+                    onClick={
+                        this.decrementSonCount
+                      }> - 
+                    </button>
+                    <span className="count"> {this.props.sonCount} </span>
+                    <button 
+                    className="plus"
+                    onClick={
+                      this.incrementSonCount
+                    }
+                    > + </button>
+                  </div>
+                </span>
+                
               </label>
             </div>
           </div>
+          <div className={ this.props.isSonCheckboxChecked ? "col-md-12 row children" : "hide-controls" }>
+            <div className="col-md-6 chkContainer">
+              <div className="checkbox  children-check">
+                <label className="children-label">
+                  <span>Son 1</span>
+                </label>
+              </div>
+            </div>
+            <div className="col-md-6">
+            <select
+              name="child_1_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild1Age(e.target.value)
+                }
+              }
+              value={this.props.responses.child_1_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          </div>
+          <div className={ this.props.sonCount > 1 ? "col-md-12 row children" : "hide-controls" }>
+            <div className="col-md-6 chkContainer">
+              <div className="checkbox children-check">
+                <label className="children-label">
+                  <span>Son 2</span>
+                </label>
+              </div>
+            </div>
+            <div className="col-md-6">
+            <select
+              name="child_2_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild2Age(e.target.value)
+                }
+              }
+              value={this.props.responses.child_2_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          </div>
+          <div className={ this.props.sonCount > 2 ? "col-md-12 row children" : "hide-controls" }>
+            <div className="col-md-6 chkContainer">
+              <div className="checkbox children-check">
+                <label className="children-label">
+                  <span>Son 3</span>
+                </label>
+              </div>
+            </div>
+            <div className="col-md-6">
+            <select
+              name="child_3_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild3Age(e.target.value)
+                }
+              }
+              value={this.props.responses.child_3_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          </div>
+          <div className={ this.props.sonCount > 3 ? "col-md-12 row children" : "hide-controls" }>
+            <div className="col-md-6 chkContainer">
+              <div className="checkbox children-check">
+                <label className="children-label">
+                  <span>Son 4</span>
+                </label>
+              </div>
+            </div>
+            <div className="col-md-6">
+            <select
+              name="child_4_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild4Age(e.target.value)
+                }
+              }
+              value={this.props.responses.child_4_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          </div>
+        
         </div>
         <div className="col-md-12 daughter">
           <div className="col-md-12 chkContainer">
@@ -499,13 +911,143 @@ class Home extends Component<
                   value="daughter"
                   className="chkMembers"
                   defaultChecked={false}
-                  // onClick={}
+                  onChange={(e)=> {
+                    this.handleDaughterBoxChecked(e.target.value)
+                  }}
                   id="daughter"
                 ></input>
 
-                <span>Daughter</span>
+                <span className="controls">Daughter
+                  <div className={ this.props.isDaughterCheckboxChecked ? "show-controls counter-controls" : "hide-controls" }>
+                    <button 
+                    className="minus"
+                    onClick={
+                      this.decrementDaughterCount
+                    }
+                    > - </button>
+                    <span className="count"> {this.props.daughterCount} </span>
+                    <button 
+                    className="plus"
+                    onClick={
+                      this.incrementDaughterCount
+                    }
+                    > + </button>
+                  </div>
+                </span>
               </label>
             </div>
+          </div>
+          <div className= { this.props.isDaughterCheckboxChecked ? "col-md-12 row children" : "hide-controls" }>
+            <div className="col-md-6 chkContainer">
+              <div className="checkbox children-check">
+                <label className="children-label">
+                  <span>Daughter 1</span>
+                </label>
+              </div>
+            </div>
+            <div className="col-md-6">
+            <select
+              name="child_5_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild5Age(e.target.value)
+                }
+              }
+              value={this.props.responses.child_5_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          </div>
+          <div className= { this.props.daughterCount > 1 ? "col-md-12 row children" : "hide-controls" }>
+            <div className="col-md-6 chkContainer">
+              <div className="checkbox children-check">
+                <label className="children-label">
+                  <span>Daughter 2</span>
+                </label>
+              </div>
+            </div>
+            <div className="col-md-6">
+            <select
+              name="child_6_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild6Age(e.target.value)
+                }
+              }
+              value={this.props.responses.child_6_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          </div>
+          <div className= { this.props.daughterCount > 2 ? "col-md-12 row children" : "hide-controls" }>
+            <div className="col-md-6 chkContainer">
+              <div className="checkbox children-check">
+                <label className="children-label">
+                  <span>Daughter 3</span>
+                </label>
+              </div>
+            </div>
+            <div className="col-md-6">
+            <select
+              name="child_7_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild7Age(e.target.value)
+                }
+              }
+              value={this.props.responses.child_7_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          </div>
+          <div className= { this.props.daughterCount > 3 ? "col-md-12 row children" : "hide-controls" }>
+            <div className="col-md-6 chkContainer">
+              <div className="checkbox children-check">
+                <label className="children-label">
+                  <span>Daughter 4</span>
+                </label>
+              </div>
+            </div>
+            <div className="col-md-6">
+            <select
+              name="child_8_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleChild8Age(e.target.value)
+                }
+              }
+              value={this.props.responses.child_8_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
           </div>
         </div>
         <div className="col-md-12 row father">
@@ -526,7 +1068,23 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-            <Select key="father_age" />
+          <select
+              name="father_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleFatherAge(e.target.value)
+                }
+              }
+              value={this.props.responses.father_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="col-md-12 row mother">
@@ -547,7 +1105,23 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-            <Select key="mother_age" />
+          <select
+              name="mother_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleMotherAge(e.target.value)
+                }
+              }
+              value={this.props.responses.mother_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="col-md-12 row grandfather">
@@ -568,7 +1142,23 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-            <Select key="grandfather_age" />
+          <select
+              name="grand_father_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleGrandFatherAge(e.target.value)
+                }
+              }
+              value={this.props.responses.grand_father_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="col-md-12 row grandmother">
@@ -589,7 +1179,23 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-            <Select key="grandmother_age" />
+          <select
+              name="grand_mother_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleGrandMotherAge(e.target.value)
+                }
+              }
+              value={this.props.responses.grand_mother_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="col-md-12 row father-in-law">
@@ -610,7 +1216,23 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-            <Select key="father_in_law_age" />
+          <select
+              name="father_in_law_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleFatherInLawAge(e.target.value)
+                }
+              }
+              value={this.props.responses.father_in_law_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="col-md-12 row mother-in-law">
@@ -631,7 +1253,23 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-            <Select key="mother_in_law_age" />
+          <select
+              name="mother_in_law_age"
+              className="form-control children-age"
+              onChange = {
+                (e) => {
+                  this.handleMotherInLawAge(e.target.value)
+                }
+              }
+              value={this.props.responses.mother_in_law_age}
+              placeholder="Select Age"
+            >
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
@@ -639,33 +1277,47 @@ class Home extends Component<
     return othersInput;
   }
 
-  handleNumOfPeopleChange(num: any) {
-    console.log(num.target.id);
-    let id = document.getElementById(num.target.id) as HTMLInputElement;
-    this.setState({
-      numOfPersons: num.target.id,
-    });
-
-    // this.props.dispatch({
-    //   type: actions.UPDATE_TYPE,
-    //   data: { key: "type", value: num }
-    // });
-  }
+  // handleNumOfPeopleChange(num: any) {
+  //   console.log(num.target.id);
+  //   let id = document.getElementById(num.target.id) as HTMLInputElement;
+  //   this.setState({
+  //     numOfPersons: num.target.id,
+  //   });
+  //}
 
   handleNavigation = (e: any) => {
     let currentPage = this.props.page;
     // console.log("currentPage:", currentPage);
     const targetId = e.target.id;
     if (targetId === "next") {
-      if (currentPage == 4 && this.props.responses.state == "") {
+      
+      //console.log('this.props.isDesktopView', this.props.isDesktopView);
+      if(this.props.isMobileViewModalOpen) {
+        if (currentPage == 4 && this.props.responses.state == "") {
+          message.error("Please provide a location");
+          return;
+        }
+        console.log('this.props.isMobileViewModalOpen', this.props.isMobileViewModalOpen,
+        'currentPage', currentPage,
+        'this.props.isDesktopView' ,this.props.isDesktopView
+        );
+      }
+      if (currentPage == 3 && this.props.responses.state == "" && this.props.isDesktopView) {
         message.error("Please provide a location");
         return;
       }
+
+      if (this.props.isDesktopView) {
+        currentPage = currentPage + 1
+      }
+
       if (currentPage >= this.props.maxPage) {
-        console.log("this.props.maxPage", this.props.maxPage);
+        console.log('this.props.responses', this.props.responses)
+        console.log("currentPage", currentPage,"this.props.maxPage", this.props.maxPage);
         this.submitResponses();
         return;
       }
+
       this.changePage("next");
       // console.log('changePage("next")', this.props.page);
     } else if (targetId === "prev") {
@@ -686,6 +1338,8 @@ class Home extends Component<
   };
 
   handleInput = (e: any) => {
+    console.log('e.target.name',e.target.name
+    ,"e.target.value", e.target.value)
     this.props.dispatch({
       type: actions.UPDATE_TEXT_RESPONSE,
       data: { key: e.target.name, value: e.target.value },
@@ -693,11 +1347,6 @@ class Home extends Component<
   };
 
   handleAdult = (value) => {
-    /* if(e.target.value=="family"){
-            this.props.dispatch({type:actions.TOGGLE_FAMILY_PLAN_SELECTED, data:{ value:true}})
-        }else if(e.target.value !="family"){
-            this.props.dispatch({type:actions.TOGGLE_FAMILY_PLAN_SELECTED, data:{ value:false}})
-        }*/
     this.props.dispatch({
       type: actions.UPDATE_TEXT_RESPONSE,
       data: { key: "adult", value },
@@ -726,6 +1375,7 @@ class Home extends Component<
     console.log(value);
     console.log(this.props.responses);
   };
+
   handleInfants = (value) => {
     this.props.dispatch({
       type: actions.UPDATE_TEXT_RESPONSE,
@@ -751,7 +1401,8 @@ class Home extends Component<
     let stringResp: any = JSON.stringify(this.props.responses);
     localStorage.setItem("responses", stringResp);
     this.props.history.push({
-      pathname: "/compare",
+      //pathname: "/compare",
+      pathname: "/compare-plans",
       data: this.props.responses,
     });
   }
@@ -788,6 +1439,7 @@ class Home extends Component<
     });
     console.log(this.props.covers);
   };
+
   updateLocation = (location: any) => {
     this.props.dispatch({
       type: actions.UPDATE_TEXT_RESPONSE,
@@ -801,12 +1453,82 @@ class Home extends Component<
     //   isDesktopView: !this.props.isDesktopView,
     // });
     this.props.dispatch({
-      type: actions.UPDATE_TYPE,
-      data: { key: "type", value: !this.props.isDesktopView }
+      type: actions.TOGGLE_DESKTOP_VIEW,
+      data: { key: "isDesktopView", value: false }
     });
   }
 
+  handleSonBoxChecked(val) {
+    console.log(this)
+     this.props.dispatch({
+       type: actions.UPDATE_SON_CHECKED,
+      data: { key: "isSonCheckboxChecked", value: !this.props.isSonCheckboxChecked }
+     });
+  }
+
+  handleDaughterBoxChecked(val) {
+    this.props.dispatch({
+      type: actions.UPDATE_DAUGHTER_CHECKED,
+      data: { key: "isDaughterCheckboxChecked", value: !this.props.isDaughterCheckboxChecked }
+    });
+  }
+
+  incrementSonCount() {
+    if (this.props.sonCount < 4 && this.props.sonCount > 0) {
+      this.props.dispatch({
+        type: actions.INCREMENT_SON_COUNT,
+        data: { key: "sonCount", value: this.props.sonCount + 1 }
+      });
+    }
+    
+  }
+
+  decrementSonCount() {
+    if (this.props.sonCount > 1) {
+        this.props.dispatch({
+          type: actions.DECREMENT_SON_COUNT,
+          data: { key: "sonCount", value: this.props.sonCount - 1 }
+        });
+    }
+    
+    console.log('this.props.sonCount', this.props.sonCount);
+  }
+
+  incrementDaughterCount() {
+    if (this.props.daughterCount < 4 && this.props.daughterCount > 0) {
+      this.props.dispatch({
+        type: actions.INCREMENT_DAUGHTER_COUNT,
+        data: { key: "daughterCount", value: this.props.daughterCount + 1 }
+      });
+    }
+    
+  }
+
+  decrementDaughterCount() {
+    if (this.props.daughterCount > 1) {
+      this.props.dispatch({
+        type: actions.DECREMENT_DAUGHTER_COUNT,
+        data: { key: "daughterCount", value: this.props.daughterCount - 1 }
+      });
+    }
+    
+  }
+
+  handleChildrenCheckboxes(e) {
+    let val = e.target.checked;
+    console.log(val);
+    // const node = this.sonCheck.current;
+    // if (node) {
+    //   node.focus();
+    // if (val == true) {
+    //   console.log('this.sonCheck',this.sonCheck)
+    // }
+    // }
+    
+  }
+
   renderQuizPages() {
+    //console.log('d open')
     const page1 = (
       <div id="firstPage">
         <div className="form-group">
@@ -819,6 +1541,11 @@ class Home extends Component<
                   value="m"
                   name="radio-group-gender"
                   defaultChecked={this.defaultGender()}
+                  onChange = {
+                    (e) => {
+                      this.handleGender(e.target.value)
+                    }
+                  }
                   className="radio-group-gender"
                 ></input>
                 <span>
@@ -836,6 +1563,11 @@ class Home extends Component<
                   value="f"
                   name="radio-group-gender"
                   className="radio-group-gender"
+                  onChange = {
+                    (e) => {
+                      this.handleGender(e.target.value)
+                    }
+                  }
                 ></input>
                 <span>
                   <FontAwesomeIcon
@@ -855,7 +1587,16 @@ class Home extends Component<
           </div>
 
           <div className="col-md-12">
-            <input className="form-control" placeholder="Full Name"></input>
+            <input 
+            className="form-control" 
+            placeholder="Full Name"
+            onChange = {
+              (e) => {
+                this.handleFullName(e.target.value)
+              }
+            }
+            value={this.props.responses.full_name}
+            ></input>
           </div>
         </div>
         <div className="form-group">
@@ -867,20 +1608,15 @@ class Home extends Component<
             <input
               className="form-control input-phone input-phone-desktop "
               placeholder="11 - digit mobile number"
+              onChange={
+                (e) => {
+                  this.handlePhone(e.target.value)
+                }
+              }
+              value={this.props.responses.phone_num}
             ></input>
           </div>
         </div>
-        {/* <div className="form-group">
-          <div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={this.handleNavigation}
-              id="next"
-            >
-              Continue
-            </button>
-          </div>
-        </div> */}
       </div>
     );
 
@@ -895,8 +1631,8 @@ class Home extends Component<
                   value="single"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.state.numOfPersons === "single"}
-                  onClick={this.handleNumOfPeopleChange}
+                  defaultChecked={this.props.responses.type === "single"}
+                  onClick={this.handleType}
                   id="single"
                 ></input>
                 <span className="num-div-inner">
@@ -915,8 +1651,8 @@ class Home extends Component<
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.state.numOfPersons === "couple"}
-                  onClick={this.handleNumOfPeopleChange}
+                  defaultChecked={this.props.responses.type === "couple"}
+                  onClick={this.handleType}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -934,10 +1670,10 @@ class Home extends Component<
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.state.numOfPersons === "fam-of-3"}
-                  onClick={this.handleNumOfPeopleChange}
+                  defaultChecked={this.props.responses.type === "fam-of-3"}
+                  onClick={this.handleType}
                   // onClick={(e) =>
-                  //   this.handleNumOfPeopleChange("fam-of-3")
+                  //   this.handleType("fam-of-3")
                   // }
                 ></input>
                 <span className="num-div-inner">
@@ -959,8 +1695,8 @@ class Home extends Component<
                   type="radio"
                   value="fam-of-4"
                   name="numOfPeople"
-                  defaultChecked={this.state.numOfPersons === "fam-of-4"}
-                  onClick={this.handleNumOfPeopleChange}
+                  defaultChecked={this.props.responses.type === "fam-of-4"}
+                  onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -978,8 +1714,8 @@ class Home extends Component<
                   type="radio"
                   value="parents"
                   name="numOfPeople"
-                  defaultChecked={this.state.numOfPersons === "parents"}
-                  onClick={this.handleNumOfPeopleChange}
+                  defaultChecked={this.props.responses.type === "parents"}
+                  onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -998,8 +1734,14 @@ class Home extends Component<
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.state.numOfPersons === "others"}
-                  onClick={this.toggleOthersInput}
+                  defaultChecked={this.props.responses.type === "others"}
+                  onClick={ (e) => 
+                    {
+                      this.toggleOthersInput()
+                      this.handleType(e)
+                    }
+                    
+                  }
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1024,30 +1766,6 @@ class Home extends Component<
                 </Modal.Header>
                 <Modal.Body>
                   {this.showOthersInput()}
-                  {/* <div className="form-group">
-                    <div className="col-md-6">
-                      {this.props.page != 1 ? (
-                        <button
-                          className="btn btn-primary btn-large view-plans btn-demo"
-                          onClick={this.handleNavigation}
-                          id="prev"
-                        >
-                          Previous
-                        </button>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <div className="col-md-6">
-                      <button
-                        className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                        onClick={this.handleNavigation}
-                        id="next"
-                      >
-                        Continue
-                      </button>
-                    </div>
-                  </div> */}
                 </Modal.Body>
               </Modal>
             </div>
@@ -1056,57 +1774,32 @@ class Home extends Component<
 
         <div className="form-group single-age-input" id="single-input">
           <div className="col-md-6">
-            {this.state.numOfPersons == "single" ? this.showSingleInput() : ""}
+            {this.props.responses.type == "single" ? this.showSingleInput() : ""}
           </div>
         </div>
 
         <div className="form-group couple-input" id="couple-input">
-          {this.state.numOfPersons == "couple" ? this.showCouplesInput() : ""}
+          {this.props.responses.type == "couple" ? this.showCouplesInput() : ""}
         </div>
 
         <div
           className="form-group fam-of-3-input col-md-12"
           id="fam-of-3-input"
         >
-          {this.state.numOfPersons == "fam-of-3" ? this.showFamOf3Input() : ""}
+          {this.props.responses.type == "fam-of-3" ? this.showFamOf3Input() : ""}
         </div>
 
         <div
           className="form-group fam-of-4-input col-md-12"
           id="fam-of-4-input"
         >
-          {this.state.numOfPersons == "fam-of-4" ? this.showFamOf4Input() : ""}
+          {this.props.responses.type == "fam-of-4" ? this.showFamOf4Input() : ""}
         </div>
 
         <div className="form-group parents-age" id="parents-age">
-          {this.state.numOfPersons == "parents" ? this.showParentsInput() : ""}
+          {this.props.responses.type == "parents" ? this.showParentsInput() : ""}
         </div>
 
-        {/* <div className="form-group">
-          <div className="col-md-6">
-            {this.props.page != 1 ? (
-              <button
-                className="btn btn-primary btn-large view-plans btn-demo"
-                onClick={this.handleNavigation}
-                id="prev"
-              >
-                Previous
-              </button>
-            ) : (
-              ""
-            )}
-          </div>
-          <div className="col-md-6">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              data-toggle="modal"
-              data-target="#myModal2"
-              id="next"
-            >
-              Continue
-            </button>
-          </div>
-        </div> */}
       </div>
     );
 
@@ -1125,6 +1818,7 @@ class Home extends Component<
               onSearch={this.onSearch}
               onChange={this.onSelectChange}
               placeholder="Location (state)"
+              value={this.props.responses.state}
             />
           </Form.Item>
         </div>
@@ -1164,18 +1858,27 @@ class Home extends Component<
         </div>
       </div>
     );
-    if (this.props.page === 1 || this.props.page === 0) {
+
+    /*if(this.props.page === 0) {
+      this.toggleModal()
+    }
+    elseif (this.props.page === 1 
+      || this.props.page === 0
+      ) {
       return page1;
-    } else if (this.props.page === 2) {
+    } else */ if (this.props.page === 2) {
       return page2;
     } else if (this.props.page === 3) {
       return page3;
     }
-    console.log("this.props.page", this.props.page);
+    
+    //console.log("this.props.page", this.props.page);
+    //console.log(this.props.responses)
     return <p>Not enough responses collected!</p>;
   }
 
   renderMobileViewQuizPages() {
+    //console.log('m open')
     const page2 = (
       <div id="firstPage">
         <div className="form-group">
@@ -1188,6 +1891,11 @@ class Home extends Component<
                   value="m"
                   name="radio-group-gender"
                   defaultChecked={this.defaultGender()}
+                  onChange = {
+                    (e) => {
+                      this.handleGender(e.target.value)
+                    }
+                  }
                   className="radio-group-gender"
                 ></input>
                 <span>
@@ -1224,21 +1932,17 @@ class Home extends Component<
           </div>
 
           <div className="col-md-12">
-            <input className="form-control" placeholder="Full Name"></input>
+            <input 
+            className="form-control"
+            onChange = {
+              (e) => {
+                this.handleFullName(e.target.value)
+              }
+            }
+            value={this.props.responses.full_name}
+            placeholder="Full Name"></input>
           </div>
         </div>
-
-        {/* <div className="form-group">
-          <div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={this.handleNavigation}
-              id="next"
-            >
-              Continue
-            </button>
-          </div>
-        </div> */}
       </div>
     );
 
@@ -1253,8 +1957,8 @@ class Home extends Component<
                   value="single"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.state.numOfPersons === "single"}
-                  onClick={this.handleNumOfPeopleChange}
+                  defaultChecked={this.props.responses.type === "single"}
+                  onClick={this.handleType}
                   id="single"
                 ></input>
                 <span className="num-div-inner">
@@ -1273,8 +1977,8 @@ class Home extends Component<
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.state.numOfPersons === "couple"}
-                  onClick={this.handleNumOfPeopleChange}
+                  defaultChecked={this.props.responses.type === "couple"}
+                  onClick={this.handleType}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1292,11 +1996,8 @@ class Home extends Component<
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.state.numOfPersons === "fam-of-3"}
-                  onClick={this.handleNumOfPeopleChange}
-                  // onClick={(e) =>
-                  //   this.handleNumOfPeopleChange("fam-of-3")
-                  // }
+                  defaultChecked={this.props.responses.type === "fam-of-3"}
+                  onClick={this.handleType}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1317,8 +2018,8 @@ class Home extends Component<
                   type="radio"
                   value="fam-of-4"
                   name="numOfPeople"
-                  defaultChecked={this.state.numOfPersons === "fam-of-4"}
-                  onClick={this.handleNumOfPeopleChange}
+                  defaultChecked={this.props.responses.type === "fam-of-4"}
+                  onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -1336,8 +2037,8 @@ class Home extends Component<
                   type="radio"
                   value="parents"
                   name="numOfPeople"
-                  defaultChecked={this.state.numOfPersons === "parents"}
-                  onClick={this.handleNumOfPeopleChange}
+                  defaultChecked={this.props.responses.type === "parents"}
+                  onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -1356,7 +2057,7 @@ class Home extends Component<
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.state.numOfPersons === "others"}
+                  defaultChecked={this.props.responses.type === "others"}
                   onClick={this.toggleOthersInput}
                 ></input>
                 <span className="num-div-inner">
@@ -1414,57 +2115,32 @@ class Home extends Component<
 
         <div className="form-group single-age-input" id="single-input">
           <div className="col-md-6">
-            {this.state.numOfPersons == "single" ? this.showSingleInput() : ""}
+            {this.props.responses.type == "single" ? this.showSingleInput() : ""}
           </div>
         </div>
 
         <div className="form-group couple-input" id="couple-input">
-          {this.state.numOfPersons == "couple" ? this.showCouplesInput() : ""}
+          {this.props.responses.type == "couple" ? this.showCouplesInput() : ""}
         </div>
 
         <div
           className="form-group fam-of-3-input col-md-12"
           id="fam-of-3-input"
         >
-          {this.state.numOfPersons == "fam-of-3" ? this.showFamOf3Input() : ""}
+          {this.props.responses.type == "fam-of-3" ? this.showFamOf3Input() : ""}
         </div>
 
         <div
           className="form-group fam-of-4-input col-md-12"
           id="fam-of-4-input"
         >
-          {this.state.numOfPersons == "fam-of-4" ? this.showFamOf4Input() : ""}
+          {this.props.responses.type == "fam-of-4" ? this.showFamOf4Input() : ""}
         </div>
 
         <div className="form-group parents-age" id="parents-age">
-          {this.state.numOfPersons == "parents" ? this.showParentsInput() : ""}
+          {this.props.responses.type == "parents" ? this.showParentsInput() : ""}
         </div>
 
-        {/* <div className="form-group">
-          <div className="col-md-6">
-            {this.props.page != 1 ? (
-              <button
-                className="btn btn-primary btn-large view-plans btn-demo"
-                onClick={this.handleNavigation}
-                id="prev"
-              >
-                Previous
-              </button>
-            ) : (
-              ""
-            )}
-          </div>
-          <div className="col-md-6">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              data-toggle="modal"
-              data-target="#myModal2"
-              id="next"
-            >
-              Continue
-            </button>
-          </div>
-        </div> */}
       </div>
     );
 
@@ -1523,23 +2199,34 @@ class Home extends Component<
       </div>
     );
     //console.log("this.props.page", this.props.page);
-    if (this.props.page === 2 || this.props.page === 1) {
+    /*if (this.props.page === 0) {
+      return page2;
+    }
+    else*/ if (this.props.page === 2
+       //|| this.props.page === 1
+       ) {
       //console.log("page2");
       return page2;
     } else if (this.props.page === 3) {
-      console.log("page3");
+      //console.log("page3");
       return page3;
     } else if (this.props.page === 4) {
       console.log("page4");
       return page4;
     }
-    console.log("this.props.page before return", this.props.page);
+    //console.log("this.props.page before return", this.props.page);
     return <p>Not enough responses collected!</p>;
   }
 
   render() {
     //console.log("this.props.page", this.props.page);
-    let current = this.props.page - 1;
+    let current;
+    if (this.props.page != 0) {
+      current = this.props.page - 1;
+    } else {
+      current = 0;
+    }
+    
 
     //console.log("current:", current);
     return (
@@ -1628,7 +2315,12 @@ class Home extends Component<
                             <input
                               className="form-control"
                               placeholder="Enter phone number"
-                              onChange={this.handlePhone}
+                              onChange={
+                                (e) => {
+                                  this.handlePhone(e.target.value)
+                                }
+                              }
+                              value={this.props.responses.phone_num}
                             />
                           </div>
                         </div>
@@ -1690,6 +2382,12 @@ class Home extends Component<
                             <input
                               className="form-control"
                               placeholder="Full Name"
+                              onChange = {
+                                (e) => {
+                                  this.handleFullName(e.target.value)
+                                }
+                              }
+                              value={this.props.responses.full_name}
                             ></input>
                           </div>
                         </div>
@@ -1702,6 +2400,12 @@ class Home extends Component<
                             <input
                               className="form-control"
                               placeholder="11 - digit mobile number"
+                              onChange={
+                                (e) => {
+                                  this.handlePhone(e.target.value)
+                                }
+                              }
+                              value={this.props.responses.phone_num}
                             ></input>
                           </div>
                         </div>
@@ -1711,7 +2415,7 @@ class Home extends Component<
                               className="btn btn-primary btn-large view-plans btn-demo"
                               onClick={() => {
                                 this.toggleModal();
-                                this.handleDesktopView();
+                                
                               }}
                             >
                               View Plans
@@ -1722,7 +2426,12 @@ class Home extends Component<
                           <div className="col-md-12">
                             <button
                               className="btn btn-primary btn-large view-plans btn-demo"
-                              onClick={this.toggleModal}
+                              onClick={
+                                () => {
+                                  this.toggleModal()
+                                  
+                                }
+                                }
                             >
                               Continue
                             </button>
@@ -1750,6 +2459,12 @@ class Home extends Component<
                             <input
                               className="form-control"
                               placeholder="Enter phone number"
+                              onChange={
+                                (e) => {
+                                  this.handlePhone(e.target.value)
+                                }
+                              }
+                              value={this.props.responses.phone_num}
                             />
                           </div>
                         </div>
@@ -1757,7 +2472,12 @@ class Home extends Component<
                           <div className="col-md-12">
                             <button
                               className="btn btn-primary btn-large view-plans btn-demo"
-                              onClick={this.mobileToggleModal}
+                              onClick={
+                                () => {
+                                  this.mobileToggleModal()
+                                  this.handleDesktopView();
+                                }
+                                }
                             >
                               Continue
                             </button>
@@ -1766,7 +2486,7 @@ class Home extends Component<
                       </form>
                       <Modal
                         dialogClassName="custom-dialog"
-                        className="right"
+                        className="desktop-modal right"
                         show={this.props.isOpen}
                         onHide={this.toggleModal}
                       >
@@ -1781,7 +2501,7 @@ class Home extends Component<
                                 id="prev"
                                 type="default"
                                 onClick={
-                                  this.props.page < 2
+                                  this.props.page < 3
                                     ? this.toggleModal
                                     : this.handleNavigation
                                 }
@@ -1793,24 +2513,23 @@ class Home extends Component<
                               </Button>
                               <div className="modal-title">
                                 {this.props.isDesktopView ? (
-                                  current >= 0 ? (
+                                  current >= 0 && current < 3 ? (
                                     <div>
                                       <p>{this.steps[current].p}</p>
                                       <h3>{this.steps[current].h3}</h3>
                                     </div>
-                                  ) : current < 0 ? (
-                                    <div>
-                                      <p>{this.steps[0].p}</p>
-                                      <h3>{this.steps[0].h3}</h3>
-                                    </div>
+                                  ) : current < 0 || current == 0 ? (
+                                    //this.toggleModal()
+                                     <div>
+                                       <p>{this.steps[0].p}</p>
+                                       <h3>{this.steps[0].h3}</h3>
+                                     </div>
                                   ) : (
-                                    console.log('current out of range:', current)
+                                    console.log('current is > 0', current)
                                   )
                                 ) : (
-                                  console.log('this.props.isDesktopView',
-                                  this.props.isDesktopView)
+                                  console.log('!this.props.isDesktopView')
                                 )
-                                
                                 }
 
                                 <Steps current={current}>
@@ -1839,7 +2558,7 @@ class Home extends Component<
                       </Modal>
                       <Modal
                         dialogClassName="custom-dialog"
-                        className="right"
+                        className="mobile-modal right"
                         show={this.props.isMobileViewModalOpen}
                         onHide={this.mobileToggleModal}
                       >
@@ -1858,7 +2577,7 @@ class Home extends Component<
                                 id="prev"
                                 type="default"
                                 onClick={
-                                  this.props.page < 2
+                                  this.props.page < 3
                                     ? this.mobileToggleModal
                                     : this.handleNavigation
                                 }
@@ -1866,19 +2585,9 @@ class Home extends Component<
                                 <FontAwesomeIcon
                                   className=""
                                   icon={faArrowLeft}
-                                  // onClick={
-                                  //   this.props.page < 2
-                                  //     ? this.toggleModal
-                                  //     : this.handleNavigation
-                                  // }
                                 />
                               </Button>
-                              {/*
-                        ) : (
-                            ""
-                          )}
 
-                        */}
                               <div className="modal-title">
                                 {current >= 0 ? (
                                   <div>
@@ -1903,21 +2612,6 @@ class Home extends Component<
                             </div>
                             {this.renderMobileViewQuizPages()}
                             <div className="nav-row row">
-                              {/*<div className="col-md-6">
-                            <div className="form-group">
-                              {this.props.page != 1 ? (
-                                <button
-                                  className="btn btn-primary btn-large view-plans btn-demo"
-                                  onClick={this.handleNavigation}
-                                  id="prev"
-                                >
-                                  Previous
-                                </button>
-                              ) : (
-                                ""
-                              )}
-                            </div>
-                          </div>*/}
                               <div className="col-md-12">
                                 <div className="form-group">
                                   <button
@@ -2008,7 +2702,7 @@ class Home extends Component<
                   </div>
                   <div className="provider-div col-md-12 row">
                     <div className="col-md-2 provider-logo-div">
-                      <img className="hmo-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
+                      <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
                     </div>
                     <div className="col-md-8 provider-name-div">
                       <h6 className="provider-name">Hygeia</h6>
@@ -2019,7 +2713,7 @@ class Home extends Component<
                   </div>
                   <div className="provider-div col-md-12 row">
                     <div className="col-md-2 provider-logo-div">
-                      <img className="hmo-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
+                      <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
                     </div>
                     <div className="col-md-8 provider-name-div">
                       <h6 className="provider-name">Hygeia</h6>

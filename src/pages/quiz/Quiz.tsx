@@ -158,18 +158,7 @@ class Quiz extends Component<QuizProps> {
         this.submitResponses();
         return;
       }
-      /*if (!this.validateEmail(this.props.responses.email)) {
-                const email: any = document.querySelector("input[type=email]");
-                email.focus();
-                message.error("Please enter a valid email");
-                return;
-            }
-            if(currentPage==3 &&this.props.responses.state==""){
-               const budget: any = document.querySelector("input[type=number]");
-                budget.focus();
-                message.error("Please provide a budget of least N20,000");
-                return
-            }*/
+
       this.changePage("next");
     } else if (targetId === "prev") {
       if (currentPage <= this.props.minPage) {
@@ -194,11 +183,6 @@ class Quiz extends Component<QuizProps> {
   };
 
   handleAdult = (value) => {
-    /* if(e.target.value=="family"){
-            this.props.dispatch({type:actions.TOGGLE_FAMILY_PLAN_SELECTED, data:{ value:true}})
-        }else if(e.target.value !="family"){
-            this.props.dispatch({type:actions.TOGGLE_FAMILY_PLAN_SELECTED, data:{ value:false}})
-        }*/
     this.props.dispatch({
       type: actions.UPDATE_TEXT_RESPONSE,
       data: { key: "adult", value },

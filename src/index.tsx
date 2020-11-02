@@ -17,6 +17,7 @@ import ErrorPage from "./pages/error-page/ErrorPage";
 import Quiz from "./pages/quiz/Quiz";
 import Compare from "./pages/compare/Compare";
 import Details from "./pages/details/Details";
+import ComparePlans from "./pages/compare/ComparePlans";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -25,6 +26,7 @@ ReactDOM.render(
         <Route exact path="/" component={Home} />
         <Route path="/quiz" component={Quiz} />
         <Route path="/compare" component={Compare} />
+        <Route path="/compare-plans" component={ComparePlans} />
         <Route path="/details" component={Details} />
         <Route component={ErrorPage} />
       </Switch>
