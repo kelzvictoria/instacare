@@ -2,6 +2,12 @@
   min-height: 480rem !important;
 } */
 
+body,
+h5,
+.Home_textHeading__26RD2 {
+  color: #172b4d !important;
+}
+
 .svg-img {
   width: 100%;
   height: 50%;
@@ -249,6 +255,14 @@ span.num-div-inner {
   background: url("./svgs/plus-b.svg") no-repeat 0 0;
 }
 
+.male-icon {
+  background: url("./svgs/male-b.svg") no-repeat 0 0;
+}
+
+.female-icon {
+  background: url("./svgs/female-b.svg") no-repeat 0 0;
+}
+
 .me,
 .couple,
 .fam-of-3,
@@ -307,6 +321,15 @@ i.gender.icons-gender.male.others {
 
 .radios label input[type="radio"]:checked + span .parents {
   background: url("./svgs/parents.svg") no-repeat 0 0 !important;
+}
+
+.radios label input[type="radio"]:checked + span .male-icon {
+  background: url("./svgs/male.svg") no-repeat 0 0 !important;
+}
+
+.radios label input[type="radio"]:checked + span .female-icon {
+  background: url("./svgs/female.svg") no-repeat 0 0 !important;
+  background-position: 4px -128px !important;
 }
 
 .show {
@@ -526,9 +549,9 @@ button.close:after {
     font-size: 0.75rem !important;
   }
 
-  .Home_content__1-Kmv {
+  /* .Home_content__1-Kmv {
     margin-top: 1rem !important;
-  }
+  } */
 
   .modal-title {
     margin-right: 0rem !important;
@@ -668,7 +691,7 @@ button.close:after {
   }
 
   .top-plan {
-    min-height: 500px !important;
+    min-height: 400px !important;
   }
 
   .top-plans-content {
@@ -690,6 +713,54 @@ button.close:after {
   }
   .home-frm.form-div {
     margin-top: 1rem;
+  }
+
+  .mt-1rem {
+    margin-top: 1rem;
+  }
+
+  .top-plans {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+
+  .col-md-12.row.plans-container {
+    padding-right: 0px;
+  }
+
+  .row.top-plan {
+    margin-left: 0.09rem !important;
+    margin-right: 0.09rem !important;
+  }
+
+  .row.second-row.mt3 {
+    margin-top: 0rem;
+  }
+
+  .col-md-6.mt6 {
+    margin-top: -0.5rem !important;
+  }
+
+  p.breadcrmb {
+    font-size: 12px !important;
+  }
+
+  span.sep {
+    margin-right: 10px;
+    margin-left: 10px;
+    font-size: 15px !important;
+  }
+
+  .col-md-12.row.plans-container {
+    display: none;
+  }
+  .card.insurers {
+    display: none;
+  }
+
+  .in-law {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
   }
 }
 
@@ -853,6 +924,13 @@ div#thirdPage {
 
   .top-plans-content {
     margin-bottom: 4rem;
+  }
+  .tabs_wrapper {
+    padding-right: 0 !important;
+  }
+  .tabs_wrapper {
+    border-bottom: solid 0.8px rgba(23, 43, 77, 0.2) !important;
+    border-top: solid 0.8px rgba(23, 43, 77, 0.2) !important;
   }
 }
 
@@ -1025,7 +1103,7 @@ button.provider-details-btn {
 }
 
 .information {
-  margin-top: 4rem;
+  margin-top: 2rem;
   text-align: justify;
 }
 
@@ -1037,6 +1115,172 @@ button.provider-details-btn {
   .col-md-8.top-plans-content {
     max-width: 64.666667%;
     margin-right: 2%;
+  }
+
+  .top-plans-content-wrapper .col-md-8 {
+    width: calc(66.67% - 40px);
+    max-width: calc(66.67% - 40px) !important;
+    margin-right: 2rem;
+  }
+  section.tabs_wrapper {
+    border-radius: 8px;
+  }
+
+  .tabs_details .card .title-h6 {
+    color: #253858;
+    font-size: 20px;
+    font-weight: 500;
+    padding-right: 124px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+  }
+
+  .insurer_card_top {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 22px;
+  }
+
+  .tag_tabs {
+    background: #eef0f2;
+    display: inline-block;
+    border-radius: 25px;
+    padding: 1px 12px;
+    font-size: 12px;
+    color: #253858;
+    position: absolute;
+    right: 16px;
+    top: 11px;
+  }
+
+  .plan-features {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .plan-features .features-block {
+    font-size: 14px;
+    color: rgba(23, 43, 77, 0.8);
+    font-weight: 400;
+    width: 50%;
+    padding-right: 20px;
+    padding-bottom: 20px;
+  }
+
+  .features-action-bar {
+    margin-top: 25px;
+    margin-bottom: 20px;
+  }
+
+  .features-action-bar .price-btn {
+    float: right;
+  }
+
+  .features-action-bar .price-btn .price {
+    display: inline-block !important;
+    color: #253858 !important;
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    vertical-align: middle !important;
+    margin-right: 20px !important;
+  }
+
+  .btn-check-prem {
+    transition: all 0.7s ease;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    letter-spacing: 0.05em;
+    font-size: 14px;
+    padding: 10px 12px;
+    width: 191px !important;
+    text-transform: uppercase;
+    border-radius: 4px;
+    color: #fff;
+  }
+  .card.top_plans_see_more.see_more {
+    display: none;
+  }
+
+  .card.insurers {
+    padding: 0;
+  }
+
+  .card_heading {
+    margin-bottom: 0;
+    color: #253858;
+    font-size: 24px;
+    font-weight: 500;
+    padding: 10px 0 10px 14px;
+    text-align: left;
+    letter-spacing: 0.02em;
+  }
+
+  .insurer_block {
+    /* -ms-flex-align: center; */
+    align-items: center;
+    margin-bottom: 0;
+    display: flex;
+    border-top: solid 0.8px #d3d7de !important;
+    padding: 5px;
+    position: relative;
+  }
+
+  .col-md-4 .hygeia-general-icon {
+    /* background-position: 1px -4675px; */
+  }
+
+  .insurer_block .supplier_icon {
+    border: 0 solid rgba(23, 43, 77, 0.2);
+    border-radius: 4px;
+    height: 50px;
+    overflow: hidden;
+    padding: 0;
+    width: 50px;
+    /* width: 38px; */
+  }
+
+  .supplier_icon {
+    margin-left: 10px;
+    /* background-image: url(./imgs/hyg.png); */
+    background-repeat: no-repeat;
+    /* background-position: 0 51px; */
+  }
+
+  .insurer_block .insurer_name {
+    font-size: 14px;
+    letter-spacing: 0.014em;
+    color: #253858;
+    width: auto;
+    margin-left: 10px;
+    display: inline-block;
+    padding-right: 20px;
+  }
+
+  .insurer_block .insurer_name span {
+    font-weight: 400;
+    color: #172b4d;
+    display: block;
+    transition: color ease-in 0.3s;
+    line-height: 21px;
+    letter-spacing: 0.014em;
+  }
+
+  .insurer_block::after {
+    content: "";
+    border: solid rgba(23, 43, 77, 0.5);
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    position: absolute;
+    right: 20px;
+    top: 28px;
   }
 }
 
@@ -1126,7 +1370,7 @@ button > svg {
 }
 
 .ant-message {
-  z-index: 10 !important;
+  z-index: 2000 !important;
   float: right !important;
   right: 0 !important;
 }
@@ -1150,6 +1394,7 @@ h6.plan-type {
   margin-left: -40px !important;
 }
 
+#prev,
 .nav-btn {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
@@ -1278,3 +1523,396 @@ h6.plan-type {
 div#Compare_wrapper__2_PoT {
   background: #f0f4f5;
 }
+
+i.gender.icons-gender.male.female-icon {
+  background-position: 4px -128px;
+}
+
+h5.float-left.top-plans,
+.home-span {
+  color: #03aa7d;
+}
+
+.tabs_wrapper {
+  background: #edeff1 !important;
+  padding: 16px 16px !important;
+
+  border-right: none !important;
+  border-left: none !important;
+}
+
+.tabs_wrapper .tabs {
+  border-bottom: 1px solid rgba(23, 43, 77, 0.1);
+  margin-bottom: 20px;
+}
+
+.tabs_wrapper .tabs ul li:last-child {
+  margin-right: 0;
+}
+
+.tabs_wrapper .tabs ul li.active a {
+  color: #03aa7d;
+  font-weight: 500;
+}
+
+.tabs_wrapper .tabs ul li a {
+  font-size: 14px;
+  text-transform: uppercase;
+  padding-bottom: 13px;
+  display: inline-block;
+  position: relative;
+}
+
+.tabs_wrapper .tabs ul li.active a::after {
+  content: "";
+  height: 3px;
+  background: #03aa7d;
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+}
+
+.tabs_details.top_plans {
+  display: block;
+}
+
+@media only screen and (max-width: 1024px) {
+  .tabs_details {
+    width: 100%;
+    white-space: nowrap;
+    overflow: auto;
+  }
+
+  .tabs_details .card {
+    display: inline-block;
+    vertical-align: top;
+    width: 85%;
+    white-space: normal;
+    height: 440px;
+    position: relative;
+    margin-right: 15px;
+    max-width: 293px;
+  }
+
+  .insurer_card_top {
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+
+  .tabsDetails .card .titleh6 {
+    position: relative;
+    padding-top: 5px;
+    padding-left: 0;
+    font-size: 16px;
+    padding-right: 0;
+    font-weight: 600;
+  }
+
+  .tag_tabs {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    margin: 10px 0 10px 18px;
+  }
+
+  .plan-features {
+    display: block;
+    height: 180px;
+  }
+
+  .plan-features .features-block {
+    margin-bottom: 20px;
+    width: 100%;
+    overflow: hidden;
+    padding-right: 0;
+    padding: 0;
+  }
+
+  .tabs_details .features-action-bar {
+    margin-top: 0;
+    /* width: 90%; */
+    width: 100%;
+  }
+
+  .features-action-bar .price-btn {
+    margin-top: 10px;
+    float: none;
+  }
+
+  .features-action-bar .price-btn .price {
+    font-size: 18px;
+    margin-bottom: 10px;
+    margin-right: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .features-action-bar .price-btn .btn {
+    width: 100%;
+  }
+}
+
+.tabs_details {
+  position: relative;
+}
+
+.tabs_details .card {
+  overflow: hidden;
+  border-radius: 8px !important;
+  padding: 6px 16px;
+  background: #fff;
+  box-shadow: 0 2px 4px 0 rgba(37, 56, 88, 0.08);
+  border: none;
+}
+
+.card {
+  margin-bottom: 16px;
+}
+
+.insurer_card_top {
+  display: flex;
+}
+
+.logo_top {
+  width: 110px;
+  height: 52px;
+}
+
+.widget-insurer-logo {
+  width: 120px;
+  height: 40px;
+  border: 1px solid #fff;
+  float: left;
+  margin-right: 20px;
+  background-size: 100% !important;
+  background-position: 0 0;
+  margin-top: 6px;
+}
+
+.logo-widget {
+  background: url(../src/svgs/Hygeia.svg) center no-repeat;
+}
+
+.insurer_card_top span {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.tabs_details .card .title-h6 {
+  color: #253858;
+  display: flex;
+  flex-direction: column;
+}
+
+.tag_tabs {
+  background: #eef0f2;
+  display: inline-block;
+  border-radius: 25px;
+  padding: 1px 12px;
+  font-size: 12px;
+  color: #253858;
+}
+
+.plan-features {
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.plan-features .features-block {
+  font-size: 14px;
+  color: rgba(23, 43, 77, 0.8);
+  font-weight: 400;
+}
+
+.plan-features .features-block .features-icon {
+  position: relative;
+}
+
+.plan-features .features-block i {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f4f5f7;
+  text-align: center;
+  display: block;
+  float: left;
+}
+
+.plan-features
+  .features-block
+  .features-icon[data-icon="Hospital Room Eligibility"]::before {
+  background-position: -209px 0;
+}
+
+.plan-features .features-block .features-icon::before {
+  content: "";
+  /* background: url(../src/svgs/hospital-bed.svg) no-repeat -209px -59px; */
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-size: 250px;
+}
+
+.plan-features .features-block i + div {
+  float: left;
+  width: calc(100% - 36px - 10px);
+  margin-left: 10px;
+  color: #253858;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  height: fit-content;
+}
+
+.plan-features .features-block p {
+  color: #253858;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.features-action-bar {
+  margin-bottom: 20px;
+}
+
+.features-action-bar .price-btn .price {
+  display: inline-block;
+  color: #253858 !important;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.features-action-bar .price-btn .price span {
+  display: block;
+  font-size: 14px;
+  color: #253858;
+  font-weight: 400;
+}
+
+.features-action-bar .price-btn .price h5 {
+  display: block;
+  color: #253858;
+  font-weight: 400;
+}
+
+.btn-check-prem {
+  transition: all 0.7s ease;
+  cursor: pointer;
+  font-weight: 500;
+  display: inline-block;
+  text-align: center;
+  letter-spacing: 0.05em;
+  font-size: 14px;
+  padding: 10px 12px;
+  /* width: 191px; */
+  width: 100%;
+  border: solid 1px #03aa7d;
+  text-transform: uppercase;
+  border-radius: 4px;
+  background: #03aa7d;
+  color: #fff;
+}
+
+.Home_content__1-Kmv {
+  background-color: #edeff1;
+}
+
+.Home_content__1-Kmv {
+  border-top: solid 0.8px rgba(23, 43, 77, 0.2) !important;
+}
+
+.container.top-plans-content-wrapper {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+p.breadcrmb {
+  margin-left: 1rem !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 2rem !important;
+}
+
+span.sep {
+  color: rgba(122, 134, 154, 0.6);
+}
+li,
+ul {
+  list-style: none;
+}
+
+.health_tab ul {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.title-h6 div {
+  /* position: relative; */
+  /* padding-top: 5px; */
+  /* padding-left: 0; */
+  font-size: 19px;
+  /* padding-right: 0; */
+  font-weight: 600;
+}
+
+p.feature-head {
+  font-size: 16px;
+}
+
+.card.top_plans_see_more.see_more {
+  text-align: center;
+  line-height: 440px;
+  font-size: 16px;
+}
+
+h3.no-med::after {
+  content: "";
+  display: block;
+  width: 39px;
+  height: 3px;
+  background-color: #f8e71c;
+  margin-top: 5px;
+  position: absolute;
+}
+
+.top-plans-content-wrapper .col-md-8 {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+button.close {
+  outline: none;
+}
+
+/* span.sep {
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  right: 0;
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  top: 6px;
+  content: "";
+  border: solid rgba(122, 134, 154, 0.6);
+  border-width: 0 1px 1px 0;
+}
+
+span.home-span::after {
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  right: 0;
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  top: 6px;
+  content: "";
+  border: solid rgba(122, 134, 154, 0.6);
+  border-width: 0 1px 1px 0;
+} */

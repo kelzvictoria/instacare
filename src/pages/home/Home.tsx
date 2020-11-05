@@ -497,7 +497,7 @@ class Home extends Component<
         <label>Select Age</label>
         <select
           name="individual"
-          className="form-control children-age"
+          className="form-control"
           onChange = {
             (e) => {
               this.handleIndividualAge(e.target.value)
@@ -524,7 +524,7 @@ class Home extends Component<
         <label>Age of the Eldest member</label>
         <select
             name="spouse_age"
-            className="form-control children-age"
+            className="form-control"
             value = {this.props.responses.spouse_age}
             onChange = {
               (e) => {
@@ -552,7 +552,7 @@ class Home extends Component<
           <label>Age of the Eldest member</label>
           <select
               name="spouse_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleSpouseAge(e.target.value)
@@ -568,11 +568,11 @@ class Home extends Component<
           ))}
         </select>
         </div>
-        <div className="col-md-6">
+        <div className="col-md-6 mt-1rem">
           <label>Select Age of Child</label>
           <select
               name="child_1_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild1Age(e.target.value)
@@ -600,7 +600,7 @@ class Home extends Component<
           <label>Age of the Eldest member</label>
           <select
               name="spouse_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleSpouseAge(e.target.value)
@@ -616,11 +616,11 @@ class Home extends Component<
           ))}
           </select>
         </div>
-        <div className="col-md-6">
+        <div className="col-md-6 mt-1rem">
           <label>Age of the Eldest Child</label>
           <select
               name="child_1_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild1Age(e.target.value)
@@ -648,7 +648,7 @@ class Home extends Component<
           <label>Age of the Eldest member</label>
           <select
               name="father_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleFatherAge(e.target.value)
@@ -695,7 +695,7 @@ class Home extends Component<
           <div className="col-md-6">
           <select
               name="individual_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleIndividualAge(e.target.value)
@@ -732,7 +732,7 @@ class Home extends Component<
           <div className="col-md-6">
           <select
               name="spouse_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleSpouseAge(e.target.value)
@@ -799,7 +799,7 @@ class Home extends Component<
             <div className="col-md-6">
             <select
               name="child_1_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild1Age(e.target.value)
@@ -827,7 +827,7 @@ class Home extends Component<
             <div className="col-md-6">
             <select
               name="child_2_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild2Age(e.target.value)
@@ -855,7 +855,7 @@ class Home extends Component<
             <div className="col-md-6">
             <select
               name="child_3_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild3Age(e.target.value)
@@ -883,7 +883,7 @@ class Home extends Component<
             <div className="col-md-6">
             <select
               name="child_4_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild4Age(e.target.value)
@@ -948,7 +948,7 @@ class Home extends Component<
             <div className="col-md-6">
             <select
               name="child_5_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild5Age(e.target.value)
@@ -976,7 +976,7 @@ class Home extends Component<
             <div className="col-md-6">
             <select
               name="child_6_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild6Age(e.target.value)
@@ -1004,7 +1004,7 @@ class Home extends Component<
             <div className="col-md-6">
             <select
               name="child_7_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild7Age(e.target.value)
@@ -1032,7 +1032,7 @@ class Home extends Component<
             <div className="col-md-6">
             <select
               name="child_8_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleChild8Age(e.target.value)
@@ -1070,7 +1070,7 @@ class Home extends Component<
           <div className="col-md-6">
           <select
               name="father_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleFatherAge(e.target.value)
@@ -1107,7 +1107,7 @@ class Home extends Component<
           <div className="col-md-6">
           <select
               name="mother_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleMotherAge(e.target.value)
@@ -1144,7 +1144,7 @@ class Home extends Component<
           <div className="col-md-6">
           <select
               name="grand_father_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleGrandFatherAge(e.target.value)
@@ -1181,7 +1181,7 @@ class Home extends Component<
           <div className="col-md-6">
           <select
               name="grand_mother_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleGrandMotherAge(e.target.value)
@@ -1199,7 +1199,7 @@ class Home extends Component<
           </div>
         </div>
         <div className="col-md-12 row father-in-law">
-          <div className="col-md-6 chkContainer">
+          <div className="col-md-6 chkContainer in-law">
             <div className="checkbox">
               <label>
                 <input
@@ -1218,7 +1218,7 @@ class Home extends Component<
           <div className="col-md-6">
           <select
               name="father_in_law_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleFatherInLawAge(e.target.value)
@@ -1236,7 +1236,7 @@ class Home extends Component<
           </div>
         </div>
         <div className="col-md-12 row mother-in-law">
-          <div className="col-md-6 chkContainer">
+          <div className="col-md-6 chkContainer in-law">
             <div className="checkbox">
               <label>
                 <input
@@ -1255,7 +1255,7 @@ class Home extends Component<
           <div className="col-md-6">
           <select
               name="mother_in_law_age"
-              className="form-control children-age"
+              className="form-control"
               onChange = {
                 (e) => {
                   this.handleMotherInLawAge(e.target.value)
@@ -1899,10 +1899,7 @@ class Home extends Component<
                   className="radio-group-gender"
                 ></input>
                 <span>
-                  <FontAwesomeIcon
-                    className="gender icons-gender male"
-                    icon={faMale}
-                  />
+                <i className="gender icons-gender male male-icon"></i>
 
                   <em>Male</em>
                 </span>
@@ -1912,13 +1909,15 @@ class Home extends Component<
                   type="radio"
                   value="f"
                   name="radio-group-gender"
+                  onChange = {
+                    (e) => {
+                      this.handleGender(e.target.value)
+                    }
+                  }
                   className="radio-group-gender"
                 ></input>
                 <span>
-                  <FontAwesomeIcon
-                    className="gender icons-gender female"
-                    icon={faFemale}
-                  />
+                    <i className="gender icons-gender male female-icon"></i>
                   <em>Female</em>
                 </span>
               </label>
@@ -2158,6 +2157,7 @@ class Home extends Component<
               dataSource={this.props.dataSource}
               onSearch={this.onSearch}
               onChange={this.onSelectChange}
+              value={this.props.responses.state}
               placeholder="Location (state)"
             />
           </Form.Item>
@@ -2299,7 +2299,7 @@ class Home extends Component<
                         className="form desktop"
                       >
                         <p>Get HMO plans from the comfort of your home</p>
-                        <h3>No medicals required</h3>
+                        <h3 className="no-med">No medicals required</h3>
                         <div className="mobile-view-steps">
                           <div className="col-md-12">
                             <Steps current={0}>
@@ -2342,10 +2342,7 @@ class Home extends Component<
                                   className="radio-group-gender"
                                 ></input>
                                 <span>
-                                  <FontAwesomeIcon
-                                    className="gender icons-gender male"
-                                    icon={faMale}
-                                  />
+                                <i className="gender icons-gender male male-icon"></i>
                                   <em>Male</em>
                                 </span>
                               </label>
@@ -2362,10 +2359,7 @@ class Home extends Component<
                                   }
                                 ></input>
                                 <span>
-                                  <FontAwesomeIcon
-                                    className="gender icons-gender female"
-                                    icon={faFemale}
-                                  />
+                                  <i className="gender icons-gender male female-icon"></i>
                                   <em>Female</em>
                                 </span>
                               </label>
@@ -2443,7 +2437,7 @@ class Home extends Component<
                         className="form mobile"
                       >
                         <p>Get HMO plans from the comfort of your home</p>
-                        <h3>No medicals required</h3>
+                        <h3 className="no-med">No medicals required</h3>
                         <div className="mobile-view-steps">
                           <div className="col-md-12">
                             <Steps current={0}>
@@ -2637,93 +2631,319 @@ class Home extends Component<
 
             <div className={styles.content}>
               <div className="top-plans container">
-                <p className="breadcrmb">Home > Health Insurance</p>
-              <hr />
-              <div className="col-md-12 row plans-container">
-                <div className="col-md-8 top-plans-content">
-                  <div className="plans-header">
-                     <h5 className="float-left top-plans">TOP PLANS</h5>
-                  </div>
-                  <hr />
-                  <div className="row top-plan">
-                    <div className="col-md-6 float-left">
-                      <div className="row first-row">
-                        <img className="hmo-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                        <div className="">
-                          <h5>Hygeia</h5>
-                          <h6>Hygeia - Prime</h6>
-                        </div>
+                <p className="breadcrmb">
+                  <span className="home-span">Home</span>  
+                  <span className="sep"> > </span> 
+                  <span>HMO Plans</span></p>
+ 
+                <div className="container row top-plans-content-wrapper">
+                  <div className="col-md-8">
+                  <section className="tabs_wrapper">
+                      <div className="tabs health_tab">
+                        <ul>
+                          <li className="active">
+                            <a href="" data-class="top_plans">
+                              TOP PLANS
+                            </a>
+                          </li>
+                        </ul>
                       </div>
-                      <div className="row second-row mt3">
-                      <FontAwesomeIcon
-                            className="mr-2 bed-icon"
-                            icon={faProcedures}
-                          />
-                        <div className="">
-                          <h5>Hospital Room Eligibility</h5>
-                          <p>Single Private A/C Room, ICU charges up...</p>
+                      <div className="tabs_details top_plans">
+                        <div className="card">
+                          <div className="insurer_card_top">
+                            <div className="logo_top 1">
+                              <span className="logo-widget widget-insurer-logo"></span>
+                            </div>
+                            <div className="title-h6">
+                                <div>Hygeia</div>
+                                <span>Hygiea - Prime</span>
+                            </div>
+                          </div>
+                          <div className="tag_tabs">
+                            Individual
+                          </div>
+                          <div className="top-features">
+                            <div className="plan-features">
+                              <div className="features-block">
+                                <i className="features-icon" data-icon="Hospital Room Eligibility">
+                                <FontAwesomeIcon
+                              className="bed-icon"
+                              icon={faProcedures}
+                            />
+                                </i>
+                                <div>
+                                  <p className="feature-head">Hospital Room Eligibility</p>
+                                  <p>
+                                  Single Private A/C Room, ICU Charges upto SI 
+                                  </p>
+                                </div>
+                                
+                              </div>
+                              <div className="features-block">
+                              
+                                <i className="features-icon" data-icon="Bonus on No Claim">
+                            <FontAwesomeIcon
+                              className="gift-icon"
+                              icon={faGift}
+                            />
+                            </i>
+                                <div>
+                                  <p  className="feature-head">Bonus on No Claim</p>
+                                  <p>
+                                    10% of Sum Insured per annum, max up to 50% of SI 
+                                  </p>
+                                </div>
+                                
+                              </div>
+                            </div>
+                            <div className="features-action-bar">
+                              <div className="price-btn">
+                                <div className="price">
+                                  <span>Starting at </span>
+                                  <h5 className="">₦ 900/ month</h5>
+                                </div>
+                                <button className="btn-check-prem">
+                                  Check Premium
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                        <div className="card">
+                          <div className="insurer_card_top">
+                            <div className="logo_top 1">
+                              <span className="logo-widget widget-insurer-logo"></span>
+                            </div>
+                            <div className="title-h6">
+                                <div>Hygeia</div>
+                                <span>Hygiea - Prime</span>
+                            </div>
+                          </div>
+                          <div className="tag_tabs">
+                            Individual
+                          </div>
+                          <div className="top-features">
+                            <div className="plan-features">
+                              <div className="features-block">
+                                <i className="features-icon" data-icon="Hospital Room Eligibility">
+                                <FontAwesomeIcon
+                              className="bed-icon"
+                              icon={faProcedures}
+                            />
+                                </i>
+                                <div>
+                                  <p className="feature-head">Hospital Room Eligibility</p>
+                                  <p>
+                                  Single Private A/C Room, ICU Charges upto SI 
+                                  </p>
+                                </div>
+                                
+                              </div>
+                              <div className="features-block">
+                                <i className="features-icon" data-icon="Bonus on No Claim">
+                                <FontAwesomeIcon
+                              className="gift-icon"
+                              icon={faGift}
+                            />
+                                </i>
+                                <div>
+                                  <p  className="feature-head">Bonus on No Claim</p>
+                                  <p>
+                                    10% of Sum Insured per annum, max up to 50% of SI 
+                                  </p>
+                                </div>
+                                
+                              </div>
+                            </div>
+                            <div className="features-action-bar">
+                              <div className="price-btn">
+                                <div className="price">
+                                  <span>Starting at </span>
+                                  <h5 className="">₦ 900/ month</h5>
+                                </div>
+                                <button className="btn-check-prem">
+                                  Check Premium
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       
-                    </div>
-                    <div className="col-md-6 mt6">
-                      <div className="row first-row go-right mb-minus1">
-                         <span className="type">Individual</span>
-                      </div>
-                      <div className="row second-row go-right hide">
-                        <FontAwesomeIcon
-                            className="ml-2 gift-icon"
-                            icon={faGift}
-                          />
-                          
-                        <div className="">
-                          <h5>Bonus on No Claim</h5>
+                        <div className="card">
+                          <div className="insurer_card_top">
+                            <div className="logo_top 1">
+                              <span className="logo-widget widget-insurer-logo"></span>
+                            </div>
+                            <div className="title-h6">
+                                <div>Hygeia</div>
+                                <span>Hygiea - Prime</span>
+                            </div>
+                          </div>
+                          <div className="tag_tabs">
+                            Individual
+                          </div>
+                          <div className="top-features">
+                            <div className="plan-features">
+                              <div className="features-block">
+                                <i className="features-icon" data-icon="Hospital Room Eligibility">
+                                <FontAwesomeIcon
+                                  className="bed-icon"
+                                  icon={faProcedures}
+                                />
+                                </i>
+                                <div>
+                                  <p className="feature-head">Hospital Room Eligibility</p>
+                                  <p>
+                                  Single Private A/C Room, ICU Charges upto SI 
+                                  </p>
+                                </div>
+                                
+                              </div>
+                              <div className="features-block">
+                              
+                                <i className="features-icon" data-icon="Bonus on No Claim">
+                                <FontAwesomeIcon
+                                  className="gift-icon"
+                                  icon={faGift}
+                                />
+                            </i>
+                                <div>
+                                  <p className="feature-head">Bonus on No Claim</p>
+                                  <p>
+                                    10% of Sum Insured per annum, max up to 50% of SI 
+                                  </p>
+                                </div>
+                                
+                              </div>
+                            </div>
+                            <div className="features-action-bar">
+                              <div className="price-btn">
+                                <div className="price">
+                                  <span>Starting at </span>
+                                  <h5 className="">₦ 900/ month</h5>
+                                </div>
+                                <button className="btn-check-prem">
+                                  Check Premium
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="card">
+                          <div className="insurer_card_top">
+                            <div className="logo_top 1">
+                              <span className="logo-widget widget-insurer-logo"></span>
+                            </div>
+                            <div className="title-h6">
+                                <div>Hygeia</div>
+                                <span>Hygiea - Prime</span>
+                            </div>
+                          </div>
+                          <div className="tag_tabs">
+                            Individual
+                          </div>
+                          <div className="top-features">
+                            <div className="plan-features">
+                              <div className="features-block">
+                                <i className="features-icon" data-icon="Hospital Room Eligibility">
+                                <FontAwesomeIcon
+                              className="bed-icon"
+                              icon={faProcedures}
+                            />
+                                </i>
+                                <div>
+                                  <p className="feature-head">Hospital Room Eligibility</p>
+                                  <p>
+                                  Single Private A/C Room, ICU Charges upto SI 
+                                  </p>
+                                </div>
+                                
+                              </div>
+                              <div className="features-block">
+                                <i className="features-icon" data-icon="Bonus on No Claim">
+                                <FontAwesomeIcon
+                              className="gift-icon"
+                              icon={faGift}
+                            />
+                                </i>
+                                <div>
+                                  <p  className="feature-head">Bonus on No Claim</p>
+                                  <p>
+                                    10% of Sum Insured per annum, max up to 50% of SI 
+                                  </p>
+                                </div>
+                                
+                              </div>
+                            </div>
+                            <div className="features-action-bar">
+                              <div className="price-btn">
+                                <div className="price">
+                                  <span>Starting at </span>
+                                  <h5 className="">₦ 900/ month</h5>
+                                </div>
+                                <button className="btn-check-prem">
+                                  Check Premium
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="card top_plans_see_more see_more">
+                            <a href="">SEE MORE PLANS ></a>
                         </div>
                       </div>
-                      
-                      <div className="row third-row">
-                        <div className="col-md-6 check-prem">
-                          <p className="starting-at">Starting at</p>
-                          <h5>₦ 900/ month</h5>
-                        </div>
-                        <div className="col-md-6 check-prem">
-                          <button className="btn btn-large btn-primary view-plans">
-                          CHECK PREMIUM
-                        </button>
-                        </div>
-                        
+                  </section>
+                  </div>
+
+                  <div className="col-md-4">
+                    <div className="card insurers">
+                    <div className="card_heading">
+                      HMO Providers
+                    </div>
+                        <a href="">
+                          <div className="insurer_block">
+                            {/* <div > */}
+                              <img className="supplier_icon insurer_logo
+                            hygeia-general-icon
+                            " src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
+                              &nbsp;
+                            {/* </div> */}
+                            <div className="insurer_name">
+                              <span>Hygeia HMO</span>
+                            </div>
+                          </div>
+                        </a>
+                    </div>
+                  </div>
+                  
+                  {/* <div className="col-md-4 hmo-providers">
+                    <div className="providers">
+                      <h5 className="float-left top-plans">HMO Providers</h5>
+                    </div>
+                    <div className="provider-div col-md-12 row">
+                      <div className="col-md-2 provider-logo-div">
+                        <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
+                      </div>
+                      <div className="col-md-8 provider-name-div">
+                        <h6 className="provider-name">Hygeia</h6>
+                      </div>
+                      <div className="col-md-2 view-provider-details">
+                        <button className="provider-details-btn">></button>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="col-md-4 hmo-providers">
-                  <div className="providers">
-                    <h5 className="float-left top-plans">HMO Providers</h5>
-                  </div>
-                  <div className="provider-div col-md-12 row">
-                    <div className="col-md-2 provider-logo-div">
-                      <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
+                    <div className="provider-div col-md-12 row">
+                      <div className="col-md-2 provider-logo-div">
+                        <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
+                      </div>
+                      <div className="col-md-8 provider-name-div">
+                        <h6 className="provider-name">Hygeia</h6>
+                      </div>
+                      <div className="col-md-2 view-provider-details">
+                        <button className="provider-details-btn">></button>
+                      </div>
                     </div>
-                    <div className="col-md-8 provider-name-div">
-                      <h6 className="provider-name">Hygeia</h6>
-                    </div>
-                    <div className="col-md-2 view-provider-details">
-                      <button className="provider-details-btn">></button>
-                    </div>
-                  </div>
-                  <div className="provider-div col-md-12 row">
-                    <div className="col-md-2 provider-logo-div">
-                      <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                    </div>
-                    <div className="col-md-8 provider-name-div">
-                      <h6 className="provider-name">Hygeia</h6>
-                    </div>
-                    <div className="col-md-2 view-provider-details">
-                      <button className="provider-details-btn">></button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  </div> */}
+                </div> 
               </div>
               <div className="information  container">
                 <div className="col-md-8">
@@ -2731,7 +2951,7 @@ class Home extends Component<
                 <div className="hmo-def">
                   <h5>Health Management Organizations (HMOs)</h5>
                   <p>
-                  An HMO is an acronym for a “Health Maintenance Organisation”. 
+                  HMO is an acronym for a “Health Maintenance Organisation”. 
                   HMOs are organizations mandated solely to manage the provision of health care
                    services through Health Care Facilities (Hospitals, Opticians, Dentists etc)
                     accredited by the Scheme. Basically, they are an intermediary between the
@@ -2769,22 +2989,6 @@ class Home extends Component<
                 </div>
                 </div>
               </div>
-              {/*<h1 className={styles.title}>How it works</h1>
-              <Row gutter={{ md: 8 }}>
-                {sections.map((section, i) => {
-                  return (
-                    <Col xs={24} md={{ span: 8 }} key={i}>
-                      <div
-                        className={styles.iconCard}
-                        style={section.color ? { color: section.color } : {}}
-                      >
-                        <Icon type={section.icon} />
-                      </div>
-                      <p className={styles.sectionText}>{section.text}</p>
-                    </Col>
-                  );
-                })}
-              </Row>*/}
             </div>
           </div>
         </div>
