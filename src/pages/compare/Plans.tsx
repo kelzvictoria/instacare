@@ -5,6 +5,12 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import * as actions from "../../utils/actions";
 import numeral from "numeral";
+
+import shortlist from "../../imgs/shortlist-yellow.svg";
+import bottom_filter from "../../imgs/bottom_filter.svg";
+import bottom_shortlist from "../../imgs/bottom_shortlist.svg";
+import bottom_compare from "../../imgs/bottom_compare.svg";
+
 import {
   Card,
   Col,
@@ -29,7 +35,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBalanceScale,
   faArrowLeft,
-  faFilter
+  faFilter,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
 const { Title } = Typography;
@@ -64,7 +71,12 @@ interface QuizProps {
   fetching: boolean;
 }
 
-class Compare extends Component<QuizProps> {
+class Plans extends Component<QuizProps> {
+  constructor(props) {
+    super(props);
+    this.goToHome = this.goToHome.bind(this);
+    this.goToDetails = this.goToDetails.bind(this);
+  }
   state = {
     toggleBar: false,
   };
@@ -356,11 +368,12 @@ class Compare extends Component<QuizProps> {
   };
 
   goToDetails(item: any) {
-    if (item) {
-      console.log(item);
-      localStorage.setItem("details", JSON.stringify(item));
-      this.props.history.push({ pathname: "/details", data: item });
-    }
+    // if (item) {
+    //   console.log(item);
+    //   localStorage.setItem("details", JSON.stringify(item));
+    //   this.props.history.push({ pathname: "/details", data: item });
+    // }
+    this.props.history.push({ pathname: "/details" });
   }
   changek(minBudget, maxBudget) {
     if (minBudget < 4) {
@@ -468,246 +481,325 @@ class Compare extends Component<QuizProps> {
 
   handleNavigation = (e: any) => {};
 
+  goToHome() {
+    this.props.history.push({ pathname: "/" });
+  }
+
   render() {
     return (
       <div id={styles.wrapper}>
         {/*<Row>*/}
         <div className="mobile-view">
-            <div className="row compare-plans-header">
-          <div className="row nav-info">
-            <Button
-              className="nav-btn"
-              id="prev"
-              type="default"
-              onClick={this.handleNavigation}
-            >
-              <FontAwesomeIcon
+          <div className="row compare-plans-header">
+            <div className="row nav-info">
+              <Button
                 className="nav-btn"
-                icon={faArrowLeft}
-                onClick={this.handleNavigation}
-              />
-            </Button>
+                id="prev"
+                type="default"
+                onClick={this.goToHome}
+              >
+                <FontAwesomeIcon className="nav-btn" icon={faArrowLeft} />
+              </Button>
 
-            <div>
-              <p className="plans-num">20 Plans for</p>
-              <h6 className="plan-type">Self</h6>
+              <div>
+                <p className="plans-num">20 Plans for</p>
+                <h6 className="plan-type">Self</h6>
+              </div>
+            </div>
+            <div className="plan-select-div">
+              <select className="plan-select">
+                <option>Base Plans</option>
+                <option>Base Plans</option>
+              </select>
             </div>
           </div>
-          <div className="plan-select-div">
-            <select className="plan-select">
-              <option>Base Plans</option>
-              <option>Base Plans</option>
-            </select>
-          </div>
-        </div>
-        <div className="compare-page-body">
-        </div>
-        
-          <div className="row">
+
+          <div className="row compare-page-body">
             <div className="col-md-8">
-                <div className="single-plan">
-                    <div className="compare-first-row row">
-                        <div className="col-md-2">
-                            <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                        </div>
-                        <div className="col-md-6 middle-col" >
-                            <h6>Hygeia</h6>
-                            <a href="">View Features ></a>
-                        </div>
-                        <div className="col-md-4">
-
-                        </div>
-                    </div>
-                    <div className="compare-second-row row">
-                        <div className="col-md-2">
-                            <p>Covers</p>
-                            <h6>5</h6>
-                        </div>
-                        <div className="col-md-6 middle-col">
-                            <p>Cashless Hospitals</p>
-                            <h6>300</h6>
-                        </div>
-                        <div className="col-md-4">
-                            <button className="btn-plan">₦5k/month</button>
-                        </div>
-                    </div>
-
+              <div className="single-plan">
+                <div className="compare-first-row row">
+                  <div className="col-md-2">
+                    <img
+                      className="provider-logo"
+                      src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                    />
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <h6>Hygeia</h6>
+                    <a href="/details">
+                      View Features
+                      <FontAwesomeIcon className="chev" icon={faChevronRight} />
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <img className="shortlist-yellow" src={shortlist} />
+                  </div>
                 </div>
-
-                <div className="single-plan">
-                    <div className="compare-first-row row">
-                        <div className="col-md-2">
-                            <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                        </div>
-                        <div className="col-md-6 middle-col" >
-                            <h6>Hygeia</h6>
-                            <a href="">View Features ></a>
-                        </div>
-                        <div className="col-md-4">
-
-                        </div>
-                    </div>
-                    <div className="compare-second-row row">
-                        <div className="col-md-2">
-                            <p>Covers</p>
-                            <h6>5</h6>
-                        </div>
-                        <div className="col-md-6 middle-col">
-                            <p>Cashless Hospitals</p>
-                            <h6>300</h6>
-                        </div>
-                        <div className="col-md-4">
-                            <button className="btn-plan">₦5k/month</button>
-                        </div>
-                    </div>
-
+                <div className="compare-second-row row">
+                  <div className="col-md-2">
+                    <p>Covers</p>
+                    <h6>5</h6>
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <p>Cashless Hospitals</p>
+                    <a href="#">
+                      <h6>
+                        300
+                        <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        />
+                      </h6>
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <button className="btn-plan" onClick={this.goToDetails}>
+                      ₦5k/month
+                    </button>
+                  </div>
                 </div>
-            
-                <div className="single-plan">
-                    <div className="compare-first-row row">
-                        <div className="col-md-2">
-                            <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                        </div>
-                        <div className="col-md-6 middle-col" >
-                            <h6>Hygeia</h6>
-                            <a href="">View Features ></a>
-                        </div>
-                        <div className="col-md-4">
+              </div>
 
-                        </div>
-                    </div>
-                    <div className="compare-second-row row">
-                        <div className="col-md-2">
-                            <p>Covers</p>
-                            <h6>5</h6>
-                        </div>
-                        <div className="col-md-6 middle-col">
-                            <p>Cashless Hospitals</p>
-                            <h6>300</h6>
-                        </div>
-                        <div className="col-md-4">
-                            <button className="btn-plan">₦5k/month</button>
-                        </div>
-                    </div>
-
+              <div className="single-plan">
+                <div className="compare-first-row row">
+                  <div className="col-md-2">
+                    <img
+                      className="provider-logo"
+                      src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                    />
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <h6>Hygeia</h6>
+                    <a href="/details">
+                      View Features
+                      <FontAwesomeIcon className="chev" icon={faChevronRight} />
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <img className="shortlist-yellow" src={shortlist} />
+                  </div>
                 </div>
-            
-                <div className="single-plan">
-                    <div className="compare-first-row row">
-                        <div className="col-md-2">
-                            <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                        </div>
-                        <div className="col-md-6 middle-col" >
-                            <h6>Hygeia</h6>
-                            <a href="">View Features ></a>
-                        </div>
-                        <div className="col-md-4">
-
-                        </div>
-                    </div>
-                    <div className="compare-second-row row">
-                        <div className="col-md-2">
-                            <p>Covers</p>
-                            <h6>5</h6>
-                        </div>
-                        <div className="col-md-6 middle-col">
-                            <p>Cashless Hospitals</p>
-                            <h6>300</h6>
-                        </div>
-                        <div className="col-md-4">
-                            <button className="btn-plan">₦5k/month</button>
-                        </div>
-                    </div>
-
+                <div className="compare-second-row row">
+                  <div className="col-md-2">
+                    <p>Covers</p>
+                    <h6>5</h6>
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <p>Cashless Hospitals</p>
+                    <a href="#">
+                      <h6>
+                        300
+                        <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        />
+                      </h6>
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <button className="btn-plan" onClick={this.goToDetails}>
+                      ₦5k/month
+                    </button>
+                  </div>
                 </div>
+              </div>
 
-                <div className="single-plan">
-                    <div className="compare-first-row row">
-                        <div className="col-md-2">
-                            <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                        </div>
-                        <div className="col-md-6 middle-col" >
-                            <h6>Hygeia</h6>
-                            <a href="">View Features ></a>
-                        </div>
-                        <div className="col-md-4">
-
-                        </div>
-                    </div>
-                    <div className="compare-second-row row">
-                        <div className="col-md-2">
-                            <p>Covers</p>
-                            <h6>5</h6>
-                        </div>
-                        <div className="col-md-6 middle-col">
-                            <p>Cashless Hospitals</p>
-                            <h6>300</h6>
-                        </div>
-                        <div className="col-md-4">
-                            <button className="btn-plan">₦5k/month</button>
-                        </div>
-                    </div>
-
+              <div className="single-plan">
+                <div className="compare-first-row row">
+                  <div className="col-md-2">
+                    <img
+                      className="provider-logo"
+                      src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                    />
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <h6>Hygeia</h6>
+                    <a href="/details">
+                      View Features
+                      <FontAwesomeIcon className="chev" icon={faChevronRight} />
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <img className="shortlist-yellow" src={shortlist} />
+                  </div>
                 </div>
-
-                <div className="single-plan">
-                    <div className="compare-first-row row">
-                        <div className="col-md-2">
-                            <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                        </div>
-                        <div className="col-md-6 middle-col" >
-                            <h6>Hygeia</h6>
-                            <a href="">View Features ></a>
-                        </div>
-                        <div className="col-md-4">
-
-                        </div>
-                    </div>
-                    <div className="compare-second-row row">
-                        <div className="col-md-2">
-                            <p>Covers</p>
-                            <h6>5</h6>
-                        </div>
-                        <div className="col-md-6 middle-col">
-                            <p>Cashless Hospitals</p>
-                            <h6>300</h6>
-                        </div>
-                        <div className="col-md-4">
-                            <button className="btn-plan">₦5k/month</button>
-                        </div>
-                    </div>
-
+                <div className="compare-second-row row">
+                  <div className="col-md-2">
+                    <p>Covers</p>
+                    <h6>5</h6>
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <p>Cashless Hospitals</p>
+                    <a href="#">
+                      <h6>
+                        300
+                        <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        />
+                      </h6>
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <button className="btn-plan" onClick={this.goToDetails}>
+                      ₦5k/month
+                    </button>
+                  </div>
                 </div>
+              </div>
 
+              <div className="single-plan">
+                <div className="compare-first-row row">
+                  <div className="col-md-2">
+                    <img
+                      className="provider-logo"
+                      src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                    />
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <h6>Hygeia</h6>
+                    <a href="/details">
+                      View Features
+                      <FontAwesomeIcon className="chev" icon={faChevronRight} />
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <img className="shortlist-yellow" src={shortlist} />
+                  </div>
+                </div>
+                <div className="compare-second-row row">
+                  <div className="col-md-2">
+                    <p>Covers</p>
+                    <h6>5</h6>
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <p>Cashless Hospitals</p>
+                    <a href="#">
+                      <h6>
+                        300
+                        <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        />
+                      </h6>
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <button className="btn-plan" onClick={this.goToDetails}>
+                      ₦5k/month
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="single-plan">
+                <div className="compare-first-row row">
+                  <div className="col-md-2">
+                    <img
+                      className="provider-logo"
+                      src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                    />
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <h6>Hygeia</h6>
+                    <a href="/details">
+                      View Features
+                      <FontAwesomeIcon className="chev" icon={faChevronRight} />
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <img className="shortlist-yellow" src={shortlist} />
+                  </div>
+                </div>
+                <div className="compare-second-row row">
+                  <div className="col-md-2">
+                    <p>Covers</p>
+                    <h6>5</h6>
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <p>Cashless Hospitals</p>
+                    <a href="#">
+                      <h6>
+                        300
+                        <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        />
+                      </h6>
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <button className="btn-plan" onClick={this.goToDetails}>
+                      ₦5k/month
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="single-plan">
+                <div className="compare-first-row row">
+                  <div className="col-md-2">
+                    <img
+                      className="provider-logo"
+                      src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                    />
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <h6>Hygeia</h6>
+                    <a href="/details">
+                      View Features
+                      <FontAwesomeIcon className="chev" icon={faChevronRight} />
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <img className="shortlist-yellow" src={shortlist} />
+                  </div>
+                </div>
+                <div className="compare-second-row row">
+                  <div className="col-md-2">
+                    <p>Covers</p>
+                    <h6>5</h6>
+                  </div>
+                  <div className="col-md-6 middle-col">
+                    <p>Cashless Hospitals</p>
+                    <a href="#">
+                      <h6>
+                        300
+                        <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        />
+                      </h6>
+                    </a>
+                  </div>
+                  <div className="col-md-4">
+                    <button className="btn-plan" onClick={this.goToDetails}>
+                      ₦5k/month
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="col-md-4"></div>
+            <div className="col-md-4">
+              <img className="shortlist-yellow" src={shortlist} />
+            </div>
           </div>
           <div className="bottom-menu row">
-                  <div className='col-md-4'>
-                <FontAwesomeIcon
-                className="ml-2"
-                icon={faBalanceScale}
-                />
-                <p>Compare</p>
+            <div className="col-md-4">
+              <img className="img_icon" src={bottom_compare} />
+              <p>Compare</p>
             </div>
-            <div className='col-md-4'>
-                <FontAwesomeIcon
-                className="ml-2"
-                icon={faFilter}
-                />
-                <p>Filter</p>
+            <div className="col-md-4">
+              <img className="img_icon" src={bottom_filter} />
+              <p>Filter</p>
             </div>
-            <div className='col-md-4'>
-            <FontAwesomeIcon
-                className="ml-2"
-                icon={faFilter}
-                />
-                <p>Shortlist</p>
+            <div className="col-md-4">
+              <img className="img_icon" src={bottom_shortlist} />
+              <p>Shortlist</p>
             </div>
-              </div>
-            
           </div>
         </div>
+      </div>
     );
   }
 }
@@ -720,4 +812,4 @@ const mapProps = (state: any) => {
   };
 };
 
-export default connect(mapProps)(Compare);
+export default connect(mapProps)(Plans);

@@ -16,8 +16,9 @@ import Home from "./pages/home/Home";
 import ErrorPage from "./pages/error-page/ErrorPage";
 import Quiz from "./pages/quiz/Quiz";
 import Compare from "./pages/compare/Compare";
+import PlanDetails from "./pages/details/PlanDetails";
 import Details from "./pages/details/Details";
-import ComparePlans from "./pages/compare/ComparePlans";
+import Plans from "./pages/compare/Plans";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -26,8 +27,9 @@ ReactDOM.render(
         <Route exact path="/" component={Home} />
         <Route path="/quiz" component={Quiz} />
         <Route path="/compare" component={Compare} />
-        <Route path="/compare-plans" component={ComparePlans} />
-        <Route path="/details" component={Details} />
+        <Route path="/plans" component={Plans} />
+        <Route path="/details-old" component={Details} />
+        <Route path="/details" component={PlanDetails} />
         <Route component={ErrorPage} />
       </Switch>
     </Router>

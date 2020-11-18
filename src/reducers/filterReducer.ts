@@ -190,6 +190,9 @@ export const filterReducer = createReducer(state, {
   DECREMENT_DAUGHTER_COUNT: (state, actions) => {
     state.quiz.daughterCount = actions.data.value;
   },
+  UPDATE_PLAN_DURATION: (state, actions) => {
+    state.quiz.responses.plan_duration = actions.data.value;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -237,3 +240,4 @@ createAction("INCREMENT_SON_COUNT");
 createAction("DECREMENT_SON_COUNT");
 createAction("INCREMENT_DAUGHTER_COUNT");
 createAction("DECREMENT_DAUGHTER_COUNT");
+createAction("UPDATE_PLAN_DURATION");

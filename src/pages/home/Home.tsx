@@ -103,6 +103,7 @@ class Home extends Component<
     this.incrementSonCount = this.incrementSonCount.bind(this);
     this.decrementDaughterCount = this.decrementDaughterCount.bind(this);
     this.incrementDaughterCount = this.incrementDaughterCount.bind(this);
+    this.goToDetails = this.goToDetails.bind(this)
   }
 
   steps: { p: string; h3: string }[] = [
@@ -1402,7 +1403,7 @@ class Home extends Component<
     localStorage.setItem("responses", stringResp);
     this.props.history.push({
       //pathname: "/compare",
-      pathname: "/compare-plans",
+      pathname: "/plans",
       data: this.props.responses,
     });
   }
@@ -1525,6 +1526,10 @@ class Home extends Component<
     // }
     // }
     
+  }
+
+  goToDetails() {
+    this.props.history.push({ pathname: "/details" });
   }
 
   renderQuizPages() {
@@ -2702,7 +2707,10 @@ class Home extends Component<
                                   <span>Starting at </span>
                                   <h5 className="">₦ 900/ month</h5>
                                 </div>
-                                <button className="btn-check-prem">
+                                <button 
+                                className="btn-check-prem"
+                                onClick={this.goToDetails}
+                                >
                                   Check Premium
                                 </button>
                               </div>

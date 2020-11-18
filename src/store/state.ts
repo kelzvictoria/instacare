@@ -58,6 +58,7 @@ export const state: any = {
       child_6_age: 0,
       child_7_age: 0,
       child_8_age: 0,
+      plan_duration: "1",
     },
   },
   compare: {
