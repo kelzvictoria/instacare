@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import * as actions from "../../utils/actions";
 import numeral from "numeral";
 
+import Modal from "react-bootstrap/Modal";
+
 import shortlist from "../../imgs/shortlist-yellow.svg";
 import bottom_filter from "../../imgs/bottom_filter.svg";
 import bottom_shortlist from "../../imgs/bottom_shortlist.svg";
@@ -28,6 +30,10 @@ import {
   InputNumber,
   Collapse,
   message,
+  Input,
+  Tabs,
+  Form,
+  Table,
 } from "antd";
 import { formatAsCurrency, NAIRA_SIGN } from "../../utils";
 import { Plan } from "../../interfaces/Plan";
@@ -39,439 +45,286 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { PAYSTACK_PUBLIC_KEY } from "../../utils/index";
+import { UPDATE_PRICE, TOGGLE_BUYING_PLAN } from "../../utils/actions";
+import { UPDATE_NOTGETTINGPROVIDERS } from "../../utils/actions";
+
+import PaystackButton from "react-paystack";
+
 const { Title } = Typography;
 const { Panel } = Collapse;
+const { Meta } = Card;
+const { TabPane } = Tabs;
 let responses: any;
 const API_URL = "https://dev-hmo-compare-api.herokuapp.com";
-interface QuizProps {
+interface PlansProps {
   [x: string]: any;
   dispatch(args: any): any;
-  page: number;
-  minPage: number;
-  maxPage: number;
-  checked: string[];
-  didRequestReturnEmptyResult: boolean;
-  responses: {
-    [x: string]: any;
-    budget: number;
-    type: string;
-    firstName: string;
-    lastName: string;
-    region: string;
-    services: any;
-  };
-  plans: Plan[];
-  bestPlan: Plan;
-  cheapestPlan: Plan;
-  sort: {
-    mode: string;
-    icon: string;
-    description: string;
-  };
-  fetching: boolean;
+  isFeaturesModalOpen: boolean;
+  email: string;
+  amount: number;
+  notgettingproviders: boolean;
+  buyingPlan: boolean;
 }
 
-class Plans extends Component<QuizProps> {
+interface DetailsProps {
+  email: string;
+  amount: number;
+  [x: string]: any;
+  notgettingproviders: boolean;
+  buyingPlan: boolean;
+}
+
+interface FilterProps {
+  [x: string]: any;
+}
+
+let notGettingProviders = true;
+let predetails: any;
+
+class Plans extends Component<PlansProps> {
   constructor(props) {
     super(props);
     this.goToHome = this.goToHome.bind(this);
     this.goToDetails = this.goToDetails.bind(this);
+    this.handleTabChange = this.handleTabChange.bind(this);
+    this.toggleFeaturePopUp = this.toggleFeaturePopUp.bind(this);
+    this.showCashlessHospitals = this.showCashlessHospitals.bind(this);
   }
   state = {
     toggleBar: false,
+    searchText: "",
+    open: false,
   };
 
-  basicPlanOptions = [
-    {
-      label: "Malaria Care",
-      value: "malaria",
-    },
-    {
-      label: "Typhoid Care",
-      value: "typhoid",
-    },
-    {
-      label: "Consultations",
-      value: "consultations",
-    },
-    {
-      label: "Pharmacy",
-      value: "pharmacy",
-    },
-  ];
+  setSelectedK: any;
+  searchInput: any;
 
-  planOptions = [
-    {
-      label: "Dental care",
-      value: "dentalOptions",
-    },
-    {
-      label: "Optical care",
-      value: "opticalOptions",
-    },
-    {
-      label: "Immunizations",
-      value: "immunizations",
-    },
-    {
-      label: "Cancer care",
-      value: "cancerCare",
-    },
-    {
-      label: "Diagnostics",
-      value: "diagnostics",
-    },
-    {
-      label: "Physiotherapy",
-      value: "physiotherapy",
-    },
-    {
-      label: "Maternity",
-      value: "natalCare",
-    },
-
-    {
-      label: "Psychiatric care",
-      value: "psychiatricTreatment",
-    },
-    {
-      label: "Mortuary Care",
-      value: "mortuaryServices",
-    },
-    {
-      label: "Family-Planning",
-      value: "familyPlanningServices",
-    },
-  ];
-  planTypes = [
-    {
-      label: "Individual",
-      value: "individual",
-    },
-    {
-      label: "Family",
-      value: "family",
-    },
-    {
-      label: "Couples",
-      value: "couple",
-    },
-    {
-      label: "All",
-      value: "",
-    },
-  ];
-
-  marks = {
-    300000: formatAsCurrency(300000),
-    1500000: formatAsCurrency(1500000),
-    3000000: formatAsCurrency(3000000),
-  };
-  formatBudget = (val: number) => {
-    if (val < 1000000) {
-      val = Math.round(val / 1000);
-      return val;
-    } else {
-      val = parseFloat((val / 1000000).toFixed(2));
-      return val;
-    }
-  };
-
-  minBudget: any = this.formatBudget(300000);
-  maxBudget: any = this.formatBudget(3000000);
-  popularIndex = 0;
-  usePreviousSearch = false;
-  timeout: any;
-  k = "K";
-  m = "M";
-  minbudgett;
-  maxbudgett = this.props.responses.budget[1];
-  eventHandlers = {
-    handleAdult: (value: any) => {
-      clearTimeout(this.timeout);
-      // this.props.responses.type = e.target.value;
-      this.props.dispatch({
-        type: actions.UPDATE_TEXT_RESPONSE,
-        data: { key: "adult", value },
-      });
-      if (
-        value == 1 &&
-        this.props.responses.children == 0 &&
-        this.props.responses.infants == 0
-      ) {
-        this.props.dispatch({
-          type: actions.CHANGE_PLAN_TYPE,
-          data: "individual",
-        });
-      } else if (
-        value == 0 &&
-        this.props.responses.children == 1 &&
-        this.props.responses.infants == 0
-      ) {
-        this.props.dispatch({
-          type: actions.CHANGE_PLAN_TYPE,
-          data: "individual",
-        });
-      } else if (
-        value == 0 &&
-        this.props.responses.children == 0 &&
-        this.props.responses.infants == 1
-      ) {
-        this.props.dispatch({
-          type: actions.CHANGE_PLAN_TYPE,
-          data: "individual",
-        });
-      } else if (value == 0 && this.props.responses.children > 1) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value == 0 && this.props.responses.infants > 1) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (
-        value == 2 &&
-        this.props.responses.children == 0 &&
-        this.props.responses.infants == 0
-      ) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "couple" });
-      } else if (value > 2) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value >= 1 && this.props.responses.children > 0) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value >= 1 && this.props.responses.infants > 0) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
+  getColumnSearchProps = (dataIndex: any) => ({
+    filterDropdown: (data: FilterProps) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={(node) => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={data.selectedKeys[0]}
+          onChange={(e) =>
+            data.setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            this.handleSearch(data.selectedKeys, data.confirm)
+          }
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(data.selectedKeys, data.confirm)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => this.handleReset(data.clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: (filtered: any) => (
+      <Icon type="search" style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value: any, record: any) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: (visible: any) => {
+      if (visible) {
+        this.searchInput.select();
       }
-
-      this.timeout = setTimeout(() => {
-        this.fetchData("recommend", this.props.responses);
-      }, 2000);
     },
-    handleChildren: (value: any) => {
-      clearTimeout(this.timeout);
-      // this.props.responses.type = e.target.value;
-      this.props.dispatch({
-        type: actions.UPDATE_TEXT_RESPONSE,
-        data: { key: "children", value },
-      });
-      if (
-        value == 1 &&
-        this.props.responses.adult == 0 &&
-        this.props.responses.infants == 0
-      ) {
-        this.props.dispatch({
-          type: actions.CHANGE_PLAN_TYPE,
-          data: "individual",
-        });
-      } else if (value >= 1 && this.props.responses.adult != 0) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value >= 1 && this.props.responses.infants != 0) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value == 0 && this.props.responses.adult == 2) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "couple" });
-      } else if (value == 0 && this.props.responses.adult == 1) {
-        this.props.dispatch({
-          type: actions.CHANGE_PLAN_TYPE,
-          data: "individual",
-        });
-      }
+  });
 
-      this.timeout = setTimeout(() => {
-        this.fetchData("recommend", this.props.responses);
-      }, 2000);
-    },
-
-    handleInfants: (value) => {
-      clearTimeout(this.timeout);
-      // this.props.responses.type = e.target.value;
-      this.props.dispatch({
-        type: actions.UPDATE_TEXT_RESPONSE,
-        data: { key: "infants", value },
-      });
-      if (value == 1 && this.props.responses.adult == 0) {
-        this.props.dispatch({
-          type: actions.CHANGE_PLAN_TYPE,
-          data: "individual",
-        });
-      } else if (value >= 1 && this.props.responses.adult != 0) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value == 0 && this.props.responses.adult == 2) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "couple" });
-      } else if (value >= 1 && this.props.responses.children >= 1) {
-        this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      }
-
-      this.timeout = setTimeout(() => {
-        this.fetchData("recommend", this.props.responses);
-      }, 2000);
-    },
-
-    handleCheckbox: (value: any[]) => {
-      clearTimeout(this.timeout);
-      this.props.dispatch({ type: actions.RESET_PLANS, data: true });
-      this.props.dispatch({ type: actions.UPDATE_PREFS, data: value });
-      this.timeout = setTimeout(() => {
-        this.fetchData("recommend", this.props.responses);
-      }, 2000);
-    },
-    changeBudget: async (value: any) => {
-      this.minBudget = this.formatBudget(value[0]);
-      this.maxBudget = this.formatBudget(value[1]);
-      this.changek(this.minBudget, this.maxBudget);
-      this.props.dispatch({ type: actions.RESET_PLANS, data: true });
-      this.props.dispatch({ type: actions.UPDATE_BUDGET, budget: value });
-      this.eventHandlers.handleCheckbox(this.props.checked);
-      /* await this.fetchData("recommend", this.props.responses);*/
-    },
+  handleSearch = (selectedKeys: any, confirm: any) => {
+    confirm();
+    this.setState({ searchText: selectedKeys[0] });
   };
 
-  formatter(value: number) {
-    return formatAsCurrency(value);
-  }
-
-  sortPlansByPrice = (plans: Plan[], mode = "desc") => {
-    if (mode === "desc") {
-      return plans.sort((a, b) => a.price - b.price);
-    }
-    return plans.sort((a, b) => b.price - a.price);
+  handleReset = (clearFilters: any) => {
+    clearFilters();
+    this.setState({ searchText: "" });
   };
 
-  getBestPlan = () => {
-    const _plans = this.props.plans.slice();
-    const bestPlan = _plans.sort((a, b) => b.matches - a.matches)[0];
+  //search implentation
+
+  details: any;
+  // eslint-disable-next-line camelcase
+  UNSAFE_componentWillMount() {
+    predetails = localStorage.getItem("details");
+    this.details = JSON.parse(predetails);
+    this.services = JSON.parse(predetails).services;
     this.props.dispatch({
-      type: actions.UPDATE_BEST_PLAN,
-      data: bestPlan,
+      type: UPDATE_PRICE,
+      price: JSON.parse(predetails).price * 100,
     });
+  }
+  callback = () => {
+    setTimeout(() => {
+      this.props.history.push({ pathname: "/" });
+    }, 2000);
+    this.onCloseModal();
+  };
+  close = () => {
+    //cons
+  };
+  getReference = () => {
+    let text = "";
+    let possible =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.=";
+
+    for (let i = 0; i < 15; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
   };
 
-  updateSortOrder = (mode = "desc") => {
-    let plans = this.props.plans.slice();
-    if (mode === "desc") {
-      plans = this.sortPlansByPrice(plans, "asc");
-      this.props.dispatch({
-        type: actions.UPDATE_SORT_ORDER,
-        data: {
-          mode: "asc",
-          icon: "sort-descending",
-          description: "Sort by price (cheapest first)",
-        },
-      });
-    } else if (mode === "asc") {
-      plans = this.sortPlansByPrice(plans, "desc");
-      this.props.dispatch({
-        type: actions.UPDATE_SORT_ORDER,
-        data: {
-          mode: "desc",
-          icon: "sort-ascending",
-          description: "Sort by price (most expensive first)",
-        },
-      });
-    }
-    this.props.dispatch({ type: actions.UPDATE_PLANS, data: plans });
+  notGettingProvidersView = () => {
+    notGettingProviders = true;
+    this.props.dispatch({
+      type: UPDATE_NOTGETTINGPROVIDERS,
+      status: notGettingProviders,
+    });
+    this.setState({ featuresColor: "#38A169", providersColor: "" });
+  };
+  gettingProviders = () => {
+    notGettingProviders = false;
+    this.props.dispatch({
+      type: UPDATE_NOTGETTINGPROVIDERS,
+      status: notGettingProviders,
+    });
+    this.setState({ featuresColor: "", providersColor: "#38A169" });
+  };
+  toggleBuyingPlan = () => {
+    this.props.dispatch({ type: TOGGLE_BUYING_PLAN, status: true });
+    console.log(this.props.details.buyingPlan);
   };
 
-  goToDetails(item: any) {
-    // if (item) {
-    //   console.log(item);
-    //   localStorage.setItem("details", JSON.stringify(item));
-    //   this.props.history.push({ pathname: "/details", data: item });
-    // }
-    this.props.history.push({ pathname: "/details" });
-  }
-  changek(minBudget, maxBudget) {
-    if (minBudget < 4) {
-      this.minbudgett = this.minBudget + this.m;
-    }
-    if (minBudget > 4) {
-      this.minbudgett = this.minBudget + this.k;
-    }
-    if (maxBudget < 4) {
-      this.maxbudgett = this.maxBudget + this.m;
-    }
-    if (maxBudget > 4) {
-      this.maxbudgett = this.maxBudget + this.k;
-    }
-  }
+  onOpenModal = () => {
+    this.setState({ open: true });
+  };
 
-  async fetchData(path: any, params: any) {
-    const res = await fetch(`${API_URL}/plans/${path}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+  onCloseModal = () => {
+    this.setState({ open: false });
+  };
+  columns = [
+    {
+      title: "Provider",
+      dataIndex: "providerName",
+      key: "providerName",
+      ...this.getColumnSearchProps("providerName"),
+    },
+    {
+      title: "Coverage",
+      dataIndex: "coverageTypeName",
+      key: "coverageTypeName",
+      ...this.getColumnSearchProps("coverageTypeName"),
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      ...this.getColumnSearchProps("address"),
+    },
+    {
+      title: "LGA",
+      dataIndex: "lga",
+      key: "lga",
+      ...this.getColumnSearchProps("lga"),
+    },
+    {
+      title: "State",
+      dataIndex: "stateName",
+      key: "stateName",
+    },
+  ];
 
-      method: "POST",
-      body: JSON.stringify(params),
-    });
-    if (res) {
-      let asJson = await res.json();
-      if (!asJson.data || asJson.data.length === 0) {
-        this.props.dispatch({ type: actions.UPDATE_PLANS, data: [] });
+  dataSourceA: any = [];
+  services: any;
 
-        return;
-      }
-      console.log(asJson.data);
-      this.props.dispatch({ type: actions.RESET_PLANS, data: false });
-      asJson = this.sortPlansByPrice(asJson.data, "desc");
-      this.popularIndex = Math.round(Math.random() * 4);
-      this.popularIndex =
-        this.popularIndex < asJson.length ? this.popularIndex : 0;
-      this.props.dispatch({ type: actions.UPDATE_PLANS, data: asJson });
-      this.props.dispatch({
-        type: actions.UPDATE_CHEAPEST_PLAN,
-        data: this.sortPlansByPrice(asJson)[0],
-      });
-      this.props.dispatch({
-        type: actions.UPDATE_MOSTEXPENSIVE_PLAN,
-        data: this.sortPlansByPrice(asJson)[asJson.length - 1],
-      });
-      this.getBestPlan();
-    }
-  }
+  precovers: any = localStorage.getItem("details");
+  covers = JSON.parse(this.precovers).services[0];
+  AllServices = [
+    this.covers.accidentsOrEmergenciesCover.limit,
+    this.covers.ambulance,
+    this.covers.cancerCare.offerings[0],
+    this.covers.chronicDiseaseMedication,
+    this.covers.consultations,
+    this.covers.deathBenefits.benefit,
+    this.covers.dentalOptions.offerings[0],
+    this.covers.diagnostics.offerings[0],
+    this.covers.dialysis,
+    this.covers.familyPlanningServices[0],
+    this.covers.hivTreatment,
+    this.covers.immunizations.offerings[0],
+    this.covers.natalCare,
+    this.covers.opticalOptions.offerings[0],
+    this.covers.pharmacyCover,
+    this.covers.physiotherapy,
+    this.covers.psychiatricTreatment,
+    this.covers.surgeriesCover.minorSurgeries,
+    this.covers.majorSurgeries,
+    this.covers.intermediateSurgeries,
+    this.covers.wellnessChecks,
+  ];
 
   componentDidMount() {
-    if (!this.usePreviousSearch) {
-      responses = localStorage.getItem("responses");
-      this.props.dispatch({
-        type: actions.RESET_RESPONSES,
-        data: JSON.parse(responses),
-      });
-      fetch(`${API_URL}/plans/recommend`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: responses,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.data.length === 0) {
-            this.props.dispatch({ type: actions.UPDATE_PLANS, data: [] });
-            return;
-          }
-
-          this.popularIndex = Math.round(Math.random() * 4);
-          data = this.sortPlansByPrice(data.data);
-          this.popularIndex =
-            this.popularIndex < data.length ? this.popularIndex : 0;
-          this.props.dispatch({ type: actions.UPDATE_PLANS, data });
-          this.getBestPlan();
-          this.props.dispatch({
-            type: actions.UPDATE_CHEAPEST_PLAN,
-            data: this.sortPlansByPrice(data)[0],
-          });
-          this.props.dispatch({
-            type: actions.UPDATE_MOSTEXPENSIVE_PLAN,
-            data: this.sortPlansByPrice(data)[data.length - 1],
-          });
-        })
-        .catch((err) => console.log(err));
+    console.log(this.dataSourceA);
+    console.log(this.details.hospitals);
+    console.log(this.services);
+    if (!this.details.hospitals) {
+      return;
     }
+    this.dataSourceA.push(...this.details.hospitals);
   }
 
   callb = (key) => {
     console.log(key);
   };
 
-  callb2 = (key) => {
-    console.log(key);
+  handleInput = (e: any) => {
+    this.props.dispatch({
+      type: actions.UPDATE_TEXT_RESPONSE,
+      data: { key: e.target.name, value: e.target.value },
+    });
+  };
+
+  toggleView = (key) => {
+    if (key == 1) {
+      this.notGettingProvidersView();
+    }
+    if (key == 2) {
+      this.gettingProviders();
+    }
+  };
+
+  goToDetails(item: any) {
+    this.props.history.push({ pathname: "/details" });
+  }
+
+  toggleFeaturesModal = () => {
+    this.props.dispatch({
+      type: actions.TOGGLE_FEATURES_MODAL,
+      data: {
+        key: "isFeaturesModalOpen",
+        value: !this.props.isFeaturesModalOpen,
+      },
+    });
+    console.log(
+      "this.props.isFeaturesModalOpen",
+      this.props.isFeaturesModalOpen
+    );
   };
 
   toggle = () => {
@@ -483,6 +336,33 @@ class Plans extends Component<QuizProps> {
 
   goToHome() {
     this.props.history.push({ pathname: "/" });
+  }
+
+  handleTabChange(val) {
+    //let id = document.getElementById(val.target.id) as HTMLInputElement;
+    this.props.dispatch({
+      type: actions.UPDATE_FEATURES_TAB_OPENED,
+      data: { key: "tab_opened", value: val.target.id },
+    });
+    //console.log("this.props.tab_opened", this.props.tab_opened);
+  }
+
+  toggleFeaturePopUp() {
+    this.props.dispatch({
+      type: actions.TOGGLE_FEATURE_POPUP,
+      data: {
+        key: "isFeaturePopUpOpen",
+        value: !this.props.isFeaturePopUpOpen,
+      },
+    });
+  }
+
+  showCashlessHospitals() {
+    this.props.dispatch({
+      type: actions.UPDATE_FEATURES_TAB_OPENED,
+      data: { key: "tab_opened", value: "hospitals" },
+    });
+    this.toggleFeaturesModal();
   }
 
   render() {
@@ -526,7 +406,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <h6>Hygeia</h6>
-                    <a href="/details">
+                    <a href="#" onClick={this.toggleFeaturesModal}>
                       View Features
                       <FontAwesomeIcon className="chev" icon={faChevronRight} />
                     </a>
@@ -542,7 +422,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <p>Cashless Hospitals</p>
-                    <a href="#">
+                    <a onClick={this.showCashlessHospitals} href="#">
                       <h6>
                         300
                         <FontAwesomeIcon
@@ -570,7 +450,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <h6>Hygeia</h6>
-                    <a href="/details">
+                    <a href="#" onClick={this.toggleFeaturesModal}>
                       View Features
                       <FontAwesomeIcon className="chev" icon={faChevronRight} />
                     </a>
@@ -586,7 +466,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <p>Cashless Hospitals</p>
-                    <a href="#">
+                    <a onClick={this.showCashlessHospitals} href="#">
                       <h6>
                         300
                         <FontAwesomeIcon
@@ -614,7 +494,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <h6>Hygeia</h6>
-                    <a href="/details">
+                    <a href="#" onClick={this.toggleFeaturesModal}>
                       View Features
                       <FontAwesomeIcon className="chev" icon={faChevronRight} />
                     </a>
@@ -630,7 +510,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <p>Cashless Hospitals</p>
-                    <a href="#">
+                    <a onClick={this.showCashlessHospitals} href="#">
                       <h6>
                         300
                         <FontAwesomeIcon
@@ -658,7 +538,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <h6>Hygeia</h6>
-                    <a href="/details">
+                    <a href="#" onClick={this.toggleFeaturesModal}>
                       View Features
                       <FontAwesomeIcon className="chev" icon={faChevronRight} />
                     </a>
@@ -674,7 +554,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <p>Cashless Hospitals</p>
-                    <a href="#">
+                    <a onClick={this.showCashlessHospitals} href="#">
                       <h6>
                         300
                         <FontAwesomeIcon
@@ -702,7 +582,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <h6>Hygeia</h6>
-                    <a href="/details">
+                    <a href="#" onClick={this.toggleFeaturesModal}>
                       View Features
                       <FontAwesomeIcon className="chev" icon={faChevronRight} />
                     </a>
@@ -718,7 +598,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <p>Cashless Hospitals</p>
-                    <a href="#">
+                    <a onClick={this.showCashlessHospitals} href="#">
                       <h6>
                         300
                         <FontAwesomeIcon
@@ -746,7 +626,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <h6>Hygeia</h6>
-                    <a href="/details">
+                    <a href="#" onClick={this.toggleFeaturesModal}>
                       View Features
                       <FontAwesomeIcon className="chev" icon={faChevronRight} />
                     </a>
@@ -762,7 +642,7 @@ class Plans extends Component<QuizProps> {
                   </div>
                   <div className="col-md-6 middle-col">
                     <p>Cashless Hospitals</p>
-                    <a href="#">
+                    <a onClick={this.showCashlessHospitals} href="#">
                       <h6>
                         300
                         <FontAwesomeIcon
@@ -799,6 +679,482 @@ class Plans extends Component<QuizProps> {
             </div>
           </div>
         </div>
+        <Modal
+          dialogClassName="custom-dialog"
+          className="features-modal"
+          show={this.props.isFeaturesModalOpen}
+          onHide={this.toggleFeaturesModal}
+        >
+          <Modal.Header
+            className="features-modal-header"
+            translate="true"
+            closeButton
+          >
+            <div className="">
+              <div className="features-header row">
+                <div className="col-md-3">
+                  <div className="box-logo">
+                    <img src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
+                  </div>
+                </div>
+                <div className="col-md-9">
+                  <h6>Hygeia HMO</h6>
+                  <div className="row features-header-inner">
+                    <div className="col-md-3">
+                      <p className="greyed-text">Covers</p>
+                      <h6>2</h6>
+                    </div>
+                    <div className="col-md-7">
+                      <p className="greyed-text">Premium</p>
+                      <h6>₦5k/ month</h6>
+                      <p className="greyed-text">₦50k paid annually</p>
+                    </div>
+                    <div className="col-md-2 shortlist-div">
+                      <img className="shortlist-yellow" src={shortlist} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Modal.Header>
+          <Modal.Body className="features-modal-body">
+            {/* <Row gutter={8}>
+              <Col xs={24} md={24}>
+                <Tabs defaultActiveKey="1" onChange={this.toggleView}>
+                  <TabPane tab="Features" key="1">
+                    <Row gutter={8}></Row>
+                  </TabPane>
+                  <TabPane tab="Cashless Hospitals" key="2"></TabPane>
+                  <TabPane tab="Providers" key="3">
+                    <Table
+                      dataSource={this.dataSourceA}
+                      columns={this.columns}
+                    />
+                  </TabPane>
+                </Tabs>
+              </Col>
+
+              <Col xs={24} md={16}>
+                {/* {notGettingProviders ? (
+                  <Row gutter={8}></Row>
+                ) : (
+                  <Table dataSource={this.dataSourceA} columns={this.columns} />
+                )} */}
+            {/*</Col>
+              <Col xs={24} md={8}></Col>
+            </Row> */}
+            <div className="features-modal">
+              <div className="feature_card">
+                <div className="tabs tabs-feature" id="tabs-feature">
+                  <ul>
+                    <li
+                      className={
+                        this.props.tab_opened == "highlights"
+                          ? "features_tab is-active"
+                          : "features_tab"
+                      }
+                      id="li_plansHigh"
+                    >
+                      <a onClick={this.handleTabChange} id="highlights">
+                        Highlights
+                      </a>
+                    </li>
+                    <li
+                      className={
+                        this.props.tab_opened == "features"
+                          ? "features_tab is-active"
+                          : "features_tab"
+                      }
+                      id="li_plansFeat"
+                    >
+                      <a onClick={this.handleTabChange} id="features">
+                        Features
+                      </a>
+                    </li>
+                    <li
+                      className={
+                        this.props.tab_opened == "claim"
+                          ? "features_tab is-active"
+                          : "features_tab"
+                      }
+                      id="li_plansClaim"
+                    >
+                      <a onClick={this.handleTabChange} id="claim">
+                        Claim Process
+                      </a>
+                    </li>
+                    <li
+                      className={
+                        this.props.tab_opened == "hospitals"
+                          ? "features_tab is-active"
+                          : "features_tab"
+                      }
+                      id="li_plansHosp"
+                    >
+                      <a onClick={this.handleTabChange} id="hospitals">
+                        Cashless Hospitals
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div
+                  className={
+                    this.props.tab_opened == "claim"
+                      ? "features_popup_table1 claim_process"
+                      : this.props.tab_opened == "hospitals"
+                      ? "features_popup_table1 hospitalSearchWrapper"
+                      : "features_popup_table1"
+                  }
+                >
+                  {this.props.tab_opened == "highlights" ? (
+                    <div className="highlights-content">
+                      <div
+                        className="div_features_covered_main"
+                        onClick={this.toggleFeaturePopUp}
+                      >
+                        <div className="features_icons">
+                          <div className="feature-icon1">
+                            <img
+                              alt=""
+                              className=""
+                              src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
+                            />
+                          </div>
+                        </div>
+                        <div className="div_features_covered_border">
+                          <h2 className="span_feature_popup_heading">
+                            We are a certified 5 star partner for Health Care
+                          </h2>
+                          {/* <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        /> */}
+                        </div>
+                      </div>
+                      <div
+                        className="div_features_covered_main"
+                        onClick={this.toggleFeaturePopUp}
+                      >
+                        <div className="features_icons">
+                          <div className="feature-icon1">
+                            <img
+                              alt=""
+                              className=""
+                              src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
+                            />
+                          </div>
+                        </div>
+                        <div className="div_features_covered_border">
+                          <h2 className="span_feature_popup_heading">
+                            We are a certified 5 star partner for Health Care
+                          </h2>
+                          {/* <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        /> */}
+                        </div>
+                      </div>
+                      <div className="div_features_covered_main">
+                        <div className="features_icons">
+                          <div className="feature-icon1">
+                            <img
+                              alt=""
+                              className=""
+                              src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
+                            />
+                          </div>
+                        </div>
+                        <div className="div_features_covered_border">
+                          <h2 className="span_feature_popup_heading">
+                            We are a certified 5 star partner for Health Care
+                          </h2>
+                          {/* <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        /> */}
+                        </div>
+                      </div>
+                      <div className="div_features_covered_main">
+                        <div className="features_icons">
+                          <div className="feature-icon1">
+                            <img
+                              alt=""
+                              className=""
+                              src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
+                            />
+                          </div>
+                        </div>
+                        <div className="div_features_covered_border">
+                          <h2 className="span_feature_popup_heading">
+                            We are a certified 5 star partner for Health Care
+                          </h2>
+                          {/* <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        /> */}
+                        </div>
+                      </div>
+                      <div className="div_features_covered_main">
+                        <div className="features_icons">
+                          <div className="feature-icon1">
+                            <img
+                              alt=""
+                              className=""
+                              src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
+                            />
+                          </div>
+                        </div>
+                        <div className="div_features_covered_border">
+                          <h2 className="span_feature_popup_heading">
+                            We are a certified 5 star partner for Health Care
+                          </h2>
+                          {/* <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        /> */}
+                        </div>
+                      </div>
+                      <div className="div_features_covered_main">
+                        <div className="features_icons">
+                          <div className="feature-icon1">
+                            <img
+                              alt=""
+                              className=""
+                              src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
+                            />
+                          </div>
+                        </div>
+                        <div className="div_features_covered_border">
+                          <h2 className="span_feature_popup_heading">
+                            We are a certified 5 star partner for Health Care
+                          </h2>
+                          {/* <FontAwesomeIcon
+                          className="chev"
+                          icon={faChevronRight}
+                        /> */}
+                        </div>
+                      </div>
+                    </div>
+                  ) : this.props.tab_opened == "features" ? (
+                    <div className="features-content">
+                      <p className="coveredHead">What's covered</p>
+                      <div className="">
+                        <div className="div_features_covered_main">
+                          <div className="div_features_covered_inside">
+                            <div className="features_icons">
+                              <div className="feature-icon1">
+                                <img
+                                  alt="feature"
+                                  className="feature_icon_img"
+                                  src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5.svg"
+                                />
+                              </div>
+                            </div>
+                            <div className="div_features_covered_border">
+                              <h2 className="span_feature_popup_heading">
+                                Hospital Room Eligibility
+                              </h2>
+                              <span className="span_feature_popup_sub_heading">
+                                Single Private A/C Room
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="div_features_covered_main">
+                          <div className="div_features_covered_inside">
+                            <div className="features_icons">
+                              <div className="feature-icon1">
+                                <img
+                                  alt="feature"
+                                  className="feature_icon_img"
+                                  src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5.svg"
+                                />
+                              </div>
+                            </div>
+                            <div className="div_features_covered_border">
+                              <h2 className="span_feature_popup_heading">
+                                Hospital Room Eligibility
+                              </h2>
+                              <span className="span_feature_popup_sub_heading">
+                                Single Private A/C Room
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="div_features_covered_main">
+                          <div className="div_features_covered_inside">
+                            <div className="features_icons">
+                              <div className="feature-icon1">
+                                <img
+                                  alt="feature"
+                                  className="feature_icon_img"
+                                  src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5.svg"
+                                />
+                              </div>
+                            </div>
+                            <div className="div_features_covered_border">
+                              <h2 className="span_feature_popup_heading">
+                                Hospital Room Eligibility
+                              </h2>
+                              <span className="span_feature_popup_sub_heading">
+                                Single Private A/C Room
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="div_features_covered_main">
+                          <div className="div_features_covered_inside">
+                            <div className="features_icons">
+                              <div className="feature-icon1">
+                                <img
+                                  alt="feature"
+                                  className="feature_icon_img"
+                                  src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5.svg"
+                                />
+                              </div>
+                            </div>
+                            <div className="div_features_covered_border">
+                              <h2 className="span_feature_popup_heading">
+                                Hospital Room Eligibility
+                              </h2>
+                              <span className="span_feature_popup_sub_heading">
+                                Single Private A/C Room
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="div_features_covered_main">
+                          <div className="div_features_covered_inside">
+                            <div className="features_icons">
+                              <div className="feature-icon1">
+                                <img
+                                  alt="feature"
+                                  className="feature_icon_img"
+                                  src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5.svg"
+                                />
+                              </div>
+                            </div>
+                            <div className="div_features_covered_border">
+                              <h2 className="span_feature_popup_heading">
+                                Hospital Room Eligibility
+                              </h2>
+                              <span className="span_feature_popup_sub_heading">
+                                Single Private A/C Room
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : this.props.tab_opened == "claim" ? (
+                    <div className="claim-content">
+                      <h3>Cashless: Insurer directly pays network hospital</h3>
+                      <div className="claim_process_text">
+                        <h4>Inform Hygeia HMO</h4>
+                        <ul>
+                          <li>
+                            Call Care Health Insurance (formerly known as
+                            Religare Health Insurance) claims desk on Services
+                            (1800-102-4488) and Sales (1800-102-4499) at least
+                            24 Hrs in Emergency &amp; 48 hrs in case of Planned
+                            Admission in advance.
+                          </li>
+                          <li>
+                            The Provider may ask for:
+                            <ul>
+                              <li>Name of Insured</li>
+                              <li>Name of Insured</li>
+                              <li>Name of Insured</li>
+                              <li>Name of Insured</li>
+                              <li>Name of Insured</li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="cashless-hosp-content">
+                      <div className="features_search_hosp">
+                        <input
+                          type="text"
+                          placeholder="Search Hospitals"
+                          id="input_hospital"
+                          // disabled
+                        />
+                        <p className="searchIcon"></p>
+                      </div>
+                      <div className="features_hospital_catHead">
+                        Top Hospitals
+                      </div>
+                      <ul className="features_hosp_list">
+                        <li>Living spring hospital</li>
+                        <li>Living spring hospital</li>
+                        <li>Living spring hospital</li>
+                        <li>Living spring hospital</li>
+                        <li>Living spring hospital</li>
+                      </ul>
+                      <div className="features_hospital_catHead">
+                        Other Hospitals
+                      </div>
+                      <ul className="features_hosp_list">
+                        <li>Kupa Medical Centre</li>
+                        <li>Kupa Medical Centre</li>
+                        <li>Kupa Medical Centre</li>
+                        <li>Kupa Medical Centre</li>
+                        <li>Kupa Medical Centre</li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+                <div className="bottom-menu details-bottom-menu row">
+                  <div className="col-md-4">
+                    <p>Total Premium</p>
+                    <p>₦5000</p>
+                  </div>
+                  <div className="col-md-8">
+                    <button className="btn btn-danger checkout">
+                      PROCEED TO CHECKOUT
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Modal.Body>
+          <div className="claim_popup_main">
+            <div className="claim_popup_black"></div>
+            <Modal
+              dialogClassName="custom-dialog"
+              className="claim_popup_white"
+              show={this.props.isFeaturePopUpOpen}
+              onHide={this.toggleFeaturePopUp}
+            >
+              <Modal.Header
+                className="div_claim_popup_heading"
+                translate="true"
+                closeButton
+              >
+                <span className="claim_popup_heading">Value for money</span>
+              </Modal.Header>
+              <Modal.Body className="">
+                <div className="div_feature_explain">
+                  <span>
+                    You get 1 year health cover at a very affordable price. No
+                    catch and complete peace of mind.
+                  </span>
+                </div>
+                <div className="div_feature_what">
+                  <p>Why it is Important</p>
+                  <span>
+                    Opting for 1 year cover means you are insured against all
+                    possible illnesses, be it cancer, heart problems or an
+                    accident. This guarantees complete peace of ming at a very
+                    reasonable price.
+                  </span>
+                </div>
+              </Modal.Body>
+            </Modal>
+          </div>
+        </Modal>
       </div>
     );
   }

@@ -19,7 +19,8 @@ import {
   faArrowLeft,
   faSmile,
   faProcedures,
-  faGift
+  faGift,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AppHeader from "../../components/app-header/AppHeader";
@@ -58,7 +59,7 @@ interface QuizProps {
   responses: {
     [x: string]: any;
     budget: number;
-    num_of_people: number,
+    num_of_people: number;
     type: string;
     firstName: string;
     lastName: string;
@@ -88,13 +89,9 @@ interface QuizProps {
     child_7_age: string;
     child_8_age: string;
   };
-  
 }
 
-class Home extends Component<
-  QuizProps,
-  {}
-> {
+class Home extends Component<QuizProps, {}> {
   //private sonCheck = React.createRef<HTMLInputElement>();
   constructor(props) {
     super(props);
@@ -103,7 +100,7 @@ class Home extends Component<
     this.incrementSonCount = this.incrementSonCount.bind(this);
     this.decrementDaughterCount = this.decrementDaughterCount.bind(this);
     this.incrementDaughterCount = this.incrementDaughterCount.bind(this);
-    this.goToDetails = this.goToDetails.bind(this)
+    this.goToDetails = this.goToDetails.bind(this);
   }
 
   steps: { p: string; h3: string }[] = [
@@ -183,7 +180,7 @@ class Home extends Component<
   toggleModal = () => {
     this.props.dispatch({
       type: actions.TOGGLE_DESKTOP_MODAL,
-      data: { key: "isOpen", value: !this.props.isOpen}
+      data: { key: "isOpen", value: !this.props.isOpen },
     });
   };
 
@@ -193,7 +190,10 @@ class Home extends Component<
     // });
     this.props.dispatch({
       type: actions.TOGGLE_MOBILE_MODAL,
-      data: { key: "isMobileViewModalOpen", value: !this.props.isMobileViewModalOpen }
+      data: {
+        key: "isMobileViewModalOpen",
+        value: !this.props.isMobileViewModalOpen,
+      },
     });
   };
 
@@ -203,19 +203,18 @@ class Home extends Component<
     // });
     this.props.dispatch({
       type: actions.TOGGLE_OTHERS_MODAL,
-      data: { key: "isOthersInputOpen", value: !this.props.isOthersInputOpen }
-    })
+      data: { key: "isOthersInputOpen", value: !this.props.isOthersInputOpen },
+    });
   };
 
   changePage = (action: string) => {
     //console.log('called me?');
-    
+
     this.props.dispatch({ type: actions.CHANGE_PAGE, data: action });
   };
 
   componentDidMount() {
     document.title = "Instacare - Home";
-
   }
 
   defaultGender() {
@@ -226,196 +225,196 @@ class Home extends Component<
     // this.setState ({
     //   gender: val
     // })
-   // console.log('this:', this, "this.props:", this.props)
+    // console.log('this:', this, "this.props:", this.props)
     this.props.dispatch({
       type: actions.UPDATE_GENDER,
-      data: { key: "gender", value: val }
+      data: { key: "gender", value: val },
     });
   }
 
   handlePhone(val) {
     this.props.dispatch({
       type: actions.UPDATE_PHONE,
-      data: { key: "phone_num", value: val }
+      data: { key: "phone_num", value: val },
     });
   }
 
   handleFullName(val) {
     this.props.dispatch({
       type: actions.UPDATE_FULL_NAME,
-      data: { key: "full_name", value: val }
+      data: { key: "full_name", value: val },
     });
   }
 
   handleIndividualAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
-    
+
     this.props.dispatch({
       type: actions.UPDATE_INDIVIDUAL_AGE,
-      data: { key: "individual_age", value: val }
+      data: { key: "individual_age", value: val },
     });
   }
 
   handleFatherAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_FATHER_AGE,
-      data: { key: "father_age", value: val }
+      data: { key: "father_age", value: val },
     });
   }
 
   handleMotherAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
-    
+
     this.props.dispatch({
       type: actions.UPDATE_MOTHER_AGE,
-      data: { key: "mother_age", value: val }
+      data: { key: "mother_age", value: val },
     });
   }
 
   handleGrandFatherAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
-    
+
     this.props.dispatch({
       type: actions.UPDATE_GRAND_FATHER_AGE,
-      data: { key: "phone_num", value: val }
+      data: { key: "phone_num", value: val },
     });
   }
 
   handleGrandMotherAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_GRAND_MOTHER_AGE,
-      data: { key: "grand_mother_age", value: val }
+      data: { key: "grand_mother_age", value: val },
     });
   }
 
   handleFatherInLawAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_FATHER_IN_LAW_AGE,
-      data: { key: "father_in_law_age", value: val }
+      data: { key: "father_in_law_age", value: val },
     });
   }
 
   handleMotherInLawAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_MOTHER_IN_LAW_AGE,
-      data: { key: "mother_in_law_age", value: val }
+      data: { key: "mother_in_law_age", value: val },
     });
   }
-  
+
   handleSpouseAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_SPOUSE_AGE,
-      data: { key: "spouse_age", value: val }
+      data: { key: "spouse_age", value: val },
     });
   }
 
   handleChild1Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_CHILD_1_AGE,
-      data: { key: "child_1_age", value: val }
+      data: { key: "child_1_age", value: val },
     });
   }
 
   handleChild2Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_CHILD_2_AGE,
-      data: { key: "child_2_age", value: val }
+      data: { key: "child_2_age", value: val },
     });
   }
 
   handleChild3Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_CHILD_3_AGE,
-      data: { key: "child_3_age", value: val }
+      data: { key: "child_3_age", value: val },
     });
   }
 
   handleChild4Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
-    } 
+      this.resetAges();
+    }
 
     this.props.dispatch({
       type: actions.UPDATE_CHILD_4_AGE,
-      data: { key: "child_4_age", value: val }
+      data: { key: "child_4_age", value: val },
     });
   }
 
   handleChild5Age(val) {
     this.props.dispatch({
       type: actions.UPDATE_CHILD_5_AGE,
-      data: { key: "child_5_age", value: val }
+      data: { key: "child_5_age", value: val },
     });
   }
 
   handleChild6Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_CHILD_6_AGE,
-      data: { key: "child_6_age", value: val }
+      data: { key: "child_6_age", value: val },
     });
   }
 
   handleChild7Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_CHILD_7_AGE,
-      data: { key: "child_7_age", value: val }
+      data: { key: "child_7_age", value: val },
     });
   }
 
   handleChild8Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges()
+      this.resetAges();
     }
 
     this.props.dispatch({
       type: actions.UPDATE_CHILD_8_AGE,
-      data: { key: "child_8_age", value: val }
+      data: { key: "child_8_age", value: val },
     });
   }
 
@@ -423,8 +422,8 @@ class Home extends Component<
     this.props.dispatch({
       type: actions.RESET_RESPONSES,
       data: {
-        individual_age : 0,
-        father_age : 0,
+        individual_age: 0,
+        father_age: 0,
         mother_age: 0,
         grand_father_age: 0,
         grand_mother_age: 0,
@@ -439,42 +438,37 @@ class Home extends Component<
         child_6_age: 0,
         child_7_age: 0,
         child_8_age: 0,
-      }
-    })
-
-    
+      },
+    });
   }
 
   handleType(val) {
     //let id = document.getElementById(val.target.id) as HTMLInputElement;
     this.props.dispatch({
       type: actions.UPDATE_TYPE,
-      data: { key: "type", value: val.target.id }
-    })
+      data: { key: "type", value: val.target.id },
+    });
   }
 
   handleNumOfPeopleCount() {
-
     if (this.props.responses.type == "couple") {
-      this.props.responses.num_of_people = 
-      this.props.responses.num_of_people + 1
+      this.props.responses.num_of_people =
+        this.props.responses.num_of_people + 1;
     }
 
     if (this.props.responses.type == "fam-of-3") {
-      this.props.responses.num_of_people = 
-      this.props.responses.num_of_people + 2
+      this.props.responses.num_of_people =
+        this.props.responses.num_of_people + 2;
     }
 
     if (this.props.responses.type == "parents") {
-      this.props.responses.num_of_people = 
-      this.props.responses.num_of_people + 1
+      this.props.responses.num_of_people =
+        this.props.responses.num_of_people + 1;
     }
 
     if (this.props.responses.type == "others") {
       this.props.responses.num_of_people = 0;
-      
     }
-
 
     console.log(
       `
@@ -482,10 +476,10 @@ class Home extends Component<
       + this.props.sonCount
       + this.props.daughterCount
       `,
-      this.props.responses.num_of_people
-    + this.props.sonCount
-    + this.props.daughterCount
-    )
+      this.props.responses.num_of_people +
+        this.props.sonCount +
+        this.props.daughterCount
+    );
   }
 
   preventDefault(e: React.FormEvent<HTMLFormElement>) {
@@ -499,20 +493,18 @@ class Home extends Component<
         <select
           name="individual"
           className="form-control"
-          onChange = {
-            (e) => {
-              this.handleIndividualAge(e.target.value)
-            }
-          }
-          value = {this.props.responses.individual_age}
+          onChange={(e) => {
+            this.handleIndividualAge(e.target.value);
+          }}
+          value={this.props.responses.individual_age}
           placeholder="Select Age"
         >
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
     );
 
@@ -524,22 +516,20 @@ class Home extends Component<
       <div id="couples-control" className="col-md-6">
         <label>Age of the Eldest member</label>
         <select
-            name="spouse_age"
-            className="form-control"
-            value = {this.props.responses.spouse_age}
-            onChange = {
-              (e) => {
-                this.handleSpouseAge(e.target.value)
-              }
-            }
-            placeholder="Select Age"
-          >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+          name="spouse_age"
+          className="form-control"
+          value={this.props.responses.spouse_age}
+          onChange={(e) => {
+            this.handleSpouseAge(e.target.value);
+          }}
+          placeholder="Select Age"
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
     );
 
@@ -552,42 +542,38 @@ class Home extends Component<
         <div className="col-md-6">
           <label>Age of the Eldest member</label>
           <select
-              name="spouse_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleSpouseAge(e.target.value)
-                }
-              }
-              value = {this.props.responses.spouse_age}
-              placeholder="Select Age"
-            >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+            name="spouse_age"
+            className="form-control"
+            onChange={(e) => {
+              this.handleSpouseAge(e.target.value);
+            }}
+            value={this.props.responses.spouse_age}
+            placeholder="Select Age"
+          >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="col-md-6 mt-1rem">
           <label>Select Age of Child</label>
           <select
-              name="child_1_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild1Age(e.target.value)
-                }
-              }
-              value = {this.props.responses.child_1_age}
-              placeholder="Select Age"
-            >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+            name="child_1_age"
+            className="form-control"
+            onChange={(e) => {
+              this.handleChild1Age(e.target.value);
+            }}
+            value={this.props.responses.child_1_age}
+            placeholder="Select Age"
+          >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     );
@@ -600,41 +586,37 @@ class Home extends Component<
         <div className="col-md-6">
           <label>Age of the Eldest member</label>
           <select
-              name="spouse_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleSpouseAge(e.target.value)
-                }
-              }
-              value = {this.props.responses.spouse_age}
-              placeholder="Select Age"
-            >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
+            name="spouse_age"
+            className="form-control"
+            onChange={(e) => {
+              this.handleSpouseAge(e.target.value);
+            }}
+            value={this.props.responses.spouse_age}
+            placeholder="Select Age"
+          >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
         <div className="col-md-6 mt-1rem">
           <label>Age of the Eldest Child</label>
           <select
-              name="child_1_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild1Age(e.target.value)
-                }
-              }
-              value = {this.props.responses.child_1_age}
-              placeholder="Select Age"
-            >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
+            name="child_1_age"
+            className="form-control"
+            onChange={(e) => {
+              this.handleChild1Age(e.target.value);
+            }}
+            value={this.props.responses.child_1_age}
+            placeholder="Select Age"
+          >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>
@@ -648,16 +630,14 @@ class Home extends Component<
         <div className="col-md-6">
           <label>Age of the Eldest member</label>
           <select
-              name="father_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleFatherAge(e.target.value)
-                }
-              }
-              value = {this.props.responses.father_age}
-              placeholder="Select Age"
-            >
+            name="father_age"
+            className="form-control"
+            onChange={(e) => {
+              this.handleFatherAge(e.target.value);
+            }}
+            value={this.props.responses.father_age}
+            placeholder="Select Age"
+          >
             {options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -694,23 +674,21 @@ class Home extends Component<
           </div>
 
           <div className="col-md-6">
-          <select
+            <select
               name="individual_age"
               className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleIndividualAge(e.target.value)
-                }
-              }
-              value = {this.props.responses.individual_age}
+              onChange={(e) => {
+                this.handleIndividualAge(e.target.value);
+              }}
+              value={this.props.responses.individual_age}
               placeholder="Select Age"
             >
-            {options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="col-md-12 row spouse">
@@ -731,23 +709,21 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-          <select
+            <select
               name="spouse_age"
               className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleSpouseAge(e.target.value)
-                }
-              }
+              onChange={(e) => {
+                this.handleSpouseAge(e.target.value);
+              }}
               value={this.props.responses.spouse_age}
               placeholder="Select Age"
             >
-            {options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+              {options.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <div className="col-md-12 son">
@@ -759,37 +735,46 @@ class Home extends Component<
                   value="son"
                   className="chkMembers"
                   defaultChecked={false}
-                  onChange={
-                    (e)=>{
-                      this.handleSonBoxChecked(e.target.value)
-                    }
-                  }
+                  onChange={(e) => {
+                    this.handleSonBoxChecked(e.target.value);
+                  }}
                   id="son"
                 ></input>
 
-                <span className="controls" >Son
-                  <div className= { this.props.isSonCheckboxChecked ? "show-controls counter-controls" : "hide-controls" }>
-                    <button 
-                    className="minus" 
-                    id="dec-son"
-                    onClick={
-                        this.decrementSonCount
-                      }> - 
+                <span className="controls">
+                  Son
+                  <div
+                    className={
+                      this.props.isSonCheckboxChecked
+                        ? "show-controls counter-controls"
+                        : "hide-controls"
+                    }
+                  >
+                    <button
+                      className="minus"
+                      id="dec-son"
+                      onClick={this.decrementSonCount}
+                    >
+                      {" "}
+                      -
                     </button>
                     <span className="count"> {this.props.sonCount} </span>
-                    <button 
-                    className="plus"
-                    onClick={
-                      this.incrementSonCount
-                    }
-                    > + </button>
+                    <button className="plus" onClick={this.incrementSonCount}>
+                      {" "}
+                      +{" "}
+                    </button>
                   </div>
                 </span>
-                
               </label>
             </div>
           </div>
-          <div className={ this.props.isSonCheckboxChecked ? "col-md-12 row children" : "hide-controls" }>
+          <div
+            className={
+              this.props.isSonCheckboxChecked
+                ? "col-md-12 row children"
+                : "hide-controls"
+            }
+          >
             <div className="col-md-6 chkContainer">
               <div className="checkbox  children-check">
                 <label className="children-label">
@@ -798,26 +783,30 @@ class Home extends Component<
               </div>
             </div>
             <div className="col-md-6">
-            <select
-              name="child_1_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild1Age(e.target.value)
-                }
-              }
-              value={this.props.responses.child_1_age}
-              placeholder="Select Age"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <select
+                name="child_1_age"
+                className="form-control"
+                onChange={(e) => {
+                  this.handleChild1Age(e.target.value);
+                }}
+                value={this.props.responses.child_1_age}
+                placeholder="Select Age"
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          </div>
-          <div className={ this.props.sonCount > 1 ? "col-md-12 row children" : "hide-controls" }>
+          <div
+            className={
+              this.props.sonCount > 1
+                ? "col-md-12 row children"
+                : "hide-controls"
+            }
+          >
             <div className="col-md-6 chkContainer">
               <div className="checkbox children-check">
                 <label className="children-label">
@@ -826,26 +815,30 @@ class Home extends Component<
               </div>
             </div>
             <div className="col-md-6">
-            <select
-              name="child_2_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild2Age(e.target.value)
-                }
-              }
-              value={this.props.responses.child_2_age}
-              placeholder="Select Age"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <select
+                name="child_2_age"
+                className="form-control"
+                onChange={(e) => {
+                  this.handleChild2Age(e.target.value);
+                }}
+                value={this.props.responses.child_2_age}
+                placeholder="Select Age"
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          </div>
-          <div className={ this.props.sonCount > 2 ? "col-md-12 row children" : "hide-controls" }>
+          <div
+            className={
+              this.props.sonCount > 2
+                ? "col-md-12 row children"
+                : "hide-controls"
+            }
+          >
             <div className="col-md-6 chkContainer">
               <div className="checkbox children-check">
                 <label className="children-label">
@@ -854,26 +847,30 @@ class Home extends Component<
               </div>
             </div>
             <div className="col-md-6">
-            <select
-              name="child_3_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild3Age(e.target.value)
-                }
-              }
-              value={this.props.responses.child_3_age}
-              placeholder="Select Age"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <select
+                name="child_3_age"
+                className="form-control"
+                onChange={(e) => {
+                  this.handleChild3Age(e.target.value);
+                }}
+                value={this.props.responses.child_3_age}
+                placeholder="Select Age"
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          </div>
-          <div className={ this.props.sonCount > 3 ? "col-md-12 row children" : "hide-controls" }>
+          <div
+            className={
+              this.props.sonCount > 3
+                ? "col-md-12 row children"
+                : "hide-controls"
+            }
+          >
             <div className="col-md-6 chkContainer">
               <div className="checkbox children-check">
                 <label className="children-label">
@@ -882,26 +879,23 @@ class Home extends Component<
               </div>
             </div>
             <div className="col-md-6">
-            <select
-              name="child_4_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild4Age(e.target.value)
-                }
-              }
-              value={this.props.responses.child_4_age}
-              placeholder="Select Age"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <select
+                name="child_4_age"
+                className="form-control"
+                onChange={(e) => {
+                  this.handleChild4Age(e.target.value);
+                }}
+                value={this.props.responses.child_4_age}
+                placeholder="Select Age"
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          </div>
-        
         </div>
         <div className="col-md-12 daughter">
           <div className="col-md-12 chkContainer">
@@ -912,33 +906,48 @@ class Home extends Component<
                   value="daughter"
                   className="chkMembers"
                   defaultChecked={false}
-                  onChange={(e)=> {
-                    this.handleDaughterBoxChecked(e.target.value)
+                  onChange={(e) => {
+                    this.handleDaughterBoxChecked(e.target.value);
                   }}
                   id="daughter"
                 ></input>
 
-                <span className="controls">Daughter
-                  <div className={ this.props.isDaughterCheckboxChecked ? "show-controls counter-controls" : "hide-controls" }>
-                    <button 
-                    className="minus"
-                    onClick={
-                      this.decrementDaughterCount
+                <span className="controls">
+                  Daughter
+                  <div
+                    className={
+                      this.props.isDaughterCheckboxChecked
+                        ? "show-controls counter-controls"
+                        : "hide-controls"
                     }
-                    > - </button>
+                  >
+                    <button
+                      className="minus"
+                      onClick={this.decrementDaughterCount}
+                    >
+                      {" "}
+                      -{" "}
+                    </button>
                     <span className="count"> {this.props.daughterCount} </span>
-                    <button 
-                    className="plus"
-                    onClick={
-                      this.incrementDaughterCount
-                    }
-                    > + </button>
+                    <button
+                      className="plus"
+                      onClick={this.incrementDaughterCount}
+                    >
+                      {" "}
+                      +{" "}
+                    </button>
                   </div>
                 </span>
               </label>
             </div>
           </div>
-          <div className= { this.props.isDaughterCheckboxChecked ? "col-md-12 row children" : "hide-controls" }>
+          <div
+            className={
+              this.props.isDaughterCheckboxChecked
+                ? "col-md-12 row children"
+                : "hide-controls"
+            }
+          >
             <div className="col-md-6 chkContainer">
               <div className="checkbox children-check">
                 <label className="children-label">
@@ -947,26 +956,30 @@ class Home extends Component<
               </div>
             </div>
             <div className="col-md-6">
-            <select
-              name="child_5_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild5Age(e.target.value)
-                }
-              }
-              value={this.props.responses.child_5_age}
-              placeholder="Select Age"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <select
+                name="child_5_age"
+                className="form-control"
+                onChange={(e) => {
+                  this.handleChild5Age(e.target.value);
+                }}
+                value={this.props.responses.child_5_age}
+                placeholder="Select Age"
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          </div>
-          <div className= { this.props.daughterCount > 1 ? "col-md-12 row children" : "hide-controls" }>
+          <div
+            className={
+              this.props.daughterCount > 1
+                ? "col-md-12 row children"
+                : "hide-controls"
+            }
+          >
             <div className="col-md-6 chkContainer">
               <div className="checkbox children-check">
                 <label className="children-label">
@@ -975,26 +988,30 @@ class Home extends Component<
               </div>
             </div>
             <div className="col-md-6">
-            <select
-              name="child_6_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild6Age(e.target.value)
-                }
-              }
-              value={this.props.responses.child_6_age}
-              placeholder="Select Age"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <select
+                name="child_6_age"
+                className="form-control"
+                onChange={(e) => {
+                  this.handleChild6Age(e.target.value);
+                }}
+                value={this.props.responses.child_6_age}
+                placeholder="Select Age"
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          </div>
-          <div className= { this.props.daughterCount > 2 ? "col-md-12 row children" : "hide-controls" }>
+          <div
+            className={
+              this.props.daughterCount > 2
+                ? "col-md-12 row children"
+                : "hide-controls"
+            }
+          >
             <div className="col-md-6 chkContainer">
               <div className="checkbox children-check">
                 <label className="children-label">
@@ -1003,26 +1020,30 @@ class Home extends Component<
               </div>
             </div>
             <div className="col-md-6">
-            <select
-              name="child_7_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild7Age(e.target.value)
-                }
-              }
-              value={this.props.responses.child_7_age}
-              placeholder="Select Age"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              <select
+                name="child_7_age"
+                className="form-control"
+                onChange={(e) => {
+                  this.handleChild7Age(e.target.value);
+                }}
+                value={this.props.responses.child_7_age}
+                placeholder="Select Age"
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          </div>
-          <div className= { this.props.daughterCount > 3 ? "col-md-12 row children" : "hide-controls" }>
+          <div
+            className={
+              this.props.daughterCount > 3
+                ? "col-md-12 row children"
+                : "hide-controls"
+            }
+          >
             <div className="col-md-6 chkContainer">
               <div className="checkbox children-check">
                 <label className="children-label">
@@ -1031,24 +1052,22 @@ class Home extends Component<
               </div>
             </div>
             <div className="col-md-6">
-            <select
-              name="child_8_age"
-              className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleChild8Age(e.target.value)
-                }
-              }
-              value={this.props.responses.child_8_age}
-              placeholder="Select Age"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
+              <select
+                name="child_8_age"
+                className="form-control"
+                onChange={(e) => {
+                  this.handleChild8Age(e.target.value);
+                }}
+                value={this.props.responses.child_8_age}
+                placeholder="Select Age"
+              >
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
         <div className="col-md-12 row father">
@@ -1069,14 +1088,12 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-          <select
+            <select
               name="father_age"
               className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleFatherAge(e.target.value)
-                }
-              }
+              onChange={(e) => {
+                this.handleFatherAge(e.target.value);
+              }}
               value={this.props.responses.father_age}
               placeholder="Select Age"
             >
@@ -1106,14 +1123,12 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-          <select
+            <select
               name="mother_age"
               className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleMotherAge(e.target.value)
-                }
-              }
+              onChange={(e) => {
+                this.handleMotherAge(e.target.value);
+              }}
               value={this.props.responses.mother_age}
               placeholder="Select Age"
             >
@@ -1143,14 +1158,12 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-          <select
+            <select
               name="grand_father_age"
               className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleGrandFatherAge(e.target.value)
-                }
-              }
+              onChange={(e) => {
+                this.handleGrandFatherAge(e.target.value);
+              }}
               value={this.props.responses.grand_father_age}
               placeholder="Select Age"
             >
@@ -1180,14 +1193,12 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-          <select
+            <select
               name="grand_mother_age"
               className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleGrandMotherAge(e.target.value)
-                }
-              }
+              onChange={(e) => {
+                this.handleGrandMotherAge(e.target.value);
+              }}
               value={this.props.responses.grand_mother_age}
               placeholder="Select Age"
             >
@@ -1217,14 +1228,12 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-          <select
+            <select
               name="father_in_law_age"
               className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleFatherInLawAge(e.target.value)
-                }
-              }
+              onChange={(e) => {
+                this.handleFatherInLawAge(e.target.value);
+              }}
               value={this.props.responses.father_in_law_age}
               placeholder="Select Age"
             >
@@ -1254,14 +1263,12 @@ class Home extends Component<
             </div>
           </div>
           <div className="col-md-6">
-          <select
+            <select
               name="mother_in_law_age"
               className="form-control"
-              onChange = {
-                (e) => {
-                  this.handleMotherInLawAge(e.target.value)
-                }
-              }
+              onChange={(e) => {
+                this.handleMotherInLawAge(e.target.value);
+              }}
               value={this.props.responses.mother_in_law_age}
               placeholder="Select Age"
             >
@@ -1291,30 +1298,42 @@ class Home extends Component<
     // console.log("currentPage:", currentPage);
     const targetId = e.target.id;
     if (targetId === "next") {
-      
       //console.log('this.props.isDesktopView', this.props.isDesktopView);
-      if(this.props.isMobileViewModalOpen) {
+      if (this.props.isMobileViewModalOpen) {
         if (currentPage == 4 && this.props.responses.state == "") {
           message.error("Please provide a location");
           return;
         }
-        console.log('this.props.isMobileViewModalOpen', this.props.isMobileViewModalOpen,
-        'currentPage', currentPage,
-        'this.props.isDesktopView' ,this.props.isDesktopView
+        console.log(
+          "this.props.isMobileViewModalOpen",
+          this.props.isMobileViewModalOpen,
+          "currentPage",
+          currentPage,
+          "this.props.isDesktopView",
+          this.props.isDesktopView
         );
       }
-      if (currentPage == 3 && this.props.responses.state == "" && this.props.isDesktopView) {
+      if (
+        currentPage == 3 &&
+        this.props.responses.state == "" &&
+        this.props.isDesktopView
+      ) {
         message.error("Please provide a location");
         return;
       }
 
       if (this.props.isDesktopView) {
-        currentPage = currentPage + 1
+        currentPage = currentPage + 1;
       }
 
       if (currentPage >= this.props.maxPage) {
-        console.log('this.props.responses', this.props.responses)
-        console.log("currentPage", currentPage,"this.props.maxPage", this.props.maxPage);
+        console.log("this.props.responses", this.props.responses);
+        console.log(
+          "currentPage",
+          currentPage,
+          "this.props.maxPage",
+          this.props.maxPage
+        );
         this.submitResponses();
         return;
       }
@@ -1339,8 +1358,12 @@ class Home extends Component<
   };
 
   handleInput = (e: any) => {
-    console.log('e.target.name',e.target.name
-    ,"e.target.value", e.target.value)
+    console.log(
+      "e.target.name",
+      e.target.name,
+      "e.target.value",
+      e.target.value
+    );
     this.props.dispatch({
       type: actions.UPDATE_TEXT_RESPONSE,
       data: { key: e.target.name, value: e.target.value },
@@ -1455,22 +1478,28 @@ class Home extends Component<
     // });
     this.props.dispatch({
       type: actions.TOGGLE_DESKTOP_VIEW,
-      data: { key: "isDesktopView", value: false }
+      data: { key: "isDesktopView", value: false },
     });
   }
 
   handleSonBoxChecked(val) {
-    console.log(this)
-     this.props.dispatch({
-       type: actions.UPDATE_SON_CHECKED,
-      data: { key: "isSonCheckboxChecked", value: !this.props.isSonCheckboxChecked }
-     });
+    console.log(this);
+    this.props.dispatch({
+      type: actions.UPDATE_SON_CHECKED,
+      data: {
+        key: "isSonCheckboxChecked",
+        value: !this.props.isSonCheckboxChecked,
+      },
+    });
   }
 
   handleDaughterBoxChecked(val) {
     this.props.dispatch({
       type: actions.UPDATE_DAUGHTER_CHECKED,
-      data: { key: "isDaughterCheckboxChecked", value: !this.props.isDaughterCheckboxChecked }
+      data: {
+        key: "isDaughterCheckboxChecked",
+        value: !this.props.isDaughterCheckboxChecked,
+      },
     });
   }
 
@@ -1478,41 +1507,38 @@ class Home extends Component<
     if (this.props.sonCount < 4 && this.props.sonCount > 0) {
       this.props.dispatch({
         type: actions.INCREMENT_SON_COUNT,
-        data: { key: "sonCount", value: this.props.sonCount + 1 }
+        data: { key: "sonCount", value: this.props.sonCount + 1 },
       });
     }
-    
   }
 
   decrementSonCount() {
     if (this.props.sonCount > 1) {
-        this.props.dispatch({
-          type: actions.DECREMENT_SON_COUNT,
-          data: { key: "sonCount", value: this.props.sonCount - 1 }
-        });
+      this.props.dispatch({
+        type: actions.DECREMENT_SON_COUNT,
+        data: { key: "sonCount", value: this.props.sonCount - 1 },
+      });
     }
-    
-    console.log('this.props.sonCount', this.props.sonCount);
+
+    console.log("this.props.sonCount", this.props.sonCount);
   }
 
   incrementDaughterCount() {
     if (this.props.daughterCount < 4 && this.props.daughterCount > 0) {
       this.props.dispatch({
         type: actions.INCREMENT_DAUGHTER_COUNT,
-        data: { key: "daughterCount", value: this.props.daughterCount + 1 }
+        data: { key: "daughterCount", value: this.props.daughterCount + 1 },
       });
     }
-    
   }
 
   decrementDaughterCount() {
     if (this.props.daughterCount > 1) {
       this.props.dispatch({
         type: actions.DECREMENT_DAUGHTER_COUNT,
-        data: { key: "daughterCount", value: this.props.daughterCount - 1 }
+        data: { key: "daughterCount", value: this.props.daughterCount - 1 },
       });
     }
-    
   }
 
   handleChildrenCheckboxes(e) {
@@ -1525,7 +1551,6 @@ class Home extends Component<
     //   console.log('this.sonCheck',this.sonCheck)
     // }
     // }
-    
   }
 
   goToDetails() {
@@ -1546,11 +1571,9 @@ class Home extends Component<
                   value="m"
                   name="radio-group-gender"
                   defaultChecked={this.defaultGender()}
-                  onChange = {
-                    (e) => {
-                      this.handleGender(e.target.value)
-                    }
-                  }
+                  onChange={(e) => {
+                    this.handleGender(e.target.value);
+                  }}
                   className="radio-group-gender"
                 ></input>
                 <span>
@@ -1568,11 +1591,9 @@ class Home extends Component<
                   value="f"
                   name="radio-group-gender"
                   className="radio-group-gender"
-                  onChange = {
-                    (e) => {
-                      this.handleGender(e.target.value)
-                    }
-                  }
+                  onChange={(e) => {
+                    this.handleGender(e.target.value);
+                  }}
                 ></input>
                 <span>
                   <FontAwesomeIcon
@@ -1592,15 +1613,13 @@ class Home extends Component<
           </div>
 
           <div className="col-md-12">
-            <input 
-            className="form-control" 
-            placeholder="Full Name"
-            onChange = {
-              (e) => {
-                this.handleFullName(e.target.value)
-              }
-            }
-            value={this.props.responses.full_name}
+            <input
+              className="form-control"
+              placeholder="Full Name"
+              onChange={(e) => {
+                this.handleFullName(e.target.value);
+              }}
+              value={this.props.responses.full_name}
             ></input>
           </div>
         </div>
@@ -1613,11 +1632,9 @@ class Home extends Component<
             <input
               className="form-control input-phone input-phone-desktop "
               placeholder="11 - digit mobile number"
-              onChange={
-                (e) => {
-                  this.handlePhone(e.target.value)
-                }
-              }
+              onChange={(e) => {
+                this.handlePhone(e.target.value);
+              }}
               value={this.props.responses.phone_num}
             ></input>
           </div>
@@ -1740,13 +1757,10 @@ class Home extends Component<
                   name="numOfPeople"
                   className="radio-group-num"
                   defaultChecked={this.props.responses.type === "others"}
-                  onClick={ (e) => 
-                    {
-                      this.toggleOthersInput()
-                      this.handleType(e)
-                    }
-                    
-                  }
+                  onClick={(e) => {
+                    this.toggleOthersInput();
+                    this.handleType(e);
+                  }}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1769,9 +1783,7 @@ class Home extends Component<
                     <h3>{this.steps[1].h3}</h3>
                   </div>
                 </Modal.Header>
-                <Modal.Body>
-                  {this.showOthersInput()}
-                </Modal.Body>
+                <Modal.Body>{this.showOthersInput()}</Modal.Body>
               </Modal>
             </div>
           </div>
@@ -1779,7 +1791,9 @@ class Home extends Component<
 
         <div className="form-group single-age-input" id="single-input">
           <div className="col-md-6">
-            {this.props.responses.type == "single" ? this.showSingleInput() : ""}
+            {this.props.responses.type == "single"
+              ? this.showSingleInput()
+              : ""}
           </div>
         </div>
 
@@ -1791,20 +1805,25 @@ class Home extends Component<
           className="form-group fam-of-3-input col-md-12"
           id="fam-of-3-input"
         >
-          {this.props.responses.type == "fam-of-3" ? this.showFamOf3Input() : ""}
+          {this.props.responses.type == "fam-of-3"
+            ? this.showFamOf3Input()
+            : ""}
         </div>
 
         <div
           className="form-group fam-of-4-input col-md-12"
           id="fam-of-4-input"
         >
-          {this.props.responses.type == "fam-of-4" ? this.showFamOf4Input() : ""}
+          {this.props.responses.type == "fam-of-4"
+            ? this.showFamOf4Input()
+            : ""}
         </div>
 
         <div className="form-group parents-age" id="parents-age">
-          {this.props.responses.type == "parents" ? this.showParentsInput() : ""}
+          {this.props.responses.type == "parents"
+            ? this.showParentsInput()
+            : ""}
         </div>
-
       </div>
     );
 
@@ -1871,12 +1890,14 @@ class Home extends Component<
       || this.props.page === 0
       ) {
       return page1;
-    } else */ if (this.props.page === 2) {
+    } else */ if (
+      this.props.page === 2
+    ) {
       return page2;
     } else if (this.props.page === 3) {
       return page3;
     }
-    
+
     //console.log("this.props.page", this.props.page);
     //console.log(this.props.responses)
     return <p>Not enough responses collected!</p>;
@@ -1896,15 +1917,13 @@ class Home extends Component<
                   value="m"
                   name="radio-group-gender"
                   defaultChecked={this.defaultGender()}
-                  onChange = {
-                    (e) => {
-                      this.handleGender(e.target.value)
-                    }
-                  }
+                  onChange={(e) => {
+                    this.handleGender(e.target.value);
+                  }}
                   className="radio-group-gender"
                 ></input>
                 <span>
-                <i className="gender icons-gender male male-icon"></i>
+                  <i className="gender icons-gender male male-icon"></i>
 
                   <em>Male</em>
                 </span>
@@ -1914,15 +1933,13 @@ class Home extends Component<
                   type="radio"
                   value="f"
                   name="radio-group-gender"
-                  onChange = {
-                    (e) => {
-                      this.handleGender(e.target.value)
-                    }
-                  }
+                  onChange={(e) => {
+                    this.handleGender(e.target.value);
+                  }}
                   className="radio-group-gender"
                 ></input>
                 <span>
-                    <i className="gender icons-gender male female-icon"></i>
+                  <i className="gender icons-gender male female-icon"></i>
                   <em>Female</em>
                 </span>
               </label>
@@ -1936,15 +1953,14 @@ class Home extends Component<
           </div>
 
           <div className="col-md-12">
-            <input 
-            className="form-control"
-            onChange = {
-              (e) => {
-                this.handleFullName(e.target.value)
-              }
-            }
-            value={this.props.responses.full_name}
-            placeholder="Full Name"></input>
+            <input
+              className="form-control"
+              onChange={(e) => {
+                this.handleFullName(e.target.value);
+              }}
+              value={this.props.responses.full_name}
+              placeholder="Full Name"
+            ></input>
           </div>
         </div>
       </div>
@@ -2119,7 +2135,9 @@ class Home extends Component<
 
         <div className="form-group single-age-input" id="single-input">
           <div className="col-md-6">
-            {this.props.responses.type == "single" ? this.showSingleInput() : ""}
+            {this.props.responses.type == "single"
+              ? this.showSingleInput()
+              : ""}
           </div>
         </div>
 
@@ -2131,20 +2149,25 @@ class Home extends Component<
           className="form-group fam-of-3-input col-md-12"
           id="fam-of-3-input"
         >
-          {this.props.responses.type == "fam-of-3" ? this.showFamOf3Input() : ""}
+          {this.props.responses.type == "fam-of-3"
+            ? this.showFamOf3Input()
+            : ""}
         </div>
 
         <div
           className="form-group fam-of-4-input col-md-12"
           id="fam-of-4-input"
         >
-          {this.props.responses.type == "fam-of-4" ? this.showFamOf4Input() : ""}
+          {this.props.responses.type == "fam-of-4"
+            ? this.showFamOf4Input()
+            : ""}
         </div>
 
         <div className="form-group parents-age" id="parents-age">
-          {this.props.responses.type == "parents" ? this.showParentsInput() : ""}
+          {this.props.responses.type == "parents"
+            ? this.showParentsInput()
+            : ""}
         </div>
-
       </div>
     );
 
@@ -2207,9 +2230,10 @@ class Home extends Component<
     /*if (this.props.page === 0) {
       return page2;
     }
-    else*/ if (this.props.page === 2
-       //|| this.props.page === 1
-       ) {
+    else*/ if (
+      this.props.page === 2
+      //|| this.props.page === 1
+    ) {
       //console.log("page2");
       return page2;
     } else if (this.props.page === 3) {
@@ -2231,7 +2255,6 @@ class Home extends Component<
     } else {
       current = 0;
     }
-    
 
     //console.log("current:", current);
     return (
@@ -2320,11 +2343,9 @@ class Home extends Component<
                             <input
                               className="form-control"
                               placeholder="Enter phone number"
-                              onChange={
-                                (e) => {
-                                  this.handlePhone(e.target.value)
-                                }
-                              }
+                              onChange={(e) => {
+                                this.handlePhone(e.target.value);
+                              }}
                               value={this.props.responses.phone_num}
                             />
                           </div>
@@ -2339,15 +2360,13 @@ class Home extends Component<
                                   value="m"
                                   name="radio-group-gender"
                                   defaultChecked={this.defaultGender()}
-                                  onChange = {
-                                    (e) => {
-                                      this.handleGender(e.target.value)
-                                    }
-                                  }
+                                  onChange={(e) => {
+                                    this.handleGender(e.target.value);
+                                  }}
                                   className="radio-group-gender"
                                 ></input>
                                 <span>
-                                <i className="gender icons-gender male male-icon"></i>
+                                  <i className="gender icons-gender male male-icon"></i>
                                   <em>Male</em>
                                 </span>
                               </label>
@@ -2357,11 +2376,9 @@ class Home extends Component<
                                   value="f"
                                   name="radio-group-gender"
                                   className="radio-group-gender"
-                                  onChange = {
-                                    (e) => {
-                                      this.handleGender(e.target.value)
-                                    }
-                                  }
+                                  onChange={(e) => {
+                                    this.handleGender(e.target.value);
+                                  }}
                                 ></input>
                                 <span>
                                   <i className="gender icons-gender male female-icon"></i>
@@ -2381,11 +2398,9 @@ class Home extends Component<
                             <input
                               className="form-control"
                               placeholder="Full Name"
-                              onChange = {
-                                (e) => {
-                                  this.handleFullName(e.target.value)
-                                }
-                              }
+                              onChange={(e) => {
+                                this.handleFullName(e.target.value);
+                              }}
                               value={this.props.responses.full_name}
                             ></input>
                           </div>
@@ -2399,11 +2414,9 @@ class Home extends Component<
                             <input
                               className="form-control"
                               placeholder="11 - digit mobile number"
-                              onChange={
-                                (e) => {
-                                  this.handlePhone(e.target.value)
-                                }
-                              }
+                              onChange={(e) => {
+                                this.handlePhone(e.target.value);
+                              }}
                               value={this.props.responses.phone_num}
                             ></input>
                           </div>
@@ -2414,7 +2427,6 @@ class Home extends Component<
                               className="btn btn-primary btn-large view-plans btn-demo"
                               onClick={() => {
                                 this.toggleModal();
-                                
                               }}
                             >
                               View Plans
@@ -2425,12 +2437,9 @@ class Home extends Component<
                           <div className="col-md-12">
                             <button
                               className="btn btn-primary btn-large view-plans btn-demo"
-                              onClick={
-                                () => {
-                                  this.toggleModal()
-                                  
-                                }
-                                }
+                              onClick={() => {
+                                this.toggleModal();
+                              }}
                             >
                               Continue
                             </button>
@@ -2458,11 +2467,9 @@ class Home extends Component<
                             <input
                               className="form-control"
                               placeholder="Enter phone number"
-                              onChange={
-                                (e) => {
-                                  this.handlePhone(e.target.value)
-                                }
-                              }
+                              onChange={(e) => {
+                                this.handlePhone(e.target.value);
+                              }}
                               value={this.props.responses.phone_num}
                             />
                           </div>
@@ -2471,12 +2478,10 @@ class Home extends Component<
                           <div className="col-md-12">
                             <button
                               className="btn btn-primary btn-large view-plans btn-demo"
-                              onClick={
-                                () => {
-                                  this.mobileToggleModal()
-                                  this.handleDesktopView();
-                                }
-                                }
+                              onClick={() => {
+                                this.mobileToggleModal();
+                                this.handleDesktopView();
+                              }}
                             >
                               Continue
                             </button>
@@ -2519,17 +2524,16 @@ class Home extends Component<
                                     </div>
                                   ) : current < 0 || current == 0 ? (
                                     //this.toggleModal()
-                                     <div>
-                                       <p>{this.steps[0].p}</p>
-                                       <h3>{this.steps[0].h3}</h3>
-                                     </div>
+                                    <div>
+                                      <p>{this.steps[0].p}</p>
+                                      <h3>{this.steps[0].h3}</h3>
+                                    </div>
                                   ) : (
-                                    console.log('current is > 0', current)
+                                    console.log("current is > 0", current)
                                   )
                                 ) : (
-                                  console.log('!this.props.isDesktopView')
-                                )
-                                }
+                                  console.log("!this.props.isDesktopView")
+                                )}
 
                                 <Steps current={current}>
                                   {this.steps.map((step, i) => {
@@ -2637,13 +2641,16 @@ class Home extends Component<
             <div className={styles.content}>
               <div className="top-plans container">
                 <p className="breadcrmb">
-                  <span className="home-span">Home</span>  
-                  <span className="sep"> > </span> 
-                  <span>HMO Plans</span></p>
- 
+                  <span className="home-span">Home</span>
+                  <span className="sep">
+                    <FontAwesomeIcon className="chev" icon={faChevronRight} />
+                  </span>
+                  <span>HMO Plans</span>
+                </p>
+
                 <div className="container row top-plans-content-wrapper">
                   <div className="col-md-8">
-                  <section className="tabs_wrapper">
+                    <section className="tabs_wrapper">
                       <div className="tabs health_tab">
                         <ul>
                           <li className="active">
@@ -2660,45 +2667,51 @@ class Home extends Component<
                               <span className="logo-widget widget-insurer-logo"></span>
                             </div>
                             <div className="title-h6">
-                                <div>Hygeia</div>
-                                <span>Hygiea - Prime</span>
+                              <div>Hygeia</div>
+                              <span>Hygiea - Prime</span>
                             </div>
                           </div>
-                          <div className="tag_tabs">
-                            Individual
-                          </div>
+                          <div className="tag_tabs">Individual</div>
                           <div className="top-features">
                             <div className="plan-features">
                               <div className="features-block">
-                                <i className="features-icon" data-icon="Hospital Room Eligibility">
-                                <FontAwesomeIcon
-                              className="bed-icon"
-                              icon={faProcedures}
-                            />
+                                <i
+                                  className="features-icon"
+                                  data-icon="Hospital Room Eligibility"
+                                >
+                                  <FontAwesomeIcon
+                                    className="bed-icon"
+                                    icon={faProcedures}
+                                  />
                                 </i>
                                 <div>
-                                  <p className="feature-head">Hospital Room Eligibility</p>
+                                  <p className="feature-head">
+                                    Hospital Room Eligibility
+                                  </p>
                                   <p>
-                                  Single Private A/C Room, ICU Charges upto SI 
+                                    Single Private A/C Room, ICU Charges upto SI
                                   </p>
                                 </div>
-                                
                               </div>
                               <div className="features-block">
-                              
-                                <i className="features-icon" data-icon="Bonus on No Claim">
-                            <FontAwesomeIcon
-                              className="gift-icon"
-                              icon={faGift}
-                            />
-                            </i>
+                                <i
+                                  className="features-icon"
+                                  data-icon="Bonus on No Claim"
+                                >
+                                  <FontAwesomeIcon
+                                    className="gift-icon"
+                                    icon={faGift}
+                                  />
+                                </i>
                                 <div>
-                                  <p  className="feature-head">Bonus on No Claim</p>
+                                  <p className="feature-head">
+                                    Bonus on No Claim
+                                  </p>
                                   <p>
-                                    10% of Sum Insured per annum, max up to 50% of SI 
+                                    10% of Sum Insured per annum, max up to 50%
+                                    of SI
                                   </p>
                                 </div>
-                                
                               </div>
                             </div>
                             <div className="features-action-bar">
@@ -2707,9 +2720,9 @@ class Home extends Component<
                                   <span>Starting at </span>
                                   <h5 className="">₦ 900/ month</h5>
                                 </div>
-                                <button 
-                                className="btn-check-prem"
-                                onClick={this.goToDetails}
+                                <button
+                                  className="btn-check-prem"
+                                  onClick={this.goToDetails}
                                 >
                                   Check Premium
                                 </button>
@@ -2723,44 +2736,51 @@ class Home extends Component<
                               <span className="logo-widget widget-insurer-logo"></span>
                             </div>
                             <div className="title-h6">
-                                <div>Hygeia</div>
-                                <span>Hygiea - Prime</span>
+                              <div>Hygeia</div>
+                              <span>Hygiea - Prime</span>
                             </div>
                           </div>
-                          <div className="tag_tabs">
-                            Individual
-                          </div>
+                          <div className="tag_tabs">Individual</div>
                           <div className="top-features">
                             <div className="plan-features">
                               <div className="features-block">
-                                <i className="features-icon" data-icon="Hospital Room Eligibility">
-                                <FontAwesomeIcon
-                              className="bed-icon"
-                              icon={faProcedures}
-                            />
+                                <i
+                                  className="features-icon"
+                                  data-icon="Hospital Room Eligibility"
+                                >
+                                  <FontAwesomeIcon
+                                    className="bed-icon"
+                                    icon={faProcedures}
+                                  />
                                 </i>
                                 <div>
-                                  <p className="feature-head">Hospital Room Eligibility</p>
+                                  <p className="feature-head">
+                                    Hospital Room Eligibility
+                                  </p>
                                   <p>
-                                  Single Private A/C Room, ICU Charges upto SI 
+                                    Single Private A/C Room, ICU Charges upto SI
                                   </p>
                                 </div>
-                                
                               </div>
                               <div className="features-block">
-                                <i className="features-icon" data-icon="Bonus on No Claim">
-                                <FontAwesomeIcon
-                              className="gift-icon"
-                              icon={faGift}
-                            />
+                                <i
+                                  className="features-icon"
+                                  data-icon="Bonus on No Claim"
+                                >
+                                  <FontAwesomeIcon
+                                    className="gift-icon"
+                                    icon={faGift}
+                                  />
                                 </i>
                                 <div>
-                                  <p  className="feature-head">Bonus on No Claim</p>
+                                  <p className="feature-head">
+                                    Bonus on No Claim
+                                  </p>
                                   <p>
-                                    10% of Sum Insured per annum, max up to 50% of SI 
+                                    10% of Sum Insured per annum, max up to 50%
+                                    of SI
                                   </p>
                                 </div>
-                                
                               </div>
                             </div>
                             <div className="features-action-bar">
@@ -2776,52 +2796,58 @@ class Home extends Component<
                             </div>
                           </div>
                         </div>
-                      
+
                         <div className="card">
                           <div className="insurer_card_top">
                             <div className="logo_top 1">
                               <span className="logo-widget widget-insurer-logo"></span>
                             </div>
                             <div className="title-h6">
-                                <div>Hygeia</div>
-                                <span>Hygiea - Prime</span>
+                              <div>Hygeia</div>
+                              <span>Hygiea - Prime</span>
                             </div>
                           </div>
-                          <div className="tag_tabs">
-                            Individual
-                          </div>
+                          <div className="tag_tabs">Individual</div>
                           <div className="top-features">
                             <div className="plan-features">
                               <div className="features-block">
-                                <i className="features-icon" data-icon="Hospital Room Eligibility">
-                                <FontAwesomeIcon
-                                  className="bed-icon"
-                                  icon={faProcedures}
-                                />
+                                <i
+                                  className="features-icon"
+                                  data-icon="Hospital Room Eligibility"
+                                >
+                                  <FontAwesomeIcon
+                                    className="bed-icon"
+                                    icon={faProcedures}
+                                  />
                                 </i>
                                 <div>
-                                  <p className="feature-head">Hospital Room Eligibility</p>
+                                  <p className="feature-head">
+                                    Hospital Room Eligibility
+                                  </p>
                                   <p>
-                                  Single Private A/C Room, ICU Charges upto SI 
+                                    Single Private A/C Room, ICU Charges upto SI
                                   </p>
                                 </div>
-                                
                               </div>
                               <div className="features-block">
-                              
-                                <i className="features-icon" data-icon="Bonus on No Claim">
-                                <FontAwesomeIcon
-                                  className="gift-icon"
-                                  icon={faGift}
-                                />
-                            </i>
+                                <i
+                                  className="features-icon"
+                                  data-icon="Bonus on No Claim"
+                                >
+                                  <FontAwesomeIcon
+                                    className="gift-icon"
+                                    icon={faGift}
+                                  />
+                                </i>
                                 <div>
-                                  <p className="feature-head">Bonus on No Claim</p>
+                                  <p className="feature-head">
+                                    Bonus on No Claim
+                                  </p>
                                   <p>
-                                    10% of Sum Insured per annum, max up to 50% of SI 
+                                    10% of Sum Insured per annum, max up to 50%
+                                    of SI
                                   </p>
                                 </div>
-                                
                               </div>
                             </div>
                             <div className="features-action-bar">
@@ -2843,44 +2869,51 @@ class Home extends Component<
                               <span className="logo-widget widget-insurer-logo"></span>
                             </div>
                             <div className="title-h6">
-                                <div>Hygeia</div>
-                                <span>Hygiea - Prime</span>
+                              <div>Hygeia</div>
+                              <span>Hygiea - Prime</span>
                             </div>
                           </div>
-                          <div className="tag_tabs">
-                            Individual
-                          </div>
+                          <div className="tag_tabs">Individual</div>
                           <div className="top-features">
                             <div className="plan-features">
                               <div className="features-block">
-                                <i className="features-icon" data-icon="Hospital Room Eligibility">
-                                <FontAwesomeIcon
-                              className="bed-icon"
-                              icon={faProcedures}
-                            />
+                                <i
+                                  className="features-icon"
+                                  data-icon="Hospital Room Eligibility"
+                                >
+                                  <FontAwesomeIcon
+                                    className="bed-icon"
+                                    icon={faProcedures}
+                                  />
                                 </i>
                                 <div>
-                                  <p className="feature-head">Hospital Room Eligibility</p>
+                                  <p className="feature-head">
+                                    Hospital Room Eligibility
+                                  </p>
                                   <p>
-                                  Single Private A/C Room, ICU Charges upto SI 
+                                    Single Private A/C Room, ICU Charges upto SI
                                   </p>
                                 </div>
-                                
                               </div>
                               <div className="features-block">
-                                <i className="features-icon" data-icon="Bonus on No Claim">
-                                <FontAwesomeIcon
-                              className="gift-icon"
-                              icon={faGift}
-                            />
+                                <i
+                                  className="features-icon"
+                                  data-icon="Bonus on No Claim"
+                                >
+                                  <FontAwesomeIcon
+                                    className="gift-icon"
+                                    icon={faGift}
+                                  />
                                 </i>
                                 <div>
-                                  <p  className="feature-head">Bonus on No Claim</p>
+                                  <p className="feature-head">
+                                    Bonus on No Claim
+                                  </p>
                                   <p>
-                                    10% of Sum Insured per annum, max up to 50% of SI 
+                                    10% of Sum Insured per annum, max up to 50%
+                                    of SI
                                   </p>
                                 </div>
-                                
                               </div>
                             </div>
                             <div className="features-action-bar">
@@ -2897,33 +2930,40 @@ class Home extends Component<
                           </div>
                         </div>
                         <div className="card top_plans_see_more see_more">
-                            <a href="">SEE MORE PLANS ></a>
+                          <a href="">
+                            SEE MORE PLANS
+                            <FontAwesomeIcon
+                              className="chev"
+                              icon={faChevronRight}
+                            />
+                          </a>
                         </div>
                       </div>
-                  </section>
+                    </section>
                   </div>
 
                   <div className="col-md-4">
                     <div className="card insurers">
-                    <div className="card_heading">
-                      HMO Providers
-                    </div>
-                        <a href="">
-                          <div className="insurer_block">
-                            {/* <div > */}
-                              <img className="supplier_icon insurer_logo
+                      <div className="card_heading">HMO Providers</div>
+                      <a href="">
+                        <div className="insurer_block">
+                          {/* <div > */}
+                          <img
+                            className="supplier_icon insurer_logo
                             hygeia-general-icon
-                            " src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                              &nbsp;
-                            {/* </div> */}
-                            <div className="insurer_name">
-                              <span>Hygeia HMO</span>
-                            </div>
+                            "
+                            src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                          />
+                          &nbsp;
+                          {/* </div> */}
+                          <div className="insurer_name">
+                            <span>Hygeia HMO</span>
                           </div>
-                        </a>
+                        </div>
+                      </a>
                     </div>
                   </div>
-                  
+
                   {/* <div className="col-md-4 hmo-providers">
                     <div className="providers">
                       <h5 className="float-left top-plans">HMO Providers</h5>
@@ -2951,50 +2991,53 @@ class Home extends Component<
                       </div>
                     </div>
                   </div> */}
-                </div> 
+                </div>
               </div>
               <div className="information  container">
                 <div className="col-md-8">
-
-                <div className="hmo-def">
-                  <h5>Health Management Organizations (HMOs)</h5>
+                  <div className="hmo-def">
+                    <h5>Health Management Organizations (HMOs)</h5>
+                    <p>
+                      HMO is an acronym for a “Health Maintenance Organisation”.
+                      HMOs are organizations mandated solely to manage the
+                      provision of health care services through Health Care
+                      Facilities (Hospitals, Opticians, Dentists etc) accredited
+                      by the Scheme. Basically, they are an intermediary between
+                      the hospital and individuals/ companies seeking to provide
+                      healthcare for themselves, families or employees.
+                    </p>
+                  </div>
+                  <div className="hmo-plans-dev"></div>
+                  <h5>HMO Plans</h5>
                   <p>
-                  HMO is an acronym for a “Health Maintenance Organisation”. 
-                  HMOs are organizations mandated solely to manage the provision of health care
-                   services through Health Care Facilities (Hospitals, Opticians, Dentists etc)
-                    accredited by the Scheme. Basically, they are an intermediary between the
-                     hospital and individuals/ companies seeking to provide healthcare for 
-                     themselves, families or employees.
+                    HMO plans offer a wide range of healthcare services through
+                    a network of providers who agree to supply services to
+                    members. With an HMO you'll likely have coverage for a
+                    broader range of preventive healthcare services than you
+                    would through another type of plan.
                   </p>
-                </div>
-                <div className="hmo-plans-dev"></div>
-                <h5>HMO Plans</h5>
-                <p>
-                HMO plans offer a wide range of healthcare services through a network of 
-                providers who agree to supply services to members. With an HMO you'll likely
-                 have coverage for a broader range of preventive healthcare services than you
-                  would through another type of plan.
-                </p>
-                <div className="hmo-plans-importance">
-                  <h5>Importance of HMO plans</h5>
-                  <p>
-                  With the increased demand for quality healthcare services,
-                  medical treatment has now become quite expensive, especially in
-                  the private hospitals. And without health insurance, the hospital
-                  bills are enough to drain one's savings.
-                  </p>
-                  <p>
-                    Therefore, an HMO plan becomes an absolute necessity as it offers 
-                    coverage to the insured individual, family members against the 
-                    exorbitant hospital expenses in case of an accident or illness.
-                  </p>
-                  <p>
-                    We at InstaCare can help you buy the right HMO plan that suits your 
-                    requirement below is the list of HMO plans with the top providers. You
-                    can do the comparison and find the best health plan for your family.
-                  </p>
-                                    
-                </div>
+                  <div className="hmo-plans-importance">
+                    <h5>Importance of HMO plans</h5>
+                    <p>
+                      With the increased demand for quality healthcare services,
+                      medical treatment has now become quite expensive,
+                      especially in the private hospitals. And without health
+                      insurance, the hospital bills are enough to drain one's
+                      savings.
+                    </p>
+                    <p>
+                      Therefore, an HMO plan becomes an absolute necessity as it
+                      offers coverage to the insured individual, family members
+                      against the exorbitant hospital expenses in case of an
+                      accident or illness.
+                    </p>
+                    <p>
+                      We at InstaCare can help you buy the right HMO plan that
+                      suits your requirement below is the list of HMO plans with
+                      the top providers. You can do the comparison and find the
+                      best health plan for your family.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

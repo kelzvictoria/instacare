@@ -193,6 +193,16 @@ export const filterReducer = createReducer(state, {
   UPDATE_PLAN_DURATION: (state, actions) => {
     state.quiz.responses.plan_duration = actions.data.value;
   },
+  TOGGLE_FEATURES_MODAL: (state, actions) => {
+    state.quiz.isFeaturesModalOpen = actions.data.value;
+  },
+
+  UPDATE_FEATURES_TAB_OPENED: (state, actions) => {
+    state.quiz.tab_opened = actions.data.value;
+  },
+  TOGGLE_FEATURE_POPUP: (state, actions) => {
+    state.quiz.isFeaturePopUpOpen = actions.data.value;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -241,3 +251,6 @@ createAction("DECREMENT_SON_COUNT");
 createAction("INCREMENT_DAUGHTER_COUNT");
 createAction("DECREMENT_DAUGHTER_COUNT");
 createAction("UPDATE_PLAN_DURATION");
+createAction("TOGGLE_FEATURES_MODAL");
+createAction("UPDATE_FEATURES_TAB_OPENED");
+createAction("TOGGLE_FEATURE_POPUP");

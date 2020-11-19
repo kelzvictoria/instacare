@@ -11,11 +11,14 @@ export const state: any = {
     isOpen: false,
     isMobileViewModalOpen: false,
     isOthersInputOpen: false,
+    isFeaturesModalOpen: false,
+    isFeaturePopUpOpen: false,
     isDesktopView: true,
     isSonCheckboxChecked: false,
     isDaughterCheckboxChecked: false,
     sonCount: 1,
     daughterCount: 1,
+    tab_opened: "highlights",
 
     responses: {
       budget: [300000, 350000],
