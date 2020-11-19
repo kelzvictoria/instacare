@@ -248,7 +248,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleIndividualAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -259,7 +259,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleFatherAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -270,7 +270,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleMotherAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -281,7 +281,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleGrandFatherAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -292,7 +292,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleGrandMotherAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -303,7 +303,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleFatherInLawAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -314,7 +314,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleMotherInLawAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -325,7 +325,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleSpouseAge(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -336,7 +336,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleChild1Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -347,7 +347,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleChild2Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -358,7 +358,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleChild3Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -369,7 +369,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleChild4Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -387,7 +387,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleChild6Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -398,7 +398,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleChild7Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
@@ -409,7 +409,7 @@ class Home extends Component<QuizProps, {}> {
 
   handleChild8Age(val) {
     if (this.props.responses.type != "others") {
-      this.resetAges();
+      //this.resetAges();
     }
 
     this.props.dispatch({
