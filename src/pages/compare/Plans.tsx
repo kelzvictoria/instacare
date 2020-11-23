@@ -367,7 +367,10 @@ class Plans extends Component<PlansProps> {
 
   render() {
     return (
-      <div id={styles.wrapper}>
+      <div
+        className="recommended-plans"
+        //  id={styles.wrapper}
+      >
         {/*<Row>*/}
         <div className="mobile-view">
           <div className="row compare-plans-header">
@@ -679,6 +682,310 @@ class Plans extends Component<PlansProps> {
             </div>
           </div>
         </div>
+        <div className="desktop-view quotes_main_container">
+          <div className="navbarWrapper">
+            <div className="">
+              <nav
+                className="green_theme navbar"
+                role="navigation"
+                aria-label="main navigation"
+              >
+                <Col
+                  className="row nav-info plans-desktop header  details-desktop-header"
+                  xs={24}
+                  md={8}
+                >
+                  <Link to="/">
+                    <img
+                      src="images/logo2.png"
+                      alt="Logo"
+                      className="details-ic-logo"
+                    />
+                    {/* <div className={styles.connect}>hmo connect</div> */}
+                  </Link>
+                </Col>
+              </nav>
+            </div>
+          </div>
+          <div className="quotes_toolbar is-hidden-mobile is-hidden-tablet-only-custom">
+            <div className="quotes_toolbar_wrapper">
+              <div className="insured_members_div">
+                <span className="span_insured_heading">
+                  Showing 20 plans for self (24 Yrs)
+                </span>
+              </div>
+
+              <div className="group_members_div">
+                <div className="edit_profile_div_toolbar">
+                  <img
+                    src="https://health.policybazaar.com/insurer-logo/quotes-logos/edit_profile.svg"
+                    className="img_edit_profile"
+                  />
+                  <span className="edit_insured_member">Edit Members</span>
+                </div>
+                <div className="edit_profile_div_toolbar">
+                  <div className="filter_mobile_quote_icon">
+                    <img
+                      src="https://health.policybazaar.com/insurer-logo/quotes-logos/bottom_shortlist.svg"
+                      className="img_edit_profile"
+                    />
+                  </div>
+                  <span className="edit_insured_member">Shortlist</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="quotes_filterBar is-hidden-mobile is-hidden-tablet-only-custom">
+            <div className="quotes_sorting">
+              <img
+                alt="filter"
+                className="img_filter"
+                src="https://health.policybazaar.com/insurer-logo/quotes-logos/quotes_filter.svg"
+              />
+            </div>
+            <div className="quotes_filter_insurer1">
+              <span className="span_quotes_filter_insurer">Insurers</span>
+              <div className="img_arrow"></div>
+              <div className="insurer_popup1">
+                <div className="insurer_popup_heading">
+                  <span className="span_insurer_popup_heading">Insurers</span>
+                </div>
+                <div className="cover_div">
+                  <div className="insurer_div">
+                    <div className="insurer_checkbox_container">
+                      <label className="insurer_checkbox_label">
+                        <input type="checkbox" className="checkbox_quotes" />
+                        <div className="supplier_icon Insta_Care_icon"> </div>
+                        <div className="supplier_name">
+                          <span className="span_supplier_name">InstaCare</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                  <div className="insurer_div">
+                    <div className="insurer_checkbox_container">
+                      <label className="insurer_checkbox_label">
+                        <input type="checkbox" className="checkbox_quotes" />
+                        <div className="supplier_icon Insta_Care_icon"> </div>
+                        <div className="supplier_name">
+                          <span className="span_supplier_name">InstaCare</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div className="cover_buttons">
+                  <div className="close_button">Close</div>
+                  <div className="apply_button">Apply</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="main_quotes_div is-hidden-mobile is-hidden-tablet-only-custom">
+            <div className="main_quotes_container">
+              <div className="quotes_stack_content_container is-hidden-mobile is-hidden-tablet-only-custom">
+                <div className="quotes_content_desktop is-hidden-mobile is-hidden-tablet-only-custom">
+                  <div className="new_quotes_plan_container">
+                    <div className="quotes_logo_container1">
+                      <picture>
+                        <source
+                          type="image/webp"
+                          srcSet="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                        ></source>
+                        <source
+                          type="image/png"
+                          srcSet="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                        ></source>
+                        <img
+                          alt="Star Health"
+                          className="img_contain"
+                          // layout="fill"
+                          src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                        />
+                      </picture>
+                    </div>
+                    <div className="features_container">
+                      <span className="quotes_more_plans more">
+                        <span>6 More Plans</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div className="quotes_content_container is-hidden-mobile is-hidden-tablet-only-custom">
+                    <div className="top_quotes_content">
+                      <div className="planContent_container">
+                        <span className="quotes_plan_name">Hygeia HMO</span>
+                      </div>
+                      <div className="cover_container">
+                        <div className="div_cover">
+                          <span className="span_cover">Covers</span>
+
+                          <span className="span_cover_content">5</span>
+                        </div>
+                        <div className="div_network">
+                          <span
+                            className="span_network"
+                            onClick={this.showCashlessHospitals}
+                          >
+                            Cashless Hospitals
+                          </span>
+                          <span
+                            className="span_network_content"
+                            onClick={this.showCashlessHospitals}
+                          >
+                            300
+                          </span>
+                        </div>
+                      </div>
+                      <div className="premium_container">
+                        <div
+                          className="premium_button"
+                          onClick={this.goToDetails}
+                        >
+                          ₦5k/month
+                        </div>
+                        <span className="annually_premium">40k annually</span>
+                      </div>
+                      <div className="shortlist_container">
+                        <div className="Path_shortlist coachMark">
+                          <img
+                            className="shortlist_icon"
+                            src="https://health.policybazaar.com/insurer-logo/quotes-logos/shortlist.svg"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bottom_quotes_content">
+                      <div className="check_features_cont">
+                        <div className="checkbox_container">
+                          <label className="label_checkbox_plan">
+                            <input
+                              type="checkbox"
+                              className="checkbox_quotes"
+                            />
+                            Add to Compare
+                          </label>
+                          <div className="request-loader"></div>
+                        </div>
+                        <div className="div_features">
+                          <span
+                            className="quotes_features"
+                            onClick={this.toggleFeaturesModal}
+                          >
+                            View Features
+                          </span>
+                        </div>
+                      </div>
+                      <div className="div_cover_usp">
+                        <span className="max_condition1">Best offer</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="quotes_stack_content_container is-hidden-mobile is-hidden-tablet-only-custom">
+                <div className="quotes_content_desktop is-hidden-mobile is-hidden-tablet-only-custom">
+                  <div className="new_quotes_plan_container">
+                    <div className="quotes_logo_container1">
+                      <picture>
+                        <source
+                          type="image/webp"
+                          srcSet="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                        ></source>
+                        <source
+                          type="image/png"
+                          srcSet="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                        ></source>
+                        <img
+                          alt="Star Health"
+                          className="img_contain"
+                          // layout="fill"
+                          src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                        />
+                      </picture>
+                    </div>
+                    <div className="features_container">
+                      <span className="quotes_more_plans more">
+                        <span>6 More Plans</span>
+                      </span>
+                    </div>
+                  </div>
+                  <div className="quotes_content_container is-hidden-mobile is-hidden-tablet-only-custom">
+                    <div className="top_quotes_content">
+                      <div className="planContent_container">
+                        <span className="quotes_plan_name">Hygeia HMO</span>
+                      </div>
+                      <div className="cover_container">
+                        <div className="div_cover">
+                          <span className="span_cover">Covers</span>
+
+                          <span className="span_cover_content">5</span>
+                        </div>
+                        <div className="div_network">
+                          <span
+                            className="span_network"
+                            onClick={this.showCashlessHospitals}
+                          >
+                            Cashless Hospitals
+                          </span>
+                          <span
+                            className="span_network_content"
+                            onClick={this.showCashlessHospitals}
+                          >
+                            300
+                          </span>
+                        </div>
+                      </div>
+                      <div className="premium_container">
+                        <div
+                          className="premium_button"
+                          onClick={this.goToDetails}
+                        >
+                          ₦5k/month
+                        </div>
+                        <span className="annually_premium">40k annually</span>
+                      </div>
+                      <div className="shortlist_container">
+                        <div className="Path_shortlist coachMark">
+                          <img
+                            className="shortlist_icon"
+                            src="https://health.policybazaar.com/insurer-logo/quotes-logos/shortlist.svg"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bottom_quotes_content">
+                      <div className="check_features_cont">
+                        <div className="checkbox_container">
+                          <label className="label_checkbox_plan">
+                            <input
+                              type="checkbox"
+                              className="checkbox_quotes"
+                            />
+                            Add to Compare
+                          </label>
+                          <div className="request-loader"></div>
+                        </div>
+                        <div className="div_features">
+                          <span
+                            className="quotes_features"
+                            onClick={this.toggleFeaturesModal}
+                          >
+                            View Features
+                          </span>
+                        </div>
+                      </div>
+                      <div className="div_cover_usp">
+                        <span className="max_condition1">Best offer</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <Modal
           dialogClassName="custom-dialog"
           className="features-modal"
@@ -810,7 +1117,7 @@ class Plans extends Component<PlansProps> {
                     <div className="highlights-content">
                       <div
                         className="div_features_covered_main"
-                        onClick={this.toggleFeaturePopUp}
+                        // onClick={this.toggleFeaturePopUp}
                       >
                         <div className="features_icons">
                           <div className="feature-icon1">
@@ -833,7 +1140,7 @@ class Plans extends Component<PlansProps> {
                       </div>
                       <div
                         className="div_features_covered_main"
-                        onClick={this.toggleFeaturePopUp}
+                        // onClick={this.toggleFeaturePopUp}
                       >
                         <div className="features_icons">
                           <div className="feature-icon1">

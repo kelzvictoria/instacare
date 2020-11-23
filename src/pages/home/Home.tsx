@@ -35,6 +35,7 @@ import { Select } from "./Select";
 import { sections } from "./sections";
 
 import { options } from "./Options";
+import { child_options } from "./ChildOptions";
 
 const { Step } = Steps;
 const { Meta } = Card;
@@ -568,7 +569,7 @@ class Home extends Component<QuizProps, {}> {
             value={this.props.responses.child_1_age}
             placeholder="Select Age"
           >
-            {options.map((option) => (
+            {child_options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -612,7 +613,7 @@ class Home extends Component<QuizProps, {}> {
             value={this.props.responses.child_1_age}
             placeholder="Select Age"
           >
-            {options.map((option) => (
+            {child_options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -792,7 +793,7 @@ class Home extends Component<QuizProps, {}> {
                 value={this.props.responses.child_1_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {child_options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -824,7 +825,7 @@ class Home extends Component<QuizProps, {}> {
                 value={this.props.responses.child_2_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {child_options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -856,7 +857,7 @@ class Home extends Component<QuizProps, {}> {
                 value={this.props.responses.child_3_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {child_options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -888,7 +889,7 @@ class Home extends Component<QuizProps, {}> {
                 value={this.props.responses.child_4_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {child_options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -965,7 +966,7 @@ class Home extends Component<QuizProps, {}> {
                 value={this.props.responses.child_5_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {child_options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -997,7 +998,7 @@ class Home extends Component<QuizProps, {}> {
                 value={this.props.responses.child_6_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {child_options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1029,7 +1030,7 @@ class Home extends Component<QuizProps, {}> {
                 value={this.props.responses.child_7_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {child_options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1061,7 +1062,7 @@ class Home extends Component<QuizProps, {}> {
                 value={this.props.responses.child_8_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {child_options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
