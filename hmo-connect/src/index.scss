@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+// @import '~antd/dist/antd.css';
+
+html,
+body,
+#root {
+  min-height: 100%;
+  min-width: 100%;
+  margin: 0;
+}
+
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+img.responsive {
+  height: auto;
+  width: 100%;
+}
+
+.cardImages{
+  height:50%;
+  width:100%;
+}
+
+.title {
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ant-slider-mark-text{
+  color:white !important;
+  display: none !important;
+}
+
+.ant-checkbox-disabled + span {
+  color: rgba(0, 0, 0, 0.76) !important;
+  cursor: not-allowed;
+}
+
+
+
+// .ant-btn-primary{
+//   background-color: #38A169 !important;
+//   border-color: #38A169 !important;
+//   color: white;
+//   &:hover,
+//   &:focus {
+//     background-color: #43ba7a !important;
+//     border-color: #43ba7a !important;
+//   }
+// }
+
+// .ant-btn-default {
+//   &:hover,
+//   &:focus {
+//     border-color: #38A169 !important;
+//     color: #38A169 !important;
+//   }
+// }
+
+// .ant-steps-item-process .ant-steps-item-icon {
+//   background: #38A169 !important;
+//   border-color: #38A169 !important;
+// }
+
+// .ant-steps-item-finish .ant-steps-item-icon {
+//   border-color: #38A169 !important;
+// }
+
+// .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title::after {
+//   background-color: #38A169 !important;
+// }
+// .ant-steps-item-finish .ant-steps-item-icon>.ant-steps-icon {
+//   color: #38A169 !important;
+// }
