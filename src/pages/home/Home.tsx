@@ -1424,6 +1424,8 @@ class Home extends Component<QuizProps, {}> {
 
   submitResponses() {
     let stringResp: any = JSON.stringify(this.props.responses);
+
+    console.log("this.props.responses", this.props.responses);
     localStorage.setItem("responses", stringResp);
     this.props.history.push({
       //pathname: "/compare",
@@ -1617,6 +1619,7 @@ class Home extends Component<QuizProps, {}> {
             <input
               className="form-control"
               placeholder="Full Name"
+              required={true}
               onChange={(e) => {
                 this.handleFullName(e.target.value);
               }}
@@ -1633,6 +1636,7 @@ class Home extends Component<QuizProps, {}> {
             <input
               className="form-control input-phone input-phone-desktop "
               placeholder="11 - digit mobile number"
+              required={true}
               onChange={(e) => {
                 this.handlePhone(e.target.value);
               }}
@@ -1959,6 +1963,7 @@ class Home extends Component<QuizProps, {}> {
               onChange={(e) => {
                 this.handleFullName(e.target.value);
               }}
+              required={true}
               value={this.props.responses.full_name}
               placeholder="Full Name"
             ></input>
@@ -2399,6 +2404,7 @@ class Home extends Component<QuizProps, {}> {
                             <input
                               className="form-control"
                               placeholder="Full Name"
+                              required={true}
                               onChange={(e) => {
                                 this.handleFullName(e.target.value);
                               }}
@@ -2415,6 +2421,7 @@ class Home extends Component<QuizProps, {}> {
                             <input
                               className="form-control"
                               placeholder="11 - digit mobile number"
+                              required={true}
                               onChange={(e) => {
                                 this.handlePhone(e.target.value);
                               }}
@@ -2427,7 +2434,14 @@ class Home extends Component<QuizProps, {}> {
                             <button
                               className="btn btn-primary btn-large view-plans btn-demo"
                               onClick={() => {
-                                this.toggleModal();
+                                if (
+                                  this.props.responses.full_name &&
+                                  this.props.responses.phone_num
+                                ) {
+                                  this.toggleModal();
+                                } else {
+                                  console.log("Enter your details");
+                                }
                               }}
                             >
                               View Plans

@@ -97,7 +97,7 @@ class Plans extends Component<PlansProps> {
     open: false,
   };
 
-  setSelectedK: any;
+  /* setSelectedK: any;
   searchInput: any;
 
   getColumnSearchProps = (dataIndex: any) => ({
@@ -307,7 +307,7 @@ class Plans extends Component<PlansProps> {
     if (key == 2) {
       this.gettingProviders();
     }
-  };
+  };*/
 
   goToDetails(item: any) {
     this.props.history.push({ pathname: "/details" });
