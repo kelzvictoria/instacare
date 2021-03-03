@@ -56,7 +56,7 @@ const { Panel } = Collapse;
 const { Meta } = Card;
 const { TabPane } = Tabs;
 let responses: any;
-const API_URL = "https://dev-hmo-compare-api.herokuapp.com";
+const API_URL = "https://instacareconnect.pmglobaltechnology.com/";
 interface PlansProps {
   [x: string]: any;
   dispatch(args: any): any;

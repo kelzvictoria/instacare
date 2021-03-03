@@ -2285,7 +2285,7 @@ class Home extends Component<QuizProps, {}> {
                               Find Health Plans Starting
                               <br />
                               <span className={styles.headingSpan}>
-                                @ ₦18,000/year
+                                @ ₦19,999/year
                               </span>
                             </p>
                           </div>
@@ -2301,15 +2301,15 @@ class Home extends Component<QuizProps, {}> {
                             icon={faShieldAlt}
                           />
                           <div className="card-text">
-                            <h5>Tax Benefit</h5>
-                            <p>up to ₦5,000</p>
+                            <h5>Compare</h5>
+                            <p>HMO Plans</p>
                           </div>
                         </div>
                         <div className="col-md-4 card mr-3">
                           <span className="naira banner-icon">₦</span>
                           <div className="card-text">
-                            <h5>Save up to 12.5%</h5>
-                            <p>on 2 year payment plans</p>
+                            <h5>Purchase</h5>
+                            <p>HMO Plans</p>
                           </div>
                         </div>
                         <div className="col-md-4 card">
@@ -2318,8 +2318,8 @@ class Home extends Component<QuizProps, {}> {
                             icon={faSmile}
                           />
                           <div className="card-text">
-                            <h5>2,000+</h5>
-                            <p>Happy customers</p>
+                            <h5>Insure</h5>
+                            <p>You and Yours</p>
                           </div>
                         </div>
                       </div>

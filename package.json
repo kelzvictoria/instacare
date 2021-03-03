@@ -1,5 +1,5 @@
 {
-  "name": "hmo-compare-app",
+  "name": "instacare-web",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -7,8 +7,10 @@
     "node": "12.8.1"
   },
   "contributors": [
-    "okorie chinedu",
-    "Jerry Ejonavi"
+    "Okorie Chinedu",
+    "Jerry Ejonavi",
+    "Omotayo Adegoke",
+    "Victoria Kazeem"
   ],
   "author": "PM Global Technology Services",
   "dependencies": {
