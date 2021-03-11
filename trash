@@ -1,807 +1,220 @@
-//custom.css start
-
-#header {
-  width: 100%;
-  max-width: 100%;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
-@media only screen and (max-width: 480px) {
-  #header {
-    padding-bottom: 0;
-  }
-}
-/*box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.1);*/
-/*display: flex;
-    justify-content: space-between;*/
-#header img {
-  max-height: 30px;
-  display: inline-block;
-  @media only screen and (max-width: 480px) {
-    padding-bottom: 0;
-    max-height: 30px;
-  }
-}
-.ic-navbar-wrapper {
-  background: #fff;
-  min-height: 40px;
-  position: relative;
-  z-index: 999;
-}
-
-.top {
-  padding-bottom: 1rem;
-}
-
-.ic-quick-connect {
-  background: 0 0;
-  height: 40px;
-}
-
-.ic-navbar-wrapper .ic-quick-connect {
-  background: 0 0;
-  height: 40px;
-}
-@media (max-width: 1024px) {
-  .ic-quick-connect {
-    display: none;
-  }
-}
-
-@media (min-width: 1200px) {
-  .ic-container {
-    width: 1170px;
-    min-height: 35px;
-    max-width: 100%;
-    margin: auto;
-  }
-}
-
-.ic-container {
-  padding: 0 15px;
-}
-
-.ic-navbar-wrapper .ic-quick-connect ul.smallheader_nav {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-  max-width: 50%;
-  width: 50%;
-  float: right !important;
-}
-
-li,
-ul {
-  list-style: none;
-}
-
-.ic-navbar-wrapper .ic-quick-connect ul.smallheader_nav li {
-  display: inline-block;
-  /*float: left;*/
-  position: relative;
-  list-style: none;
-}
-
-.ic-navbar-wrapper .ic-navbar {
-  background: rgba(228, 234, 240, 0.5);
-  height: 57px;
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-navbar {
-    background: #fff;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar {
-    position: relative;
-  }
-}
-
-@media (min-width: 1200px) {
-  .ic-container {
-    width: 1170px;
-    min-height: 35px;
-    max-width: 100%;
-    margin: auto;
-  }
-}
-
-.ic-container {
-  padding: 0 15px;
-}
-
-.ic-navbar-wrapper .instacare-logo {
-  float: left;
-  max-height: 55px;
-  position: relative;
-}
-
-.btn-toggle {
-  display: none;
-}
-
-.btn-toggle,
-.ic-navbar-wrapper input[type="checkbox"]::before,
-.instacare-logo.mobile .btn-close {
-  background: url(http://static.iccdn.in/cdn/images/new-home/navigation_icon_img.png?v=12);
-}
-
-a {
-  color: #0065ff;
-  text-decoration: none;
-}
-
-@media (max-width: 1024px) {
-  .btn-toggle {
-    display: block;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: 0 0;
-    width: 40px;
-    height: 20px;
-    float: left;
-    margin: 21px 0 0;
-    border: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: 0;
-    cursor: pointer;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-logo {
-    background-position: 0 center;
-    width: 150px;
-    height: 54px;
-  }
-}
-
-.ic-navbar-wrapper .ic-logo {
-  background: url(http://static.iccdn.in/cdn/images/new-home/logoic.svg)
-    no-repeat 0 17px;
-  width: 175px;
-  height: 55px;
-  display: inline-block;
-  padding-top: 0;
-  background-size: 100%;
-}
-
-.ic-myaccount.mobile {
-  position: static;
-  width: 30px;
-  height: 30px;
-  font-size: 0;
-  float: right;
-  display: block;
-  margin: 15px 10px 0;
-  background-repeat: no-repeat;
-  background-position: -56px -71px;
-  background-size: 186px 105px;
-}
-
-.ic-myaccount.mobile,
-.ic-navbar-wrapper .ic-nav ul.nav li a.ic-myaccount::before,
-.ic-navbar-wrapper .ic-quick-connect ul.smallheader_nav li a.download:before {
-  background: url(http://static.iccdn.in/cdn/images/new-home/svg-icons/icons.svg)
-    no-repeat;
-}
-
-.ic-navbar-wrapper .ic-nav {
-  width: auto;
-  float: right;
-}
-
-@media (max-width: 1024px) {
-  .ic-nav {
-    position: fixed;
-    background-color: #fff;
-    top: 0;
-    left: -265px;
-    height: 100%;
-    min-width: 260px;
-    max-width: 260px;
-    padding: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    transition: left 0.3s ease-in-out;
-  }
-}
-
-.instacare-logo.mobile {
-  position: relative;
-}
-
-.mobile-only,
-.instacare-logo.mobile {
-  display: none !important;
-  position: fixed;
-  width: 260px;
-  background: #fff;
-  z-index: 1005;
-}
-
-.ic-navbar-wrapper .instacare-logo {
-  float: left;
-  max-height: 55px;
-  position: relative;
-}
-
-@media (max-width: 1024px) {
-  .mobile-only,
-  .instacare-logo.mobile {
-    display: block !important;
-  }
-}
-
-@media (max-width: 1024px) {
-  .instacare-logo.mobile .btn-close {
-    width: 22px;
-    height: 23px;
-    position: absolute;
-    left: 225px;
-    z-index: 1002;
-    top: 14px;
-    border: none;
-    background-position: 0 -30px;
-    background-repeat: no-repeat;
-    background-color: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: 0;
-    cursor: pointer;
-  }
-}
-
-.btn-toggle,
-.ic-navbar-wrapper input[type="checkbox"]::before,
-.instacare-logo.mobile .btn-close {
-  background: url(http://static.iccdn.in/images/new-home/navigation_icon_img.png?v=12);
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-}
-
-li,
-ul {
-  list-style: none;
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li {
-  display: inline-block;
-  list-style: none;
-  position: relative;
-  background: 0;
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav,
-  .ic-navbar-wrapper .ic-nav ul.nav li {
-    display: block;
-  }
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li {
-  display: inline-block;
-  list-style: none;
-  position: relative;
-  background: 0;
-}
-
-@media only screen and (max-width: 1024px) {
-  .policywarp nav ul.nav li {
-    width: 100%;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav li label {
-    display: block;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav a,
-  .ic-navbar-wrapper .ic-nav ul.nav li label {
-    padding: 15px 20px !important;
-    margin: 0 !important;
-    border-bottom: 1px solid #e6e6e6;
-    border-radius: 0 !important;
-    display: inline-block;
-    cursor: pointer;
-    width: 100%;
-  }
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li label {
-  display: none;
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li a,
-.ic-navbar-wrapper .ic-nav ul.nav li label {
-  font-size: 12px;
-  text-decoration: none;
-  color: #4d4d4d;
-  padding: 20px 0 20px;
-  margin: 0 20px;
-  font-weight: 500;
-  text-transform: capitalize;
-  display: block;
-  position: relative;
-  letter-spacing: 0;
-  white-space: normal;
-  line-height: normal;
-  background: 0;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li label {
-  display: none;
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li a,
-.ic-navbar-wrapper .ic-nav ul.nav li label {
-  font-size: 12px;
-  text-decoration: none;
-  color: #4d4d4d;
-  padding: 20px 0 20px;
-  margin: 0 20px;
-  font-weight: 500;
-  text-transform: capitalize;
-  display: block;
-  position: relative;
-  letter-spacing: 0;
-  white-space: normal;
-  line-height: normal;
-  background: 0;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav li label {
-    display: block;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav a,
-  .ic-navbar-wrapper .ic-nav ul.nav li label {
-    padding: 15px 20px !important;
-    margin: 0 !important;
-    border-bottom: 1px solid #e6e6e6;
-    border-radius: 0 !important;
-    display: inline-block;
-    cursor: pointer;
-    width: 100%;
-  }
-}
-
-.ic-navbar-wrapper input[type="checkbox"] {
-  display: none;
-}
-
-button,
-input,
-select,
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-}
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper input[type="checkbox"] {
-    background: 0 0;
-    position: absolute;
-    height: 46px;
-    display: block;
-    width: 100%;
-    top: 0;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: 0;
-    border: 0;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu,
-  .ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu.min {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu.min {
-  width: 240px;
-  left: -7%;
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu {
-    display: block !important;
-    height: 0;
-    overflow: hidden;
-    -webkit-transition: all 0.3s auto;
-    -moz-transition: all 0.3s auto;
-    transition: all 0.3s auto;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu {
-    background: #f3f2f2;
-    box-shadow: none;
-    border-radius: 0;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu {
-    position: static;
-  }
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu {
-  display: none;
-  position: absolute;
-  width: 240px;
-  background: #fff;
-  z-index: 1000;
-  padding: 8px 0 15px;
-  margin: 0;
-  box-shadow: 4px 5px 9px -2px rgba(16, 16, 16, 0.18);
-  border: 0;
-  left: -15%;
-  border-bottom-left-radius: 8px;
-  top: 55px;
-  right: 0;
-  margin: 0 auto;
-  border-bottom-right-radius: 8px;
-}
-.ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu li {
-  display: block;
-  width: 100%;
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav,
-  .ic-navbar-wrapper .ic-nav ul.nav li {
-    display: block;
-  }
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li {
-  display: inline-block;
-  list-style: none;
-  position: relative;
-  background: 0;
-}
-
-@media (max-width: 1024px) {
-  .hide-mobile-link {
-    display: none !important;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu li a {
-    padding: 10px 24px !important;
-    border: none;
-    font-size: 13px;
-  }
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li a,
-.ic-navbar-wrapper .ic-nav ul.nav li label {
-  /* font-size: 12px; */
-  text-decoration: none;
-  color: #4d4d4d;
-  /* padding: 20px 0 20px;
-    margin: 0 20px; */
-  font-weight: 500;
-  text-transform: capitalize;
-  display: block;
-  position: relative;
-  letter-spacing: 0;
-  white-space: normal;
-  line-height: normal;
-  background: 0;
-  /* border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px; */
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav a,
-  .ic-navbar-wrapper .ic-nav ul.nav li label {
-    padding: 15px 20px !important;
-    margin: 0 !important;
-    border-bottom: 1px solid #e6e6e6;
-    border-radius: 0 !important;
-    display: inline-block;
-    cursor: pointer;
-    width: 100%;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu li a {
-    padding: 10px 24px !important;
-    border: none;
-    font-size: 13px;
-  }
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li a,
-.ic-navbar-wrapper .ic-nav ul.nav li label {
-  /* font-size: 12px; */
-  text-decoration: none;
-  color: #4d4d4d;
-  padding: 20px 0 20px;
-  margin: 0 20px;
-  font-weight: 500;
-  text-transform: capitalize;
-  display: block;
-  position: relative;
-  /* letter-spacing: 0; */
-  white-space: normal;
-  line-height: normal;
-  background: 0;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav a,
-  .ic-navbar-wrapper .ic-nav ul.nav li label {
-    padding: 15px 20px !important;
-    margin: 0 !important;
-    border-bottom: 1px solid #e6e6e6;
-    border-radius: 0 !important;
-    display: inline-block;
-    cursor: pointer;
-    width: 100%;
-  }
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu li a {
-    padding: 10px 24px !important;
-    border: none;
-    font-size: 13px;
-  }
-}
-.ic-navbar-wrapper .ic-nav ul.nav li a,
-.ic-navbar-wrapper .ic-nav ul.nav li label {
-  font-size: 12px;
-  text-decoration: none;
-  color: #4d4d4d;
-  padding: 20px 0 20px;
-  margin: 0 20px;
-  font-weight: 500;
-  text-transform: capitalize;
-  display: block;
-  position: relative;
-  letter-spacing: 0;
-  white-space: normal;
-  line-height: normal;
-  background: 0;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav a,
-  .ic-navbar-wrapper .ic-nav ul.nav li label {
-    padding: 15px 20px !important;
-    margin: 0 !important;
-    border-bottom: 1px solid #e6e6e6;
-    border-radius: 0 !important;
-    display: inline-block;
-    cursor: pointer;
-    width: 100%;
-  }
-}
-a {
-  color: #0065ff;
-  text-decoration: none;
-}
-user agent stylesheet a:-webkit-any-link {
-  color: -webkit-link;
-  cursor: pointer;
-}
-.ic-navbar-wrapper .ic-nav ul.nav li {
-  display: inline-block;
-  list-style: none;
-  position: relative;
-  background: 0;
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li {
-  display: inline-block;
-  list-style: none;
-  position: relative;
-  background: 0;
-}
-
-@media only screen and (max-width: 1024px) {
-  .policywarp nav ul.nav li {
-    width: 100%;
-  }
-}
-
-@media (max-width: 1024px) {
-  .mobile-only,
-  .instacare-logo.mobile {
-    display: block !important;
-  }
-}
-
-.mobile-only,
-.instacare-logo.mobile {
-  /* display: none!important;
-    position: fixed;
-    width: 260px;
-    background: #fff; */
-  z-index: 1005;
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li a,
-.ic-navbar-wrapper .ic-nav ul.nav li label {
-  font-size: 12px;
-  text-decoration: none;
-  color: #4d4d4d;
-  /* padding: 20px 0 20px;
-    margin: 0 20px; */
-  font-weight: 500;
-  text-transform: capitalize;
-  display: block;
-  position: relative;
-  letter-spacing: 0;
-  white-space: normal;
-  line-height: normal;
-  background: 0;
-  /* border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px; */
-}
-
-@media (max-width: 1024px) {
-  .ic-navbar-wrapper .ic-nav ul.nav a,
-  .ic-navbar-wrapper .ic-nav ul.nav li label {
-    padding: 15px 20px !important;
-    margin: 0 !important;
-    border-bottom: 1px solid #e6e6e6;
-    border-radius: 0 !important;
-    display: inline-block;
-    cursor: pointer;
-    width: 100%;
-  }
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li {
-  display: inline-block;
-  list-style: none;
-  position: relative;
-  background: 0;
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu {
-  display: none;
-  position: absolute;
-  width: 240px;
-  background: #fff;
-  z-index: 1000;
-  padding: 8px 0 15px;
-  margin: 0;
-  box-shadow: 4px 5px 9px -2px rgba(16, 16, 16, 0.18);
-  border: 0;
-  left: -15%;
-  border-bottom-left-radius: 8px;
-  top: 55px;
-  right: 0;
-  margin: 0 auto;
-  border-bottom-right-radius: 8px;
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li .dropdown-menu li {
-  display: block;
-  width: 100%;
-}
-
-.ic-navbar-wrapper .ic-nav ul.nav li {
-  /* display: inline-block; */
-  list-style: none;
-  position: relative;
-  background: 0;
-}
-.ic-navbar-wrapper input[type="checkbox"] {
-  display: none;
-}
-//custom.css end
-
-//AppHeader.tsx
-
-return (
-    <div id="header" className="ic-navbar-wrapper">
-      <div className="ic-quick-connect">
-        <Row className="ic-quick-container">
-          <ul className="smallheader_nav row">
-            <li className="col-md-4">
-              <Link to="/">Sales: 09055232411</Link>
-            </li>
-            <li className="col-md-4">
-              <Link to="/">Sales: 09055232411</Link>
-            </li>
-            <li className="col-md-4">
-              <Link to="/">Contact Us</Link>
-            </li>
-          </ul>
-        </Row>
-      </div>
-
-      <div className="ic-navbar">
-        <Row className="ic-container">
-          <Col xs={24} md={8} className="instacare-logo">
-            <a href="#" className="btn-toggle"></a>
-            <Link to="/">
-              <img src="images/logo2.png" alt="Logo" />
-            </Link>
-          </Col>
-          <a href="" className="ic-myaccount mobile" rel="nofollow">
-            My Account
-          </a>
-          <div className="ic-nav">
-            <div className="instacare-logo">
-              <a href="" className="ic-logo"></a>
-              <a href="javascript:history.back();" className="btn-close"></a>
-            </div>
-            <ul className="nav">
-              <li>
-                <label itemProp="label" htmlFor="hmos"></label>
-                <input type="checkbox" id="hmos" name="menu-item" />
-                <div className="hide-nav">
-                  <a itemProp="url" href="">
-                    Health Insurance
-                  </a>
+<div
+              className={
+                this.state.show_desktop_compare_widget
+                  ? "quotes_compare_container is-hidden-desktop-custom"
+                  : "hide"
+              }
+            >
+              <div className="div_compare_plans_heading">
+                <span className="compare_plans_heading">Compare Plans</span>
+                <span
+                  className="compare_remove"
+                  onClick={this.toggleShowDesktopCompareWidget}
+                >
+                  Close
+                </span>
+              </div>
+              <div className="quotes_compare_row">
+                <div className="quotes_compare_div">
+                  <div className="quotes_compare_plan_name">
+                    <div className="quotes_compare_plan_main">
+                      <div className="quotes_compare_image">
+                        {this.state.compare_plans_desktop_indexes[0] ? (
+                          <img
+                            src={
+                              this.props.recommended_plans[
+                                this.state.compare_plans_desktop_indexes[0]
+                              ].hmo_id.logo
+                            }
+                            alt=""
+                            width="48"
+                            className="quotes_img_compare1"
+                            onClick={this.toggleShowDesktopCompareCheckbox}
+                          />
+                        ) : (
+                          <i className="quotes_img_compare1 others"></i>
+                        )}
+                      </div>
+                      <div className="quotes_compare_plan_block">
+                        <span
+                          className={
+                            this.state.compare_plans_desktop_indexes[0]
+                              ? "quotes_compare_span_plan_name"
+                              : "add-plan"
+                          }
+                          onClick={this.toggleShowDesktopCompareCheckbox}
+                        >
+                          {this.state.compare_plans_desktop_indexes[0]
+                            ? this.props.recommended_plans[
+                                this.state.compare_plans_desktop_indexes[0]
+                              ].name
+                            : "Add Plan"}
+                        </span>
+                        <div
+                          className={
+                            this.state.compare_plans_desktop_indexes[0]
+                              ? "cover_compare"
+                              : "hide"
+                          }
+                        >
+                          {this.state.compare_plans_desktop_indexes[0]
+                            ? this.props.quiz.responses.type == "single"
+                              ? `₦${
+                                  this.props.recommended_plans[
+                                    this.state.compare_plans_desktop_indexes[0]
+                                  ].individual_annual_price
+                                }`
+                              : `₦${
+                                  this.props.recommended_plans[
+                                    this.state.compare_plans_desktop_indexes[0]
+                                  ].family_annual_price
+                                }`
+                            : ""}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="div_remove_compare"
+                      onClick={() => {
+                        //this.state.compare_plans_desktop_indexes.length == 2 ?
+
+                        this.removePlanFromCheckedIndexes(
+                          this.state.compare_plans_desktop_indexes[2]
+                        ); //:
+                      }}
+                    >
+                      <span className="span_cross">x</span>
+                    </div>
+                  </div>
+                  <div className="quotes_compare_plan_name">
+                    <div className="quotes_compare_plan_main">
+                      <div className="quotes_compare_image">
+                        {this.state.compare_plans_desktop_indexes[1] ? (
+                          <img
+                            src={
+                              this.props.recommended_plans[
+                                this.state.compare_plans_desktop_indexes[1]
+                              ].hmo_id.logo
+                            }
+                            alt=""
+                            width="48"
+                            className="quotes_img_compare1"
+                          />
+                        ) : (
+                          <i className="quotes_img_compare1 others"></i>
+                        )}
+                      </div>
+                      <div className="quotes_compare_plan_block">
+                        <span
+                          className={
+                            this.state.compare_plans_desktop_indexes[1]
+                              ? "quotes_compare_span_plan_name"
+                              : "add-plan"
+                          }
+                          onClick={this.toggleShowDesktopCompareCheckbox}
+                        >
+                          {this.state.compare_plans_desktop_indexes[1]
+                            ? this.props.recommended_plans[
+                                this.state.compare_plans_desktop_indexes[1]
+                              ].name
+                            : "Add Plan"}
+                        </span>
+                        <div
+                          className={
+                            this.state.compare_plans_desktop_indexes[1]
+                              ? "cover_compare"
+                              : "hide"
+                          }
+                        >
+                          {this.state.compare_plans_desktop_indexes[1]
+                            ? this.props.quiz.responses.type == "single"
+                              ? this.props.recommended_plans[
+                                  this.state.compare_plans_desktop_indexes[1]
+                                ].individual_annual_price
+                              : this.props.recommended_plans[
+                                  this.state.compare_plans_desktop_indexes[1]
+                                ].family_annual_price
+                            : ""}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="div_remove_compare"
+                      onClick={() => {
+                        this.removePlanFromCheckedIndexes(
+                          this.state.compare_plans_desktop_indexes[1]
+                        );
+                      }}
+                    >
+                      <span className="span_cross">x</span>
+                    </div>
+                  </div>
+                  <div className="quotes_compare_plan_name">
+                    <div className="quotes_compare_plan_main">
+                      <div className="quotes_compare_image">
+                        {this.state.compare_plans_desktop_indexes[0] ? (
+                          <img
+                            src={
+                              this.props.recommended_plans[
+                                this.state.compare_plans_desktop_indexes[0]
+                              ].hmo_id.logo
+                            }
+                            alt=""
+                            width="48"
+                            className="quotes_img_compare1"
+                          />
+                        ) : (
+                          <i className="quotes_img_compare1 others"></i>
+                        )}
+                      </div>
+                      <div className="quotes_compare_plan_block">
+                        <span
+                          className={
+                            this.state.compare_plans_desktop_indexes[0]
+                              ? "quotes_compare_span_plan_name"
+                              : "add-plan"
+                          }
+                          onClick={this.toggleShowDesktopCompareCheckbox}
+                        >
+                          {this.state.compare_plans_desktop_indexes[0]
+                            ? this.props.recommended_plans[
+                                this.state.compare_plans_desktop_indexes[0]
+                              ].name
+                            : "Add Plan"}
+                        </span>
+                        <div
+                          className={
+                            this.state.compare_plans_desktop_indexes[0]
+                              ? "cover_compare"
+                              : "hide"
+                          }
+                        >
+                          {this.state.compare_plans_desktop_indexes[0]
+                            ? this.props.quiz.responses.type == "single"
+                              ? this.props.recommended_plans[
+                                  this.state.compare_plans_desktop_indexes[0]
+                                ].individual_annual_price
+                              : this.props.recommended_plans[
+                                  this.state.compare_plans_desktop_indexes[0]
+                                ].family_annual_price
+                            : ""}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="div_remove_compare"
+                      onClick={() => {
+                        this.removePlanFromCheckedIndexes(
+                          this.state.compare_plans_desktop_indexes[0]
+                        );
+                      }}
+                    >
+                      <span className="span_cross">x</span>
+                    </div>
+                  </div>
                 </div>
-                <ul className="dropdown-menu min">
-                  <li className="hide-mobile-link">
-                    <a itemProp="url" href="">
-                      <span itemProp="name">HMO Plans</span>
-                    </a>
-                  </li>
-                  <li className="hide-mobile-link">
-                    <a itemProp="url" href="">
-                      <span itemProp="name">HMO Plans</span>
-                    </a>
-                  </li>
-                  <li className="hide-mobile-link">
-                    <a itemProp="url" href="">
-                      <span itemProp="name">HMO Plans</span>
-                    </a>
-                  </li>
-                  <li className="hide-mobile-link">
-                    <a itemProp="url" href="">
-                      <span itemProp="name">HMO Plans</span>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </Row>
-      </div>
-    </div>
-  );
-
-  //AppHeader.tsx end
+              </div>
+              <div className="compare_quotes_button " id="CompareNow">
+                COMPARE NOW
+              </div>
+            </div>

@@ -1,4 +1,22 @@
 export interface Plan {
+  [x: string]: any;
+  name: string;
+  category_id: string;
+  individual_annual_price: number;
+  individual_monthly_price: number;
+  family_annual_price: number;
+  family_monthly_price: number;
+  family_no: number;
+  total_benefit_limit: number;
+  inpatient_limit: number;
+  outpatient_limit: number;
+  cover_region_id: string;
+  covers: string;
+  duration: string;
+  service_id: object;
+}
+
+/*export interface Plan {
     [x: string]: any;
     name: string;
     price: number;
@@ -58,4 +76,4 @@ export interface Plan {
     exclusions: string[];
     imageUrl?: string;
     matches: number;
-}
+}*/

@@ -10,6 +10,7 @@ import {
   AutoComplete,
   Form,
   Card,
+  Spin,
 } from "antd";
 import {
   faHome,
@@ -37,8 +38,22 @@ import { sections } from "./sections";
 import { options } from "./Options";
 import { child_options } from "./ChildOptions";
 
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
+import Plans from "../compare/Plans";
+
+import ic_logo from "../../imgs/logo2.png";
+// import {
+//   verifyPhoneNumber,
+//   sanitizePhoneNumber,
+//   COUNTRY_CODE,
+// } from "nigerian-phone-number-validator";
+
 const { Step } = Steps;
 const { Meta } = Card;
+
+const API_URL = "https://instacareconnect.pmglobaltechnology.com";
+const TEST_URL = "http://localhost:5000";
 
 interface QuizProps {
   [x: string]: any;
@@ -102,12 +117,17 @@ class Home extends Component<QuizProps, {}> {
     this.decrementDaughterCount = this.decrementDaughterCount.bind(this);
     this.incrementDaughterCount = this.incrementDaughterCount.bind(this);
     this.goToDetails = this.goToDetails.bind(this);
+    this.handlePhone = this.handlePhone.bind(this);
   }
+
+  state = {
+    is_phone_valid: "null",
+  };
 
   steps: { p: string; h3: string }[] = [
     {
       h3: "No medicals required",
-      p: "Get HMO plans from the comfort of your home",
+      p: "Compare HMO plans in Nigeria from the comfort of your home",
     },
     {
       h3: "Like to get HMO plans for",
@@ -126,7 +146,7 @@ class Home extends Component<QuizProps, {}> {
     },
     {
       h3: "No medicals required",
-      p: "Get HMO plans from the comfort of your home",
+      p: "Compare HMO plans in Nigeria from the comfort of your home",
     },
     {
       h3: "Like to get HMO plans for",
@@ -189,13 +209,22 @@ class Home extends Component<QuizProps, {}> {
     // this.setState({
     //   isMobileViewModalOpen: !this.props.isMobileViewModalOpen,
     // });
-    this.props.dispatch({
-      type: actions.TOGGLE_MOBILE_MODAL,
-      data: {
-        key: "isMobileViewModalOpen",
-        value: !this.props.isMobileViewModalOpen,
-      },
-    });
+
+    if (
+      !this.props.responses.phone_num ||
+      this.props.responses.phone_num.length < 14
+    ) {
+      message.error("Please enter your phone number");
+      return;
+    } else {
+      this.props.dispatch({
+        type: actions.TOGGLE_MOBILE_MODAL,
+        data: {
+          key: "isMobileViewModalOpen",
+          value: !this.props.isMobileViewModalOpen,
+        },
+      });
+    }
   };
 
   toggleOthersInput = () => {
@@ -216,6 +245,232 @@ class Home extends Component<QuizProps, {}> {
 
   componentDidMount() {
     document.title = "Instacare - Home";
+    this.fetchHmos();
+    this.fetchProviders();
+    this.fetchServices();
+    this.fetchPlans();
+  }
+
+  async fetchPlans() {
+    this.props.dispatch({
+      type: actions.IS_FETCHING_PLANS,
+      data: true,
+    });
+    const res = await fetch(`${API_URL}/api/plans`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (res) {
+      let plans: object[] = [];
+      let formelo_resp = await res.json();
+      this.props.dispatch({
+        type: actions.IS_FETCHING_PLANS,
+        data: false,
+      });
+      if (formelo_resp || formelo_resp.length !== 0) {
+        for (let i = 0; i < formelo_resp.length; i++) {
+          plans.push(formelo_resp[i].data);
+        }
+
+        for (let j = 0; j < plans.length; j++) {
+          let hmoID = plans[j]["hmo_id"].id;
+          let servicesString = plans[j]["service_id"];
+          let services = servicesString ? JSON.parse(servicesString) : "";
+
+          const hmo_res = await fetch(`${API_URL}/api/hmos?id=${hmoID}`, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "GET",
+          });
+
+          if (hmo_res) {
+            let hmo_resp = await hmo_res.json();
+            //console.log("hmo_resp", hmo_resp);
+
+            plans[j]["hmo_id"] = hmo_resp.data;
+            plans[j]["service_id"] = services;
+          }
+        }
+
+        this.props.dispatch({
+          type: actions.GET_PLANS,
+          data: plans,
+        });
+        return;
+      }
+    }
+  }
+
+  async fetchHmos() {
+    this.props.dispatch({
+      type: actions.IS_FETCHING_HMOS,
+      data: true,
+    });
+    const res = await fetch(`${API_URL}/api/hmos`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (res) {
+      let hmos: object[] = [];
+      let formelo_resp = await res.json();
+      this.props.dispatch({
+        type: actions.IS_FETCHING_HMOS,
+        data: false,
+      });
+      if (formelo_resp || formelo_resp.length !== 0) {
+        for (let i = 0; i < formelo_resp.length; i++) {
+          hmos.push(formelo_resp[i].data);
+        }
+
+        // formelo_resp.map((hmo) => {
+        //   hmos.push(hmo.data);
+        // });
+
+        this.props.dispatch({
+          type: actions.GET_HMOS,
+          data: hmos,
+        });
+        return;
+      }
+    }
+  }
+
+  async fetchServices() {
+    this.props.dispatch({
+      type: actions.IS_FETCHING_SERVICES,
+      data: true,
+    });
+    const res = await fetch(`${API_URL}/api/services`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (res) {
+      let services: object[] = [];
+      let formelo_resp = await res.json();
+      this.props.dispatch({
+        type: actions.IS_FETCHING_SERVICES,
+        data: false,
+      });
+      if (formelo_resp || formelo_resp.length !== 0) {
+        for (let i = 0; i < formelo_resp.length; i++) {
+          services.push(formelo_resp[i].data);
+        }
+
+        this.props.dispatch({
+          type: actions.GET_SERVICES,
+          data: services,
+        });
+        return;
+      }
+    }
+  }
+
+  async fetchProviders() {
+    this.props.dispatch({
+      type: actions.IS_FETCHING_PROVIDERS,
+      data: true,
+    });
+    const res = await fetch(`${API_URL}/api/providers`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (res) {
+      let providers: object[] = [];
+      let formelo_resp = await res.json();
+      this.props.dispatch({
+        type: actions.IS_FETCHING_PROVIDERS,
+        data: false,
+      });
+      if (formelo_resp || formelo_resp.length !== 0) {
+        for (let i = 0; i < formelo_resp.length; i++) {
+          providers.push(formelo_resp[i].data);
+        }
+
+        this.props.dispatch({
+          type: actions.GET_PROVIDERS,
+          data: providers,
+        });
+        return;
+      }
+      console.log("providers", providers);
+    }
+  }
+
+  async fetchRecommendedPlans() {
+    this.handleNumOfPeopleCount();
+    // console.log("this.props", this.props);
+    let rec_plans: object[] = [];
+    let family_plans: object[] = [];
+    let individual_plans: object[] = [];
+
+    this.props.dispatch({
+      type: actions.IS_FETCHING_RECOMMENDED_PLANS,
+      data: true,
+    });
+    let res = await this.props.plans;
+    console.log("res", res);
+    if (res) {
+      if (res.length !== 0) {
+        for (let i = 0; i < res.length; i++) {
+          console.log("res[i].category_id.id:", res[i].category_id.id);
+          if (
+            //this.props.responses.num_of_people == 1 &&
+            res[i].category_id.id == "personal"
+          ) {
+            console.log("personal");
+            individual_plans.push(res[i]);
+            //rec_plans.push(res[i]);
+          }
+
+          if (
+            //this.props.responses.num_of_people > 1 &&
+            res[i].category_id.id == "famiy"
+          ) {
+            console.log("family");
+            // rec_plans.push(res[i]);
+            family_plans.push(res[i]);
+          }
+        }
+
+        this.props.dispatch({
+          type: actions.GET_NUM_OF_PEOPLE,
+          data: this.props.quiz.responses.num_of_people,
+        });
+
+        if (
+          //this.props.responses.num_of_people === 1 ||
+          this.props.quiz.responses.type == "single"
+        ) {
+          rec_plans = individual_plans;
+        } else if (this.props.quiz.responses.type !== "single") {
+          rec_plans = family_plans;
+        }
+
+        this.props.dispatch({
+          type: actions.GET_RECOMMENDED_PLANS,
+          data: rec_plans,
+        });
+
+        this.props.dispatch({
+          type: actions.IS_FETCHING_RECOMMENDED_PLANS,
+          data: false,
+        });
+        return;
+      }
+    }
   }
 
   defaultGender() {
@@ -234,10 +489,23 @@ class Home extends Component<QuizProps, {}> {
   }
 
   handlePhone(val) {
-    this.props.dispatch({
-      type: actions.UPDATE_PHONE,
-      data: { key: "phone_num", value: val },
-    });
+    if (val) {
+      console.log("val.length", val.length, "val", val);
+      if (val.toString().length == 14) {
+        this.setState({
+          is_phone_valid: true,
+        });
+      } else if (val.toString().length > 0 && val.toString().length < 14) {
+        this.setState({
+          is_phone_valid: false,
+        });
+      }
+
+      this.props.dispatch({
+        type: actions.UPDATE_PHONE,
+        data: { key: "phone_num", value: val },
+      });
+    }
   }
 
   handleFullName(val) {
@@ -452,34 +720,68 @@ class Home extends Component<QuizProps, {}> {
   }
 
   handleNumOfPeopleCount() {
+    // if (this.props.responses.type != "single") {
+    //   this.props.dispatch({
+    //     type: actions.RESET_NUM_OF_PEOPLE,
+    //   });
+    // }
+
     if (this.props.responses.type == "couple") {
-      this.props.responses.num_of_people =
-        this.props.responses.num_of_people + 1;
-    }
+      this.props.dispatch({
+        type: actions.UPDATE_NUM_OF_PEOPLE,
+        data: 1,
+      });
+    } else if (this.props.responses.type == "fam-of-4") {
+      this.props.dispatch({
+        type: actions.UPDATE_NUM_OF_PEOPLE,
+        data: 3,
+      });
+    } else if (this.props.responses.type == "fam-of-3") {
+      this.props.dispatch({
+        type: actions.UPDATE_NUM_OF_PEOPLE,
+        data: 2,
+      });
+    } else if (this.props.responses.type == "parents") {
+      this.props.dispatch({
+        type: actions.UPDATE_NUM_OF_PEOPLE,
+        data: 1,
+      });
+    } else if (this.props.responses.type == "others") {
+      let ages = [
+        this.props.responses.child_1_age,
+        this.props.responses.child_2_age,
+        this.props.responses.child_3_age,
+        this.props.responses.child_4_age,
+        this.props.responses.child_5_age,
+        this.props.responses.child_6_age,
+        this.props.responses.child_7_age,
+        this.props.responses.child_8_age,
+        this.props.responses.father_age,
+        this.props.responses.mother_age,
+        this.props.responses.father_in_law_age,
+        this.props.responses.mother_in_law_age,
+        this.props.responses.spouse_age,
+        this.props.responses.grand_father_age,
+        this.props.responses.grand_mother_age,
+        this.props.individual_age,
+      ];
 
-    if (this.props.responses.type == "fam-of-3") {
-      this.props.responses.num_of_people =
-        this.props.responses.num_of_people + 2;
-    }
-
-    if (this.props.responses.type == "parents") {
-      this.props.responses.num_of_people =
-        this.props.responses.num_of_people + 1;
-    }
-
-    if (this.props.responses.type == "others") {
-      this.props.responses.num_of_people = 0;
+      for (let i = 0; i < ages.length; i++) {
+        //console.log("ages[i]", ages[i]);
+        if (parseInt(ages[i]) !== 0) {
+          this.props.dispatch({
+            type: actions.UPDATE_NUM_OF_PEOPLE,
+            data: 1,
+          });
+        }
+      }
     }
 
     console.log(
       `
       this.props.responses.num_of_people
-      + this.props.sonCount
-      + this.props.daughterCount
       `,
-      this.props.responses.num_of_people +
-        this.props.sonCount +
-        this.props.daughterCount
+      this.props.responses.num_of_people
     );
   }
 
@@ -1298,12 +1600,23 @@ class Home extends Component<QuizProps, {}> {
     let currentPage = this.props.page;
     // console.log("currentPage:", currentPage);
     const targetId = e.target.id;
+    if (
+      !this.props.responses.phone_num ||
+      this.props.responses.phone_num.length < 14
+    ) {
+      message.error("Please enter your phone number");
+      return;
+    }
     if (targetId === "next") {
       //console.log('this.props.isDesktopView', this.props.isDesktopView);
       if (this.props.isMobileViewModalOpen) {
-        if (currentPage == 4 && this.props.responses.state == "") {
-          message.error("Please provide a location");
-          return;
+        if (currentPage == 4) {
+          if (this.props.responses.state == "") {
+            message.error("Please provide a location");
+            return;
+          } else {
+            this.fetchRecommendedPlans();
+          }
         }
         console.log(
           "this.props.isMobileViewModalOpen",
@@ -1314,13 +1627,13 @@ class Home extends Component<QuizProps, {}> {
           this.props.isDesktopView
         );
       }
-      if (
-        currentPage == 3 &&
-        this.props.responses.state == "" &&
-        this.props.isDesktopView
-      ) {
-        message.error("Please provide a location");
-        return;
+      if (currentPage == 3 && this.props.isDesktopView) {
+        if (this.props.responses.state == "") {
+          message.error("Please provide a location");
+          return;
+        } else {
+          this.fetchRecommendedPlans();
+        }
       }
 
       if (this.props.isDesktopView) {
@@ -1633,15 +1946,25 @@ class Home extends Component<QuizProps, {}> {
           </div>
 
           <div className="col-md-12">
-            <input
-              className="form-control input-phone input-phone-desktop "
+            <PhoneInput
+              className={
+                this.state.is_phone_valid
+                  ? "form-control input-phone input-phone-desktop"
+                  : "form-control input-phone input-phone-desktop invalid"
+              }
               placeholder="11 - digit mobile number"
-              required={true}
-              onChange={(e) => {
-                this.handlePhone(e.target.value);
-              }}
+              //required={true}
+              onChange={
+                // (e) => {
+                this.handlePhone
+                //   (e.target.value);
+                // }
+              }
+              defaultCountry="NG"
               value={this.props.responses.phone_num}
-            ></input>
+              type="phone"
+              maxLength="13"
+            />
           </div>
         </div>
       </div>
@@ -1851,7 +2174,7 @@ class Home extends Component<QuizProps, {}> {
             />
           </Form.Item>
         </div>
-        <div className="row col-md-12">
+        <div className="row col-md-12 popular-cities">
           <div className="col-md-3">
             <button
               className="form-control state-btn"
@@ -2253,8 +2576,22 @@ class Home extends Component<QuizProps, {}> {
     return <p>Not enough responses collected!</p>;
   }
 
+  getClickedPlan = (index) => {
+    console.log("index", index);
+    this.props.dispatch({
+      type: actions.GET_CLICKED_PLAN,
+      data: this.props.plans[index],
+      //data: this.props.recommended_plans[index],
+    });
+  };
+
   render() {
     //console.log("this.props.page", this.props.page);
+    //console.log("this.props.hmos", this.props.hmos);
+    //console.log("this.props.services", this.props.services);
+    //console.log("this.props.providers", this.props.providers);
+    //console.log("this.props.plans", this.props.plans);
+    console.log("this.props", this.props);
     let current;
     if (this.props.page != 0) {
       current = this.props.page - 1;
@@ -2319,7 +2656,7 @@ class Home extends Component<QuizProps, {}> {
                           />
                           <div className="card-text">
                             <h5>Insure</h5>
-                            <p>You and Yours</p>
+                            <p>You & your family</p>
                           </div>
                         </div>
                       </div>
@@ -2332,7 +2669,10 @@ class Home extends Component<QuizProps, {}> {
                         onSubmit={this.preventDefault}
                         className="form desktop"
                       >
-                        <p>Get HMO plans from the comfort of your home</p>
+                        <p>
+                          Compare HMO plans in Nigeria from the comfort of your
+                          home
+                        </p>
                         <h3 className="no-med">No medicals required</h3>
                         <div className="mobile-view-steps">
                           <div className="col-md-12">
@@ -2346,12 +2686,23 @@ class Home extends Component<QuizProps, {}> {
                         <div className="mobile-view-phone form-group">
                           <div className="col-md-12">
                             <label>Tell us about you</label>
-                            <input
-                              className="form-control"
+                            <PhoneInput
+                              className={
+                                this.state.is_phone_valid
+                                  ? "form-control"
+                                  : "form-control invalid"
+                              }
                               placeholder="Enter phone number"
-                              onChange={(e) => {
-                                this.handlePhone(e.target.value);
-                              }}
+                              type="phone"
+                              maxLength="13"
+                              defaultCountry="NG"
+                              //required={true}
+                              onChange={
+                                // (e) => {
+                                this.handlePhone
+                                //   (e.target.value);
+                                // }
+                              }
                               value={this.props.responses.phone_num}
                             />
                           </div>
@@ -2418,15 +2769,25 @@ class Home extends Component<QuizProps, {}> {
                           </div>
 
                           <div className="col-md-12">
-                            <input
-                              className="form-control"
+                            <PhoneInput
+                              className={
+                                this.state.is_phone_valid
+                                  ? "form-control"
+                                  : "form-control invalid"
+                              }
                               placeholder="11 - digit mobile number"
-                              required={true}
-                              onChange={(e) => {
-                                this.handlePhone(e.target.value);
-                              }}
+                              //required={true}
+                              defaultCountry="NG"
+                              onChange={
+                                // (e) => {
+                                this.handlePhone
+                                //   (e.target.value);
+                                // }
+                              }
                               value={this.props.responses.phone_num}
-                            ></input>
+                              type="phone"
+                              maxLength="13"
+                            />
                           </div>
                         </div>
                         <div className="form-group home-view-btn">
@@ -2452,9 +2813,7 @@ class Home extends Component<QuizProps, {}> {
                           <div className="col-md-12">
                             <button
                               className="btn btn-primary btn-large view-plans btn-demo"
-                              onClick={() => {
-                                this.toggleModal();
-                              }}
+                              onClick={this.toggleModal}
                             >
                               Continue
                             </button>
@@ -2465,7 +2824,10 @@ class Home extends Component<QuizProps, {}> {
                         onSubmit={this.preventDefault}
                         className="form mobile"
                       >
-                        <p>Get HMO plans from the comfort of your home</p>
+                        <p>
+                          Compare HMO plans in Nigeria from the comfort of your
+                          home
+                        </p>
                         <h3 className="no-med">No medicals required</h3>
                         <div className="mobile-view-steps">
                           <div className="col-md-12">
@@ -2479,13 +2841,24 @@ class Home extends Component<QuizProps, {}> {
                         <div className="mobile-view-phone form-group">
                           <div className="col-md-12">
                             <label>Tell us about you</label>
-                            <input
-                              className="form-control"
+                            <PhoneInput
+                              className={
+                                this.state.is_phone_valid
+                                  ? "form-control"
+                                  : "form-control invalid"
+                              }
                               placeholder="Enter phone number"
-                              onChange={(e) => {
-                                this.handlePhone(e.target.value);
-                              }}
+                              defaultCountry="NG"
+                              // required={true}
+                              onChange={
+                                // (e) => {
+                                this.handlePhone
+                                //   (e.target.value);
+                                // }
+                              }
                               value={this.props.responses.phone_num}
+                              type="phone"
+                              maxLength="13"
                             />
                           </div>
                         </div>
@@ -2676,274 +3049,118 @@ class Home extends Component<QuizProps, {}> {
                         </ul>
                       </div>
                       <div className="tabs_details top_plans">
-                        <div className="card">
-                          <div className="insurer_card_top">
-                            <div className="logo_top 1">
-                              <span className="logo-widget widget-insurer-logo"></span>
-                            </div>
-                            <div className="title-h6">
-                              <div>Hygeia</div>
-                              <span>Hygiea - Prime</span>
-                            </div>
-                          </div>
-                          <div className="tag_tabs">Individual</div>
-                          <div className="top-features">
-                            <div className="plan-features">
-                              <div className="features-block">
-                                <i
-                                  className="features-icon"
-                                  data-icon="Hospital Room Eligibility"
-                                >
-                                  <FontAwesomeIcon
-                                    className="bed-icon"
-                                    icon={faProcedures}
-                                  />
-                                </i>
-                                <div>
-                                  <p className="feature-head">
-                                    Hospital Room Eligibility
-                                  </p>
-                                  <p>
-                                    Single Private A/C Room, ICU Charges upto SI
-                                  </p>
+                        {this.props.plans.length > 0 ? (
+                          this.props.plans.map((plan, i) => {
+                            return (
+                              <div className="card">
+                                <div className="insurer_card_top">
+                                  <div className="logo_top 1">
+                                    <span className="logo-widget widget-insurer-logo">
+                                      <img src={plan.hmo_id.logo} />
+                                    </span>
+                                  </div>
+                                  <div className="title-h6">
+                                    <div>{plan.hmo_id.name}</div>
+                                    <span>{plan.name}</span>
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="features-block">
-                                <i
-                                  className="features-icon"
-                                  data-icon="Bonus on No Claim"
-                                >
-                                  <FontAwesomeIcon
-                                    className="gift-icon"
-                                    icon={faGift}
-                                  />
-                                </i>
-                                <div>
-                                  <p className="feature-head">
-                                    Bonus on No Claim
-                                  </p>
-                                  <p>
-                                    10% of Sum Insured per annum, max up to 50%
-                                    of SI
-                                  </p>
+                                <div className="tag_tabs">
+                                  {plan.category_id.name}
                                 </div>
-                              </div>
-                            </div>
-                            <div className="features-action-bar">
-                              <div className="price-btn">
-                                <div className="price">
-                                  <span>Starting at </span>
-                                  <h5 className="">₦ 900/ month</h5>
-                                </div>
-                                <button
-                                  className="btn-check-prem"
-                                  onClick={this.goToDetails}
-                                >
-                                  Check Premium
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="card">
-                          <div className="insurer_card_top">
-                            <div className="logo_top 1">
-                              <span className="logo-widget widget-insurer-logo"></span>
-                            </div>
-                            <div className="title-h6">
-                              <div>Hygeia</div>
-                              <span>Hygiea - Prime</span>
-                            </div>
-                          </div>
-                          <div className="tag_tabs">Individual</div>
-                          <div className="top-features">
-                            <div className="plan-features">
-                              <div className="features-block">
-                                <i
-                                  className="features-icon"
-                                  data-icon="Hospital Room Eligibility"
-                                >
-                                  <FontAwesomeIcon
-                                    className="bed-icon"
-                                    icon={faProcedures}
-                                  />
-                                </i>
-                                <div>
-                                  <p className="feature-head">
-                                    Hospital Room Eligibility
-                                  </p>
-                                  <p>
-                                    Single Private A/C Room, ICU Charges upto SI
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="features-block">
-                                <i
-                                  className="features-icon"
-                                  data-icon="Bonus on No Claim"
-                                >
-                                  <FontAwesomeIcon
-                                    className="gift-icon"
-                                    icon={faGift}
-                                  />
-                                </i>
-                                <div>
-                                  <p className="feature-head">
-                                    Bonus on No Claim
-                                  </p>
-                                  <p>
-                                    10% of Sum Insured per annum, max up to 50%
-                                    of SI
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="features-action-bar">
-                              <div className="price-btn">
-                                <div className="price">
-                                  <span>Starting at </span>
-                                  <h5 className="">₦ 900/ month</h5>
-                                </div>
-                                <button className="btn-check-prem">
-                                  Check Premium
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                                <div className="top-features">
+                                  <div className="plan-features">
+                                    {plan.service_id
+                                      ? plan.service_id
+                                          .slice(0, 2)
+                                          .map((service) => {
+                                            return (
+                                              <div className="features-block">
+                                                <i
+                                                  className="features-icon"
+                                                  data-icon="Hospital Room Eligibility"
+                                                >
+                                                  <FontAwesomeIcon
+                                                    className="gift-icon"
+                                                    icon={faGift}
+                                                  />
+                                                </i>
+                                                <div>
+                                                  <p className="feature-head">
+                                                    {service}
+                                                  </p>
+                                                  {/* <p>
+                                          Single Private A/C Room, ICU Charges
+                                          upto SI
+                                        </p> */}
+                                                </div>
+                                              </div>
+                                            );
+                                          })
+                                      : ""}
 
-                        <div className="card">
-                          <div className="insurer_card_top">
-                            <div className="logo_top 1">
-                              <span className="logo-widget widget-insurer-logo"></span>
-                            </div>
-                            <div className="title-h6">
-                              <div>Hygeia</div>
-                              <span>Hygiea - Prime</span>
-                            </div>
+                                    {/* <div className="features-block">
+                                      <i
+                                        className="features-icon"
+                                        data-icon="Bonus on No Claim"
+                                      >
+                                        <FontAwesomeIcon
+                                          className="gift-icon"
+                                          icon={faGift}
+                                        />
+                                      </i>
+                                      <div>
+                                        <p className="feature-head">
+                                          Bonus on No Claim
+                                        </p>
+                                       
+                                      </div>
+                                    </div> */}
+                                  </div>
+                                  <div className="features-action-bar">
+                                    <div className="price-btn">
+                                      <div className="price">
+                                        <span>Starting at </span>
+                                        <h5 className="">
+                                          {" "}
+                                          ₦
+                                          {plan.category_id.id == "personal" &&
+                                          plan.individual_annual_price
+                                            ? plan.individual_annual_price
+                                            : plan.category_id.id ==
+                                                "personal" &&
+                                              plan.individual_monthly_price
+                                            ? plan.individual_monthly_price
+                                            : plan.category_id.id == "family" &&
+                                              plan.family_annual_price
+                                            ? plan.family_annual_price
+                                            : plan.category_id.id == "family" &&
+                                              plan.family_monthly_price
+                                            ? plan.family_monthly_price
+                                            : plan.individual_annual_price}
+                                          {/* ₦ 900/ month */}
+                                        </h5>
+                                      </div>
+                                      <button
+                                        className="btn-check-prem"
+                                        onClick={() => {
+                                          this.goToDetails();
+                                          this.getClickedPlan(i);
+                                        }}
+                                      >
+                                        Check Premium
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })
+                        ) : (
+                          <div className="card">
+                            <Spin />
                           </div>
-                          <div className="tag_tabs">Individual</div>
-                          <div className="top-features">
-                            <div className="plan-features">
-                              <div className="features-block">
-                                <i
-                                  className="features-icon"
-                                  data-icon="Hospital Room Eligibility"
-                                >
-                                  <FontAwesomeIcon
-                                    className="bed-icon"
-                                    icon={faProcedures}
-                                  />
-                                </i>
-                                <div>
-                                  <p className="feature-head">
-                                    Hospital Room Eligibility
-                                  </p>
-                                  <p>
-                                    Single Private A/C Room, ICU Charges upto SI
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="features-block">
-                                <i
-                                  className="features-icon"
-                                  data-icon="Bonus on No Claim"
-                                >
-                                  <FontAwesomeIcon
-                                    className="gift-icon"
-                                    icon={faGift}
-                                  />
-                                </i>
-                                <div>
-                                  <p className="feature-head">
-                                    Bonus on No Claim
-                                  </p>
-                                  <p>
-                                    10% of Sum Insured per annum, max up to 50%
-                                    of SI
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="features-action-bar">
-                              <div className="price-btn">
-                                <div className="price">
-                                  <span>Starting at </span>
-                                  <h5 className="">₦ 900/ month</h5>
-                                </div>
-                                <button className="btn-check-prem">
-                                  Check Premium
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="card">
-                          <div className="insurer_card_top">
-                            <div className="logo_top 1">
-                              <span className="logo-widget widget-insurer-logo"></span>
-                            </div>
-                            <div className="title-h6">
-                              <div>Hygeia</div>
-                              <span>Hygiea - Prime</span>
-                            </div>
-                          </div>
-                          <div className="tag_tabs">Individual</div>
-                          <div className="top-features">
-                            <div className="plan-features">
-                              <div className="features-block">
-                                <i
-                                  className="features-icon"
-                                  data-icon="Hospital Room Eligibility"
-                                >
-                                  <FontAwesomeIcon
-                                    className="bed-icon"
-                                    icon={faProcedures}
-                                  />
-                                </i>
-                                <div>
-                                  <p className="feature-head">
-                                    Hospital Room Eligibility
-                                  </p>
-                                  <p>
-                                    Single Private A/C Room, ICU Charges upto SI
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="features-block">
-                                <i
-                                  className="features-icon"
-                                  data-icon="Bonus on No Claim"
-                                >
-                                  <FontAwesomeIcon
-                                    className="gift-icon"
-                                    icon={faGift}
-                                  />
-                                </i>
-                                <div>
-                                  <p className="feature-head">
-                                    Bonus on No Claim
-                                  </p>
-                                  <p>
-                                    10% of Sum Insured per annum, max up to 50%
-                                    of SI
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="features-action-bar">
-                              <div className="price-btn">
-                                <div className="price">
-                                  <span>Starting at </span>
-                                  <h5 className="">₦ 900/ month</h5>
-                                </div>
-                                <button className="btn-check-prem">
-                                  Check Premium
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        )}
+
                         <div className="card top_plans_see_more see_more">
                           <a href="">
                             SEE MORE PLANS
@@ -2960,52 +3177,40 @@ class Home extends Component<QuizProps, {}> {
                   <div className="col-md-4">
                     <div className="card insurers">
                       <div className="card_heading">HMO Providers</div>
-                      <a href="">
-                        <div className="insurer_block">
-                          {/* <div > */}
-                          <img
-                            className="supplier_icon insurer_logo
+                      {this.props.hmos ? (
+                        this.props.hmos.map((hmo) => {
+                          return (
+                            <a href="">
+                              <div className="insurer_block">
+                                <div className="hmo-logo-div">
+                                  <img
+                                    className="supplier_icon insurer_logo
                             hygeia-general-icon
                             "
-                            src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
-                          />
-                          &nbsp;
-                          {/* </div> */}
-                          <div className="insurer_name">
-                            <span>Hygeia HMO</span>
+                                    src={hmo.logo ? hmo.logo : ic_logo}
+                                    // "https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                                  />
+                                  &nbsp;
+                                </div>
+                                <div className="insurer_name">
+                                  <span>
+                                    {hmo.name}
+                                    {/* HMO */}
+                                  </span>
+                                </div>
+                              </div>
+                            </a>
+                          );
+                        })
+                      ) : (
+                        <a href="">
+                          <div className="insurer_block">
+                            <Spin />
                           </div>
-                        </div>
-                      </a>
+                        </a>
+                      )}
                     </div>
                   </div>
-
-                  {/* <div className="col-md-4 hmo-providers">
-                    <div className="providers">
-                      <h5 className="float-left top-plans">HMO Providers</h5>
-                    </div>
-                    <div className="provider-div col-md-12 row">
-                      <div className="col-md-2 provider-logo-div">
-                        <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                      </div>
-                      <div className="col-md-8 provider-name-div">
-                        <h6 className="provider-name">Hygeia</h6>
-                      </div>
-                      <div className="col-md-2 view-provider-details">
-                        <button className="provider-details-btn">></button>
-                      </div>
-                    </div>
-                    <div className="provider-div col-md-12 row">
-                      <div className="col-md-2 provider-logo-div">
-                        <img className="provider-logo" src="https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg" />
-                      </div>
-                      <div className="col-md-8 provider-name-div">
-                        <h6 className="provider-name">Hygeia</h6>
-                      </div>
-                      <div className="col-md-2 view-provider-details">
-                        <button className="provider-details-btn">></button>
-                      </div>
-                    </div>
-                  </div> */}
                 </div>
               </div>
               <div className="information  container">
@@ -3066,6 +3271,7 @@ class Home extends Component<QuizProps, {}> {
 const mapProps = (state: any) => {
   return {
     ...state.quiz.quiz,
+    ...state.quiz,
   };
 };
 

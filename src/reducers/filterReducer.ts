@@ -1,6 +1,7 @@
 import { createReducer, createAction } from "redux-starter-kit";
 
 import { state } from "../store/state";
+import { GET_PROVIDERS } from "../utils/actions";
 
 export const filterReducer = createReducer(state, {
   CHANGE_PAGE: (state, action) => {
@@ -203,6 +204,63 @@ export const filterReducer = createReducer(state, {
   TOGGLE_FEATURE_POPUP: (state, actions) => {
     state.quiz.isFeaturePopUpOpen = actions.data.value;
   },
+
+  GET_PLANS: (state, actions) => {
+    state.plans = actions.data;
+  },
+
+  GET_HMOS: (state, actions) => {
+    state.hmos = actions.data;
+  },
+
+  GET_PROVIDERS: (state, actions) => {
+    state.providers = actions.data;
+  },
+
+  GET_SERVICES: (state, actions) => {
+    state.services = actions.data;
+  },
+
+  GET_RECOMMENDED_PLANS: (state, actions) => {
+    state.recommended_plans = actions.data;
+  },
+
+  GET_CLICKED_PLAN: (state, actions) => {
+    state.clicked_plan = actions.data;
+  },
+
+  IS_FETCHING_PLANS: (state, actions) => {
+    state.fetching_plans = actions.data;
+  },
+
+  IS_FETCHING_HMOS: (state, actions) => {
+    state.fetching_hmos = actions.data;
+  },
+
+  IS_FETCHING_SERVICES: (state, actions) => {
+    state.fetching_services = actions.data;
+  },
+
+  IS_FETCHING_PROVIDERS: (state, actions) => {
+    state.fetching_providers = actions.data;
+  },
+
+  IS_FETCHING_RECOMMENDED_PLANS: (state, actions) => {
+    state.fetching_recommended_plans = actions.data;
+  },
+
+  UPDATE_NUM_OF_PEOPLE: (state, actions) => {
+    state.quiz.responses.num_of_people =
+      state.quiz.responses.num_of_people + actions.data;
+  },
+
+  RESET_NUM_OF_PEOPLE: (state) => {
+    state.num_of_people = 0;
+  },
+
+  GET_NUM_OF_PEOPLE: (state, actions) => {
+    state.num_of_people = actions.data;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -220,6 +278,7 @@ createAction("UPDATE_BUDGET");
 createAction("TOGGLE_FAMILY_PLAN_SELECTED");
 createAction("UPDATE_COVERS");
 createAction("RESET_PLANS");
+
 createAction("TOGGLE_DESKTOP_MODAL");
 createAction("TOGGLE_MOBILE_MODAL");
 createAction("TOGGLE_OTHERS_MODAL");
@@ -254,3 +313,20 @@ createAction("UPDATE_PLAN_DURATION");
 createAction("TOGGLE_FEATURES_MODAL");
 createAction("UPDATE_FEATURES_TAB_OPENED");
 createAction("TOGGLE_FEATURE_POPUP");
+
+createAction("GET_PLANS");
+createAction("GET_HMOS");
+createAction("GET_SERVICES");
+createAction("GET_PROVIDERS");
+createAction("GET_RECOMMENDED_PLANS");
+createAction("GET_CLICKED_PLAN");
+
+createAction("IS_FETCHING_PLANS");
+createAction("IS_FETCHING_HMOS");
+createAction("IS_FETCHING_SERVICES");
+createAction("IS_FETCHING_PROVIDERS");
+createAction("IS_FETCHING_RECOMMENDED_PLANS");
+
+createAction("UPDATE_NUM_OF_PEOPLE");
+createAction("RESET_NUM_OF_PEOPLE");
+createAction("GET_NUM_OF_PEOPLE");
