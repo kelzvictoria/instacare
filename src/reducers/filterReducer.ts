@@ -261,6 +261,18 @@ export const filterReducer = createReducer(state, {
   GET_NUM_OF_PEOPLE: (state, actions) => {
     state.num_of_people = actions.data;
   },
+
+  SET_PLANS_TO_COMPARE_ON_MOBILE: (state, actions) => {
+    state.compare_plans_mobile_indexes = actions.data;
+  },
+
+  SET_PLANS_TO_COMPARE_ON_DESKTOP: (state, actions) => {
+    state.compare_plans_desktop_indexes = actions.data;
+  },
+
+  SET_CHECKED_PLANS: (state, actions) => {
+    state.checked_plans_list = actions.data;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -330,3 +342,7 @@ createAction("IS_FETCHING_RECOMMENDED_PLANS");
 createAction("UPDATE_NUM_OF_PEOPLE");
 createAction("RESET_NUM_OF_PEOPLE");
 createAction("GET_NUM_OF_PEOPLE");
+
+createAction("SET_PLANS_TO_COMPARE_ON_MOBILE");
+createAction("SET_PLANS_TO_COMPARE_ON_DESKTOP");
+createAction("SET_CHECKED_PLANS");

@@ -93,4 +93,7 @@ export const state: any = {
   fetching_services: false,
   fetching_providers: false,
   fetching_recommended_plans: false,
+  compare_plans_mobile_indexes: [],
+  compare_plans_desktop_indexes: [],
+  checked_plans_list: [],
 };

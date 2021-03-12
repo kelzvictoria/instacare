@@ -19,6 +19,7 @@ import Compare from "./pages/compare/Compare";
 import PlanDetails from "./pages/details/PlanDetails";
 import Details from "./pages/details/Details";
 import Plans from "./pages/compare/Plans";
+import SideBySideComparison from "./pages/compare/SideBySideComparison";
 
 ReactDOM.render(
   <Provider store={store}>
@@ -26,10 +27,11 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/quiz" component={Quiz} />
-        <Route path="/compare" component={Compare} />
+        {/* <Route path="/compare" component={Compare} /> */}
         <Route path="/plans" component={Plans} />
         <Route path="/details-old" component={Details} />
         <Route path="/details" component={PlanDetails} />
+        <Route path="/compare" component={SideBySideComparison} />
         <Route component={ErrorPage} />
       </Switch>
     </Router>

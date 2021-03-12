@@ -1664,6 +1664,10 @@ class Home extends Component<QuizProps, {}> {
     }
   };
 
+  phoneNumError = () => {
+    message.error("Your phone number is required");
+  };
+
   /**
    * @param {any[]} value
    */
@@ -1932,7 +1936,7 @@ class Home extends Component<QuizProps, {}> {
             <input
               className="form-control"
               placeholder="Full Name"
-              required={true}
+              // required={true}
               onChange={(e) => {
                 this.handleFullName(e.target.value);
               }}
@@ -2286,7 +2290,7 @@ class Home extends Component<QuizProps, {}> {
               onChange={(e) => {
                 this.handleFullName(e.target.value);
               }}
-              required={true}
+              // required={true}
               value={this.props.responses.full_name}
               placeholder="Full Name"
             ></input>
@@ -2755,7 +2759,7 @@ class Home extends Component<QuizProps, {}> {
                             <input
                               className="form-control"
                               placeholder="Full Name"
-                              required={true}
+                              // required={true}
                               onChange={(e) => {
                                 this.handleFullName(e.target.value);
                               }}
@@ -2795,13 +2799,10 @@ class Home extends Component<QuizProps, {}> {
                             <button
                               className="btn btn-primary btn-large view-plans btn-demo"
                               onClick={() => {
-                                if (
-                                  this.props.responses.full_name &&
-                                  this.props.responses.phone_num
-                                ) {
+                                if (this.props.responses.phone_num) {
                                   this.toggleModal();
                                 } else {
-                                  console.log("Enter your details");
+                                  this.phoneNumError();
                                 }
                               }}
                             >
@@ -3060,7 +3061,7 @@ class Home extends Component<QuizProps, {}> {
                                     </span>
                                   </div>
                                   <div className="title-h6">
-                                    <div>{plan.hmo_id.name}</div>
+                                    <div>{plan.hmo_id.name.id}</div>
                                     <span>{plan.name}</span>
                                   </div>
                                 </div>
@@ -3194,7 +3195,7 @@ class Home extends Component<QuizProps, {}> {
                                 </div>
                                 <div className="insurer_name">
                                   <span>
-                                    {hmo.name}
+                                    {hmo.name.id}
                                     {/* HMO */}
                                   </span>
                                 </div>

@@ -91,6 +91,7 @@ class Plans extends Component<PlansProps> {
     super(props);
     this.goToHome = this.goToHome.bind(this);
     this.goToDetails = this.goToDetails.bind(this);
+    this.goToComparison = this.goToComparison.bind(this);
     this.handleTabChange = this.handleTabChange.bind(this);
     this.toggleFeaturePopUp = this.toggleFeaturePopUp.bind(this);
     this.showCashlessHospitals = this.showCashlessHospitals.bind(this);
@@ -324,6 +325,26 @@ class Plans extends Component<PlansProps> {
   goToDetails() {
     //item: any
     this.props.history.push({ pathname: "/details" });
+  }
+
+  goToComparison() {
+    if (
+      this.state.compare_plans_desktop_indexes.length > 1 ||
+      this.state.compare_plans_mobile_indexes.length > 1
+    ) {
+      this.setRecPlansIndexesToCompare();
+      this.props.history.push({
+        pathname: "/compare",
+        // ,
+        // state: {
+        //   compare_plans_mobile_indexes: this.state.compare_plans_mobile_indexes,
+        //   compare_plans_desktop_indexes: this.state.compare_plans_desktop_indexes,
+        // },
+      });
+    } else {
+      message.error("You need to select at least 2 plans to compare");
+      return;
+    }
   }
 
   toggleFeaturesModal = () => {
@@ -1553,8 +1574,26 @@ class Plans extends Component<PlansProps> {
       this.toggleShowDesktopCompareCheckbox();
       //this.state.compare_plans_mobile_indexes.filter((plan) => index !== plan);
     }
+
     // }
   }
+
+  setRecPlansIndexesToCompare = () => {
+    this.props.dispatch({
+      type: "SET_PLANS_TO_COMPARE_ON_DESKTOP",
+      data: this.state.compare_plans_desktop_indexes,
+    });
+
+    this.props.dispatch({
+      type: "SET_PLANS_TO_COMPARE_ON_MOBILE",
+      data: this.state.compare_plans_mobile_indexes,
+    });
+
+    this.props.dispatch({
+      type: "SET_CHECKED_PLANS",
+      data: this.state.checked_plans_list,
+    });
+  };
 
   removePlanFromCheckedIndexes(index) {
     // console.log("index", index);
@@ -2547,7 +2586,10 @@ class Plans extends Component<PlansProps> {
                 )}
               </div>
               <div className="quotes_compare_buttons_div">
-                <div className="quotes_compare_button disabled">
+                <div
+                  className="quotes_compare_button disabled"
+                  onClick={this.goToComparison}
+                >
                   Compare Now
                 </div>
                 <div
