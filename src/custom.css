@@ -3617,7 +3617,7 @@ select.plan-select {
 .main_quotes_container {
   display: flex;
   flex-direction: column;
-  flex: 0.7;
+  /* flex: 0.7; */
   width: 100%;
   margin: 0 0 15px;
 }
