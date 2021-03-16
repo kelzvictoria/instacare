@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 `cd` to the project directory and run the following in your terminal
 
-```bash
+<!-- ```bash
 cp config.ts.example src/config.ts
 ```
 
@@ -12,7 +12,9 @@ and set the `API_URL` to your running instance of the web application [(here)](h
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory, you can run: -->
+
+### `npm install`
 
 ### `npm start`
 

@@ -7,67 +7,85 @@ import styles from "./AppFooter.module.scss";
 const { Title } = Typography;
 
 const companyLinks = [
-    {
-        label: "Home",
-        url: "/"
-    },
-    {
-        label: "Get a Recommendation",
-        url: "/quiz"
-    },
-    {
-        label: "Profile",
-        url: "/profile"
-    },
+  {
+    label: "Home",
+    url: "/",
+  },
+  {
+    label: "About",
+    url: "#",
+  },
+
+  {
+    label: "Services",
+    url: "#",
+  },
+
+  {
+    label: "Sales",
+    url: "#",
+  },
+
+  {
+    label: "Contact Us",
+    url: "#",
+  },
+  {
+    label: "Privacy Policy",
+    url: "#",
+  },
 ];
 
 const mediaLinks = [
-    {
-        label: "YCombinator",
-        url: "https://ycombinator.com"
-    },
-    {
-        label: "The Guardian",
-        url: "https://theguardian.co.uk"
-    },
-    {
-        label: "IIFL",
-        url: "https://iiflinsurance.com"
-    },
+  {
+    label: "YCombinator",
+    url: "https://ycombinator.com",
+  },
+  {
+    label: "The Guardian",
+    url: "https://theguardian.co.uk",
+  },
+  {
+    label: "IIFL",
+    url: "https://iiflinsurance.com",
+  },
 ];
 
-const contactLinks: {label: string, url: string, icon?: string}[] = [
-    {
-        label: "Facebook",
-        url: "https://facebook.com"
-    },
-    {
-        label: "Twitter",
-        url: "https://twitter.com"
-    },
-    {
-        label: "Instagram",
-        url: "https://instagram.com"
-    },
+const contactLinks: { label: string; url: string; icon?: string }[] = [
+  {
+    label: "Facebook",
+    url: "https://facebook.com",
+  },
+  {
+    label: "Twitter",
+    url: "https://twitter.com",
+  },
+  {
+    label: "Instagram",
+    url: "https://instagram.com",
+  },
 ];
 
 export class AppFooter extends Component {
-    render() {
-        return (
-            <div style={{ position: "relative" }}>
-                <footer className={styles.appFooter}>
-                    <Row>
-                        <Col xs={{ span: 24 }} md={{ span: 8 }}>
-                            <Title level={3}>About</Title>
-                            <ul className="footer-links">
-                                {
-                                    companyLinks.map((link, index) => {
-                                        return <li key={index}> <a href={link.url}>{link.label}</a> </li>;
-                                    })
-                                }
-                            </ul>
-                        </Col>
-                        <Col xs={{ span: 24 }} md={{ span: 8 }}>
+  render() {
+    return (
+      <div className="app_footer" style={{ position: "relative" }}>
+        <footer className={styles.appFooter}>
+          <Row>
+            {/* <Col xs={{ span: 24 }} md={{ span: 8 }}> */}
+            {/* <Title level={3}>About</Title> */}
+            <ul className="footer-links">
+              {companyLinks.map((link, index) => {
+                return (
+                  <li key={index}>
+                    {" "}
+                    <a href={link.url}>{link.label}</a>{" "}
+                  </li>
+                );
+              })}
+            </ul>
+            {/* </Col> */}
+            {/* <Col xs={{ span: 24 }} md={{ span: 8 }}>
                             <Title level={3}>In the Media</Title>
                             <ul className="footer-links">
                                 {
@@ -86,10 +104,10 @@ export class AppFooter extends Component {
                                     })
                                 }
                             </ul>
-                        </Col>
-                    </Row>
-                </footer>
-            </div>
-        );
-    }
+                        </Col> */}
+          </Row>
+        </footer>
+      </div>
+    );
+  }
 }

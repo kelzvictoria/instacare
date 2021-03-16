@@ -51,6 +51,8 @@ import { UPDATE_NOTGETTINGPROVIDERS } from "../../utils/actions";
 
 import PaystackButton from "react-paystack";
 
+import { AppFooter } from "../../components/app-footer/AppFooter";
+
 import { options } from "../home/Options";
 
 const { Title } = Typography;
@@ -1456,7 +1458,7 @@ class Plans extends Component<PlansProps> {
   plansToCompareOnDesktop(firsIndex, secondIndex, thirdIndex) {}
 
   handleCheckedPlanToCompareOnMobile(index) {
-    // console.log("index", index);
+    console.log("index", index);
 
     let value = index.value;
     let checked = index.checked;
@@ -1476,7 +1478,7 @@ class Plans extends Component<PlansProps> {
     // console.log("i", i, "j", j);
 
     if (i == -1 && indexes.length == 1) {
-      // console.log("yes babe");
+      //console.log("yes babe");
       this.toggleShowCompareCheckbox();
     }
 
@@ -1495,11 +1497,16 @@ class Plans extends Component<PlansProps> {
 
         checked_plans_list: [...this.state.checked_plans_list, checked],
       });
-    } else if (i > -1 && j > -1) {
-      // console.log(
-      //   "there",
-      //   this.state.compare_plans_mobile_indexes.splice(i, 1)
-      // );
+    } else if (i > -1) {
+      // console.log("remove", "value", value, "i", i);
+
+      // if (value == 0 && i == 0) {
+      //   this.removePlanFromCheckedIndexes("1");
+      // } else if (value == 1 && i == 1) {
+      //   this.removePlanFromCheckedIndexes("0");
+      // }
+      //
+
       this.setState({
         compare_plans_mobile_indexes: this.state.compare_plans_mobile_indexes.splice(
           i,
@@ -1539,6 +1546,10 @@ class Plans extends Component<PlansProps> {
     if (i == -1 && indexes.length == 2) {
       // console.log("yes babe");
       this.toggleShowDesktopCompareCheckbox();
+    }
+
+    if (i > -1) {
+      this.removePlanFromDesktopCheckedIndexes(value);
     }
 
     if (
@@ -1596,7 +1607,7 @@ class Plans extends Component<PlansProps> {
   };
 
   removePlanFromCheckedIndexes(index) {
-    // console.log("index", index);
+    console.log("index", index);
     // console.log("let's see");
 
     if (index == undefined) {
@@ -1899,10 +1910,11 @@ class Plans extends Component<PlansProps> {
                                   href="#"
                                 >
                                   <h6>
-                                    {
-                                      JSON.parse(rec_plan.hmo_id["provider_id"])
-                                        .length
-                                    }
+                                    {rec_plan.hmo_id["provider_id"]
+                                      ? JSON.parse(
+                                          rec_plan.hmo_id["provider_id"]
+                                        ).length
+                                      : 0}
                                     <FontAwesomeIcon
                                       className="chev"
                                       icon={faChevronRight}
@@ -2299,10 +2311,11 @@ class Plans extends Component<PlansProps> {
                                     className="span_network_content"
                                     onClick={this.showCashlessHospitals}
                                   >
-                                    {
-                                      JSON.parse(rec_plan.hmo_id["provider_id"])
-                                        .length
-                                    }
+                                    {rec_plan.hmo_id["provider_id"]
+                                      ? JSON.parse(
+                                          rec_plan.hmo_id["provider_id"]
+                                        ).length
+                                      : 0}
                                     {/* {rec_plan.hmo_id.provider_id.length} */}
                                   </span>
                                 </div>
@@ -2995,6 +3008,7 @@ class Plans extends Component<PlansProps> {
             </div>
           </div>
         </Modal>
+        <AppFooter />
       </div>
     );
   }

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 import AppHeader from "../../components/app-header/AppHeader";
+import { AppFooter } from "../../components/app-footer/AppFooter";
+
 /*import { API_URL } from "../../config";*/
 import styles from "./Compare.module.scss";
 import { connect } from "react-redux";
@@ -359,17 +361,10 @@ class SideBySideComparison extends Component<ComparisonProps> {
       compare_plans_mobile_indexes,
     } = this.props;
     console.log("this.props", this.props);
-    console.log(
-      "this.props.compare_plans_mobile_indexes.length",
-      this.props.compare_plans_mobile_indexes.length
-    );
-    console.log(
-      "this.props.compare_plans_desktop_indexes.length",
-      this.props.compare_plans_desktop_indexes.length
-    );
+
     return (
       <div>
-        {this.props.compare_plans_mobile_indexes.length > 0 ? (
+        {compare_plans_mobile_indexes.length > 0 ? (
           <div className="mobile-comparison-view quotes_main_container">
             <div className="row compare-plans-header">
               <div className="row nav-info">
@@ -1871,7 +1866,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
               </div>
             </section>
           </div>
-        ) : this.props.compare_plans_desktop_indexes.length > 0 ? (
+        ) : compare_plans_desktop_indexes.length > 0 ? (
           <div className="desktop-view quotes_main_container">
             <div className="navbarWrapper">
               <div className="">
@@ -4793,6 +4788,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
         ) : (
           "Nothing"
         )}
+        <AppFooter />
       </div>
     );
   }

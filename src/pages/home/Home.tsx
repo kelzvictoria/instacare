@@ -25,6 +25,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AppHeader from "../../components/app-header/AppHeader";
+import { AppFooter } from "../../components/app-footer/AppFooter";
+
 import styles from "./Home.module.scss";
 import "../../custom.css";
 import Modal from "react-bootstrap/Modal";
@@ -122,6 +124,8 @@ class Home extends Component<QuizProps, {}> {
 
   state = {
     is_phone_valid: "null",
+    show_provider_info: false,
+    provider_info: [],
   };
 
   steps: { p: string; h3: string }[] = [
@@ -2589,6 +2593,83 @@ class Home extends Component<QuizProps, {}> {
     });
   };
 
+  onClickProvider = (hmoIndex) => {
+    console.log("hmoIndex", hmoIndex);
+    let data = this.props.hmos.filter((hmo, i) => i == hmoIndex);
+    console.log("data[0]", data[0]);
+    //this.providerInfo(data[0]);
+
+    this.setState({
+      show_provider_info: true,
+      provider_info: data[0],
+    });
+  };
+
+  providerInfo(data) {
+    const hmoPlans = this.props.plans.filter(
+      (plan) => plan.hmo_id.name.id == data.name.id
+    );
+
+    let hospitals = data.provider_id ? JSON.parse(data.provider_id).length : 0;
+    console.log("hospitals", hospitals);
+
+    //const cheapestPrice = hmoPlans
+    console.log("hmoPlans", hmoPlans);
+
+    return (
+      <Col xs={24} md={16} className="banner-container">
+        <div className="svg-and-text provider-data col-md-12">
+          {/* <Col xs={24} md={8} className="svg-img-div">
+            <div className="svg-img">
+              <img src={data.logo}></img>
+            </div>
+          </Col>
+          <Col xs={24} md={16} className="banner-text">
+            <div className={styles.banner}>
+              <div className={styles.bannerContent} id="bannertext">
+                <p className={styles.textHeading}>{data.name.id}</p>
+              </div>
+            </div>
+          </Col> */}
+
+          <div className="svg-img">
+            <img src={data.logo}></img>
+          </div>
+
+          <div className={styles.bannerContent} id="bannertext">
+            <p className={styles.textHeading}>{data.name.id}</p>
+          </div>
+        </div>
+
+        <div className="banner-bottom">
+          <div className="row col-md-12">
+            <div className="col-md-4 card mr-3">
+              <FontAwesomeIcon className="banner-icon" icon={faShieldAlt} />
+              <div className="card-text">
+                <h5>Hospital Network</h5>
+                <p>{hospitals}</p>
+              </div>
+            </div>
+            <div className="col-md-4 card mr-3">
+              <span className="naira banner-icon">₦</span>
+              <div className="card-text">
+                <h5>Plans Starting @</h5>
+                <p>#####</p>
+              </div>
+            </div>
+            <div className="col-md-4 card">
+              <FontAwesomeIcon className="far banner-icon" icon={faSmile} />
+              <div className="card-text">
+                <h5>Insure</h5>
+                <p>You & your family</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Col>
+    );
+  }
+
   render() {
     //console.log("this.props.page", this.props.page);
     //console.log("this.props.hmos", this.props.hmos);
@@ -2612,60 +2693,67 @@ class Home extends Component<QuizProps, {}> {
             <div className="banner-div">
               <div className="container">
                 <Row className="banner-content">
-                  <Col xs={24} md={16} className="banner-container">
-                    <div className="svg-and-text">
-                      <Col xs={24} md={8} className="svg-img-div">
-                        <div className="svg-img">
-                          <img src="images/searching.svg"></img>
-                        </div>
-                      </Col>
-                      <Col xs={24} md={16} className="banner-text">
-                        <div className={styles.banner}>
-                          <div className={styles.bannerContent} id="bannertext">
-                            <p className={styles.textHeading}>
-                              Find Health Plans Starting
-                              <br />
-                              <span className={styles.headingSpan}>
-                                @ ₦19,999/year
-                              </span>
-                            </p>
+                  {this.state.show_provider_info ? (
+                    this.providerInfo(this.state.provider_info)
+                  ) : (
+                    <Col xs={24} md={16} className="banner-container">
+                      <div className="svg-and-text">
+                        <Col xs={24} md={8} className="svg-img-div">
+                          <div className="svg-img">
+                            <img src="images/searching.svg"></img>
                           </div>
-                        </div>
-                      </Col>
-                    </div>
+                        </Col>
+                        <Col xs={24} md={16} className="banner-text">
+                          <div className={styles.banner}>
+                            <div
+                              className={styles.bannerContent}
+                              id="bannertext"
+                            >
+                              <p className={styles.textHeading}>
+                                Find Health Plans Starting
+                                <br />
+                                <span className={styles.headingSpan}>
+                                  @ ₦19,999/year
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+                        </Col>
+                      </div>
 
-                    <div className="banner-bottom">
-                      <div className="row col-md-12">
-                        <div className="col-md-4 card mr-3">
-                          <FontAwesomeIcon
-                            className="banner-icon"
-                            icon={faShieldAlt}
-                          />
-                          <div className="card-text">
-                            <h5>Compare</h5>
-                            <p>HMO Plans</p>
+                      <div className="banner-bottom">
+                        <div className="row col-md-12">
+                          <div className="col-md-4 card mr-3">
+                            <FontAwesomeIcon
+                              className="banner-icon"
+                              icon={faShieldAlt}
+                            />
+                            <div className="card-text">
+                              <h5>Compare</h5>
+                              <p>HMO Plans</p>
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-4 card mr-3">
-                          <span className="naira banner-icon">₦</span>
-                          <div className="card-text">
-                            <h5>Purchase</h5>
-                            <p>HMO Plans</p>
+                          <div className="col-md-4 card mr-3">
+                            <span className="naira banner-icon">₦</span>
+                            <div className="card-text">
+                              <h5>Purchase</h5>
+                              <p>HMO Plans</p>
+                            </div>
                           </div>
-                        </div>
-                        <div className="col-md-4 card">
-                          <FontAwesomeIcon
-                            className="far banner-icon"
-                            icon={faSmile}
-                          />
-                          <div className="card-text">
-                            <h5>Insure</h5>
-                            <p>You & your family</p>
+                          <div className="col-md-4 card">
+                            <FontAwesomeIcon
+                              className="far banner-icon"
+                              icon={faSmile}
+                            />
+                            <div className="card-text">
+                              <h5>Insure</h5>
+                              <p>You & your family</p>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </Col>
+                    </Col>
+                  )}
 
                   <Col md={8} className="quiz">
                     <div className="home-frm form-div">
@@ -2799,11 +2887,11 @@ class Home extends Component<QuizProps, {}> {
                             <button
                               className="btn btn-primary btn-large view-plans btn-demo"
                               onClick={() => {
-                                if (this.props.responses.phone_num) {
-                                  this.toggleModal();
-                                } else {
-                                  this.phoneNumError();
-                                }
+                                // if (this.props.responses.phone_num) {
+                                this.toggleModal();
+                                // } else {
+                                //   this.phoneNumError();
+                                // }
                               }}
                             >
                               View Plans
@@ -3179,9 +3267,12 @@ class Home extends Component<QuizProps, {}> {
                     <div className="card insurers">
                       <div className="card_heading">HMO Providers</div>
                       {this.props.hmos ? (
-                        this.props.hmos.map((hmo) => {
+                        this.props.hmos.map((hmo, index) => {
                           return (
-                            <a href="">
+                            <a
+                              onClick={() => this.onClickProvider(index)}
+                              href="#"
+                            >
                               <div className="insurer_block">
                                 <div className="hmo-logo-div">
                                   <img
@@ -3263,6 +3354,7 @@ class Home extends Component<QuizProps, {}> {
               </div> */}
             </div>
           </div>
+          <AppFooter />
         </div>
       </React.Fragment>
     );

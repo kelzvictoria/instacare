@@ -14,6 +14,8 @@ import { UPDATE_PRICE, TOGGLE_BUYING_PLAN } from "../../utils/actions";
 import { UPDATE_NOTGETTINGPROVIDERS } from "../../utils/actions";
 import PaystackButton from "react-paystack";
 
+import { AppFooter } from "../../components/app-footer/AppFooter";
+
 import shortlist from "../../imgs/shortlist-yellow.svg";
 
 import {
@@ -1118,7 +1120,7 @@ class PlanDetails extends Component<DetailsProps> {
                           SEE ALL FEATURES
                           <FontAwesomeIcon className="" icon={faChevronRight} />
                         </a>
-                        <a href="" className="details-cashless-hosp">
+                        <a href="#" className="details-cashless-hosp">
                           {JSON.parse(plan.hmo_id.provider_id).length} Hospital
                           Network
                         </a>
@@ -1480,7 +1482,11 @@ class PlanDetails extends Component<DetailsProps> {
                         }
                         id="li_plansHosp"
                       >
-                        <a onClick={this.handleTabChange} id="hospitals">
+                        <a
+                          onClick={this.handleTabChange}
+                          id="hospitals"
+                          href="#"
+                        >
                           Network Hospitals
                         </a>
                       </li>
@@ -1732,6 +1738,7 @@ class PlanDetails extends Component<DetailsProps> {
             </div>
           </Modal>
         </div>
+        <AppFooter />
       </div>
     );
   }
