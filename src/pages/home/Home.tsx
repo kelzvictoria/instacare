@@ -210,21 +210,21 @@ class Home extends Component<QuizProps, {}> {
     //   isMobileViewModalOpen: !this.props.isMobileViewModalOpen,
     // });
 
-    if (
-      !this.props.responses.phone_num ||
-      this.props.responses.phone_num.length < 14
-    ) {
-      message.error("Please enter your phone number");
-      return;
-    } else {
-      this.props.dispatch({
-        type: actions.TOGGLE_MOBILE_MODAL,
-        data: {
-          key: "isMobileViewModalOpen",
-          value: !this.props.isMobileViewModalOpen,
-        },
-      });
-    }
+    // if (
+    //   !this.props.responses.phone_num ||
+    //   this.props.responses.phone_num.length < 14
+    // ) {
+    //   message.error("Please enter your phone number");
+    //   return;
+    // } else {
+    this.props.dispatch({
+      type: actions.TOGGLE_MOBILE_MODAL,
+      data: {
+        key: "isMobileViewModalOpen",
+        value: !this.props.isMobileViewModalOpen,
+      },
+    });
+    // }
   };
 
   toggleOthersInput = () => {
@@ -1600,13 +1600,13 @@ class Home extends Component<QuizProps, {}> {
     let currentPage = this.props.page;
     // console.log("currentPage:", currentPage);
     const targetId = e.target.id;
-    if (
-      !this.props.responses.phone_num ||
-      this.props.responses.phone_num.length < 14
-    ) {
-      message.error("Please enter your phone number");
-      return;
-    }
+    // if (
+    //   !this.props.responses.phone_num ||
+    //   this.props.responses.phone_num.length < 14
+    // ) {
+    //   message.error("Please enter your phone number");
+    //   return;
+    // }
     if (targetId === "next") {
       //console.log('this.props.isDesktopView', this.props.isDesktopView);
       if (this.props.isMobileViewModalOpen) {
@@ -3214,7 +3214,7 @@ class Home extends Component<QuizProps, {}> {
                   </div>
                 </div>
               </div>
-              <div className="information  container">
+              {/* <div className="information  container">
                 <div className="col-md-8">
                   <div className="hmo-def">
                     <h5>Health Management Organizations (HMOs)</h5>
@@ -3260,7 +3260,7 @@ class Home extends Component<QuizProps, {}> {
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -1784,12 +1784,12 @@ class Plans extends Component<PlansProps> {
                 </h6>
               </div>
             </div>
-            <div className="plan-select-div">
+            {/* <div className="plan-select-div">
               <select className="plan-select">
                 <option>Base Plans</option>
                 <option>Base Plans</option>
               </select>
-            </div>
+            </div> */}
           </div>
 
           <div className="row compare-page-body">
@@ -2111,7 +2111,12 @@ class Plans extends Component<PlansProps> {
                 </div>
               </div>
             </div>
-            <div className="compare_quotes_button " id="CompareNow">
+            <div
+              className="compare_quotes_button disabled"
+              id="CompareNow"
+              // className="quotes_compare_button "
+              onClick={this.goToComparison}
+            >
               COMPARE NOW
             </div>
           </div>
