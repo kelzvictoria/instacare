@@ -355,6 +355,10 @@ class SideBySideComparison extends Component<ComparisonProps> {
     this.props.history.push({ pathname: "/plans" });
   };
 
+  numberwithCommas = (value) => {
+    return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
+  };
+
   render() {
     const {
       compare_plans_desktop_indexes,
@@ -407,7 +411,12 @@ class SideBySideComparison extends Component<ComparisonProps> {
                               compare_plans_mobile_indexes[0]
                             ].hmo_id.logo
                           }
-                          alt="Care Health"
+                          alt={
+                            this.props.recommended_plans[
+                              compare_plans_mobile_indexes[0].name
+                            ]
+                          }
+                          className="img-compare"
                           width="80"
                         />
                         <p className="box-plan-2">
@@ -433,16 +442,16 @@ class SideBySideComparison extends Component<ComparisonProps> {
 
                         <button className="button ">
                           {this.props.quiz.responses.type == "single"
-                            ? `₦${
+                            ? `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_mobile_indexes[0]
                                 ].individual_annual_price
-                              }`
-                            : `₦${
+                              )}`
+                            : `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_mobile_indexes[0]
                                 ].family_annual_price
-                              }`}{" "}
+                              )}`}{" "}
                           annually<span className="arrow-icon-right"></span>
                         </button>
                         {/* <span className="yearly-text"> ₹ 7,921 paid annually</span> */}
@@ -454,8 +463,13 @@ class SideBySideComparison extends Component<ComparisonProps> {
                               compare_plans_mobile_indexes[1]
                             ].hmo_id.logo
                           }
-                          alt="Max Bupa"
+                          alt={
+                            this.props.recommended_plans[
+                              compare_plans_mobile_indexes
+                            ].name
+                          }
                           width="80"
+                          className="img-compare"
                         />
                         <p className="box-plan-2">
                           <span className="plan-2">
@@ -481,16 +495,16 @@ class SideBySideComparison extends Component<ComparisonProps> {
                         </p>
                         <button className="button ">
                           {this.props.quiz.responses.type == "single"
-                            ? `₦${
+                            ? `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_mobile_indexes[1]
                                 ].individual_annual_price
-                              }`
-                            : `₦${
+                              )}`
+                            : `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_mobile_indexes[1]
                                 ].family_annual_price
-                              }`}{" "}
+                              )}`}{" "}
                           annually<span className="arrow-icon-right"></span>
                         </button>
                         {/* <span className="yearly-text"> ₹ 10,992 paid annually</span> */}
@@ -507,31 +521,31 @@ class SideBySideComparison extends Component<ComparisonProps> {
                     <div className="column w_50 grey-bg-col">
                       <h3 className="select">
                         {this.props.quiz.responses.type == "single"
-                          ? `₦${
+                          ? `₦${this.numberwithCommas(
                               this.props.recommended_plans[
                                 compare_plans_mobile_indexes[0]
                               ].individual_annual_price
-                            }`
-                          : `₦${
+                            )}`
+                          : `₦${this.numberwithCommas(
                               this.props.recommended_plans[
                                 compare_plans_mobile_indexes[0]
                               ].family_annual_price
-                            }`}{" "}
+                            )}`}{" "}
                       </h3>
                     </div>
                     <div className="column w_50 grey-bg-col">
                       <h3 className="select">
                         {this.props.quiz.responses.type == "single"
-                          ? `₦${
+                          ? `₦${this.numberwithCommas(
                               this.props.recommended_plans[
                                 compare_plans_mobile_indexes[1]
                               ].individual_annual_price
-                            }`
-                          : `₦${
+                            )}`
+                          : `₦${this.numberwithCommas(
                               this.props.recommended_plans[
                                 compare_plans_mobile_indexes[1]
                               ].family_annual_price
-                            }`}{" "}
+                            )}`}{" "}
                       </h3>
                     </div>
                   </div>
@@ -1804,8 +1818,12 @@ class SideBySideComparison extends Component<ComparisonProps> {
                                         ₦
                                         {this.props.quiz.responses.type ==
                                         "single"
-                                          ? similar_plan.individual_annual_price
-                                          : similar_plan.family_annual_price}
+                                          ? this.numberwithCommas(
+                                              similar_plan.individual_annual_price
+                                            )
+                                          : this.numberwithCommas(
+                                              similar_plan.family_annual_price
+                                            )}
                                         / year
                                       </p>
                                       <ul>
@@ -1901,6 +1919,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
                         <a
                           className="button back_btn  is-hidden-mobile is-hidden-tablet-only"
                           id="CompareBack"
+                          onClick={this.goToPlans}
                         >
                           <span className="arrow-icon"></span> Back
                         </a>
@@ -1919,8 +1938,13 @@ class SideBySideComparison extends Component<ComparisonProps> {
                               compare_plans_desktop_indexes[0]
                             ].hmo_id.logo
                           }
-                          alt="Care Health"
+                          alt={
+                            this.props.recommended_plans[
+                              compare_plans_desktop_indexes[0]
+                            ].name
+                          }
                           width="80"
+                          className="img-compare"
                         />
                         <p className="box-plan-2">
                           <span className="plan-2">
@@ -1947,16 +1971,16 @@ class SideBySideComparison extends Component<ComparisonProps> {
 
                         <button className="button ">
                           {this.props.quiz.responses.type == "single"
-                            ? `₦${
+                            ? `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_desktop_indexes[0]
                                 ].individual_annual_price
-                              }`
-                            : `₦${
+                              )}`
+                            : `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_desktop_indexes[0]
                                 ].family_annual_price
-                              }`}{" "}
+                              )}`}{" "}
                           annually<span className="arrow-icon-right"></span>
                         </button>
                         {/* <span className="yearly-text"> ₹ 7,921 paid annually</span> */}
@@ -1968,8 +1992,13 @@ class SideBySideComparison extends Component<ComparisonProps> {
                               compare_plans_desktop_indexes[1]
                             ].hmo_id.logo
                           }
-                          alt="Max Bupa"
+                          alt={
+                            this.props.recommended_plans[
+                              compare_plans_desktop_indexes[1]
+                            ].name
+                          }
                           width="80"
+                          className="img-compare"
                         />
                         <p className="box-plan-2">
                           <span className="plan-2">
@@ -1995,16 +2024,16 @@ class SideBySideComparison extends Component<ComparisonProps> {
                         </p>
                         <button className="button ">
                           {this.props.quiz.responses.type == "single"
-                            ? `₦${
+                            ? `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_desktop_indexes[1]
                                 ].individual_annual_price
-                              }`
-                            : `₦${
+                              )}`
+                            : `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_desktop_indexes[1]
                                 ].family_annual_price
-                              }`}{" "}
+                              )}`}{" "}
                           annually<span className="arrow-icon-right"></span>
                         </button>
                         {/* <span className="yearly-text"> ₹ 10,992 paid annually</span> */}
@@ -2017,7 +2046,12 @@ class SideBySideComparison extends Component<ComparisonProps> {
                                 compare_plans_desktop_indexes[2]
                               ].hmo_id.logo
                             }
-                            alt="Star Health"
+                            alt={
+                              this.props.recommended_plans[
+                                compare_plans_desktop_indexes[2]
+                              ].name
+                            }
+                            className="img-compare"
                             width="80"
                           />
                           <p className="box-plan-2">
@@ -2044,16 +2078,16 @@ class SideBySideComparison extends Component<ComparisonProps> {
                           </p>
                           <button className="button ">
                             {this.props.quiz.responses.type == "single"
-                              ? `₦${
+                              ? `₦${this.numberwithCommas(
                                   this.props.recommended_plans[
                                     compare_plans_desktop_indexes[2]
                                   ].individual_annual_price
-                                }`
-                              : `₦${
+                                )}`
+                              : `₦${this.numberwithCommas(
                                   this.props.recommended_plans[
                                     compare_plans_desktop_indexes[2]
                                   ].family_annual_price
-                                }`}{" "}
+                                )}`}{" "}
                             annually<span className="arrow-icon-right"></span>
                           </button>
                           {/* <span className="yearly-text"> ₹ 7,432 paid annually</span> */}
@@ -2070,47 +2104,47 @@ class SideBySideComparison extends Component<ComparisonProps> {
                     <div className="column w_50 ">
                       <h3 className="select">
                         {this.props.quiz.responses.type == "single"
-                          ? `₦${
+                          ? `₦${this.numberwithCommas(
                               this.props.recommended_plans[
                                 compare_plans_desktop_indexes[0]
                               ].individual_annual_price
-                            }`
-                          : `₦${
+                            )}`
+                          : `₦${this.numberwithCommas(
                               this.props.recommended_plans[
                                 compare_plans_desktop_indexes[0]
                               ].family_annual_price
-                            }`}{" "}
+                            )}`}{" "}
                       </h3>
                     </div>
                     <div className="column w_50 ">
                       <h3 className="select">
                         {this.props.quiz.responses.type == "single"
-                          ? `₦${
+                          ? `₦${this.numberwithCommas(
                               this.props.recommended_plans[
                                 compare_plans_desktop_indexes[1]
                               ].individual_annual_price
-                            }`
-                          : `₦${
+                            )}`
+                          : `₦${this.numberwithCommas(
                               this.props.recommended_plans[
                                 compare_plans_desktop_indexes[1]
                               ].family_annual_price
-                            }`}{" "}
+                            )}`}{" "}
                       </h3>
                     </div>
                     {compare_plans_desktop_indexes[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <h3 className="select">
                           {this.props.quiz.responses.type == "single"
-                            ? `₦${
+                            ? `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_desktop_indexes[2]
                                 ].individual_annual_price
-                              }`
-                            : `₦${
+                              )}`
+                            : `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   compare_plans_desktop_indexes[2]
                                 ].family_annual_price
-                              }`}{" "}
+                              )}`}{" "}
                         </h3>
                       </div>
                     ) : (
@@ -3731,11 +3765,15 @@ class SideBySideComparison extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className=" has-text-weight-bold sp-more">
-                        {JSON.parse(
-                          this.props.recommended_plans[
-                            compare_plans_desktop_indexes[0]
-                          ].hmo_id.provider_id
-                        ).map((prov) => prov + ", ")}
+                        {this.props.recommended_plans[
+                          compare_plans_desktop_indexes[0]
+                        ].hmo_id.provider_id
+                          ? JSON.parse(
+                              this.props.recommended_plans[
+                                compare_plans_desktop_indexes[0]
+                              ].hmo_id.provider_id
+                            ).map((prov) => prov + ", ")
+                          : ""}
                       </p>
                       <a className="block is-active link-bottom">
                         View network hospitals
@@ -3743,11 +3781,15 @@ class SideBySideComparison extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className=" has-text-weight-bold sp-more">
-                        {JSON.parse(
-                          this.props.recommended_plans[
-                            compare_plans_desktop_indexes[1]
-                          ].hmo_id.provider_id
-                        ).map((prov) => prov + ", ")}
+                        {this.props.recommended_plans[
+                          compare_plans_desktop_indexes[1]
+                        ].hmo_id.provider_id
+                          ? JSON.parse(
+                              this.props.recommended_plans[
+                                compare_plans_desktop_indexes[1]
+                              ].hmo_id.provider_id
+                            ).map((prov) => prov + ", ")
+                          : ""}
                       </p>
                       <a className="block is-active link-bottom">
                         View network hospitals
@@ -3756,11 +3798,15 @@ class SideBySideComparison extends Component<ComparisonProps> {
                     {compare_plans_desktop_indexes[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className=" has-text-weight-bold sp-more">
-                          {JSON.parse(
-                            this.props.recommended_plans[
-                              compare_plans_desktop_indexes[2]
-                            ].hmo_id.provider_id
-                          ).map((prov) => prov + ", ")}
+                          {this.props.recommended_plans[
+                            compare_plans_desktop_indexes[2]
+                          ].hmo_id.provider_id
+                            ? JSON.parse(
+                                this.props.recommended_plans[
+                                  compare_plans_desktop_indexes[2]
+                                ].hmo_id.provider_id
+                              ).map((prov) => prov + ", ")
+                            : ""}
                         </p>
                         <a className="block is-active link-bottom">
                           View network hospitals
@@ -4723,8 +4769,12 @@ class SideBySideComparison extends Component<ComparisonProps> {
                                         ₦
                                         {this.props.quiz.responses.type ==
                                         "single"
-                                          ? similar_plan.individual_annual_price
-                                          : similar_plan.family_annual_price}
+                                          ? this.numberwithCommas(
+                                              similar_plan.individual_annual_price
+                                            )
+                                          : this.numberwithCommas(
+                                              similar_plan.family_annual_price
+                                            )}
                                         / year
                                       </p>
                                       <ul>
@@ -4740,11 +4790,11 @@ class SideBySideComparison extends Component<ComparisonProps> {
                                           <span>Sum Insured</span>
                                         </li>
                                         <li>
-                                          {
-                                            JSON.parse(
-                                              similar_plan.hmo_id.provider_id
-                                            ).length
-                                          }{" "}
+                                          {similar_plan.hmo_id.provider_id
+                                            ? JSON.parse(
+                                                similar_plan.hmo_id.provider_id
+                                              ).length
+                                            : 0}{" "}
                                           <span>Hospitals</span>
                                         </li>
                                       </ul>
@@ -4786,7 +4836,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
             </section>
           </div>
         ) : (
-          "Nothing"
+          this.goToPlans()
         )}
         <AppFooter />
       </div>

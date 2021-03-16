@@ -273,6 +273,10 @@ export const filterReducer = createReducer(state, {
   SET_CHECKED_PLANS: (state, actions) => {
     state.checked_plans_list = actions.data;
   },
+
+  FORMAT_PRICES: (value) => {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -346,3 +350,5 @@ createAction("GET_NUM_OF_PEOPLE");
 createAction("SET_PLANS_TO_COMPARE_ON_MOBILE");
 createAction("SET_PLANS_TO_COMPARE_ON_DESKTOP");
 createAction("SET_CHECKED_PLANS");
+
+createAction("FORMAT_PRICES");

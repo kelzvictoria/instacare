@@ -96,6 +96,10 @@ class PlanDetails extends Component<DetailsProps> {
     this.props.history.push({ pathname: "/plans" });
   }
 
+  goToHome = () => {
+    this.props.history.push({ pathname: "/" });
+  };
+
   handlePlanDuration(val) {
     this.props.dispatch({
       type: actions.UPDATE_PLAN_DURATION,
@@ -1042,6 +1046,16 @@ class PlanDetails extends Component<DetailsProps> {
     });
   }
 
+  numberwithCommas = (value) => {
+    return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
+  };
+
+  componentDidMount() {
+    if (!this.props.quiz.clicked_plan.name) {
+      this.goToHome();
+    }
+  }
+
   render() {
     const plan = this.props.quiz.clicked_plan;
     console.log("plan details props", this.props);
@@ -1096,77 +1110,83 @@ class PlanDetails extends Component<DetailsProps> {
               </div>
             </div>
           </div>
-
-          <div className="row  pl-3rem ">
-            <div className="col-md-8 two-third">
-              <div className="row details-header-row">
-                <div className="col-md-12 details-header">
-                  <div className="">
-                    <div className="compare-first-row row">
-                      <div className="col-md-4">
-                        <img
-                          className="provider-logo"
-                          src={plan.hmo_id.logo}
-                          //"https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
-                        />
-                      </div>
-                      <div className="col-md-8 middle-col">
-                        <h6>{plan.name}</h6>
-                        <a
-                          href="#"
-                          className="details-features"
-                          onClick={this.toggleFeaturesModal}
-                        >
-                          SEE ALL FEATURES
-                          <FontAwesomeIcon className="" icon={faChevronRight} />
-                        </a>
-                        <a href="#" className="details-cashless-hosp">
-                          {JSON.parse(plan.hmo_id.provider_id).length} Hospital
-                          Network
-                        </a>
+          {plan.name ? (
+            <div>
+              <div className="row  pl-3rem ">
+                <div className="col-md-8 two-third">
+                  <div className="row details-header-row">
+                    <div className="col-md-12 details-header">
+                      <div className="">
+                        <div className="compare-first-row row">
+                          <div className="col-md-4">
+                            <img
+                              className="provider-logo"
+                              src={plan.hmo_id.logo}
+                              //"https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                            />
+                          </div>
+                          <div className="col-md-8 middle-col">
+                            <h6>{plan.name}</h6>
+                            <a
+                              href="#"
+                              className="details-features"
+                              onClick={this.toggleFeaturesModal}
+                            >
+                              SEE ALL FEATURES
+                              <FontAwesomeIcon
+                                className=""
+                                icon={faChevronRight}
+                              />
+                            </a>
+                            <a href="#" className="details-cashless-hosp">
+                              {plan.hmo_id.provider_id
+                                ? JSON.parse(plan.hmo_id.provider_id).length
+                                : 0}{" "}
+                              Hospital Network
+                            </a>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="duration">
-                <h6>Plan Duration</h6>
-                {/* <p>
+                  <div className="duration">
+                    <h6>Plan Duration</h6>
+                    {/* <p>
                   Choosing a multi-year gets you a discount and saves you the
                   trouble of renewing your HMO Plan yearly
                 </p> */}
-                <div
-                  className={
-                    this.props.responses.plan_duration === "1"
-                      ? "hmo_period_inner selected_term"
-                      : "hmo_period_inner"
-                  }
-                >
-                  <div>
-                    <div className="label-term-radiobox">
-                      <label>
-                        <input
-                          type="radio"
-                          name="term"
-                          className="input-radio"
-                          value="1"
-                          defaultChecked={
-                            this.props.responses.plan_duration === "1"
-                          }
-                          onClick={this.handlePlanDuration}
-                        />{" "}
-                        1 Year
-                      </label>
+                    <div
+                      className={
+                        this.props.responses.plan_duration === "1"
+                          ? "hmo_period_inner selected_term"
+                          : "hmo_period_inner"
+                      }
+                    >
+                      <div>
+                        <div className="label-term-radiobox">
+                          <label>
+                            <input
+                              type="radio"
+                              name="term"
+                              className="input-radio"
+                              value="1"
+                              defaultChecked={
+                                this.props.responses.plan_duration === "1"
+                              }
+                              onClick={this.handlePlanDuration}
+                            />{" "}
+                            1 Year
+                          </label>
+                        </div>
+                      </div>
+                      <div className="text_right">
+                        <span className="mr-2">Premium</span>₦
+                        {this.props.responses.type == "single"
+                          ? this.numberwithCommas(plan.individual_annual_price)
+                          : this.numberwithCommas(plan.family_annual_price)}
+                      </div>
                     </div>
-                  </div>
-                  <div className="text_right">
-                    <span className="mr-2">Premium</span>₦
-                    {this.props.responses.type == "single"
-                      ? plan.individual_annual_price
-                      : plan.family_annual_price}
-                  </div>
-                </div>
-                {/* <div
+                    {/* <div
                   className={
                     this.props.responses.plan_duration === "2"
                       ? "hmo_period_inner selected_term"
@@ -1224,430 +1244,457 @@ class PlanDetails extends Component<DetailsProps> {
                     ₦12000
                   </div>
                 </div> */}
-              </div>
-              <div className="members-covered">
-                <h6>Members Covered</h6>
-                <div className="row">
-                  <p>
-                    {this.props.quiz.quiz.responses.full_name}(
-                    {this.props.quiz.quiz.responses.individual_age} years)
-                  </p>
-                  <a
-                    className="edit-members-modal"
-                    onClick={this.toggleOthersInput}
-                    href="#"
-                  >
-                    <FontAwesomeIcon
-                      className="members-chev"
-                      icon={faChevronRight}
-                    />
-                  </a>
-                </div>
-              </div>
-              <div className="similar-plans">
-                <div className="similar-plans-inner">
-                  <div className="heading_section">
-                    <h6>Compare with similar plans</h6>
                   </div>
-                  <div className="similar_plan_feature">
-                    <div className="box-slider">
-                      <div className="slider-plans">
-                        {this.props.quiz.recommended_plans.map(
-                          (similar_plan) => {
-                            return similar_plan.name !== plan.name ? (
-                              <div className="box">
-                                <ul className="similar-plan-ul">
-                                  <li>
-                                    <div className="box_block">
-                                      <div className="img-box-logo-similar">
-                                        <img src={similar_plan.hmo_id.logo} />
-                                      </div>
-                                      <span className="greyed-text">
-                                        {similar_plan.name}
-                                      </span>
-                                    </div>
-                                    <ul>
+                  <div className="members-covered">
+                    <h6>Members Covered</h6>
+                    <div className="row">
+                      <p>
+                        {this.props.quiz.quiz.responses.full_name}(
+                        {this.props.quiz.quiz.responses.individual_age} years)
+                      </p>
+                      <a
+                        className="edit-members-modal"
+                        onClick={this.toggleOthersInput}
+                        href="#"
+                      >
+                        <FontAwesomeIcon
+                          className="members-chev"
+                          icon={faChevronRight}
+                        />
+                      </a>
+                    </div>
+                  </div>
+                  <div className="similar-plans">
+                    <div className="similar-plans-inner">
+                      <div className="heading_section">
+                        <h6>Compare with similar plans</h6>
+                      </div>
+                      <div className="similar_plan_feature">
+                        <div className="box-slider">
+                          <div className="slider-plans">
+                            {this.props.quiz.recommended_plans.map(
+                              (similar_plan) => {
+                                return similar_plan.name !== plan.name ? (
+                                  <div className="box">
+                                    <ul className="similar-plan-ul">
                                       <li>
-                                        <span>
-                                          Covers{" "}
-                                          <b>
-                                            {
-                                              this.props.quiz.quiz.responses
-                                                .num_of_people
-                                            }{" "}
-                                            {this.props.quiz.quiz.responses
-                                              .num_of_people > 1
-                                              ? " people"
-                                              : " person"}
-                                          </b>
-                                        </span>
-                                      </li>
-                                      <li>
-                                        <span>
-                                          Premium{" "}
-                                          <b>
-                                            ₦
-                                            {this.props.responses.type ==
-                                            "single"
-                                              ? similar_plan.individual_annual_price
-                                              : similar_plan.family_annual_price}
-                                            / year
-                                          </b>
-                                        </span>
+                                        <div className="box_block">
+                                          <div className="img-box-logo-similar">
+                                            <img
+                                              src={similar_plan.hmo_id.logo}
+                                            />
+                                          </div>
+                                          <span className="greyed-text">
+                                            {similar_plan.name}
+                                          </span>
+                                        </div>
+                                        <ul>
+                                          <li>
+                                            <span>
+                                              Covers{" "}
+                                              <b>
+                                                {
+                                                  this.props.quiz.quiz.responses
+                                                    .num_of_people
+                                                }{" "}
+                                                {this.props.quiz.quiz.responses
+                                                  .num_of_people > 1
+                                                  ? " people"
+                                                  : " person"}
+                                              </b>
+                                            </span>
+                                          </li>
+                                          <li>
+                                            <span>
+                                              Premium{" "}
+                                              <b>
+                                                ₦
+                                                {this.props.responses.type ==
+                                                "single"
+                                                  ? this.numberwithCommas(
+                                                      similar_plan.individual_annual_price
+                                                    )
+                                                  : this.numberwithCommas(
+                                                      similar_plan.family_annual_price
+                                                    )}
+                                                / year
+                                              </b>
+                                            </span>
+                                          </li>
+                                        </ul>
+                                        <div className="similar-plans-btm">
+                                          <button
+                                            className="btn"
+                                            onClick={this.goToPlans}
+                                          >
+                                            COMPARE NOW
+                                          </button>
+                                        </div>
                                       </li>
                                     </ul>
-                                    <div className="similar-plans-btm">
-                                      <button className="btn">
-                                        COMPARE NOW
-                                      </button>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </div>
-                            ) : (
-                              ""
-                            );
-                          }
-                        )}
+                                  </div>
+                                ) : (
+                                  ""
+                                );
+                              }
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="col-md-4 wrapper_right_product">
-              <div className="inner_right_section">
-                <h3>Summary</h3>
-                <div className="scroll_space">
-                  {/* <div className="flexRow section_right">
+                <div className="col-md-4 wrapper_right_product">
+                  <div className="inner_right_section">
+                    <h3>Summary</h3>
+                    <div className="scroll_space">
+                      {/* <div className="flexRow section_right">
                     <div className="">Base Plan</div>
                     <div>
                       <span>₦5000</span>
                     </div>
                   </div> */}
-                  <div className="flexRow section_right">
-                    <div>Cover Amount</div>
-                    <div>
-                      <span>
-                        ₦
-                        {this.props.responses.type == "single"
-                          ? plan.individual_annual_price
-                          : plan.family_annual_price}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flexRow section_right">
-                    <div>Policy Period</div>
-                    <div>
-                      <span>{plan.duration}</span>
-                    </div>
-                  </div>
-                  <div className="premium_right">
-                    <div className="flexRow section_premium">
-                      <div>TOTAL PREMIUM</div>
-                      <div>
-                        <span>
-                          ₦
-                          {this.props.responses.type == "single"
-                            ? plan.individual_annual_price
-                            : plan.family_monthly_price}
-                        </span>
+                      <div className="flexRow section_right">
+                        <div>Cover Amount</div>
+                        <div>
+                          <span>
+                            ₦
+                            {this.props.responses.type == "single"
+                              ? this.numberwithCommas(
+                                  plan.individual_annual_price
+                                )
+                              : this.numberwithCommas(plan.family_annual_price)}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flexRow section_right">
+                        <div>Policy Period</div>
+                        <div>
+                          <span>{plan.duration}</span>
+                        </div>
+                      </div>
+                      <div className="premium_right">
+                        <div className="flexRow section_premium">
+                          <div>TOTAL PREMIUM</div>
+                          <div>
+                            <span>
+                              ₦
+                              {this.props.responses.type == "single"
+                                ? this.numberwithCommas(
+                                    plan.individual_annual_price
+                                  )
+                                : this.numberwithCommas(
+                                    plan.family_monthly_price
+                                  )}
+                            </span>
+                          </div>
+                        </div>
+                        <button type="button">PROCEED TO CHECKOUT</button>
                       </div>
                     </div>
-                    <button type="button">PROCEED TO CHECKOUT</button>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="bottom-menu details-bottom-menu row">
-            <div className="col-md-4">
-              <p>Total Premium</p>
-              <p>
-                ₦
-                {this.props.responses.type == "single"
-                  ? plan.individual_annual_price
-                  : plan.family_annual_price}
-              </p>
-            </div>
-            <div className="col-md-8">
-              <button className="btn btn-danger checkout">
-                PROCEED TO CHECKOUT
-              </button>
-            </div>
-          </div>
-          <Modal
-            dialogClassName="custom-dialog"
-            className="features-modal"
-            show={this.props.isFeaturesModalOpen}
-            onHide={this.toggleFeaturesModal}
-          >
-            <Modal.Header
-              className="features-modal-header"
-              translate="true"
-              closeButton
-            >
-              <div className="">
-                <div className="features-header row">
-                  <div className="col-md-3">
-                    <div className="box-logo">
-                      <img
-                        src={
-                          plan.hmo_id
-                            ? plan.hmo_id.logo
-                            : console.log("plan.hmo_id", plan.hmo_id)
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-9">
-                    <h6>{plan.name}</h6>
-                    <div className="row features-header-inner">
-                      <div className="col-md-3">
-                        <p className="greyed-text">Covers</p>
-                        <h6>{this.props.quiz.quiz.responses.num_of_people}</h6>
-                      </div>
-                      <div className="col-md-7">
-                        <p className="greyed-text">Premium</p>
-                        <h6>
-                          ₦
-                          {this.props.responses.type == "single"
-                            ? plan.individual_annual_price
-                            : plan.family_annual_price}
-                          / year
-                        </h6>
-                        {plan.individual_monthly_price ? (
-                          <p className="greyed-text">
-                            ₦{plan.individual_monthly_price} paid monthly
-                          </p>
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      <div className="col-md-2 shortlist-div">
-                        <img className="shortlist-yellow" src={shortlist} />
-                      </div>
-                    </div>
-                  </div>
+              <div className="bottom-menu details-bottom-menu row">
+                <div className="col-md-4">
+                  <p>Total Premium</p>
+                  <p>
+                    ₦
+                    {this.props.responses.type == "single"
+                      ? this.numberwithCommas(plan.individual_annual_price)
+                      : this.numberwithCommas(plan.family_annual_price)}
+                  </p>
+                </div>
+                <div className="col-md-8">
+                  <button className="btn btn-danger checkout">
+                    PROCEED TO CHECKOUT
+                  </button>
                 </div>
               </div>
-            </Modal.Header>
-            <Modal.Body className="features-modal-body">
-              <div className="features-modal">
-                <div className="feature_card">
-                  <div className="tabs tabs-feature" id="tabs-feature">
-                    <ul>
-                      <li
-                        className={
-                          this.props.tab_opened == "highlights"
-                            ? "features_tab is-active"
-                            : "features_tab"
-                        }
-                        id="li_plansHigh"
-                      >
-                        <a onClick={this.handleTabChange} id="highlights">
-                          Highlights
-                        </a>
-                      </li>
-                      <li
-                        className={
-                          this.props.tab_opened == "features"
-                            ? "features_tab is-active"
-                            : "features_tab"
-                        }
-                        id="li_plansFeat"
-                      >
-                        <a onClick={this.handleTabChange} id="features">
-                          Features
-                        </a>
-                      </li>
-                      <li
+              <Modal
+                dialogClassName="custom-dialog"
+                className="features-modal"
+                show={this.props.isFeaturesModalOpen}
+                onHide={this.toggleFeaturesModal}
+              >
+                <Modal.Header
+                  className="features-modal-header"
+                  translate="true"
+                  closeButton
+                >
+                  <div className="">
+                    <div className="features-header row">
+                      <div className="col-md-3">
+                        <div className="box-logo">
+                          <img
+                            src={
+                              plan.hmo_id
+                                ? plan.hmo_id.logo
+                                : console.log("plan.hmo_id", plan.hmo_id)
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-9">
+                        <h6>{plan.name}</h6>
+                        <div className="row features-header-inner">
+                          <div className="col-md-3">
+                            <p className="greyed-text">Covers</p>
+                            <h6>
+                              {this.props.quiz.quiz.responses.num_of_people}
+                            </h6>
+                          </div>
+                          <div className="col-md-7">
+                            <p className="greyed-text">Premium</p>
+                            <h6>
+                              ₦
+                              {this.props.responses.type == "single"
+                                ? this.numberwithCommas(
+                                    plan.individual_annual_price
+                                  )
+                                : this.numberwithCommas(
+                                    plan.family_annual_price
+                                  )}
+                              / year
+                            </h6>
+                            {plan.individual_monthly_price ? (
+                              <p className="greyed-text">
+                                ₦
+                                {this.numberwithCommas(
+                                  plan.individual_monthly_price
+                                )}{" "}
+                                paid monthly
+                              </p>
+                            ) : (
+                              ""
+                            )}
+                          </div>
+                          <div className="col-md-2 shortlist-div">
+                            <img className="shortlist-yellow" src={shortlist} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Modal.Header>
+                <Modal.Body className="features-modal-body">
+                  <div className="features-modal">
+                    <div className="feature_card">
+                      <div className="tabs tabs-feature" id="tabs-feature">
+                        <ul>
+                          <li
+                            className={
+                              this.props.tab_opened == "highlights"
+                                ? "features_tab is-active"
+                                : "features_tab"
+                            }
+                            id="li_plansHigh"
+                          >
+                            <a onClick={this.handleTabChange} id="highlights">
+                              Highlights
+                            </a>
+                          </li>
+                          <li
+                            className={
+                              this.props.tab_opened == "features"
+                                ? "features_tab is-active"
+                                : "features_tab"
+                            }
+                            id="li_plansFeat"
+                          >
+                            <a onClick={this.handleTabChange} id="features">
+                              Features
+                            </a>
+                          </li>
+                          <li
+                            className={
+                              this.props.tab_opened == "claim"
+                                ? "features_tab is-active"
+                                : "features_tab"
+                            }
+                            id="li_plansClaim"
+                          >
+                            <a onClick={this.handleTabChange} id="claim">
+                              Claim Process
+                            </a>
+                          </li>
+                          <li
+                            className={
+                              this.props.tab_opened == "hospitals"
+                                ? "features_tab is-active"
+                                : "features_tab"
+                            }
+                            id="li_plansHosp"
+                          >
+                            <a
+                              onClick={this.handleTabChange}
+                              id="hospitals"
+                              href="#"
+                            >
+                              Network Hospitals
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div
                         className={
                           this.props.tab_opened == "claim"
-                            ? "features_tab is-active"
-                            : "features_tab"
+                            ? "features_popup_table1 claim_process"
+                            : this.props.tab_opened == "hospitals"
+                            ? "features_popup_table1 hospitalSearchWrapper"
+                            : "features_popup_table1"
                         }
-                        id="li_plansClaim"
                       >
-                        <a onClick={this.handleTabChange} id="claim">
-                          Claim Process
-                        </a>
-                      </li>
-                      <li
-                        className={
-                          this.props.tab_opened == "hospitals"
-                            ? "features_tab is-active"
-                            : "features_tab"
-                        }
-                        id="li_plansHosp"
-                      >
-                        <a
-                          onClick={this.handleTabChange}
-                          id="hospitals"
-                          href="#"
-                        >
-                          Network Hospitals
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div
-                    className={
-                      this.props.tab_opened == "claim"
-                        ? "features_popup_table1 claim_process"
-                        : this.props.tab_opened == "hospitals"
-                        ? "features_popup_table1 hospitalSearchWrapper"
-                        : "features_popup_table1"
-                    }
-                  >
-                    {this.props.tab_opened == "highlights" ? (
-                      <div className="highlights-content">
-                        <div
-                          className="div_features_covered_main"
-                          //onClick={this.toggleFeaturePopUp}
-                        >
-                          <div className="features_icons">
-                            <div className="feature-icon1">
-                              <img
-                                alt=""
-                                className=""
-                                src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
-                              />
-                            </div>
-                          </div>
-                          <div className="div_features_covered_border">
-                            <h2 className="span_feature_popup_heading">
-                              Out-patient Limit: ₦{plan.outpatient_limit}
-                            </h2>
-                            {/* <FontAwesomeIcon
+                        {this.props.tab_opened == "highlights" ? (
+                          <div className="highlights-content">
+                            <div
+                              className="div_features_covered_main"
+                              //onClick={this.toggleFeaturePopUp}
+                            >
+                              <div className="features_icons">
+                                <div className="feature-icon1">
+                                  <img
+                                    alt=""
+                                    className=""
+                                    src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
+                                  />
+                                </div>
+                              </div>
+                              <div className="div_features_covered_border">
+                                <h2 className="span_feature_popup_heading">
+                                  Out-patient Limit: ₦
+                                  {this.numberwithCommas(plan.outpatient_limit)}
+                                </h2>
+                                {/* <FontAwesomeIcon
                           className="chev"
                           icon={faChevronRight}
                         /> */}
-                          </div>
-                        </div>
-                        <div
-                          className="div_features_covered_main"
-                          //onClick={this.toggleFeaturePopUp}
-                        >
-                          <div className="features_icons">
-                            <div className="feature-icon1">
-                              <img
-                                alt=""
-                                className=""
-                                src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
-                              />
+                              </div>
                             </div>
-                          </div>
-                          <div className="div_features_covered_border">
-                            <h2 className="span_feature_popup_heading">
-                              In-patient Limit: ₦{plan.inpatient_limit}
-                            </h2>
-                            {/* <FontAwesomeIcon
+                            <div
+                              className="div_features_covered_main"
+                              //onClick={this.toggleFeaturePopUp}
+                            >
+                              <div className="features_icons">
+                                <div className="feature-icon1">
+                                  <img
+                                    alt=""
+                                    className=""
+                                    src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
+                                  />
+                                </div>
+                              </div>
+                              <div className="div_features_covered_border">
+                                <h2 className="span_feature_popup_heading">
+                                  In-patient Limit: ₦
+                                  {this.numberwithCommas(plan.inpatient_limit)}
+                                </h2>
+                                {/* <FontAwesomeIcon
                           className="chev"
                           icon={faChevronRight}
                         /> */}
-                          </div>
-                        </div>
-                        <div className="div_features_covered_main">
-                          <div className="features_icons">
-                            <div className="feature-icon1">
-                              <img
-                                alt=""
-                                className=""
-                                src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
-                              />
+                              </div>
                             </div>
-                          </div>
-                          <div className="div_features_covered_border">
-                            <h2 className="span_feature_popup_heading">
-                              Cover Region:{" "}
-                              {plan.cover_region_id
-                                ? plan.cover_region_id.name
-                                : ""}
-                            </h2>
-                            {/* <FontAwesomeIcon
+                            <div className="div_features_covered_main">
+                              <div className="features_icons">
+                                <div className="feature-icon1">
+                                  <img
+                                    alt=""
+                                    className=""
+                                    src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
+                                  />
+                                </div>
+                              </div>
+                              <div className="div_features_covered_border">
+                                <h2 className="span_feature_popup_heading">
+                                  Cover Region:{" "}
+                                  {plan.cover_region_id
+                                    ? plan.cover_region_id.name
+                                    : ""}
+                                </h2>
+                                {/* <FontAwesomeIcon
                           className="chev"
                           icon={faChevronRight}
                         /> */}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    ) : this.props.tab_opened == "features" ? (
-                      <div className="features-content">
-                        <p className="coveredHead">What's covered</p>
-                        <div className="">
-                          {plan.service_id
-                            ? plan.service_id.map((service) => {
-                                return (
-                                  <div className="div_features_covered_main">
-                                    <div className="div_features_covered_inside">
-                                      <div className="features_icons">
-                                        <div className="feature-icon1">
-                                          <img
-                                            alt="feature"
-                                            className="feature_icon_img"
-                                            src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5.svg"
-                                          />
-                                        </div>
-                                      </div>
-                                      <div className="div_features_covered_border">
-                                        <h2 className="span_feature_popup_heading">
-                                          {service}
-                                        </h2>
-                                        {/* <span className="span_feature_popup_sub_heading">
+                        ) : this.props.tab_opened == "features" ? (
+                          <div className="features-content">
+                            <p className="coveredHead">What's covered</p>
+                            <div className="">
+                              {plan.service_id
+                                ? plan.service_id.map((service) => {
+                                    return (
+                                      <div className="div_features_covered_main">
+                                        <div className="div_features_covered_inside">
+                                          <div className="features_icons">
+                                            <div className="feature-icon1">
+                                              <img
+                                                alt="feature"
+                                                className="feature_icon_img"
+                                                src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5.svg"
+                                              />
+                                            </div>
+                                          </div>
+                                          <div className="div_features_covered_border">
+                                            <h2 className="span_feature_popup_heading">
+                                              {service}
+                                            </h2>
+                                            {/* <span className="span_feature_popup_sub_heading">
                             Single Private A/C Room
                           </span> */}
+                                          </div>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </div>
-                                );
-                              })
-                            : ""}
-                        </div>
-                      </div>
-                    ) : this.props.tab_opened == "claim" ? (
-                      <div className="claim-content">
-                        <h3>HMO directly pays network hospital</h3>
-                        <div className="claim_process_text">
-                          {/* <h4>Inform Hygeia HMO</h4> */}
-                          <ul>
-                            <li></li>
-                            <li>
-                              The Provider may ask for:
+                                    );
+                                  })
+                                : ""}
+                            </div>
+                          </div>
+                        ) : this.props.tab_opened == "claim" ? (
+                          <div className="claim-content">
+                            <h3>HMO directly pays network hospital</h3>
+                            <div className="claim_process_text">
+                              {/* <h4>Inform Hygeia HMO</h4> */}
                               <ul>
-                                <li>Name of Insured</li>
-                                {/* <li>Name of Insured</li>
+                                <li></li>
+                                <li>
+                                  The Provider may ask for:
+                                  <ul>
+                                    <li>Name of Insured</li>
+                                    {/* <li>Name of Insured</li>
                               <li>Name of Insured</li>
                               <li>Name of Insured</li>
                               <li>Name of Insured</li> */}
+                                  </ul>
+                                </li>
                               </ul>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="cashless-hosp-content">
-                        <div className="features_search_hosp">
-                          <input
-                            type="text"
-                            placeholder="Search Hospitals"
-                            id="input_hospital"
-                            // disabled
-                          />
-                          <p className="searchIcon"></p>
-                        </div>
-                        <div className="features_hospital_catHead">
-                          Top Hospitals
-                        </div>
-                        <ul className="features_hosp_list">
-                          {JSON.parse(plan.hmo_id.provider_id).map(
-                            (provider) => {
-                              return <li>{provider}</li>;
-                            }
-                          )}
-                        </ul>
-                        {/* <div className="features_hospital_catHead">
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="cashless-hosp-content">
+                            <div className="features_search_hosp">
+                              <input
+                                type="text"
+                                placeholder="Search Hospitals"
+                                id="input_hospital"
+                                // disabled
+                              />
+                              <p className="searchIcon"></p>
+                            </div>
+                            <div className="features_hospital_catHead">
+                              Top Hospitals
+                            </div>
+                            <ul className="features_hosp_list">
+                              {JSON.parse(plan.hmo_id.provider_id).map(
+                                (provider) => {
+                                  return <li>{provider}</li>;
+                                }
+                              )}
+                            </ul>
+                            {/* <div className="features_hospital_catHead">
                         Other Hospitals
                       </div>
                       <ul className="features_hosp_list">
@@ -1657,86 +1704,94 @@ class PlanDetails extends Component<DetailsProps> {
                         <li>Kupa Medical Centre</li>
                         <li>Kupa Medical Centre</li>
                       </ul> */}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="bottom-menu details-bottom-menu row">
-                    <div className="col-md-4">
-                      <p>Total Premium</p>
-                      <p>
-                        ₦{" "}
-                        {this.props.responses.type == "single"
-                          ? plan.individual_annual_price
-                          : plan.family_annual_price}
-                      </p>
+                      <div className="bottom-menu details-bottom-menu row">
+                        <div className="col-md-4">
+                          <p>Total Premium</p>
+                          <p>
+                            ₦{" "}
+                            {this.props.responses.type == "single"
+                              ? this.numberwithCommas(
+                                  plan.individual_annual_price
+                                )
+                              : this.numberwithCommas(plan.family_annual_price)}
+                          </p>
+                        </div>
+                        <div className="col-md-8">
+                          <button className="btn btn-danger checkout">
+                            PROCEED TO CHECKOUT
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="col-md-8">
-                      <button className="btn btn-danger checkout">
-                        PROCEED TO CHECKOUT
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Modal.Body>
-            <div className="claim_popup_main">
-              <div className="claim_popup_black"></div>
-              <Modal
-                dialogClassName="custom-dialog"
-                className="claim_popup_white"
-                show={this.props.isFeaturePopUpOpen}
-                onHide={this.toggleFeaturePopUp}
-              >
-                <Modal.Header
-                  className="div_claim_popup_heading"
-                  translate="true"
-                  closeButton
-                >
-                  <span className="claim_popup_heading">Value for money</span>
-                </Modal.Header>
-                <Modal.Body className="">
-                  <div className="div_feature_explain">
-                    <span>
-                      You get 1 year health cover at a very affordable price. No
-                      catch and complete peace of mind.
-                    </span>
-                  </div>
-                  <div className="div_feature_what">
-                    <p>Why it is Important</p>
-                    <span>
-                      Opting for 1 year cover means you are insured against all
-                      possible illnesses, be it cancer, heart problems or an
-                      accident. This guarantees complete peace of ming at a very
-                      reasonable price.
-                    </span>
                   </div>
                 </Modal.Body>
+                <div className="claim_popup_main">
+                  <div className="claim_popup_black"></div>
+                  <Modal
+                    dialogClassName="custom-dialog"
+                    className="claim_popup_white"
+                    show={this.props.isFeaturePopUpOpen}
+                    onHide={this.toggleFeaturePopUp}
+                  >
+                    <Modal.Header
+                      className="div_claim_popup_heading"
+                      translate="true"
+                      closeButton
+                    >
+                      <span className="claim_popup_heading">
+                        Value for money
+                      </span>
+                    </Modal.Header>
+                    <Modal.Body className="">
+                      <div className="div_feature_explain">
+                        <span>
+                          You get 1 year health cover at a very affordable
+                          price. No catch and complete peace of mind.
+                        </span>
+                      </div>
+                      <div className="div_feature_what">
+                        <p>Why it is Important</p>
+                        <span>
+                          Opting for 1 year cover means you are insured against
+                          all possible illnesses, be it cancer, heart problems
+                          or an accident. This guarantees complete peace of ming
+                          at a very reasonable price.
+                        </span>
+                      </div>
+                    </Modal.Body>
+                  </Modal>
+                </div>
+              </Modal>
+              <Modal
+                dialogClassName="custom-dialog"
+                className="right edit-members-popup"
+                show={this.props.isOthersInputOpen}
+                onHide={this.toggleOthersInput}
+              >
+                <Modal.Header translate="true" closeButton>
+                  <div className="others-mtitle edit-members-header">
+                    <h3>Edit Members</h3>
+                  </div>
+                </Modal.Header>
+                <Modal.Body>{this.showOthersInput()}</Modal.Body>
+                <div className="bottom-menu details-bottom-menu row">
+                  <div className="col-md-12">
+                    <button
+                      className="btn btn-danger checkout update-members-btn"
+                      onClick={this.toggleOthersInput}
+                    >
+                      UPDATE MEMBERS
+                    </button>
+                  </div>
+                </div>
               </Modal>
             </div>
-          </Modal>
-          <Modal
-            dialogClassName="custom-dialog"
-            className="right edit-members-popup"
-            show={this.props.isOthersInputOpen}
-            onHide={this.toggleOthersInput}
-          >
-            <Modal.Header translate="true" closeButton>
-              <div className="others-mtitle edit-members-header">
-                <h3>Edit Members</h3>
-              </div>
-            </Modal.Header>
-            <Modal.Body>{this.showOthersInput()}</Modal.Body>
-            <div className="bottom-menu details-bottom-menu row">
-              <div className="col-md-12">
-                <button
-                  className="btn btn-danger checkout update-members-btn"
-                  onClick={this.toggleOthersInput}
-                >
-                  UPDATE MEMBERS
-                </button>
-              </div>
-            </div>
-          </Modal>
+          ) : (
+            this.goToHome()
+          )}
         </div>
         <AppFooter />
       </div>

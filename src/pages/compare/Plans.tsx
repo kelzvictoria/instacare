@@ -1749,6 +1749,10 @@ class Plans extends Component<PlansProps> {
     });
   };
 
+  numberwithCommas = (value) => {
+    return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
+  };
+
   render() {
     console.log("this.props", this.props);
     const recPlansArr = this.props.recommended_plans;
@@ -1932,8 +1936,12 @@ class Plans extends Component<PlansProps> {
                                 >
                                   ₦
                                   {this.props.quiz.responses.type == "single"
-                                    ? rec_plan.individual_annual_price
-                                    : rec_plan.family_annual_price}{" "}
+                                    ? this.numberwithCommas(
+                                        rec_plan.individual_annual_price
+                                      )
+                                    : this.numberwithCommas(
+                                        rec_plan.family_annual_price
+                                      )}{" "}
                                   annually
                                   {/* ₦5k/month */}
                                 </button>
@@ -2031,16 +2039,16 @@ class Plans extends Component<PlansProps> {
                       >
                         {this.state.compare_plans_mobile_indexes[0]
                           ? this.props.quiz.responses.type == "single"
-                            ? `₦${
+                            ? `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   this.state.compare_plans_mobile_indexes[0]
                                 ].individual_annual_price
-                              }`
-                            : `₦${
+                              )}`
+                            : `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   this.state.compare_plans_mobile_indexes[0]
                                 ].family_annual_price
-                              }`
+                              )}`
                           : ""}
                       </div>
                     </div>
@@ -2100,12 +2108,16 @@ class Plans extends Component<PlansProps> {
                       >
                         {this.state.compare_plans_mobile_indexes[1]
                           ? this.props.quiz.responses.type == "single"
-                            ? this.props.recommended_plans[
-                                this.state.compare_plans_mobile_indexes[1]
-                              ].individual_annual_price
-                            : this.props.recommended_plans[
-                                this.state.compare_plans_mobile_indexes[1]
-                              ].family_annual_price
+                            ? this.numberwithCommas(
+                                this.props.recommended_plans[
+                                  this.state.compare_plans_mobile_indexes[1]
+                                ].individual_annual_price
+                              )
+                            : this.numberwithCommas(
+                                this.props.recommended_plans[
+                                  this.state.compare_plans_mobile_indexes[1]
+                                ].family_annual_price
+                              )
                           : ""}
                       </div>
                     </div>
@@ -2330,15 +2342,23 @@ class Plans extends Component<PlansProps> {
                                 >
                                   ₦
                                   {this.props.quiz.responses.type == "single"
-                                    ? rec_plan.individual_annual_price
-                                    : rec_plan.family_annual_price}{" "}
+                                    ? this.numberwithCommas(
+                                        rec_plan.individual_annual_price
+                                      )
+                                    : this.numberwithCommas(
+                                        rec_plan.family_annual_price
+                                      )}{" "}
                                   annually
                                 </div>
                                 <span className="annually_premium">
                                   ₦
                                   {this.props.quiz.responses.type == "single"
-                                    ? rec_plan.individual_monthly_price
-                                    : rec_plan.family_annual_price}
+                                    ? this.numberwithCommas(
+                                        rec_plan.individual_monthly_price
+                                      )
+                                    : this.numberwithCommas(
+                                        rec_plan.family_annual_price
+                                      )}
                                   /month
                                 </span>
                               </div>
@@ -2457,16 +2477,16 @@ class Plans extends Component<PlansProps> {
                       <div className="cover_compare">
                         <span>
                           {this.props.quiz.responses.type == "single"
-                            ? `₦${
+                            ? `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   this.state.compare_plans_desktop_indexes[0]
                                 ].individual_annual_price
-                              }`
-                            : `₦${
+                              )}`
+                            : `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   this.state.compare_plans_desktop_indexes[0]
                                 ].family_annual_price
-                              }`}
+                              )}`}
                         </span>
                       </div>
                     </div>
@@ -2514,16 +2534,16 @@ class Plans extends Component<PlansProps> {
                       <div className="cover_compare">
                         <span>
                           {this.props.quiz.responses.type == "single"
-                            ? `₦${
+                            ? `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   this.state.compare_plans_desktop_indexes[1]
                                 ].individual_annual_price
-                              }`
-                            : `₦${
+                              )}`
+                            : `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   this.state.compare_plans_desktop_indexes[1]
                                 ].family_annual_price
-                              }`}
+                              )}`}
                         </span>
                       </div>
                     </div>
@@ -2571,16 +2591,16 @@ class Plans extends Component<PlansProps> {
                       <div className="cover_compare">
                         <span>
                           {this.props.quiz.responses.type == "single"
-                            ? `₦${
+                            ? `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   this.state.compare_plans_desktop_indexes[2]
                                 ].individual_annual_price
-                              }`
-                            : `₦${
+                              )}`
+                            : `₦${this.numberwithCommas(
                                 this.props.recommended_plans[
                                   this.state.compare_plans_desktop_indexes[2]
                                 ].family_annual_price
-                              }`}
+                              )}`}
                         </span>
                       </div>
                     </div>
@@ -2657,13 +2677,20 @@ class Plans extends Component<PlansProps> {
                       <h6>
                         ₦
                         {this.props.quiz.responses.type == "single"
-                          ? this.props.clicked_plan.individual_annual_price
-                          : this.props.clicked_plan.family_annual_price}
+                          ? this.numberwithCommas(
+                              this.props.clicked_plan.individual_annual_price
+                            )
+                          : this.numberwithCommas(
+                              this.props.clicked_plan.family_annual_price
+                            )}
                         / year
                       </h6>
                       {this.props.clicked_plan.individual_monthly_price ? (
                         <p className="greyed-text">
-                          ₦{this.props.clicked_plan.individual_monthly_price}{" "}
+                          ₦
+                          {this.numberwithCommas(
+                            this.props.clicked_plan.individual_monthly_price
+                          )}{" "}
                           paid monthly
                         </p>
                       ) : (
@@ -2785,7 +2812,9 @@ class Plans extends Component<PlansProps> {
                         <div className="div_features_covered_border">
                           <h2 className="span_feature_popup_heading">
                             Out-patient Limit: ₦
-                            {this.props.clicked_plan.outpatient_limit}
+                            {this.numberwithCommas(
+                              this.props.clicked_plan.outpatient_limit
+                            )}
                           </h2>
                           {/* <FontAwesomeIcon
                           className="chev"
@@ -2809,7 +2838,9 @@ class Plans extends Component<PlansProps> {
                         <div className="div_features_covered_border">
                           <h2 className="span_feature_popup_heading">
                             In-patient Limit: ₦
-                            {this.props.clicked_plan.inpatient_limit}
+                            {this.numberwithCommas(
+                              this.props.clicked_plan.inpatient_limit
+                            )}
                           </h2>
                           {/* <FontAwesomeIcon
                           className="chev"
@@ -2936,8 +2967,12 @@ class Plans extends Component<PlansProps> {
                     <p>
                       ₦{" "}
                       {this.props.quiz.responses.type == "single"
-                        ? this.props.clicked_plan.individual_annual_price
-                        : this.props.clicked_plan.family_annual_price}
+                        ? this.numberwithCommas(
+                            this.props.clicked_plan.individual_annual_price
+                          )
+                        : this.numberwithCommas(
+                            this.props.clicked_plan.family_annual_price
+                          )}
                     </p>
                   </div>
                   <div className="col-md-8">

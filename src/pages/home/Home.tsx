@@ -2584,6 +2584,10 @@ class Home extends Component<QuizProps, {}> {
     return <p>Not enough responses collected!</p>;
   }
 
+  numberwithCommas = (value) => {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   getClickedPlan = (index) => {
     console.log("index", index);
     this.props.dispatch({
@@ -3212,20 +3216,32 @@ class Home extends Component<QuizProps, {}> {
                                         <h5 className="">
                                           {" "}
                                           ₦
-                                          {plan.category_id.id == "personal" &&
-                                          plan.individual_annual_price
-                                            ? plan.individual_annual_price
-                                            : plan.category_id.id ==
-                                                "personal" &&
-                                              plan.individual_monthly_price
-                                            ? plan.individual_monthly_price
-                                            : plan.category_id.id == "family" &&
-                                              plan.family_annual_price
-                                            ? plan.family_annual_price
-                                            : plan.category_id.id == "family" &&
-                                              plan.family_monthly_price
-                                            ? plan.family_monthly_price
-                                            : plan.individual_annual_price}
+                                          {
+                                            plan.category_id.id !== "family" &&
+                                            plan.individual_annual_price
+                                              ? this.numberwithCommas(
+                                                  plan.individual_annual_price
+                                                )
+                                              : plan.category_id.id !==
+                                                  "family" &&
+                                                plan.individual_monthly_price
+                                              ? this.numberwithCommas(
+                                                  plan.individual_monthly_price
+                                                )
+                                              : plan.category_id.id ==
+                                                  "family" &&
+                                                plan.family_annual_price
+                                              ? this.numberwithCommas(
+                                                  plan.family_annual_price
+                                                )
+                                              : plan.category_id.id ==
+                                                  "family" &&
+                                                plan.family_monthly_price
+                                              ? this.numberwithCommas(
+                                                  plan.family_monthly_price
+                                                )
+                                              : "" //plan.individual_annual_price
+                                          }
                                           {/* ₦ 900/ month */}
                                         </h5>
                                       </div>
