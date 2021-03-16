@@ -359,9 +359,17 @@ class SideBySideComparison extends Component<ComparisonProps> {
       compare_plans_mobile_indexes,
     } = this.props;
     console.log("this.props", this.props);
+    console.log(
+      "this.props.compare_plans_mobile_indexes.length",
+      this.props.compare_plans_mobile_indexes.length
+    );
+    console.log(
+      "this.props.compare_plans_desktop_indexes.length",
+      this.props.compare_plans_desktop_indexes.length
+    );
     return (
       <div>
-        {compare_plans_mobile_indexes ? (
+        {this.props.compare_plans_mobile_indexes.length > 0 ? (
           <div className="mobile-comparison-view quotes_main_container">
             <div className="row compare-plans-header">
               <div className="row nav-info">
@@ -418,11 +426,11 @@ class SideBySideComparison extends Component<ComparisonProps> {
                           <a className="is-inline-flex edit-plan-close">×</a>
                           <a
                             className="close_plan edit-plan-close"
-                            onClick={() => {
-                              this.removePlanFromMobileCheckedIndexes(
-                                compare_plans_mobile_indexes[0]
-                              );
-                            }}
+                            // onClick={() => {
+                            //   this.removePlanFromMobileCheckedIndexes(
+                            //     compare_plans_mobile_indexes[0]
+                            //   );
+                            // }}
                           >
                             ×
                           </a>
@@ -467,11 +475,11 @@ class SideBySideComparison extends Component<ComparisonProps> {
                           </a>
                           <a
                             className="close_plan edit-plan-close"
-                            onClick={() => {
-                              this.removePlanFromMobileCheckedIndexes(
-                                compare_plans_mobile_indexes[1]
-                              );
-                            }}
+                            // onClick={() => {
+                            //   this.removePlanFromMobileCheckedIndexes(
+                            //     compare_plans_mobile_indexes[1]
+                            //   );
+                            // }}
                           >
                             ×
                           </a>
@@ -1863,7 +1871,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
               </div>
             </section>
           </div>
-        ) : compare_plans_desktop_indexes ? (
+        ) : this.props.compare_plans_desktop_indexes.length > 0 ? (
           <div className="desktop-view quotes_main_container">
             <div className="navbarWrapper">
               <div className="">
