@@ -27,7 +27,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/quiz" component={Quiz} />
-        {/* <Route path="/compare" component={Compare} /> */}
+        <Route path="/compare-old" component={Compare} />
         <Route path="/plans" component={Plans} />
         <Route path="/details-old" component={Details} />
         <Route path="/details" component={PlanDetails} />

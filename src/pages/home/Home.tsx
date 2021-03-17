@@ -3130,7 +3130,7 @@ class Home extends Component<QuizProps, {}> {
                 </p>
 
                 <div className="container row top-plans-content-wrapper">
-                  <div className="col-md-8">
+                  <div className="col-md-12">
                     <section className="tabs_wrapper">
                       <div className="tabs health_tab">
                         <ul>
@@ -3153,8 +3153,11 @@ class Home extends Component<QuizProps, {}> {
                                     </span>
                                   </div>
                                   <div className="title-h6">
-                                    <div>{plan.hmo_id.name.id}</div>
-                                    <span>{plan.name}</span>
+                                    <div>{plan.name}</div>
+                                    <span>{plan.hmo_id.name.id}</span>
+
+                                    {/* <div>{plan.hmo_id.name.id}</div>
+                                    <span>{plan.name}</span> */}
                                   </div>
                                 </div>
                                 <div className="tag_tabs">
@@ -3261,12 +3264,12 @@ class Home extends Component<QuizProps, {}> {
                             );
                           })
                         ) : (
-                          <div className="card">
-                            <Spin />
-                          </div>
+                          // <div className="card">
+                          <Spin />
+                          // </div>
                         )}
 
-                        <div className="card top_plans_see_more see_more">
+                        {/* <div className="card top_plans_see_more see_more">
                           <a href="">
                             SEE MORE PLANS
                             <FontAwesomeIcon
@@ -3274,12 +3277,12 @@ class Home extends Component<QuizProps, {}> {
                               icon={faChevronRight}
                             />
                           </a>
-                        </div>
+                        </div> */}
                       </div>
                     </section>
                   </div>
 
-                  <div className="col-md-4">
+                  {/* <div className="col-md-4">
                     <div className="card insurers">
                       <div className="card_heading">HMO Providers</div>
                       {this.props.hmos ? (
@@ -3303,7 +3306,7 @@ class Home extends Component<QuizProps, {}> {
                                 <div className="insurer_name">
                                   <span>
                                     {hmo.name.id}
-                                    {/* HMO */}
+                                    
                                   </span>
                                 </div>
                               </div>
@@ -3318,7 +3321,7 @@ class Home extends Component<QuizProps, {}> {
                         </a>
                       )}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               {/* <div className="information  container">

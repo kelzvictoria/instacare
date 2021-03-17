@@ -2942,11 +2942,13 @@ class Plans extends Component<PlansProps> {
                         Top Hospitals
                       </div>
                       <ul className="features_hosp_list">
-                        {JSON.parse(
-                          this.props.clicked_plan.hmo_id.provider_id
-                        ).map((provider) => {
-                          return <li>{provider}</li>;
-                        })}
+                        {this.props.clicked_plan.hmo_id.provider_id
+                          ? JSON.parse(
+                              this.props.clicked_plan.hmo_id.provider_id
+                            ).map((provider) => {
+                              return <li>{provider}</li>;
+                            })
+                          : ""}
                       </ul>
                       {/* <div className="features_hospital_catHead">
                         Other Hospitals

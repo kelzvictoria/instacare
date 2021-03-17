@@ -11,6 +11,11 @@ const companyLinks = [
     label: "Home",
     url: "/",
   },
+
+  {
+    label: "HMOs",
+    url: "/hmos",
+  },
   {
     label: "About",
     url: "#",

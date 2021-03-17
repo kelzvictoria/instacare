@@ -795,7 +795,9 @@ button.close:after {
   }
 
   .top-plans.container {
-    background: #edeff1 !important;
+    background: #edeff10f !important;
+
+    /* #edeff1 !important; */
   }
 
   .tabs_wrapper .tabs ul li.active a::after {
@@ -870,7 +872,7 @@ div#thirdPage {
   .banner-container {
     width: 46.67% !important;
     max-width: 46.67% !important;
-    top: 6.3rem !important;
+    /* top: 6.3rem !important; */
   }
 
   .quiz {
@@ -885,7 +887,12 @@ div#thirdPage {
   .col-md-4.card {
     flex: 0 0 100% !important;
     padding: 0px !important;
-    padding-left: 4.5rem !important;
+    /* padding-left: 4.5rem !important; */
+  }
+
+  .banner-bottom .col-md-4.card {
+    text-align: center;
+    justify-content: center;
   }
 
   .banner-bottom .row div:nth-child(2),
@@ -947,6 +954,26 @@ div#thirdPage {
     margin-left: 0px !important;
     margin-right: 0px !important;
     padding-left: 0px !important;
+  }
+
+  .card-text {
+    display: flex;
+  }
+
+  .card-text p {
+    margin-top: 0 !important;
+    padding-top: 0px !important;
+    margin-bottom: 0.5em;
+    color: #1a7749;
+    /* font-size: 1rem; */
+    font-weight: 500;
+  }
+
+  .price-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -30px !important;
   }
 }
 
@@ -1179,15 +1206,16 @@ button.provider-details-btn {
     color: #253858;
     font-size: 20px;
     font-weight: 500;
-    padding-right: 124px;
+    /* padding-right: 124px; */
     display: flex;
     flex-direction: column;
-    padding-left: 20px;
+    /* padding-left: 20px; */
   }
 
   .insurer_card_top {
     display: flex;
-    flex-direction: row;
+    /* flex-direction: row; */
+    flex-direction: column;
     margin-bottom: 22px;
   }
 
@@ -1204,8 +1232,9 @@ button.provider-details-btn {
   }
 
   .plan-features {
-    margin-top: 15px;
-    display: flex;
+    /* margin-top: 15px; */
+    /* display: flex; */
+    display: block;
     flex-wrap: wrap;
   }
 
@@ -1213,18 +1242,19 @@ button.provider-details-btn {
     font-size: 14px;
     color: rgba(23, 43, 77, 0.8);
     font-weight: 400;
-    width: 50%;
+    /* width: 50%; */
+    width: 100%;
     padding-right: 20px;
     padding-bottom: 20px;
   }
 
   .features-action-bar {
-    margin-top: 25px;
-    margin-bottom: 20px;
+    /* margin-top: 25px;
+    margin-bottom: 20px; */
   }
 
   .features-action-bar .price-btn {
-    float: right;
+    /* float: right; */
   }
 
   .features-action-bar .price-btn .price {
@@ -1233,7 +1263,7 @@ button.provider-details-btn {
     font-size: 20px !important;
     font-weight: 500 !important;
     vertical-align: middle !important;
-    margin-right: 20px !important;
+    /* margin-right: 20px !important; */
   }
 
   .btn-check-prem {
@@ -1604,7 +1634,8 @@ h5.float-left.top-plans,
 }
 
 .tabs_wrapper {
-  background: #edeff1 !important;
+  background: #edeff10f !important;
+  /* #edeff1 !important; */
   padding: 16px 16px !important;
 
   border-right: none !important;
@@ -1745,8 +1776,8 @@ h5.float-left.top-plans,
 }
 
 .logo_top {
-  width: 110px;
-  height: 52px;
+  /* width: 110px;
+  height: 52px; */
 }
 
 .widget-insurer-logo {
@@ -4134,12 +4165,12 @@ p.Home_textHeading__26RD2 {
 }
 
 span.logo-widget.widget-insurer-logo {
-  width: 100% !important;
+  /* width: 100% !important; */
 }
 
 .logo-widget img {
-  height: 100%;
-  width: 100%;
+  /* height: 100%;
+  width: 100%; */
 }
 
 span.quotes_more_plans.more {
@@ -5606,9 +5637,118 @@ ul.footer-links {
   margin-top: 0px !important;
 }
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) { */
+@media (min-width: 999px) {
+  .tabs_details.top_plans {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    justify-content: space-around;
+    display: flex;
+  }
+
+  .tabs_wrapper {
+    /* background: #edeff124 !important; */
+  }
+
+  .tabs_details .card {
+    box-shadow: 0 2px 4px 0 rgba(37, 56, 88, 0.08);
+  }
+
+  .tabs_details.top_plans {
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+
+  .tabs_details .card {
+    /* height: 400px; */
+    height: 420px;
+    width: 30.33%;
+    max-width: 30.33%;
+  }
+
+  .features-action-bar {
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .plan-features {
+    height: 50%;
+  }
+
+  .top-features {
+    height: 100%;
+    margin-bottom: 20px;
+  }
+
+  .features-action-bar .price-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .price {
+    text-align: center;
+  }
+}
+
+span.logo-widget.widget-insurer-logo {
+  /* height: 70px; */
+  height: 45px;
+  margin-bottom: 2rem;
+}
+
+.logo_top {
+  margin-bottom: 1rem;
+}
+
+.logo-widget img {
+  height: 100%;
+}
+
+@media (max-width: 600px) {
+  span.logo-widget.widget-insurer-logo {
+    margin-bottom: 0rem !important;
+  }
+
+  .plan-features .features-block {
+    margin-bottom: 5px !important;
+  }
+
+  .tabs_details .features-action-bar {
+    margin-top: -10px;
+  }
+}
+
+@media (min-width: 600px) {
   ul.footer-links {
     display: flex;
     justify-content: space-around;
   }
+}
+
+/* @media (min-width: 1000px) and (max-width: 1200px) {
+  .tabs_details .card {
+    height: 400px;
+    width: 50%;
+    max-width: 50%;
+  }
+} */
+
+.ant-spin.ant-spin-spinning {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .ant-col.banner-container.ant-col-xs-24.ant-col-md-16 {
+    display: none;
+  }
+}
+
+.top_fixed_box img {
+  height: 65px;
 }

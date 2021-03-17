@@ -417,7 +417,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
                             ]
                           }
                           className="img-compare"
-                          width="80"
+                          // width="80"
                         />
                         <p className="box-plan-2">
                           <span className="plan-2">
@@ -468,7 +468,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
                               compare_plans_mobile_indexes
                             ].name
                           }
-                          width="80"
+                          // width="80"
                           className="img-compare"
                         />
                         <p className="box-plan-2">
@@ -1943,7 +1943,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
                               compare_plans_desktop_indexes[0]
                             ].name
                           }
-                          width="80"
+                          // width="80"
                           className="img-compare"
                         />
                         <p className="box-plan-2">
@@ -1997,7 +1997,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
                               compare_plans_desktop_indexes[1]
                             ].name
                           }
-                          width="80"
+                          // width="80"
                           className="img-compare"
                         />
                         <p className="box-plan-2">
@@ -2052,7 +2052,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
                               ].name
                             }
                             className="img-compare"
-                            width="80"
+                            // width="80"
                           />
                           <p className="box-plan-2">
                             <span className="plan-2">
