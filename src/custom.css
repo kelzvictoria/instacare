@@ -5934,6 +5934,7 @@ span.logo-widget.widget-insurer-logo {
 
 @media (min-width: 999px) {
   .tabs_details.top_plans {
+    margin: auto;
     justify-content: unset !important;
   }
 
@@ -5950,12 +5951,12 @@ span.logo-widget.widget-insurer-logo {
 /* juliette */
 
 @media (min-width: 999px) {
-  .features-action-bar {
+  /* .features-action-bar {
     height: 0%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     margin-top: 15px;
-  }
+  } */
 }
