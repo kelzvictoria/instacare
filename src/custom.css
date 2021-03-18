@@ -5693,7 +5693,7 @@ ul.footer-links {
   }
 
   .features-action-bar {
-    height: 50%;
+    height: 0%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -5746,7 +5746,7 @@ span.logo-widget.widget-insurer-logo {
   }
 
   .tabs_details .features-action-bar {
-    margin-top: -10px;
+    /* margin-top: -10px; */
   }
 }
 
@@ -5783,12 +5783,7 @@ span.logo-widget.widget-insurer-logo {
 /* troubleshooting the top plans cards styling */
 
 .tabs_details .card {
-<<<<<<< HEAD
   height: 250px !important;
-=======
-  /* height: 300px !important;  */
-  height: 280px !important;
->>>>>>> e9e6e75ada24fc16a2f7e4e439fe0a342a95b524
 }
 
 .top-features {
@@ -5796,11 +5791,11 @@ span.logo-widget.widget-insurer-logo {
 }
 
 .plan-features {
-  height: 22% !important;
+  /* height: 22% !important; */
 }
 
 .features-action-bar {
-  height: 60% !important;
+  /* height: 60% !important; */
 }
 
 .gift-icon {
@@ -5889,7 +5884,7 @@ span.logo-widget.widget-insurer-logo {
 
 @media (min-width: 999px) and (max-width: 1023px) {
   .features-action-bar {
-    margin-top: -25px !important;
+    /* margin-top: -25px !important; */
   }
 }
 
@@ -5898,3 +5893,14 @@ span.logo-widget.widget-insurer-logo {
     height: 2rem !important;
   }
 }
+@media (min-width: 999px){
+  .features-action-bar {
+    height: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 15px;
+}
+}
+
