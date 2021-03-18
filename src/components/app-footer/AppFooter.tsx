@@ -3,6 +3,10 @@ import React, { Component } from "react";
 import { Row, Col, Typography, Icon } from "antd";
 
 import styles from "./AppFooter.module.scss";
+//import { connect } from "http2";
+
+import { connect } from "react-redux";
+import * as actions from "../../utils/actions";
 
 const { Title } = Typography;
 
@@ -26,9 +30,15 @@ const companyLinks = [
     url: "#",
   },
 
+  // {
+  //   label: "Sales",
+  //   url: "#",
+  // },
+
   {
-    label: "Sales",
-    url: "#",
+    label: "Reliance HMO",
+    url: "/reliance",
+    id: "reliance",
   },
 
   {
@@ -71,8 +81,27 @@ const contactLinks: { label: string; url: string; icon?: string }[] = [
   },
 ];
 
-export class AppFooter extends Component {
+interface FooterProps {
+  [x: string]: any;
+  dispatch(args: any): any;
+}
+
+class AppFooter extends Component<FooterProps, {}> {
+  constructor(props) {
+    super(props);
+    this.handleHMOClick = this.handleHMOClick.bind(this);
+  }
+
+  state = {};
+
+  handleHMOClick = (hmo) => {
+    console.log("this.props", this.props);
+    // this.props.history.push({ pathname: `/${hmo}` });
+  };
+  filterPlansByHMO = (hmo) => {};
+
   render() {
+    // console.log("this.props in footer", this.props);
     return (
       <div className="app_footer" style={{ position: "relative" }}>
         <footer className={styles.appFooter}>
@@ -84,7 +113,12 @@ export class AppFooter extends Component {
                 return (
                   <li key={index}>
                     {" "}
-                    <a href={link.url}>{link.label}</a>{" "}
+                    <a
+                      href={link.url}
+                      onClick={() => this.handleHMOClick(link.id)}
+                    >
+                      {link.label}
+                    </a>{" "}
                   </li>
                 );
               })}
@@ -116,3 +150,12 @@ export class AppFooter extends Component {
     );
   }
 }
+
+const mapProps = (state: any) => {
+  return {
+    ...state.quiz.quiz,
+    ...state.quiz,
+  };
+};
+
+export default connect(mapProps)(AppFooter);

@@ -25,7 +25,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AppHeader from "../../components/app-header/AppHeader";
-import { AppFooter } from "../../components/app-footer/AppFooter";
+import AppFooter from "../../components/app-footer/AppFooter";
 
 import styles from "./Home.module.scss";
 import "../../custom.css";
@@ -126,6 +126,8 @@ class Home extends Component<QuizProps, {}> {
     is_phone_valid: "null",
     show_provider_info: false,
     provider_info: [],
+    filter_plans_by_hmo: false,
+    provider_plans: [],
   };
 
   steps: { p: string; h3: string }[] = [
@@ -202,6 +204,58 @@ class Home extends Component<QuizProps, {}> {
     "Zamfara",
   ];
 
+  hmos: { name: string; id: string }[] = [
+    {
+      name: "Hygeia ",
+      id: "hygeia",
+    },
+
+    {
+      name: "Metrohealth",
+      id: "metro-health",
+    },
+
+    {
+      name: "Novo Health Africa",
+      id: "novo-health-africa",
+    },
+
+    {
+      name: "Swift",
+      id: "swift",
+    },
+
+    {
+      name: "Reliance ",
+      id: "reliance",
+    },
+
+    {
+      name: "Princeton Health Limited",
+      id: "princeton-health-limited",
+    },
+
+    {
+      name: "AIICO Multi-Shield Nig Ltd",
+      id: "aiico-multi-shield-nig-ltd",
+    },
+
+    {
+      name: "Integrated Healthcare Limited",
+      id: "integrated_healthcare_ltd",
+    },
+
+    {
+      name: "Total Health Trust",
+      id: "total-health-trust",
+    },
+
+    {
+      name: "Avon",
+      id: "avon",
+    },
+  ];
+
   toggleModal = () => {
     this.props.dispatch({
       type: actions.TOGGLE_DESKTOP_MODAL,
@@ -249,10 +303,172 @@ class Home extends Component<QuizProps, {}> {
 
   componentDidMount() {
     document.title = "Instacare - Home";
+    // this.fetchHmos();
+    // this.fetchProviders();
+    // this.fetchServices();
+    // this.fetchPlans();
+
+    //console.log("this.props.match", this.props.match);
+
+    //const hmo = this.props.match.params ? this.props.match.params.hmo : "";
+
+    //this.getPlansByHMO(hmo);
+  }
+
+  async UNSAFE_componentWillMount() {
     this.fetchHmos();
     this.fetchProviders();
     this.fetchServices();
-    this.fetchPlans();
+    await this.fetchPlans();
+
+    console.log("this.props.match", this.props.match);
+
+    const hmo = this.props.match.params ? this.props.match.params.hmo : "";
+
+    this.getPlansByHMO(hmo);
+  }
+
+  hmoBannerDiv(hmoId) {
+    console.log("this.hmos", this.hmos, "hmoId", hmoId);
+
+    const hmoArr = this.hmos.filter((hmo) => hmo["id"] == hmoId);
+    console.log("hmoArr", hmoArr);
+    let data;
+    if (hmoId) {
+      data = this.props.hmos.filter((hmo) => hmo.name.id == hmoArr[0].name);
+
+      console.log("data", data);
+
+      //let hospitals = data.provider_id ? JSON.parse(data.provider_id).length : 0;
+      //console.log("hospitals", hospitals);
+      return (
+        <Col xs={24} md={16} className="banner-container provider-banner">
+          <div className="svg-and-text provider-data">
+            <div className="svg-img">
+              <img src={data[0].logo}></img>
+            </div>
+
+            <div className={styles.bannerContent} id="bannertext">
+              <p className={styles.textHeading}>{data[0].name.id}</p>
+            </div>
+          </div>
+
+          <div className="banner-bottom">
+            <div className="row col-md-12">
+              <div className="col-md-4 card mr-3">
+                <FontAwesomeIcon className="banner-icon" icon={faShieldAlt} />
+                <div className="card-text">
+                  <h5>Hospital Network</h5>
+                  <p>
+                    {data[0].provider_id
+                      ? JSON.parse(data[0].provider_id).length
+                      : 0}
+                  </p>
+                </div>
+              </div>
+              <div className="col-md-4 card mr-3">
+                <span className="naira banner-icon">₦</span>
+                <div className="card-text">
+                  <h5>Plans Starting @</h5>
+                  <p>#####</p>
+                </div>
+              </div>
+              <div className="col-md-4 card">
+                <FontAwesomeIcon className="far banner-icon" icon={faSmile} />
+                <div className="card-text">
+                  <h5>Insure</h5>
+                  <p>You & your family</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Col>
+      );
+    }
+  }
+
+  homeBannerDiv() {
+    return (
+      <Col xs={24} md={16} className="banner-container">
+        <div className="svg-and-text">
+          <Col xs={24} md={8} className="svg-img-div">
+            <div className="svg-img">
+              <img src="images/searching.svg"></img>
+            </div>
+          </Col>
+          <Col xs={24} md={16} className="banner-text">
+            <div className={styles.banner}>
+              <div className={styles.bannerContent} id="bannertext">
+                <p className={styles.textHeading}>
+                  Find Health Plans Starting
+                  <br />
+                  <span className={styles.headingSpan}>@ ₦19,999/year</span>
+                </p>
+              </div>
+            </div>
+          </Col>
+        </div>
+
+        <div className="banner-bottom">
+          <div className="row col-md-12">
+            <div className="col-md-4 card mr-3">
+              <FontAwesomeIcon className="banner-icon" icon={faShieldAlt} />
+              <div className="card-text">
+                <h5>Compare</h5>
+                <p>HMO Plans</p>
+              </div>
+            </div>
+            <div className="col-md-4 card mr-3">
+              <span className="naira banner-icon">₦</span>
+              <div className="card-text">
+                <h5>Purchase</h5>
+                <p>HMO Plans</p>
+              </div>
+            </div>
+            <div className="col-md-4 card">
+              <FontAwesomeIcon className="far banner-icon" icon={faSmile} />
+              <div className="card-text">
+                <h5>Insure</h5>
+                <p>You & your family</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Col>
+    );
+  }
+
+  async getPlansByHMO(hmoId) {
+    //console.log("hmoId", hmoId);
+    //console.log("this.props.plans", this.props.plans);
+
+    //  console.log("this.hmos[0].id", this.hmos[0].id);
+
+    const hmoName = this.hmos.filter((hmo) => hmo["id"] == hmoId);
+
+    // console.log("hmoName[0].name", hmoName[0].name);
+
+    if (hmoId) {
+      const hmoPlans = await this.props.plans.filter(
+        (plan) => {
+          console.log("plan.hmo_id.name.id", plan.hmo_id.name.id);
+          return plan.hmo_id.name.id == hmoName[0].name;
+        } //data.name.id
+      );
+
+      this.setState({
+        provider_plans: hmoPlans,
+        filter_plans_by_hmo: true,
+      });
+
+      console.log("hmoPlans", hmoPlans);
+
+      return {
+        hmoPlans,
+      };
+    } else {
+      return "home page has mounted";
+    }
   }
 
   async fetchPlans() {
@@ -2609,10 +2825,14 @@ class Home extends Component<QuizProps, {}> {
     });
   };
 
-  providerInfo(data) {
-    const hmoPlans = this.props.plans.filter(
+  async providerInfo(data) {
+    const hmoPlans = await this.props.plans.filter(
       (plan) => plan.hmo_id.name.id == data.name.id
     );
+
+    this.setState({
+      provider_plans: hmoPlans,
+    });
 
     let hospitals = data.provider_id ? JSON.parse(data.provider_id).length : 0;
     console.log("hospitals", hospitals);
@@ -2620,58 +2840,10 @@ class Home extends Component<QuizProps, {}> {
     //const cheapestPrice = hmoPlans
     console.log("hmoPlans", hmoPlans);
 
-    return (
-      <Col xs={24} md={16} className="banner-container">
-        <div className="svg-and-text provider-data col-md-12">
-          {/* <Col xs={24} md={8} className="svg-img-div">
-            <div className="svg-img">
-              <img src={data.logo}></img>
-            </div>
-          </Col>
-          <Col xs={24} md={16} className="banner-text">
-            <div className={styles.banner}>
-              <div className={styles.bannerContent} id="bannertext">
-                <p className={styles.textHeading}>{data.name.id}</p>
-              </div>
-            </div>
-          </Col> */}
-
-          <div className="svg-img">
-            <img src={data.logo}></img>
-          </div>
-
-          <div className={styles.bannerContent} id="bannertext">
-            <p className={styles.textHeading}>{data.name.id}</p>
-          </div>
-        </div>
-
-        <div className="banner-bottom">
-          <div className="row col-md-12">
-            <div className="col-md-4 card mr-3">
-              <FontAwesomeIcon className="banner-icon" icon={faShieldAlt} />
-              <div className="card-text">
-                <h5>Hospital Network</h5>
-                <p>{hospitals}</p>
-              </div>
-            </div>
-            <div className="col-md-4 card mr-3">
-              <span className="naira banner-icon">₦</span>
-              <div className="card-text">
-                <h5>Plans Starting @</h5>
-                <p>#####</p>
-              </div>
-            </div>
-            <div className="col-md-4 card">
-              <FontAwesomeIcon className="far banner-icon" icon={faSmile} />
-              <div className="card-text">
-                <h5>Insure</h5>
-                <p>You & your family</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Col>
-    );
+    return {
+      hmoPlans,
+      hospitals,
+    };
   }
 
   render() {
@@ -2680,13 +2852,16 @@ class Home extends Component<QuizProps, {}> {
     //console.log("this.props.services", this.props.services);
     //console.log("this.props.providers", this.props.providers);
     //console.log("this.props.plans", this.props.plans);
-    console.log("this.props", this.props);
+    //console.log("this.props", this.props);
+
     let current;
     if (this.props.page != 0) {
       current = this.props.page - 1;
     } else {
       current = 0;
     }
+
+    let providerPlans: any[] = this.state.provider_plans;
 
     //console.log("current:", current);
     return (
@@ -2697,67 +2872,9 @@ class Home extends Component<QuizProps, {}> {
             <div className="banner-div">
               <div className="container">
                 <Row className="banner-content">
-                  {this.state.show_provider_info ? (
-                    this.providerInfo(this.state.provider_info)
-                  ) : (
-                    <Col xs={24} md={16} className="banner-container">
-                      <div className="svg-and-text">
-                        <Col xs={24} md={8} className="svg-img-div">
-                          <div className="svg-img">
-                            <img src="images/searching.svg"></img>
-                          </div>
-                        </Col>
-                        <Col xs={24} md={16} className="banner-text">
-                          <div className={styles.banner}>
-                            <div
-                              className={styles.bannerContent}
-                              id="bannertext"
-                            >
-                              <p className={styles.textHeading}>
-                                Find Health Plans Starting
-                                <br />
-                                <span className={styles.headingSpan}>
-                                  @ ₦19,999/year
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                        </Col>
-                      </div>
-
-                      <div className="banner-bottom">
-                        <div className="row col-md-12">
-                          <div className="col-md-4 card mr-3">
-                            <FontAwesomeIcon
-                              className="banner-icon"
-                              icon={faShieldAlt}
-                            />
-                            <div className="card-text">
-                              <h5>Compare</h5>
-                              <p>HMO Plans</p>
-                            </div>
-                          </div>
-                          <div className="col-md-4 card mr-3">
-                            <span className="naira banner-icon">₦</span>
-                            <div className="card-text">
-                              <h5>Purchase</h5>
-                              <p>HMO Plans</p>
-                            </div>
-                          </div>
-                          <div className="col-md-4 card">
-                            <FontAwesomeIcon
-                              className="far banner-icon"
-                              icon={faSmile}
-                            />
-                            <div className="card-text">
-                              <h5>Insure</h5>
-                              <p>You & your family</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-                  )}
+                  {this.state.filter_plans_by_hmo && this.props.match.params.hmo
+                    ? this.hmoBannerDiv(this.props.match.params.hmo)
+                    : this.homeBannerDiv()}
 
                   <Col md={8} className="quiz">
                     <div className="home-frm form-div">
@@ -3142,7 +3259,8 @@ class Home extends Component<QuizProps, {}> {
                         </ul>
                       </div>
                       <div className="tabs_details top_plans">
-                        {this.props.plans.length > 0 ? (
+                        {this.props.plans.length > 0 &&
+                        !this.state.filter_plans_by_hmo ? (
                           this.props.plans.map((plan, i) => {
                             return (
                               <div className="card">
@@ -3216,7 +3334,111 @@ class Home extends Component<QuizProps, {}> {
                                     <div className="price-btn">
                                       <div className="price">
                                         <span>Starting at </span>
-                                        <h5 className="">
+                                        <h5 className="check-premium">
+                                          {" "}
+                                          ₦
+                                          {
+                                            plan.category_id.id !== "family" &&
+                                            plan.individual_annual_price
+                                              ? this.numberwithCommas(
+                                                  plan.individual_annual_price
+                                                )
+                                              : plan.category_id.id !==
+                                                  "family" &&
+                                                plan.individual_monthly_price
+                                              ? this.numberwithCommas(
+                                                  plan.individual_monthly_price
+                                                )
+                                              : plan.category_id.id ==
+                                                  "family" &&
+                                                plan.family_annual_price
+                                              ? this.numberwithCommas(
+                                                  plan.family_annual_price
+                                                )
+                                              : plan.category_id.id ==
+                                                  "family" &&
+                                                plan.family_monthly_price
+                                              ? this.numberwithCommas(
+                                                  plan.family_monthly_price
+                                                )
+                                              : "" //plan.individual_annual_price
+                                          }
+                                          {/* ₦ 900/ month */}
+                                        </h5>
+                                      </div>
+                                      <button
+                                        className="btn-check-prem"
+                                        onClick={() => {
+                                          this.goToDetails();
+                                          this.getClickedPlan(i);
+                                        }}
+                                      >
+                                        Check Premium
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })
+                        ) : providerPlans.length > 0 &&
+                          this.state.filter_plans_by_hmo ? (
+                          providerPlans.map((plan, i) => {
+                            return (
+                              <div className="card">
+                                <div className="insurer_card_top">
+                                  <div className="logo_top 1">
+                                    <span className="logo-widget widget-insurer-logo">
+                                      <img src={plan.hmo_id.logo} />
+                                    </span>
+                                  </div>
+                                  <div className="title-h6">
+                                    <div>{plan.name}</div>
+                                    <span>{plan.hmo_id.name.id}</span>
+
+                                    {/* <div>{plan.hmo_id.name.id}</div>
+                                    <span>{plan.name}</span> */}
+                                  </div>
+                                </div>
+                                <div className="tag_tabs">
+                                  {plan.category_id.name}
+                                </div>
+                                <div className="top-features">
+                                  <div className="plan-features">
+                                    {plan.service_id
+                                      ? plan.service_id
+                                          .slice(0, 2)
+                                          .map((service) => {
+                                            return (
+                                              <div className="features-block">
+                                                <i
+                                                  className="features-icon"
+                                                  data-icon="Hospital Room Eligibility"
+                                                >
+                                                  <FontAwesomeIcon
+                                                    className="gift-icon"
+                                                    icon={faGift}
+                                                  />
+                                                </i>
+                                                <div>
+                                                  <p className="feature-head">
+                                                    {service}
+                                                  </p>
+                                                  {/* <p>
+                                          Single Private A/C Room, ICU Charges
+                                          upto SI
+                                        </p> */}
+                                                </div>
+                                              </div>
+                                            );
+                                          })
+                                      : ""}
+                                  </div>
+                                  <div className="features-action-bar">
+                                    <div className="price-btn">
+                                      <div className="price">
+                                        <span>Starting at </span>
+                                        <h5 className="check-premium">
                                           {" "}
                                           ₦
                                           {
@@ -3373,7 +3595,10 @@ class Home extends Component<QuizProps, {}> {
               </div> */}
             </div>
           </div>
-          <AppFooter />
+          <AppFooter
+            //  handleProviderClick={this.onClickProvider}
+            {...this.props}
+          />
         </div>
       </React.Fragment>
     );

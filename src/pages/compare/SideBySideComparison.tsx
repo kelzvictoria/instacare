@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import AppHeader from "../../components/app-header/AppHeader";
-import { AppFooter } from "../../components/app-footer/AppFooter";
+import AppFooter from "../../components/app-footer/AppFooter";
 
 /*import { API_URL } from "../../config";*/
 import styles from "./Compare.module.scss";

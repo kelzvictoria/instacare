@@ -51,7 +51,7 @@ import { UPDATE_NOTGETTINGPROVIDERS } from "../../utils/actions";
 
 import PaystackButton from "react-paystack";
 
-import { AppFooter } from "../../components/app-footer/AppFooter";
+import AppFooter from "../../components/app-footer/AppFooter";
 
 import { options } from "../home/Options";
 
