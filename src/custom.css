@@ -1277,11 +1277,11 @@ button.provider-details-btn {
     display: inline-block;
     text-align: center;
     letter-spacing: 0.05em;
-    font-size: 14px;
-    padding: 10px 12px;
+    font-size: small;
+    /* padding: 10px 12px; */
     /* width: 191px !important; */
     text-transform: uppercase;
-    border-radius: 4px;
+    border-radius: 2px;
     color: #fff;
   }
   .card.top_plans_see_more.see_more {
@@ -1732,7 +1732,7 @@ h5.float-left.top-plans,
 
   .plan-features {
     display: block;
-    height: 180px;
+    /* height: 180px; */
   }
 
   .plan-features .features-block {
@@ -1812,7 +1812,7 @@ h5.float-left.top-plans,
 .insurer_card_top span {
   font-size: 14px;
   font-weight: bold;
-  color: #aeb6bf;
+  color: #888888;
 }
 
 .tabs_details .card .title-h6 {
@@ -1887,8 +1887,8 @@ h5.float-left.top-plans,
 
 .plan-features .features-block p {
   color: #253858;
-  font-weight: 500;
-  margin-bottom: 3px;
+  /* font-weight: 500; */
+  /* margin-top: 5px; */
 }
 
 .features-action-bar {
@@ -1904,26 +1904,28 @@ h5.float-left.top-plans,
 
 .features-action-bar .price-btn .price span {
   display: block;
-  font-size: 14px;
+  font-size: x-small;
   color: #aeb6bf;
+  padding-bottom: 5px;
   /* font-weight: 400; */
 }
 
 .features-action-bar .price-btn .price h5 {
   display: block;
-  color: #253858;
-  font-weight: 400;
+  color: #333333!important;
+  font-weight: bolder;
+  font-size: 18px;
 }
 
 .btn-check-prem {
   transition: all 0.7s ease;
   cursor: pointer;
-  font-weight: 500;
+  /* font-weight: 500; */
   display: inline-block;
   text-align: center;
   letter-spacing: 0.05em;
-  font-size: 14px;
-  padding: 10px 12px;
+  /* font-size: 14px; */
+  /* padding: 10px 12px; */
   /* width: 191px; */
   width: 100%;
   border: solid 1px #03aa7d;
@@ -1976,9 +1978,11 @@ ul {
   /* position: relative; */
   /* padding-top: 5px; */
   /* padding-left: 0; */
-  font-size: 19px;
   /* padding-right: 0; */
-  font-weight: 600;
+  font-size: 18px;
+    /* padding-right: 0; */
+    font-weight: bolder;
+    color: #333333;
 }
 
 p.feature-head {
@@ -4180,7 +4184,7 @@ p.Home_textHeading__26RD2 {
 
 .card p {
   margin-bottom: 0px;
-  padding: 5px;
+  /* padding: 5px; */
 }
 
 span.logo-widget.widget-insurer-logo {
@@ -5681,7 +5685,7 @@ ul.footer-links {
 
   .tabs_details .card {
     /* height: 400px; */
-    height: 280px;
+    height: 350px;
     width: 30.33%;
     max-width: 30.33%;
   }
@@ -5692,6 +5696,7 @@ ul.footer-links {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    margin-top: 15px;
   }
 
   .plan-features {
@@ -5776,7 +5781,7 @@ span.logo-widget.widget-insurer-logo {
 /* troubleshooting the top plans cards styling */
 
 .tabs_details .card {
-  height: 300px !important;
+  height: 250px !important;
 }
 
 .top-features {
@@ -5784,7 +5789,7 @@ span.logo-widget.widget-insurer-logo {
 }
 
 .plan-features {
-  height: 40% !important;
+  height: 22% !important;
 }
 
 .features-action-bar {
@@ -5804,8 +5809,7 @@ span.logo-widget.widget-insurer-logo {
 
 .plan-features .features-block p {
   color: #aeb6bf !important;
-  font-size: 14px !important;
-}
+  font-size: 12px !important;}
 
 .plan-features .features-block i {
   background: none !important;
@@ -5820,7 +5824,7 @@ span.logo-widget.widget-insurer-logo {
   height: 1.5rem !important;
   display: flex !important;
   padding-right: 0px !important;
-  padding-bottom: 5px !important;
+  padding-bottom: 0px !important;
 }
 
 .plan-features .features-block i + div {
@@ -5834,7 +5838,7 @@ span.logo-widget.widget-insurer-logo {
   color: #748f88 !important;
   text-transform: none !important;
   padding: 5px 5px !important;
-  width: 131px !important;
+  width: 120px !important;
 }
 
 /* .features-action-bar .price-btn {

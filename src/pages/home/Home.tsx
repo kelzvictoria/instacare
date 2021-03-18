@@ -3215,7 +3215,7 @@ class Home extends Component<QuizProps, {}> {
                                   <div className="features-action-bar">
                                     <div className="price-btn">
                                       <div className="price">
-                                        <span>Starting at </span>
+                                        <span>Starting @ </span>
                                         <h5 className="" >
                                           {" "}
                                           ₦
