@@ -958,6 +958,8 @@ div#thirdPage {
 
   .card-text {
     display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .card-text p {
@@ -1744,7 +1746,7 @@ h5.float-left.top-plans,
   }
 
   .tabs_details .features-action-bar {
-    margin-top: 0;
+    /* margin-top: 0; */
     /* width: 90%; */
     width: 100%;
   }
@@ -1846,8 +1848,8 @@ h5.float-left.top-plans,
 }
 
 .plan-features .features-block i {
-  width: 36px;
-  height: 36px;
+  /* width: 36px;
+  height: 36px; */
   border-radius: 50%;
   background: #f4f5f7;
   text-align: center;
@@ -5776,7 +5778,8 @@ span.logo-widget.widget-insurer-logo {
 /* troubleshooting the top plans cards styling */
 
 .tabs_details .card {
-  height: 300px !important;
+  /* height: 300px !important;  */
+  height: 280px !important;
 }
 
 .top-features {
@@ -5800,6 +5803,7 @@ span.logo-widget.widget-insurer-logo {
 
 .plan-features {
   display: flex !important;
+  flex-direction: column !important;
 }
 
 .plan-features .features-block p {
@@ -5827,6 +5831,7 @@ span.logo-widget.widget-insurer-logo {
   display: flex !important;
   align-items: center !important;
   height: 100% !important;
+  margin-left: 0px !important;
 }
 
 .btn-check-prem {
@@ -5837,8 +5842,51 @@ span.logo-widget.widget-insurer-logo {
   width: 131px !important;
 }
 
-/* .features-action-bar .price-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-} */
+.btn-check-prem:hover {
+  background: #03aa7d !important;
+  color: #fff !important;
+}
+
+.features-action-bar .price-btn {
+  display: flex !important;
+  flex-direction: column !important;
+
+  align-items: center !important;
+}
+
+@media (max-width: 1199px) {
+  .tabs_details .card {
+    height: 300px !important;
+  }
+
+  .insurer_card_top {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .features-action-bar {
+    /* margin-top: -15px !important; */
+  }
+}
+
+@media (max-width: 1023px) {
+  .price-btn {
+    margin-top: -15px !important;
+  }
+
+  .price {
+    margin-bottom: 0px !important;
+  }
+}
+
+@media (min-width: 999px) and (max-width: 1023px) {
+  .features-action-bar {
+    margin-top: -25px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .plan-features .features-block {
+    height: 2rem !important;
+  }
+}
