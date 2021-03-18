@@ -1215,8 +1215,12 @@ button.provider-details-btn {
   .insurer_card_top {
     display: flex;
     /* flex-direction: row; */
-    flex-direction: column;
+    /* flex-direction: column;
     margin-bottom: 22px;
+    display: flex; */
+    flex-direction: row;
+    margin-bottom: 22px;
+    margin-bottom: 5px;
   }
 
   .tag_tabs {
@@ -1702,13 +1706,22 @@ h5.float-left.top-plans,
   }
 
   .tabsDetails .card .titleh6 {
-    position: relative;
+    /* position: relative;
     padding-top: 5px;
     padding-left: 0;
     font-size: 16px;
     padding-right: 0;
-    font-weight: 600;
+    font-weight: 600; */
   }
+  .insurer_card_top .titleh6 {
+    /* color: #253858; */
+    /* font-size: 20px; */
+    /* font-weight: 500; */
+    /* padding-right: 124px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px; */
+}
 
   .tag_tabs {
     position: absolute;
@@ -1773,6 +1786,7 @@ h5.float-left.top-plans,
 
 .insurer_card_top {
   display: flex;
+  flex-direction: row;
 }
 
 .logo_top {
@@ -1781,8 +1795,8 @@ h5.float-left.top-plans,
 }
 
 .widget-insurer-logo {
-  width: 120px;
-  height: 40px;
+  /* width: 120px; */
+  /* height: 40px; */
   border: 1px solid #fff;
   float: left;
   margin-right: 20px;
@@ -1796,8 +1810,9 @@ h5.float-left.top-plans,
 } */
 
 .insurer_card_top span {
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight:bold;
+    color: #AEB6BF;
 }
 
 .tabs_details .card .title-h6 {
@@ -1890,8 +1905,8 @@ h5.float-left.top-plans,
 .features-action-bar .price-btn .price span {
   display: block;
   font-size: 14px;
-  color: #253858;
-  font-weight: 400;
+  color: #AEB6BF;
+  /* font-weight: 400; */
 }
 
 .features-action-bar .price-btn .price h5 {
@@ -1932,6 +1947,7 @@ h5.float-left.top-plans,
   margin-left: 0px !important;
   margin-right: 0px !important;
   justify-content: space-around;
+  background: #f1f5f8;
 }
 
 p.breadcrmb {
@@ -1939,7 +1955,8 @@ p.breadcrmb {
   /* margin-top: 0.5rem !important; */
   padding-top: 1rem;
   /* margin-bottom: 2rem !important; */
-  margin-bottom: 1rem !important;
+  /* margin-bottom: 1rem !important; */
+  /* margin-bottom: 0!important; */
 }
 
 span.sep {
@@ -2561,6 +2578,7 @@ p.greyed-text {
   flex-shrink: 0;
   justify-content: flex-start;
   padding-inline-start: 0px !important;
+  margin-bottom: 20px !important;
 }
 
 .tabs {
@@ -2875,8 +2893,8 @@ ul.features_hosp_list {
 }
 
 .tabs ul {
-  margin-bottom: 0px !important;
-  font-size: 3.8vw;
+  /* margin-bottom: 0px !important; */
+  /* font-size: 2.5vw; */
 }
 .tabs:not(:last-child) {
   position: static;
@@ -5662,7 +5680,7 @@ ul.footer-links {
 
   .tabs_details .card {
     /* height: 400px; */
-    height: 420px;
+    height: 280px;
     width: 30.33%;
     max-width: 30.33%;
   }
@@ -5697,12 +5715,13 @@ ul.footer-links {
 
 span.logo-widget.widget-insurer-logo {
   /* height: 70px; */
-  height: 45px;
-  margin-bottom: 2rem;
+  height: 30px;
+  /* margin-bottom: 2rem; */
 }
 
 .logo_top {
   margin-bottom: 1rem;
+  /* margin-bottom: -1.2rem; */
 }
 
 .logo-widget img {
