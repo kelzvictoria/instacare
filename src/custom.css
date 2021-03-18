@@ -4184,7 +4184,8 @@ p.Home_textHeading__26RD2 {
   padding: 15px;
 }
 
-.card p {
+.bot-body .card p,
+.card .feature-head {
   margin-bottom: 0px;
   /* padding: 5px; */
 }
@@ -5893,14 +5894,58 @@ span.logo-widget.widget-insurer-logo {
     height: 2rem !important;
   }
 }
-@media (min-width: 999px){
-  .features-action-bar {
-    height: 0%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin-top: 15px;
-}
+
+.provider-banner .svg-and-text.provider-data.col-md-12 {
+  margin-bottom: 0px !important;
 }
 
+.provider-banner .ant-col.banner-container.ant-col-xs-24.ant-col-md-16 {
+  height: 450px;
+}
+
+.provider-banner .svg-and-text.provider-data {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center;
+}
+
+.provider-banner .svg-and-text {
+  height: 50%;
+}
+
+.provider-banner .provider-data .svg-img {
+  height: 80%;
+  /* background: black; */
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.provider-banner div#bannertext {
+  height: 20%;
+}
+
+.provider-banner .provider-data p.Home_textHeading__26RD2 {
+  margin-top: 0px !important;
+}
+
+.provider-banner .banner-bottom {
+  height: 50%;
+}
+
+@media (min-width: 999px) {
+  .tabs_details.top_plans {
+    justify-content: unset !important;
+  }
+
+  .tabs_details .card {
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+  }
+}
+
+.ant-spin.ant-spin-spinning {
+  margin: auto;
+}

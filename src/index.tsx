@@ -21,6 +21,8 @@ import Details from "./pages/details/Details";
 import Plans from "./pages/compare/Plans";
 import SideBySideComparison from "./pages/compare/SideBySideComparison";
 
+//import HMO from "./pages/home/HMO";
+
 ReactDOM.render(
   <Provider store={store}>
     <Router>
@@ -32,6 +34,8 @@ ReactDOM.render(
         <Route path="/details-old" component={Details} />
         <Route path="/details" component={PlanDetails} />
         <Route path="/compare" component={SideBySideComparison} />
+        <Route exact path="/:hmo" component={Home} />
+        {/* <Route path= {`/${hmo}`} component = {HMO} /> */}
         <Route component={ErrorPage} />
       </Switch>
     </Router>
