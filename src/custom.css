@@ -801,7 +801,7 @@ button.close:after {
   }
 
   .tabs_wrapper .tabs ul li.active a::after {
-    height: 5px !important;
+    /* height: 5px !important; */
   }
 
   .top_plans .card .ant-spin.ant-spin-spinning {
@@ -973,7 +973,7 @@ div#thirdPage {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: -30px !important;
+    /* margin-top: -30px !important; */
   }
 }
 
@@ -1279,7 +1279,7 @@ button.provider-details-btn {
     letter-spacing: 0.05em;
     font-size: 14px;
     padding: 10px 12px;
-    width: 191px !important;
+    /* width: 191px !important; */
     text-transform: uppercase;
     border-radius: 4px;
     color: #fff;
@@ -1721,7 +1721,7 @@ h5.float-left.top-plans,
     display: flex;
     flex-direction: column;
     padding-left: 20px; */
-}
+  }
 
   .tag_tabs {
     position: absolute;
@@ -1736,7 +1736,7 @@ h5.float-left.top-plans,
   }
 
   .plan-features .features-block {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     width: 100%;
     overflow: hidden;
     padding-right: 0;
@@ -1811,8 +1811,8 @@ h5.float-left.top-plans,
 
 .insurer_card_top span {
   font-size: 14px;
-  font-weight:bold;
-    color: #AEB6BF;
+  font-weight: bold;
+  color: #aeb6bf;
 }
 
 .tabs_details .card .title-h6 {
@@ -1905,7 +1905,7 @@ h5.float-left.top-plans,
 .features-action-bar .price-btn .price span {
   display: block;
   font-size: 14px;
-  color: #AEB6BF;
+  color: #aeb6bf;
   /* font-weight: 400; */
 }
 
@@ -2578,7 +2578,8 @@ p.greyed-text {
   flex-shrink: 0;
   justify-content: flex-start;
   padding-inline-start: 0px !important;
-  margin-bottom: 20px !important;
+  /* margin-bottom: 20px !important; */
+  margin-bottom: 2px !important;
 }
 
 .tabs {
@@ -5703,9 +5704,9 @@ ul.footer-links {
   }
 
   .features-action-bar .price-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
   }
 
   .price {
@@ -5771,3 +5772,73 @@ span.logo-widget.widget-insurer-logo {
 .top_fixed_box img {
   height: 65px;
 }
+
+/* troubleshooting the top plans cards styling */
+
+.tabs_details .card {
+  height: 300px !important;
+}
+
+.top-features {
+  height: 80% !important;
+}
+
+.plan-features {
+  height: 40% !important;
+}
+
+.features-action-bar {
+  height: 60% !important;
+}
+
+.gift-icon {
+  /* color: #aeb6bf; */
+  background-color: #f4f5f7;
+  height: 1.5rem !important;
+  width: 1.5rem !important;
+}
+
+.plan-features {
+  display: flex !important;
+}
+
+.plan-features .features-block p {
+  color: #aeb6bf !important;
+  font-size: 14px !important;
+}
+
+.plan-features .features-block i {
+  background: none !important;
+
+  height: 100% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.plan-features .features-block {
+  height: 1.5rem !important;
+  display: flex !important;
+  padding-right: 0px !important;
+  padding-bottom: 5px !important;
+}
+
+.plan-features .features-block i + div {
+  display: flex !important;
+  align-items: center !important;
+  height: 100% !important;
+}
+
+.btn-check-prem {
+  background: none !important;
+  color: #748f88 !important;
+  text-transform: none !important;
+  padding: 5px 5px !important;
+  width: 131px !important;
+}
+
+/* .features-action-bar .price-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} */
