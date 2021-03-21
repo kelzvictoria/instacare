@@ -24,18 +24,18 @@ const companyLinks = [
     url: "/",
   },
 
-  {
-    label: "HMOs",
-    url: "/hmos",
-  },
+  // {
+  //   label: "HMOs",
+  //   url: "/hmos",
+  // },
   {
     label: "About",
-    url: "#",
+    url: "/about",
   },
 
   {
     label: "Services",
-    url: "#",
+    url: "/services",
   },
 
   // {
@@ -43,19 +43,19 @@ const companyLinks = [
   //   url: "#",
   // },
 
-  {
-    label: "Reliance HMO",
-    url: "/reliance",
-    id: "reliance",
-  },
+  // {
+  //   label: "Reliance HMO",
+  //   url: "/reliance",
+  //   id: "reliance",
+  // },
 
   {
     label: "Contact Us",
-    url: "#",
+    url: "/contact",
   },
   {
     label: "Privacy Policy",
-    url: "#",
+    url: "/privacy-policy",
   },
 ];
 
@@ -98,8 +98,8 @@ class AppFooter extends Component<FooterProps, {}> {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
-    }
+      open: false,
+    };
     this.handleHMOClick = this.handleHMOClick.bind(this);
   }
 
@@ -109,7 +109,7 @@ class AppFooter extends Component<FooterProps, {}> {
     console.log("this.props", this.props);
     // this.props.history.push({ pathname: `/${hmo}` });
   };
-  filterPlansByHMO = (hmo) => { };
+  filterPlansByHMO = (hmo) => {};
 
   render() {
     // console.log("this.props in footer", this.props);
@@ -157,8 +157,14 @@ class AppFooter extends Component<FooterProps, {}> {
                         </Col> */}
           {/* </Row> */}
           <div className={styles.footer}>
-            <div className={styles.h2Tag}><h2>Help us spread the Word</h2></div>
-            <div className={styles.h4Tag}><h4>Follow, like, tweet or post. We Would love to interact with you</h4></div>
+            <div className={styles.h2Tag}>
+              <h2>Help us spread the Word</h2>
+            </div>
+            <div className={styles.h4Tag}>
+              <h4>
+                Follow, like, tweet or post. We Would love to interact with you
+              </h4>
+            </div>
             <ul className={styles.social}>
               <li>
                 <a href="#" className={styles.facebook}>
@@ -185,37 +191,101 @@ class AppFooter extends Component<FooterProps, {}> {
                   <FontAwesomeIcon icon={faYoutube} />
                 </a>
               </li>
-
             </ul>
             <div className={styles.blockContentWrapper}>
               <div className={styles.subfooter}>
                 <div className={styles.grid}>
                   <div className={styles.boxleft}>
-                    <Title level={3} className={styles.title}>Health Management Oganizations (HMO)</Title>
-                    <ul className={styles.allInsurance} style={{ padding: 0, margin: 0 }}>
-                      <li><a href="#">Hygeia HMO</a></li>
-                      <li><a href="#">Pro-Health HMO</a></li>
-                      <li><a href="#">Novo Health Africa HMO</a></li>
-                      <li><a href="#">Swift HMO Ltd</a></li>
-                      <li><a href="#">Reliance HMO</a></li>
-                      <li><a href="#">Princeton Health Limited</a></li>
-                      <li><a href="#">AIICO Multi-Shield Nig. Ltd</a></li>
-                      <li><a href="#">Avon Health Insurance</a></li>
-                      <li><a href="#">Integrated Healthcare Limited</a></li>
-                      <li><a href="#">Total Health Trust</a></li>
-                      <li><a href="https://www.policybazaar.com/health-insurance/companies/" className={styles.viewplan}>View All</a></li>
+                    <Title level={3} className={styles.title}>
+                      Health Management Oganizations (HMO)
+                    </Title>
+                    <ul
+                      className={styles.allInsurance}
+                      style={{ padding: 0, margin: 0 }}
+                    >
+                      <li>
+                        <a href="/hygeia">Hygeia HMO</a>
+                      </li>
+                      <li>
+                        <a href="/metro-health">MetroHealth HMO</a>
+                      </li>
+                      <li>
+                        <a href="/novo-health-africa">Novo Health Africa HMO</a>
+                      </li>
+                      <li>
+                        <a href="/swift">Swift HMO Ltd</a>
+                      </li>
+                      <li>
+                        <a href="/reliance">Reliance HMO</a>
+                      </li>
+                      <li>
+                        <a href="/princeton-health-limited">
+                          Princeton Health Limited
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/aiico-multi-shield-nig-ltd">
+                          AIICO Multi-Shield Nig. Ltd
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/avon">Avon Health Insurance</a>
+                      </li>
+                      <li>
+                        <a href="/integrated-healthcare-ltd">
+                          Integrated Healthcare Limited
+                        </a>
+                      </li>
+                      <li>
+                        <a href="/total-health-trust">Total Health Trust</a>
+                      </li>
+                      <li>
+                        <a
+                          href="https://www.policybazaar.com/health-insurance/companies/"
+                          className={styles.viewplan}
+                        >
+                          View All
+                        </a>
+                      </li>
                     </ul>
                   </div>
                   <div className={styles.boxleft}>
-                    <Title level={3} className={styles.title}>Health Insurance Packages</Title>
-                    <ul className={styles.allInsurance} style={{ padding: 0, margin: 0 }}>
-                      <li><a href="https://www.policybazaar.com/health-insurance/health-insurance-india/">Health Insurance Plans</a></li>
-                      <li><a href="https://www.policybazaar.com/health-insurance/family-health-insurance-plan/">Health Insurance for Family</a></li>
-                      <li><a href="https://www.policybazaar.com/health-insurance/senior-citizen-health-insurance/">Health Insurance for Senior Citizen</a></li>
+                    <Title level={3} className={styles.title}>
+                      Health Insurance Packages
+                    </Title>
+                    <ul
+                      className={styles.allInsurance}
+                      style={{ padding: 0, margin: 0 }}
+                    >
+                      <li>
+                        <a href="/">Health Insurance Plans</a>
+                      </li>
+                      <li>
+                        <a href="https://www.policybazaar.com/health-insurance/family-health-insurance-plan/">
+                          Health Insurance for Family
+                        </a>
+                      </li>
+                      <li>
+                        <a href="https://www.policybazaar.com/health-insurance/senior-citizen-health-insurance/">
+                          Health Insurance for Senior Citizen
+                        </a>
+                      </li>
                       {/* <li><a href="https://www.policybazaar.com/health-insurance/mediclaim-insurance/">Mediclaim</a></li> */}
-                      <li><a href="https://www.policybazaar.com/health-insurance/critical-illness-insurance/">Critical Illness Insurance</a></li>
-                      <li><a href="https://www.policybazaar.com/health-insurance/health-insurance-premium-calculator/">Health Insurance Premium Calculator</a></li>
-                      <li><a href="https://www.policybazaar.com/commercial-insurance/group-health-insurance/">Group Health Insurance</a></li>
+                      <li>
+                        <a href="https://www.policybazaar.com/health-insurance/critical-illness-insurance/">
+                          Critical Illness Insurance
+                        </a>
+                      </li>
+                      <li>
+                        <a href="https://www.policybazaar.com/health-insurance/health-insurance-premium-calculator/">
+                          Health Insurance Premium Calculator
+                        </a>
+                      </li>
+                      <li>
+                        <a href="https://www.policybazaar.com/commercial-insurance/group-health-insurance/">
+                          Group Health Insurance
+                        </a>
+                      </li>
                     </ul>
                   </div>
                   {/* <div className={styles.boxleft}>
@@ -240,14 +310,14 @@ class AppFooter extends Component<FooterProps, {}> {
                   </div> */}
                 </div>
                 <div className={styles.grid}>
-                  <ul className={styles.subfooterlinks} style={{ padding: 0, }}>
+                  <ul className={styles.subfooterlinks} style={{ padding: 0 }}>
                     {companyLinks.map((link, index) => {
                       return (
                         <li key={index}>
                           {" "}
                           <a
                             href={link.url}
-                            onClick={() => this.handleHMOClick(link.id)}
+                            // onClick={() => this.handleHMOClick(link.id)}
                           >
                             {link.label}
                           </a>{" "}
@@ -266,7 +336,6 @@ class AppFooter extends Component<FooterProps, {}> {
                     <li><a href="https://www.policybazaar.com/pblife/newsroom">Newsroom</a></li> */}
                   </ul>
                 </div>
-
               </div>
               {/* <Row className={styles.subfooter}>
                                 <Col xs={{ span: 24 }} md={{ span: 6 }} className={styles.grid}>
@@ -339,14 +408,31 @@ class AppFooter extends Component<FooterProps, {}> {
               <div className={styles.legalinfo}>
                 {/* <p>CIN: U74999HR2014PTC053454 Policybazaar Insurance Brokers Private Limited (formerly known as Policybazaar Insurance Web Aggregator Private Limited)<span> Policybazaar is currently registered as a Web aggregator by IRDAI. Approval for registration as an Insurance Broker is pending with the IRDAI.</span> Registered Office - Plot No.119, Sector - 44, Gurgaon, Haryana - 122001 </p> */}
                 {/* <p><a href="https://www.policybazaar.com/legal-and-admin-policies/#license" >IRDAI Web aggregator Registration No. 06 Registration Code No. IRDAI/WBA21/15 Valid till 13/07/2021</a></p> */}
-                <p className={styles.small}>Insurance is the subject matter of solicitation.Visitors are hereby informed that their information submitted on the website may be shared with insurers.</p>
-                <p className={styles.small}>*The information provided on this website/page is only for information sake. Instacare does not in any form or manner endorse the information so provided on the website and strives to provide factual and unbiased information to customers to assist in making informed insurance choices.</p>
-                <p className={styles.small}>The product information for comparison displayed on this website is of the insurers with whom our company has an agreement.</p>
-                <p>Product information is authentic and solely based on the information received from the Insurer © Copyright 2021 useinstacare.com/. All Rights Reserved..</p>
+                <p className={styles.small}>
+                  Insurance is the subject matter of solicitation.Visitors are
+                  hereby informed that their information submitted on the
+                  website may be shared with insurers.
+                </p>
+                <p className={styles.small}>
+                  *The information provided on this website/page is only for
+                  information sake. Instacare does not in any form or manner
+                  endorse the information so provided on the website and strives
+                  to provide factual and unbiased information to customers to
+                  assist in making informed insurance choices.
+                </p>
+                <p className={styles.small}>
+                  The product information for comparison displayed on this
+                  website is of the insurers with whom our company has an
+                  agreement.
+                </p>
+                <p>
+                  Product information is authentic and solely based on the
+                  information received from the Insurer © Copyright 2021
+                  useinstacare.com/. All Rights Reserved..
+                </p>
               </div>
             </div>
           </div>
-
         </footer>
       </div>
     );
