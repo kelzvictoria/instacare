@@ -1,11 +1,486 @@
+// .appFooter {
+//     background: #212121;
+//     padding: 3rem;
+//     h3, a {
+//         color: #fff;
+//     }
+//     ul {
+//         padding-left: 0px;
+//         list-style: none;
+//     }
+//     .footer{
+//         background-color: green!important;
+//         padding: 50px;
+//     }
+// }
 .appFooter {
-    background: #212121;
-    padding: 3rem;
-    h3, a {
-        color: #fff;
+    // background: #f1f5f8;
+    //color: #172b4d !important;
+    //padding: 2rem;
+    // padding-top: 2rem;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #172b4d;
+    font-weight: 400;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+    letter-spacing: 0;
+    scroll-behavior: smooth;
+    outline: 0;
+    box-sizing: border-box;
+    a {
+        color: #0065ff;
     }
-    ul {
-        padding-left: 0px;
+    // text-align: center;
+    .footer{
+        clear: both;
+        background: #fff!important;
+        position: relative;
+        display: block;
+        padding: 40px 0 40px 0;
+        margin: 0;
+        display: block;
+    }
+    .footer .h2 .footer .h4{
+        margin: 0 15px;
+    }
+    .footer h2{
+        letter-spacing: .7px;
+        text-align: center;
+        font-size: 22px;
+        line-height: 10px;
+        padding: 50px 0 10px;
+        color: #4d4d4d;
+        font-weight: 500;
+        margin: 0 15px;
+    }
+    .footer h4{
+        letter-spacing: .7px;
+        text-align: center;
+        font-size: 18px;
+        line-height: 22px;
+        padding: 0 0 10px;
+        color: #a3a3a3;
+        font-weight: 300;
+        box-sizing: border-box;
+        margin: 0 15px;
+       
+    }
+    .footer .social{
+        padding: 0;
+        //margin: 20px auto 0;
+        text-align: center;
+        //width: 220px;
+    }
+    .footer .social li{
+        list-style: none;
+        display: inline-block;
+    }
+    .footer .social li .facebook {
+        padding-right: 10px;
+        // background-position: -104px 0;
+        color: #4968ad;
+    }
+    .footer .social li .twitter {
+        // background-position: -34px -50px;
+        color: #49a1eb;
+        padding-right: 10px;
+    }
+    .footer .social li .instalgram {
+        // background-position: -34px -100px;
+        color: black;
+        padding-right: 10px;
+    }
+    .footer .social li .youtube {
+        // background-position: -34px -200px;
+        color: #eb3223;
+        padding-right: 10px;
+    }
+    .footer .social li .linkedin {
+        // background-position: -34px -150px;
+        color: #49a1eb;
+        padding-right: 10px;
+    }
+    .footer .social li a{
+        display: block;
+        // padding: 0;
+        // margin: 0;
+        font-size: 35px;;
+    }
+    .footer .social a:hover{
+        transform: translate(-2px);
+    }
+    li ul {
         list-style: none;
     }
+    .blockContentWrapper{
+        text-align: left!important;
+        background: #f5f5f5;
+        //padding-bottom: 3rem;
+        //width: 100%;
+    }
+    .footer .subfooter {
+        //padding: 40px 0;
+        background: #f5f5f5;
+        max-width: 1140px;
+        margin: 30px auto 20px;
+        text-align: left;
+        // padding: 5px 10px;
+        // padding-left: 22%;
+        // padding-right: 22%;
+        //padding-top: 3rem;
+        // padding-bottom: 3rem;
+        // margin-top: 40px;
+        padding: 40px 0;
+        margin-top: 40px;
+    }
+    .subfooter .grid {
+        display: flex;
+    }
+    .footer .grid {
+        width: 1140px;
+        margin: 0 auto;
+    }
+    .subfooter .boxleft {
+        width: calc(1170px * 50/100);
+        padding-right: calc(1170px * 5/100);
+    }
+    .subfooter .title {
+        font-size: 16px;
+        color: #4c4c4c;
+        font-weight: 500;
+        padding-bottom: 15px;
+        margin-bottom: 5px;
+        position: relative;
+    }
+    .subfooter .title::before {
+        content: "";
+        position: absolute;
+        width: 70%;
+        background: #b2b2b2;
+        height: 1px;
+        bottom: 0;
+    }
+    .subfooter .allInsurance{
+        display: inline-block;
+        vertical-align: top;
+        list-style: none;
+        width: 100%;
+        position: relative;
+    }
+    .subfooter .allInsurance ul {
+        text-align: left;
+    }
+    .subfooter .allInsurance li:first-child {
+        margin-top: 0;
+    }
+   
+    .subfooter .allInsurance li {
+        display: block;
+        margin: 0;
+    }
+    .subfooter .allInsurance li a {
+        text-decoration: none;
+        display: block;
+        line-height: 34px;
+        color: #4c4c4c;
+        font-size: 14px;
+        cursor: pointer;
+        line-height: 18px;
+        margin-top: 15px;
+    }
+    .subfooter .allInsurance li a:hover {
+        color: #0065ff;
+    }
+    .subfooter .allInsurance .viewplan {
+        color: #0065ff!important;
+    }
+    .subfooterlinks{
+        margin: 30px auto 0;
+        width: 100%;
+        background: #efefef;
+        border: 0;
+        text-align: center;
+        display: table;
+    }
+    .subfooterlinks li {
+        list-style: none;
+        display: inline-block;
+        margin: 0;
+    }
+    .subfooterlinks li a {
+        display: block;
+        font-size: 14px;
+        color: #4c4c4c;
+        text-decoration: none;
+        padding: 0 16px;
+        border-right: 1px solid #ccc;
+        margin: 20px 0;
+    }
+    .subfooterlinks:after {
+        content: "";
+        clear: both;
+    }
+    .footer .footerBox{
+        width: 100%;
+        padding: 0 50px;
+        margin: 0 auto;
+    }
+    .footer .investor{
+       //padding-top: 3rem;
+       margin: 20px auto 20px;
+    }
+    .footer .investor h5 {
+        font-size: 25px;
+        font-weight: 400;
+        text-align: center;
+        color: #4d4d4d;
+    }
+    .footer .investor .invest {
+        padding: 0;
+        margin: 10px auto 30px;
+        width: 98%;
+        text-align: center;
+    }
+    .investor .invest li {
+        display: inline-block;
+        list-style: none;
+    }
+    .investor .invest li a.footerIcons img{
+        display: block;
+        line-height: 22px;
+        color: #4d4d4d;
+        padding: 0;
+        // width: 95px;
+        // height: 40px;
+        text-decoration: none;
+        margin: 0 auto;
+        //border: 1px solid #e6e6e6;
+        font-size: 0;
+    }
+    .investor .invest:after {
+        content: "";
+        clear: both;
+    }
+    .noticeMassage {
+        font-size: 12px;
+        width: 100%;
+        max-width: 1140px;
+        margin: 30px auto 20px;
+        color: #333;
+        text-align: left;
+        line-height: 20px;
+        background: rgba(204,204,204,.2);
+        border-radius: 5px;
+        padding: 5px 10px;
+        letter-spacing: .5px;
+    }
+    .noticeMassage span {
+        font-weight: 500;
+    }
+    .footer .legalinfo {
+        text-align: center;
+        border-top: 1px solid #e6e6e6;
+        padding-top: 20px;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 1140px;
+        margin: 30px auto 20px;
+        padding-bottom: 3rem;
+    }
+    .footer .legalinfo p {
+        padding: 0;
+        margin: 0;
+        font-size: 12px;
+        color: #a3a3a3!important;
+    }
+    .footer .legalinfo p.small {
+        font-size: 12px;
+        color: #a3a3a3;
+    }
+    @media only screen and (max-width: 1024px){
+        .footer {
+            padding: 20px 0 40px 0;
+        }
+    }
+    @media (max-width: 840px){
+        .footer .h2Tag .h2 {
+            font-size: 22px;
+            line-height: 10px;
+        }
+    }
+    @media (max-width: 740px){
+        .footer .h4Tag .h4 {
+            font-size: 18px;
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .social {
+            margin: 20px auto;
+        }
+    }
+    @media  only screen and  (max-width: 1024px){
+        .footer .blockContentWrapper {
+            background: rgba(23,43,77,.1)!important;
+            padding: 0!important;
+            width: 100%;
+            display: table;
+            // padding: 16px 16px 36px!important;
+            // margin-bottom: 20px!important;
+            // border-top: solid .8px rgba(23,43,77,.2)!important;
+            // border-bottom: solid .8px rgba(23,43,77,.2)!important;
+        }
+    }
+    @media  only screen and  (max-width: 1024px){
+        .blockContentWrapper {
+            background: #fff!important;
+            padding: 16px 16px 36px!important;
+            margin-bottom: 20px!important;
+            border-top: solid .8px rgba(23,43,77,.2)!important;
+            border-bottom: solid .8px rgba(23,43,77,.2)!important;
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .footer .subfooter {
+            padding: 0;
+            margin-top: 20px;
+            background: #e7e9ed;
+            border: none;
+            //margin: 0 0 20px;
+            margin-top: 20px;
+            
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .subfooter {
+            border: solid rgba(23,43,77,.2);
+            border-width: 1px 0 1px 0;
+            margin: 0 0 20px;
+            padding: 30px 16px;
+            clear: both;
+            background: #fff;
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .subfooter .grid {
+            width: 100%;
+            display: table;
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .subfooter .boxleft {
+            background: #fff;
+            padding: 15px;
+            border-top: solid .8px rgba(23,43,77,.2);
+            border-bottom: solid .8px rgba(23,43,77,.2);
+            margin-bottom: 20px;
+            width: 100%;
+            display: table;
+            padding-right: 0;
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .subfooter .title {
+            font-size: 22px;
+            padding: 0;
+            margin: 0;
+        }
+    }
+    // @media only screen and (max-width: 1024px){
+    //     .subfooter .boxleft .title:after {
+    //         transform: rotate(-135deg);
+    //         -webkit-transform: rotate(-135deg);
+    //         top: 18px;
+    //     }
+    // }
+    // @media only screen and (max-width: 1024px){
+    //     .subfooter .title:after {
+    //         border: solid #000;
+    //         border-width: 0 2px 2px 0;
+    //         display: inline-block;
+    //         padding: 3px;
+    //         content: "";
+    //         position: absolute;
+    //         transform: rotate(45deg);
+    //         -webkit-transform: rotate(45deg);
+    //         right: 0;
+    //         top: 13px;
+    //     }
+    // }
+    @media only screen and (max-width: 1024px){
+        .subfooter .title:before {
+            display:none
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .subfooter .boxleft .allInsurance {
+            margin-bottom: 30px;
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .boxleft{
+            //display: none!important;
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .subfooterlinks {
+            margin-top: 0;
+            border-top: solid .8px rgba(23,43,77,.2);
+            border-bottom: solid .8px rgba(23,43,77,.2);
+            background: #fff;
+        }
+    }
+    @media only screen and (max-width: 640px){
+        .footer .footer_box {
+            padding: 0 10px;
+            // width: 100%;
+            // margin: 0 auto;
+        }
+    }
+    @media only screen and (max-width: 1024px){
+        .footer .footer_box {
+            padding: 0 30px;
+        }
+    }
+    @media (max-width: 740px){
+        .footer .investor .h5 {
+            font-size: 18px;
+        }
+    }
+    @media (max-width: 480px){
+        subfooterlinks li a {
+            padding: 0 5px;
+        }
+    }
+    @media (max-width: 667px){
+        .subfooterlinks li a {
+            font-size: 12px;
+            padding: 0 17px;
+            margin: 10px 0;
+        }
+    }
+    @media (max-width: 768px){
+        .subfooterlinks li a {
+            font-size: 12px;
+            padding: 0 7px;
+        }
+    }
+    @media (max-width: 1024px){
+        .subfooterlinks li a {
+            font-size: 12px;
+            padding: 0 20px;
+        }
+    }
+    @media (max-width: 840px){
+        .footer .legalinfo p {
+            font-size: 10px;
+        }
+    }
+    @media (max-width: 840px){
+        .footer .legalinfo p.small {
+            font-size: 9px;
+        }
+    }
+
 }
