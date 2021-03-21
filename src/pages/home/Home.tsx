@@ -11,6 +11,7 @@ import {
   Form,
   Card,
   Spin,
+  Skeleton,
 } from "antd";
 import {
   faHome,
@@ -45,6 +46,13 @@ import PhoneInput from "react-phone-number-input";
 import Plans from "../compare/Plans";
 
 import ic_logo from "../../imgs/logo2.png";
+
+import hospitalsvg from "../../svgs/hospitals.svg";
+import ratiosvg from "../../svgs/claim_ratio.svg";
+
+import HMOInfoSkeleton from "../../components/skeletons/SkeletonHMOInfo";
+import CheapestPlanSkeleton from "../../components/skeletons/SkeletonCheapestPlan";
+
 // import {
 //   verifyPhoneNumber,
 //   sanitizePhoneNumber,
@@ -204,55 +212,65 @@ class Home extends Component<QuizProps, {}> {
     "Zamfara",
   ];
 
-  hmos: { name: string; id: string }[] = [
+  hmos: { name: string; id: string; title: string }[] = [
     {
       name: "Hygeia ",
       id: "hygeia",
+      title: "Hygeia HMO",
     },
 
     {
       name: "Metrohealth",
       id: "metro-health",
+      title: "Metrohealth HMO",
     },
 
     {
       name: "Novo Health Africa",
       id: "novo-health-africa",
+      title: "Novo Health Africa HMO",
     },
 
     {
       name: "Swift",
       id: "swift",
+      title: "Swift HMO",
     },
 
     {
       name: "Reliance ",
       id: "reliance",
+      title: "Reliance HMO",
     },
 
     {
       name: "Princeton Health Limited",
       id: "princeton-health-limited",
+      title: "Princeton Health Limited HMO",
     },
 
     {
       name: "AIICO Multi-Shield Nig Ltd",
       id: "aiico-multi-shield-nig-ltd",
+      title: "AIICO Multi-Shield Nig Ltd HMO",
     },
 
     {
       name: "Integrated Healthcare Limited",
       id: "integrated_healthcare_ltd",
+      title: "Integrated Healthcare Limited HMO",
     },
 
     {
       name: "Total Health Trust",
       id: "total-health-trust",
+      title: "Total Health Trust HMO",
     },
 
     {
       name: "Avon",
       id: "avon",
+      title: "Avon HMO",
     },
   ];
 
@@ -302,7 +320,17 @@ class Home extends Component<QuizProps, {}> {
   };
 
   componentDidMount() {
-    document.title = "Instacare - Home";
+    const hmoArr = this.hmos.filter(
+      (hmo) => hmo["id"] == this.props.match.params.hmo
+    );
+
+    document.title = this.props.match.params.hmo
+      ? `Instacare - ${hmoArr[0].title}`
+      : "Instacare - Home";
+
+    this.setState({
+      provider_info: hmoArr[0],
+    });
     // this.fetchHmos();
     // this.fetchProviders();
     // this.fetchServices();
@@ -328,10 +356,41 @@ class Home extends Component<QuizProps, {}> {
     this.getPlansByHMO(hmo);
   }
 
+  getCheapestPlan() {
+    let lowest = Number.POSITIVE_INFINITY;
+    let highest = Number.NEGATIVE_INFINITY;
+    let tmp;
+
+    let arr = this.props.plans;
+    for (let i = arr.length - 1; i >= 0; i--) {
+      tmp = arr[i]["individual_annual_price"];
+      if (tmp < lowest) lowest = tmp;
+      if (tmp > highest) highest = tmp;
+    }
+    console.log(highest, lowest);
+    return lowest;
+  }
+
+  getCheapestPlanByHMO() {
+    let lowest = Number.POSITIVE_INFINITY;
+    let highest = Number.NEGATIVE_INFINITY;
+    let tmp;
+
+    let arr = this.state.provider_plans;
+    for (let i = arr.length - 1; i >= 0; i--) {
+      tmp = arr[i]["individual_annual_price"];
+      if (tmp < lowest) lowest = tmp;
+      if (tmp > highest) highest = tmp;
+    }
+    console.log(highest, lowest);
+    return lowest;
+  }
+
   hmoBannerDiv(hmoId) {
     console.log("this.hmos", this.hmos, "hmoId", hmoId);
 
     const hmoArr = this.hmos.filter((hmo) => hmo["id"] == hmoId);
+
     console.log("hmoArr", hmoArr);
     let data;
     if (hmoId) {
@@ -349,35 +408,44 @@ class Home extends Component<QuizProps, {}> {
             </div>
 
             <div className={styles.bannerContent} id="bannertext">
-              <p className={styles.textHeading}>{data[0].name.id}</p>
+              <p className={styles.textHeading}>
+                {this.state.provider_info["title"]}
+                {/* {data[0].name.id} */}
+              </p>
             </div>
           </div>
 
           <div className="banner-bottom">
             <div className="row col-md-12">
               <div className="col-md-4 card mr-3">
-                <FontAwesomeIcon className="banner-icon" icon={faShieldAlt} />
+                {/* <FontAwesomeIcon className="banner-icon" icon={faShieldAlt} /> */}
+                <img src={hospitalsvg} className="banner-icon" />
                 <div className="card-text">
-                  <h5>Hospital Network</h5>
-                  <p>
+                  <p>Hospital Network</p>
+                  <h5>
                     {data[0].provider_id
                       ? JSON.parse(data[0].provider_id).length
-                      : 0}
-                  </p>
+                      : ""}
+                  </h5>
                 </div>
               </div>
               <div className="col-md-4 card mr-3">
                 <span className="naira banner-icon">₦</span>
                 <div className="card-text">
-                  <h5>Plans Starting @</h5>
-                  <p>#####</p>
+                  <p>Plans Starting @</p>
+                  <h5>{this.numberwithCommas(this.getCheapestPlanByHMO())}</h5>
                 </div>
               </div>
               <div className="col-md-4 card">
-                <FontAwesomeIcon className="far banner-icon" icon={faSmile} />
+                {/* <FontAwesomeIcon className="far banner-icon" icon={faSmile} /> */}
+                <img src={ratiosvg} className="banner-icon" />
                 <div className="card-text">
-                  <h5>Insure</h5>
-                  <p>You & your family</p>
+                  <p>Claim Ratio</p>
+                  <h5>{`${
+                    (this.state.provider_plans.length /
+                      this.props.plans.length) *
+                    100
+                  }%`}</h5>
                 </div>
               </div>
             </div>
@@ -402,7 +470,18 @@ class Home extends Component<QuizProps, {}> {
                 <p className={styles.textHeading}>
                   Find Health Plans Starting
                   <br />
-                  <span className={styles.headingSpan}>@ ₦19,999/year</span>
+                  <span className={styles.headingSpan}>
+                    @
+                    {
+                      this.props.plans.length == 0 && (
+                        <Spin className="cheapest-plan" />
+                      )
+                      // <CheapestPlanSkeleton />
+                    }
+                    {this.props.plans.length > 0 &&
+                      ` ₦${this.numberwithCommas(this.getCheapestPlan())}`}
+                    /year
+                  </span>
                 </p>
               </div>
             </div>
@@ -2852,7 +2931,8 @@ class Home extends Component<QuizProps, {}> {
     //console.log("this.props.services", this.props.services);
     //console.log("this.props.providers", this.props.providers);
     //console.log("this.props.plans", this.props.plans);
-    //console.log("this.props", this.props);
+    console.log("this.props", this.props);
+    console.log("this.state", this.state);
 
     let current;
     if (this.props.page != 0) {
@@ -2868,382 +2948,1128 @@ class Home extends Component<QuizProps, {}> {
       <React.Fragment>
         <div className="main">
           <AppHeader />
+          {/* {this.props.match.params.hmo && this.props.plans.length == 0 ? (
+            <Spin />
+          ) : ( */}
           <div className="home">
             <div className="banner-div">
               <div className="container">
-                <Row className="banner-content">
-                  {this.state.filter_plans_by_hmo && this.props.match.params.hmo
-                    ? this.hmoBannerDiv(this.props.match.params.hmo)
-                    : this.homeBannerDiv()}
+                {/* if /hmo */}
+                {
+                  //this.state.filter_plans_by_hmo &&
+                  this.props.match.params.hmo && this.props.plans.length > 0 && (
+                    <Row className="banner-content">
+                      {this.hmoBannerDiv(this.props.match.params.hmo)}
 
-                  <Col md={8} className="quiz">
-                    <div className="home-frm form-div">
-                      <form
-                        onSubmit={this.preventDefault}
-                        className="form desktop"
-                      >
-                        <p>
-                          Compare HMO plans in Nigeria from the comfort of your
-                          home
-                        </p>
-                        <h3 className="no-med">No medicals required</h3>
-                        <div className="mobile-view-steps">
-                          <div className="col-md-12">
-                            <Steps current={0}>
-                              {this.steps.map((step, i) => {
-                                return <Step key={i} />;
-                              })}
-                            </Steps>
-                          </div>
-                        </div>
-                        <div className="mobile-view-phone form-group">
-                          <div className="col-md-12">
-                            <label>Tell us about you</label>
-                            <PhoneInput
-                              className={
-                                this.state.is_phone_valid
-                                  ? "form-control"
-                                  : "form-control invalid"
-                              }
-                              placeholder="Enter phone number"
-                              type="phone"
-                              maxLength="13"
-                              defaultCountry="NG"
-                              //required={true}
-                              onChange={
-                                // (e) => {
-                                this.handlePhone
-                                //   (e.target.value);
-                                // }
-                              }
-                              value={this.props.responses.phone_num}
-                            />
-                          </div>
-                        </div>
-                        <div className="form-group home-gender">
-                          <div className="col-md-12">
-                            <label>I am a</label>
-                            <div className="radios">
-                              <label>
-                                <input
-                                  type="radio"
-                                  value="m"
-                                  name="radio-group-gender"
-                                  defaultChecked={this.defaultGender()}
-                                  onChange={(e) => {
-                                    this.handleGender(e.target.value);
-                                  }}
-                                  className="radio-group-gender"
-                                ></input>
-                                <span>
-                                  <i className="gender icons-gender male male-icon"></i>
-                                  <em>Male</em>
-                                </span>
-                              </label>
-                              <label>
-                                <input
-                                  type="radio"
-                                  value="f"
-                                  name="radio-group-gender"
-                                  className="radio-group-gender"
-                                  onChange={(e) => {
-                                    this.handleGender(e.target.value);
-                                  }}
-                                ></input>
-                                <span>
-                                  <i className="gender icons-gender male female-icon"></i>
-                                  <em>Female</em>
-                                </span>
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="form-group home-fullname">
-                          <div className="col-md-12">
-                            <label>My name is</label>
-                          </div>
-
-                          <div className="col-md-12">
-                            <input
-                              className="form-control"
-                              placeholder="Full Name"
-                              // required={true}
-                              onChange={(e) => {
-                                this.handleFullName(e.target.value);
-                              }}
-                              value={this.props.responses.full_name}
-                            ></input>
-                          </div>
-                        </div>
-                        <div className="form-group home-phonenum">
-                          <div className="col-md-12">
-                            <label>My number is</label>
-                          </div>
-
-                          <div className="col-md-12">
-                            <PhoneInput
-                              className={
-                                this.state.is_phone_valid
-                                  ? "form-control"
-                                  : "form-control invalid"
-                              }
-                              placeholder="11 - digit mobile number"
-                              //required={true}
-                              defaultCountry="NG"
-                              onChange={
-                                // (e) => {
-                                this.handlePhone
-                                //   (e.target.value);
-                                // }
-                              }
-                              value={this.props.responses.phone_num}
-                              type="phone"
-                              maxLength="13"
-                            />
-                          </div>
-                        </div>
-                        <div className="form-group home-view-btn">
-                          <div className="col-md-12">
-                            <button
-                              className="btn btn-primary btn-large view-plans btn-demo"
-                              onClick={() => {
-                                // if (this.props.responses.phone_num) {
-                                this.toggleModal();
-                                // } else {
-                                //   this.phoneNumError();
-                                // }
-                              }}
-                            >
-                              View Plans
-                            </button>
-                          </div>
-                        </div>
-                        <div className="form-group mobile-view-cont-btn">
-                          <div className="col-md-12">
-                            <button
-                              className="btn btn-primary btn-large view-plans btn-demo"
-                              onClick={this.toggleModal}
-                            >
-                              Continue
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                      <form
-                        onSubmit={this.preventDefault}
-                        className="form mobile"
-                      >
-                        <p>
-                          Compare HMO plans in Nigeria from the comfort of your
-                          home
-                        </p>
-                        <h3 className="no-med">No medicals required</h3>
-                        <div className="mobile-view-steps">
-                          <div className="col-md-12">
-                            <Steps current={0}>
-                              {this.mobile_steps.map((step, i) => {
-                                return <Step key={i} />;
-                              })}
-                            </Steps>
-                          </div>
-                        </div>
-                        <div className="mobile-view-phone form-group">
-                          <div className="col-md-12">
-                            <label>Tell us about you</label>
-                            <PhoneInput
-                              className={
-                                this.state.is_phone_valid
-                                  ? "form-control"
-                                  : "form-control invalid"
-                              }
-                              placeholder="Enter phone number"
-                              defaultCountry="NG"
-                              // required={true}
-                              onChange={
-                                // (e) => {
-                                this.handlePhone
-                                //   (e.target.value);
-                                // }
-                              }
-                              value={this.props.responses.phone_num}
-                              type="phone"
-                              maxLength="13"
-                            />
-                          </div>
-                        </div>
-                        <div className="form-group mobile-view-cont-btn">
-                          <div className="col-md-12">
-                            <button
-                              className="btn btn-primary btn-large view-plans btn-demo"
-                              onClick={() => {
-                                this.mobileToggleModal();
-                                this.handleDesktopView();
-                              }}
-                            >
-                              Continue
-                            </button>
-                          </div>
-                        </div>
-                      </form>
-                      <Modal
-                        dialogClassName="custom-dialog"
-                        className="desktop-modal right"
-                        show={this.props.isOpen}
-                        onHide={this.toggleModal}
-                      >
-                        <Modal.Body>
+                      <Col md={8} className="quiz">
+                        <div className="home-frm form-div">
                           <form
-                            name="modalForm"
                             onSubmit={this.preventDefault}
-                            className="form steppers"
+                            className="form desktop"
                           >
-                            <div className="modal-head" id="modal-head">
-                              <Button
-                                id="prev"
-                                type="default"
-                                onClick={
-                                  this.props.page < 3
-                                    ? this.toggleModal
-                                    : this.handleNavigation
-                                }
-                              >
-                                <FontAwesomeIcon
-                                  className=""
-                                  icon={faArrowLeft}
-                                />
-                              </Button>
-                              <div className="modal-title">
-                                {this.props.isDesktopView ? (
-                                  current >= 0 && current < 3 ? (
-                                    <div>
-                                      <p>{this.steps[current].p}</p>
-                                      <h3>{this.steps[current].h3}</h3>
-                                    </div>
-                                  ) : current < 0 || current == 0 ? (
-                                    //this.toggleModal()
-                                    <div>
-                                      <p>{this.steps[0].p}</p>
-                                      <h3>{this.steps[0].h3}</h3>
-                                    </div>
-                                  ) : (
-                                    console.log("current is > 0", current)
-                                  )
-                                ) : (
-                                  console.log("!this.props.isDesktopView")
-                                )}
-
-                                <Steps current={current}>
+                            <p>
+                              Compare HMO plans in Nigeria from the comfort of
+                              your home
+                            </p>
+                            <h3 className="no-med">No medicals required</h3>
+                            <div className="mobile-view-steps">
+                              <div className="col-md-12">
+                                <Steps current={0}>
                                   {this.steps.map((step, i) => {
                                     return <Step key={i} />;
                                   })}
                                 </Steps>
                               </div>
                             </div>
-                            {this.renderQuizPages()}
-                            <div className="nav-row row">
+                            <div className="mobile-view-phone form-group">
                               <div className="col-md-12">
-                                <div className="form-group">
-                                  <button
-                                    className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                                    onClick={this.handleNavigation}
-                                    id="next"
-                                  >
-                                    Continue
-                                  </button>
+                                <label>Tell us about you</label>
+                                <PhoneInput
+                                  className={
+                                    this.state.is_phone_valid
+                                      ? "form-control"
+                                      : "form-control invalid"
+                                  }
+                                  placeholder="Enter phone number"
+                                  type="phone"
+                                  maxLength="13"
+                                  defaultCountry="NG"
+                                  //required={true}
+                                  onChange={
+                                    // (e) => {
+                                    this.handlePhone
+                                    //   (e.target.value);
+                                    // }
+                                  }
+                                  value={this.props.responses.phone_num}
+                                />
+                              </div>
+                            </div>
+                            <div className="form-group home-gender">
+                              <div className="col-md-12">
+                                <label>I am a</label>
+                                <div className="radios">
+                                  <label>
+                                    <input
+                                      type="radio"
+                                      value="m"
+                                      name="radio-group-gender"
+                                      defaultChecked={this.defaultGender()}
+                                      onChange={(e) => {
+                                        this.handleGender(e.target.value);
+                                      }}
+                                      className="radio-group-gender"
+                                    ></input>
+                                    <span>
+                                      <i className="gender icons-gender male male-icon"></i>
+                                      <em>Male</em>
+                                    </span>
+                                  </label>
+                                  <label>
+                                    <input
+                                      type="radio"
+                                      value="f"
+                                      name="radio-group-gender"
+                                      className="radio-group-gender"
+                                      onChange={(e) => {
+                                        this.handleGender(e.target.value);
+                                      }}
+                                    ></input>
+                                    <span>
+                                      <i className="gender icons-gender male female-icon"></i>
+                                      <em>Female</em>
+                                    </span>
+                                  </label>
                                 </div>
                               </div>
                             </div>
-                          </form>
-                        </Modal.Body>
-                      </Modal>
-                      <Modal
-                        dialogClassName="custom-dialog"
-                        className="mobile-modal right"
-                        show={this.props.isMobileViewModalOpen}
-                        onHide={this.mobileToggleModal}
-                      >
-                        <Modal.Body>
-                          <form
-                            name="modalForm"
-                            onSubmit={this.preventDefault}
-                            className="form steppers"
-                          >
-                            <div className="modal-head" id="modal-head">
-                              {/*
-                          {this.props.page != 1 ? (
-                          */}
 
-                              <Button
-                                id="prev"
-                                type="default"
-                                onClick={
-                                  this.props.page < 3
-                                    ? this.mobileToggleModal
-                                    : this.handleNavigation
-                                }
-                              >
-                                <FontAwesomeIcon
-                                  className=""
-                                  icon={faArrowLeft}
+                            <div className="form-group home-fullname">
+                              <div className="col-md-12">
+                                <label>My name is</label>
+                              </div>
+
+                              <div className="col-md-12">
+                                <input
+                                  className="form-control"
+                                  placeholder="Full Name"
+                                  // required={true}
+                                  onChange={(e) => {
+                                    this.handleFullName(e.target.value);
+                                  }}
+                                  value={this.props.responses.full_name}
+                                ></input>
+                              </div>
+                            </div>
+                            <div className="form-group home-phonenum">
+                              <div className="col-md-12">
+                                <label>My number is</label>
+                              </div>
+
+                              <div className="col-md-12">
+                                <PhoneInput
+                                  className={
+                                    this.state.is_phone_valid
+                                      ? "form-control"
+                                      : "form-control invalid"
+                                  }
+                                  placeholder="11 - digit mobile number"
+                                  //required={true}
+                                  defaultCountry="NG"
+                                  onChange={
+                                    // (e) => {
+                                    this.handlePhone
+                                    //   (e.target.value);
+                                    // }
+                                  }
+                                  value={this.props.responses.phone_num}
+                                  type="phone"
+                                  maxLength="13"
                                 />
-                              </Button>
-
-                              <div className="modal-title">
-                                {current >= 0 ? (
-                                  <div>
-                                    <p>{this.mobile_steps[current].p}</p>
-                                    <h3>{this.mobile_steps[current].h3}</h3>
-                                  </div>
-                                ) : current < 0 ? (
-                                  <div>
-                                    <p>{this.mobile_steps[0].p}</p>
-                                    <h3>{this.mobile_steps[0].h3}</h3>
-                                  </div>
-                                ) : (
-                                  ""
-                                )}
-
-                                <Steps current={current}>
+                              </div>
+                            </div>
+                            <div className="form-group home-view-btn">
+                              <div className="col-md-12">
+                                <button
+                                  className="btn btn-primary btn-large view-plans btn-demo"
+                                  onClick={() => {
+                                    // if (this.props.responses.phone_num) {
+                                    this.toggleModal();
+                                    // } else {
+                                    //   this.phoneNumError();
+                                    // }
+                                  }}
+                                >
+                                  View Plans
+                                </button>
+                              </div>
+                            </div>
+                            <div className="form-group mobile-view-cont-btn">
+                              <div className="col-md-12">
+                                <button
+                                  className="btn btn-primary btn-large view-plans btn-demo"
+                                  onClick={this.toggleModal}
+                                >
+                                  Continue
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                          <form
+                            onSubmit={this.preventDefault}
+                            className="form mobile"
+                          >
+                            <p>
+                              Compare HMO plans in Nigeria from the comfort of
+                              your home
+                            </p>
+                            <h3 className="no-med">No medicals required</h3>
+                            <div className="mobile-view-steps">
+                              <div className="col-md-12">
+                                <Steps current={0}>
                                   {this.mobile_steps.map((step, i) => {
                                     return <Step key={i} />;
                                   })}
                                 </Steps>
                               </div>
                             </div>
-                            {this.renderMobileViewQuizPages()}
-                            <div className="nav-row row">
+                            <div className="mobile-view-phone form-group">
                               <div className="col-md-12">
-                                <div className="form-group">
-                                  <button
-                                    className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                                    onClick={this.handleNavigation}
-                                    id="next"
-                                  >
-                                    Continue
-                                  </button>
-                                </div>
+                                <label>Tell us about you</label>
+                                <PhoneInput
+                                  className={
+                                    this.state.is_phone_valid
+                                      ? "form-control"
+                                      : "form-control invalid"
+                                  }
+                                  placeholder="Enter phone number"
+                                  defaultCountry="NG"
+                                  // required={true}
+                                  onChange={
+                                    // (e) => {
+                                    this.handlePhone
+                                    //   (e.target.value);
+                                    // }
+                                  }
+                                  value={this.props.responses.phone_num}
+                                  type="phone"
+                                  maxLength="13"
+                                />
                               </div>
                             </div>
-                            {/*here*/}
+                            <div className="form-group mobile-view-cont-btn">
+                              <div className="col-md-12">
+                                <button
+                                  className="btn btn-primary btn-large view-plans btn-demo"
+                                  onClick={() => {
+                                    this.mobileToggleModal();
+                                    this.handleDesktopView();
+                                  }}
+                                >
+                                  Continue
+                                </button>
+                              </div>
+                            </div>
                           </form>
-                        </Modal.Body>
-                        {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
-                      </Modal>
-                    </div>
-                  </Col>
-                </Row>
+                          <Modal
+                            dialogClassName="custom-dialog"
+                            className="desktop-modal right"
+                            show={this.props.isOpen}
+                            onHide={this.toggleModal}
+                          >
+                            <Modal.Body>
+                              <form
+                                name="modalForm"
+                                onSubmit={this.preventDefault}
+                                className="form steppers"
+                              >
+                                <div className="modal-head" id="modal-head">
+                                  <Button
+                                    id="prev"
+                                    type="default"
+                                    onClick={
+                                      this.props.page < 3
+                                        ? this.toggleModal
+                                        : this.handleNavigation
+                                    }
+                                  >
+                                    <FontAwesomeIcon
+                                      className=""
+                                      icon={faArrowLeft}
+                                    />
+                                  </Button>
+                                  <div className="modal-title">
+                                    {this.props.isDesktopView ? (
+                                      current >= 0 && current < 3 ? (
+                                        <div>
+                                          <p>{this.steps[current].p}</p>
+                                          <h3>{this.steps[current].h3}</h3>
+                                        </div>
+                                      ) : current < 0 || current == 0 ? (
+                                        //this.toggleModal()
+                                        <div>
+                                          <p>{this.steps[0].p}</p>
+                                          <h3>{this.steps[0].h3}</h3>
+                                        </div>
+                                      ) : (
+                                        console.log("current is > 0", current)
+                                      )
+                                    ) : (
+                                      console.log("!this.props.isDesktopView")
+                                    )}
+
+                                    <Steps current={current}>
+                                      {this.steps.map((step, i) => {
+                                        return <Step key={i} />;
+                                      })}
+                                    </Steps>
+                                  </div>
+                                </div>
+                                {this.renderQuizPages()}
+                                <div className="nav-row row">
+                                  <div className="col-md-12">
+                                    <div className="form-group">
+                                      <button
+                                        className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+                                        onClick={this.handleNavigation}
+                                        id="next"
+                                      >
+                                        Continue
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </form>
+                            </Modal.Body>
+                          </Modal>
+                          <Modal
+                            dialogClassName="custom-dialog"
+                            className="mobile-modal right"
+                            show={this.props.isMobileViewModalOpen}
+                            onHide={this.mobileToggleModal}
+                          >
+                            <Modal.Body>
+                              <form
+                                name="modalForm"
+                                onSubmit={this.preventDefault}
+                                className="form steppers"
+                              >
+                                <div className="modal-head" id="modal-head">
+                                  {/*
+                        {this.props.page != 1 ? (
+                        */}
+
+                                  <Button
+                                    id="prev"
+                                    type="default"
+                                    onClick={
+                                      this.props.page < 3
+                                        ? this.mobileToggleModal
+                                        : this.handleNavigation
+                                    }
+                                  >
+                                    <FontAwesomeIcon
+                                      className=""
+                                      icon={faArrowLeft}
+                                    />
+                                  </Button>
+
+                                  <div className="modal-title">
+                                    {current >= 0 ? (
+                                      <div>
+                                        <p>{this.mobile_steps[current].p}</p>
+                                        <h3>{this.mobile_steps[current].h3}</h3>
+                                      </div>
+                                    ) : current < 0 ? (
+                                      <div>
+                                        <p>{this.mobile_steps[0].p}</p>
+                                        <h3>{this.mobile_steps[0].h3}</h3>
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
+
+                                    <Steps current={current}>
+                                      {this.mobile_steps.map((step, i) => {
+                                        return <Step key={i} />;
+                                      })}
+                                    </Steps>
+                                  </div>
+                                </div>
+                                {this.renderMobileViewQuizPages()}
+                                <div className="nav-row row">
+                                  <div className="col-md-12">
+                                    <div className="form-group">
+                                      <button
+                                        className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+                                        onClick={this.handleNavigation}
+                                        id="next"
+                                      >
+                                        Continue
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                {/*here*/}
+                              </form>
+                            </Modal.Body>
+                            {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
+                          </Modal>
+                        </div>
+                      </Col>
+                    </Row>
+                  )
+                }
+
+                {this.props.match.params.hmo && this.props.plans.length == 0 && (
+                  <Row className="banner-content">
+                    <Col
+                      xs={24}
+                      md={16}
+                      className="banner-container provider-banner"
+                    >
+                      <HMOInfoSkeleton />
+                    </Col>
+                    <Col md={8} className="quiz">
+                      <div className="home-frm form-div">
+                        <form
+                          onSubmit={this.preventDefault}
+                          className="form desktop"
+                        >
+                          <p>
+                            Compare HMO plans in Nigeria from the comfort of
+                            your home
+                          </p>
+                          <h3 className="no-med">No medicals required</h3>
+                          <div className="mobile-view-steps">
+                            <div className="col-md-12">
+                              <Steps current={0}>
+                                {this.steps.map((step, i) => {
+                                  return <Step key={i} />;
+                                })}
+                              </Steps>
+                            </div>
+                          </div>
+                          <div className="mobile-view-phone form-group">
+                            <div className="col-md-12">
+                              <label>Tell us about you</label>
+                              <PhoneInput
+                                className={
+                                  this.state.is_phone_valid
+                                    ? "form-control"
+                                    : "form-control invalid"
+                                }
+                                placeholder="Enter phone number"
+                                type="phone"
+                                maxLength="13"
+                                defaultCountry="NG"
+                                //required={true}
+                                onChange={
+                                  // (e) => {
+                                  this.handlePhone
+                                  //   (e.target.value);
+                                  // }
+                                }
+                                value={this.props.responses.phone_num}
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group home-gender">
+                            <div className="col-md-12">
+                              <label>I am a</label>
+                              <div className="radios">
+                                <label>
+                                  <input
+                                    type="radio"
+                                    value="m"
+                                    name="radio-group-gender"
+                                    defaultChecked={this.defaultGender()}
+                                    onChange={(e) => {
+                                      this.handleGender(e.target.value);
+                                    }}
+                                    className="radio-group-gender"
+                                  ></input>
+                                  <span>
+                                    <i className="gender icons-gender male male-icon"></i>
+                                    <em>Male</em>
+                                  </span>
+                                </label>
+                                <label>
+                                  <input
+                                    type="radio"
+                                    value="f"
+                                    name="radio-group-gender"
+                                    className="radio-group-gender"
+                                    onChange={(e) => {
+                                      this.handleGender(e.target.value);
+                                    }}
+                                  ></input>
+                                  <span>
+                                    <i className="gender icons-gender male female-icon"></i>
+                                    <em>Female</em>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="form-group home-fullname">
+                            <div className="col-md-12">
+                              <label>My name is</label>
+                            </div>
+
+                            <div className="col-md-12">
+                              <input
+                                className="form-control"
+                                placeholder="Full Name"
+                                // required={true}
+                                onChange={(e) => {
+                                  this.handleFullName(e.target.value);
+                                }}
+                                value={this.props.responses.full_name}
+                              ></input>
+                            </div>
+                          </div>
+                          <div className="form-group home-phonenum">
+                            <div className="col-md-12">
+                              <label>My number is</label>
+                            </div>
+
+                            <div className="col-md-12">
+                              <PhoneInput
+                                className={
+                                  this.state.is_phone_valid
+                                    ? "form-control"
+                                    : "form-control invalid"
+                                }
+                                placeholder="11 - digit mobile number"
+                                //required={true}
+                                defaultCountry="NG"
+                                onChange={
+                                  // (e) => {
+                                  this.handlePhone
+                                  //   (e.target.value);
+                                  // }
+                                }
+                                value={this.props.responses.phone_num}
+                                type="phone"
+                                maxLength="13"
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group home-view-btn">
+                            <div className="col-md-12">
+                              <button
+                                className="btn btn-primary btn-large view-plans btn-demo"
+                                onClick={() => {
+                                  // if (this.props.responses.phone_num) {
+                                  this.toggleModal();
+                                  // } else {
+                                  //   this.phoneNumError();
+                                  // }
+                                }}
+                              >
+                                View Plans
+                              </button>
+                            </div>
+                          </div>
+                          <div className="form-group mobile-view-cont-btn">
+                            <div className="col-md-12">
+                              <button
+                                className="btn btn-primary btn-large view-plans btn-demo"
+                                onClick={this.toggleModal}
+                              >
+                                Continue
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                        <form
+                          onSubmit={this.preventDefault}
+                          className="form mobile"
+                        >
+                          <p>
+                            Compare HMO plans in Nigeria from the comfort of
+                            your home
+                          </p>
+                          <h3 className="no-med">No medicals required</h3>
+                          <div className="mobile-view-steps">
+                            <div className="col-md-12">
+                              <Steps current={0}>
+                                {this.mobile_steps.map((step, i) => {
+                                  return <Step key={i} />;
+                                })}
+                              </Steps>
+                            </div>
+                          </div>
+                          <div className="mobile-view-phone form-group">
+                            <div className="col-md-12">
+                              <label>Tell us about you</label>
+                              <PhoneInput
+                                className={
+                                  this.state.is_phone_valid
+                                    ? "form-control"
+                                    : "form-control invalid"
+                                }
+                                placeholder="Enter phone number"
+                                defaultCountry="NG"
+                                // required={true}
+                                onChange={
+                                  // (e) => {
+                                  this.handlePhone
+                                  //   (e.target.value);
+                                  // }
+                                }
+                                value={this.props.responses.phone_num}
+                                type="phone"
+                                maxLength="13"
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group mobile-view-cont-btn">
+                            <div className="col-md-12">
+                              <button
+                                className="btn btn-primary btn-large view-plans btn-demo"
+                                onClick={() => {
+                                  this.mobileToggleModal();
+                                  this.handleDesktopView();
+                                }}
+                              >
+                                Continue
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                        <Modal
+                          dialogClassName="custom-dialog"
+                          className="desktop-modal right"
+                          show={this.props.isOpen}
+                          onHide={this.toggleModal}
+                        >
+                          <Modal.Body>
+                            <form
+                              name="modalForm"
+                              onSubmit={this.preventDefault}
+                              className="form steppers"
+                            >
+                              <div className="modal-head" id="modal-head">
+                                <Button
+                                  id="prev"
+                                  type="default"
+                                  onClick={
+                                    this.props.page < 3
+                                      ? this.toggleModal
+                                      : this.handleNavigation
+                                  }
+                                >
+                                  <FontAwesomeIcon
+                                    className=""
+                                    icon={faArrowLeft}
+                                  />
+                                </Button>
+                                <div className="modal-title">
+                                  {this.props.isDesktopView ? (
+                                    current >= 0 && current < 3 ? (
+                                      <div>
+                                        <p>{this.steps[current].p}</p>
+                                        <h3>{this.steps[current].h3}</h3>
+                                      </div>
+                                    ) : current < 0 || current == 0 ? (
+                                      //this.toggleModal()
+                                      <div>
+                                        <p>{this.steps[0].p}</p>
+                                        <h3>{this.steps[0].h3}</h3>
+                                      </div>
+                                    ) : (
+                                      console.log("current is > 0", current)
+                                    )
+                                  ) : (
+                                    console.log("!this.props.isDesktopView")
+                                  )}
+
+                                  <Steps current={current}>
+                                    {this.steps.map((step, i) => {
+                                      return <Step key={i} />;
+                                    })}
+                                  </Steps>
+                                </div>
+                              </div>
+                              {this.renderQuizPages()}
+                              <div className="nav-row row">
+                                <div className="col-md-12">
+                                  <div className="form-group">
+                                    <button
+                                      className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+                                      onClick={this.handleNavigation}
+                                      id="next"
+                                    >
+                                      Continue
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+                          </Modal.Body>
+                        </Modal>
+                        <Modal
+                          dialogClassName="custom-dialog"
+                          className="mobile-modal right"
+                          show={this.props.isMobileViewModalOpen}
+                          onHide={this.mobileToggleModal}
+                        >
+                          <Modal.Body>
+                            <form
+                              name="modalForm"
+                              onSubmit={this.preventDefault}
+                              className="form steppers"
+                            >
+                              <div className="modal-head" id="modal-head">
+                                {/*
+                        {this.props.page != 1 ? (
+                        */}
+
+                                <Button
+                                  id="prev"
+                                  type="default"
+                                  onClick={
+                                    this.props.page < 3
+                                      ? this.mobileToggleModal
+                                      : this.handleNavigation
+                                  }
+                                >
+                                  <FontAwesomeIcon
+                                    className=""
+                                    icon={faArrowLeft}
+                                  />
+                                </Button>
+
+                                <div className="modal-title">
+                                  {current >= 0 ? (
+                                    <div>
+                                      <p>{this.mobile_steps[current].p}</p>
+                                      <h3>{this.mobile_steps[current].h3}</h3>
+                                    </div>
+                                  ) : current < 0 ? (
+                                    <div>
+                                      <p>{this.mobile_steps[0].p}</p>
+                                      <h3>{this.mobile_steps[0].h3}</h3>
+                                    </div>
+                                  ) : (
+                                    ""
+                                  )}
+
+                                  <Steps current={current}>
+                                    {this.mobile_steps.map((step, i) => {
+                                      return <Step key={i} />;
+                                    })}
+                                  </Steps>
+                                </div>
+                              </div>
+                              {this.renderMobileViewQuizPages()}
+                              <div className="nav-row row">
+                                <div className="col-md-12">
+                                  <div className="form-group">
+                                    <button
+                                      className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+                                      onClick={this.handleNavigation}
+                                      id="next"
+                                    >
+                                      Continue
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                              {/*here*/}
+                            </form>
+                          </Modal.Body>
+                          {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
+                        </Modal>
+                      </div>
+                    </Col>
+                  </Row>
+                )}
+
+                {/* if / */}
+
+                {!this.props.match.params.hmo && (
+                  <Row className="banner-content">
+                    {this.homeBannerDiv()}
+                    <Col md={8} className="quiz">
+                      <div className="home-frm form-div">
+                        <form
+                          onSubmit={this.preventDefault}
+                          className="form desktop"
+                        >
+                          <p>
+                            Compare HMO plans in Nigeria from the comfort of
+                            your home
+                          </p>
+                          <h3 className="no-med">No medicals required</h3>
+                          <div className="mobile-view-steps">
+                            <div className="col-md-12">
+                              <Steps current={0}>
+                                {this.steps.map((step, i) => {
+                                  return <Step key={i} />;
+                                })}
+                              </Steps>
+                            </div>
+                          </div>
+                          <div className="mobile-view-phone form-group">
+                            <div className="col-md-12">
+                              <label>Tell us about you</label>
+                              <PhoneInput
+                                className={
+                                  this.state.is_phone_valid
+                                    ? "form-control"
+                                    : "form-control invalid"
+                                }
+                                placeholder="Enter phone number"
+                                type="phone"
+                                maxLength="13"
+                                defaultCountry="NG"
+                                //required={true}
+                                onChange={
+                                  // (e) => {
+                                  this.handlePhone
+                                  //   (e.target.value);
+                                  // }
+                                }
+                                value={this.props.responses.phone_num}
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group home-gender">
+                            <div className="col-md-12">
+                              <label>I am a</label>
+                              <div className="radios">
+                                <label>
+                                  <input
+                                    type="radio"
+                                    value="m"
+                                    name="radio-group-gender"
+                                    defaultChecked={this.defaultGender()}
+                                    onChange={(e) => {
+                                      this.handleGender(e.target.value);
+                                    }}
+                                    className="radio-group-gender"
+                                  ></input>
+                                  <span>
+                                    <i className="gender icons-gender male male-icon"></i>
+                                    <em>Male</em>
+                                  </span>
+                                </label>
+                                <label>
+                                  <input
+                                    type="radio"
+                                    value="f"
+                                    name="radio-group-gender"
+                                    className="radio-group-gender"
+                                    onChange={(e) => {
+                                      this.handleGender(e.target.value);
+                                    }}
+                                  ></input>
+                                  <span>
+                                    <i className="gender icons-gender male female-icon"></i>
+                                    <em>Female</em>
+                                  </span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="form-group home-fullname">
+                            <div className="col-md-12">
+                              <label>My name is</label>
+                            </div>
+
+                            <div className="col-md-12">
+                              <input
+                                className="form-control"
+                                placeholder="Full Name"
+                                // required={true}
+                                onChange={(e) => {
+                                  this.handleFullName(e.target.value);
+                                }}
+                                value={this.props.responses.full_name}
+                              ></input>
+                            </div>
+                          </div>
+                          <div className="form-group home-phonenum">
+                            <div className="col-md-12">
+                              <label>My number is</label>
+                            </div>
+
+                            <div className="col-md-12">
+                              <PhoneInput
+                                className={
+                                  this.state.is_phone_valid
+                                    ? "form-control"
+                                    : "form-control invalid"
+                                }
+                                placeholder="11 - digit mobile number"
+                                //required={true}
+                                defaultCountry="NG"
+                                onChange={
+                                  // (e) => {
+                                  this.handlePhone
+                                  //   (e.target.value);
+                                  // }
+                                }
+                                value={this.props.responses.phone_num}
+                                type="phone"
+                                maxLength="13"
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group home-view-btn">
+                            <div className="col-md-12">
+                              <button
+                                className="btn btn-primary btn-large view-plans btn-demo"
+                                onClick={() => {
+                                  // if (this.props.responses.phone_num) {
+                                  this.toggleModal();
+                                  // } else {
+                                  //   this.phoneNumError();
+                                  // }
+                                }}
+                              >
+                                View Plans
+                              </button>
+                            </div>
+                          </div>
+                          <div className="form-group mobile-view-cont-btn">
+                            <div className="col-md-12">
+                              <button
+                                className="btn btn-primary btn-large view-plans btn-demo"
+                                onClick={this.toggleModal}
+                              >
+                                Continue
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                        <form
+                          onSubmit={this.preventDefault}
+                          className="form mobile"
+                        >
+                          <p>
+                            Compare HMO plans in Nigeria from the comfort of
+                            your home
+                          </p>
+                          <h3 className="no-med">No medicals required</h3>
+                          <div className="mobile-view-steps">
+                            <div className="col-md-12">
+                              <Steps current={0}>
+                                {this.mobile_steps.map((step, i) => {
+                                  return <Step key={i} />;
+                                })}
+                              </Steps>
+                            </div>
+                          </div>
+                          <div className="mobile-view-phone form-group">
+                            <div className="col-md-12">
+                              <label>Tell us about you</label>
+                              <PhoneInput
+                                className={
+                                  this.state.is_phone_valid
+                                    ? "form-control"
+                                    : "form-control invalid"
+                                }
+                                placeholder="Enter phone number"
+                                defaultCountry="NG"
+                                // required={true}
+                                onChange={
+                                  // (e) => {
+                                  this.handlePhone
+                                  //   (e.target.value);
+                                  // }
+                                }
+                                value={this.props.responses.phone_num}
+                                type="phone"
+                                maxLength="13"
+                              />
+                            </div>
+                          </div>
+                          <div className="form-group mobile-view-cont-btn">
+                            <div className="col-md-12">
+                              <button
+                                className="btn btn-primary btn-large view-plans btn-demo"
+                                onClick={() => {
+                                  this.mobileToggleModal();
+                                  this.handleDesktopView();
+                                }}
+                              >
+                                Continue
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                        <Modal
+                          dialogClassName="custom-dialog"
+                          className="desktop-modal right"
+                          show={this.props.isOpen}
+                          onHide={this.toggleModal}
+                        >
+                          <Modal.Body>
+                            <form
+                              name="modalForm"
+                              onSubmit={this.preventDefault}
+                              className="form steppers"
+                            >
+                              <div className="modal-head" id="modal-head">
+                                <Button
+                                  id="prev"
+                                  type="default"
+                                  onClick={
+                                    this.props.page < 3
+                                      ? this.toggleModal
+                                      : this.handleNavigation
+                                  }
+                                >
+                                  <FontAwesomeIcon
+                                    className=""
+                                    icon={faArrowLeft}
+                                  />
+                                </Button>
+                                <div className="modal-title">
+                                  {this.props.isDesktopView ? (
+                                    current >= 0 && current < 3 ? (
+                                      <div>
+                                        <p>{this.steps[current].p}</p>
+                                        <h3>{this.steps[current].h3}</h3>
+                                      </div>
+                                    ) : current < 0 || current == 0 ? (
+                                      //this.toggleModal()
+                                      <div>
+                                        <p>{this.steps[0].p}</p>
+                                        <h3>{this.steps[0].h3}</h3>
+                                      </div>
+                                    ) : (
+                                      console.log("current is > 0", current)
+                                    )
+                                  ) : (
+                                    console.log("!this.props.isDesktopView")
+                                  )}
+
+                                  <Steps current={current}>
+                                    {this.steps.map((step, i) => {
+                                      return <Step key={i} />;
+                                    })}
+                                  </Steps>
+                                </div>
+                              </div>
+                              {this.renderQuizPages()}
+                              <div className="nav-row row">
+                                <div className="col-md-12">
+                                  <div className="form-group">
+                                    <button
+                                      className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+                                      onClick={this.handleNavigation}
+                                      id="next"
+                                    >
+                                      Continue
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+                          </Modal.Body>
+                        </Modal>
+                        <Modal
+                          dialogClassName="custom-dialog"
+                          className="mobile-modal right"
+                          show={this.props.isMobileViewModalOpen}
+                          onHide={this.mobileToggleModal}
+                        >
+                          <Modal.Body>
+                            <form
+                              name="modalForm"
+                              onSubmit={this.preventDefault}
+                              className="form steppers"
+                            >
+                              <div className="modal-head" id="modal-head">
+                                {/*
+                        {this.props.page != 1 ? (
+                        */}
+
+                                <Button
+                                  id="prev"
+                                  type="default"
+                                  onClick={
+                                    this.props.page < 3
+                                      ? this.mobileToggleModal
+                                      : this.handleNavigation
+                                  }
+                                >
+                                  <FontAwesomeIcon
+                                    className=""
+                                    icon={faArrowLeft}
+                                  />
+                                </Button>
+
+                                <div className="modal-title">
+                                  {current >= 0 ? (
+                                    <div>
+                                      <p>{this.mobile_steps[current].p}</p>
+                                      <h3>{this.mobile_steps[current].h3}</h3>
+                                    </div>
+                                  ) : current < 0 ? (
+                                    <div>
+                                      <p>{this.mobile_steps[0].p}</p>
+                                      <h3>{this.mobile_steps[0].h3}</h3>
+                                    </div>
+                                  ) : (
+                                    ""
+                                  )}
+
+                                  <Steps current={current}>
+                                    {this.mobile_steps.map((step, i) => {
+                                      return <Step key={i} />;
+                                    })}
+                                  </Steps>
+                                </div>
+                              </div>
+                              {this.renderMobileViewQuizPages()}
+                              <div className="nav-row row">
+                                <div className="col-md-12">
+                                  <div className="form-group">
+                                    <button
+                                      className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+                                      onClick={this.handleNavigation}
+                                      id="next"
+                                    >
+                                      Continue
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                              {/*here*/}
+                            </form>
+                          </Modal.Body>
+                          {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
+                        </Modal>
+                      </div>
+                    </Col>
+                  </Row>
+                )}
               </div>
             </div>
 
             <div className={styles.content}>
               <div className="top-plans container">
                 <p className="breadcrmb">
-                  <span className="home-span">Home</span>
+                  <span className="home-span">
+                    <a href="/">Home</a>
+                  </span>
                   <span className="sep">
                     <FontAwesomeIcon className="chev" icon={faChevronRight} />
                   </span>
-                  <span>HMO Plans</span>
+                  <span>
+                    {" "}
+                    {this.state.provider_info
+                      ? this.state.provider_info["title"]
+                      : "HMO Plans"}{" "}
+                  </span>
                 </p>
 
                 <div className="container row top-plans-content-wrapper">
@@ -3275,7 +4101,7 @@ class Home extends Component<QuizProps, {}> {
                                     <span>{plan.hmo_id.name.id}</span>
 
                                     {/* <div>{plan.hmo_id.name.id}</div>
-                                    <span>{plan.name}</span> */}
+                                  <span>{plan.name}</span> */}
                                   </div>
                                 </div>
                                 <div className="tag_tabs">
@@ -3303,9 +4129,9 @@ class Home extends Component<QuizProps, {}> {
                                                     {service}
                                                   </p>
                                                   {/* <p>
-                                          Single Private A/C Room, ICU Charges
-                                          upto SI
-                                        </p> */}
+                                        Single Private A/C Room, ICU Charges
+                                        upto SI
+                                      </p> */}
                                                 </div>
                                               </div>
                                             );
@@ -3313,22 +4139,22 @@ class Home extends Component<QuizProps, {}> {
                                       : ""}
 
                                     {/* <div className="features-block">
-                                      <i
-                                        className="features-icon"
-                                        data-icon="Bonus on No Claim"
-                                      >
-                                        <FontAwesomeIcon
-                                          className="gift-icon"
-                                          icon={faGift}
-                                        />
-                                      </i>
-                                      <div>
-                                        <p className="feature-head">
-                                          Bonus on No Claim
-                                        </p>
-                                       
-                                      </div>
-                                    </div> */}
+                                    <i
+                                      className="features-icon"
+                                      data-icon="Bonus on No Claim"
+                                    >
+                                      <FontAwesomeIcon
+                                        className="gift-icon"
+                                        icon={faGift}
+                                      />
+                                    </i>
+                                    <div>
+                                      <p className="feature-head">
+                                        Bonus on No Claim
+                                      </p>
+                                     
+                                    </div>
+                                  </div> */}
                                   </div>
                                   <div className="features-action-bar">
                                     <div className="price-btn">
@@ -3397,7 +4223,7 @@ class Home extends Component<QuizProps, {}> {
                                     <span>{plan.hmo_id.name.id}</span>
 
                                     {/* <div>{plan.hmo_id.name.id}</div>
-                                    <span>{plan.name}</span> */}
+                                  <span>{plan.name}</span> */}
                                   </div>
                                 </div>
                                 <div className="tag_tabs">
@@ -3425,9 +4251,9 @@ class Home extends Component<QuizProps, {}> {
                                                     {service}
                                                   </p>
                                                   {/* <p>
-                                          Single Private A/C Room, ICU Charges
-                                          upto SI
-                                        </p> */}
+                                        Single Private A/C Room, ICU Charges
+                                        upto SI
+                                      </p> */}
                                                 </div>
                                               </div>
                                             );
@@ -3492,109 +4318,111 @@ class Home extends Component<QuizProps, {}> {
                         )}
 
                         {/* <div className="card top_plans_see_more see_more">
-                          <a href="">
-                            SEE MORE PLANS
-                            <FontAwesomeIcon
-                              className="chev"
-                              icon={faChevronRight}
-                            />
-                          </a>
-                        </div> */}
+                        <a href="">
+                          SEE MORE PLANS
+                          <FontAwesomeIcon
+                            className="chev"
+                            icon={faChevronRight}
+                          />
+                        </a>
+                      </div> */}
                       </div>
                     </section>
                   </div>
 
                   {/* <div className="col-md-4">
-                    <div className="card insurers">
-                      <div className="card_heading">HMO Providers</div>
-                      {this.props.hmos ? (
-                        this.props.hmos.map((hmo, index) => {
-                          return (
-                            <a
-                              onClick={() => this.onClickProvider(index)}
-                              href="#"
-                            >
-                              <div className="insurer_block">
-                                <div className="hmo-logo-div">
-                                  <img
-                                    className="supplier_icon insurer_logo
-                            hygeia-general-icon
-                            "
-                                    src={hmo.logo ? hmo.logo : ic_logo}
-                                    // "https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
-                                  />
-                                  &nbsp;
-                                </div>
-                                <div className="insurer_name">
-                                  <span>
-                                    {hmo.name.id}
-                                    
-                                  </span>
-                                </div>
+                  <div className="card insurers">
+                    <div className="card_heading">HMO Providers</div>
+                    {this.props.hmos ? (
+                      this.props.hmos.map((hmo, index) => {
+                        return (
+                          <a
+                            onClick={() => this.onClickProvider(index)}
+                            href="#"
+                          >
+                            <div className="insurer_block">
+                              <div className="hmo-logo-div">
+                                <img
+                                  className="supplier_icon insurer_logo
+                          hygeia-general-icon
+                          "
+                                  src={hmo.logo ? hmo.logo : ic_logo}
+                                  // "https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
+                                />
+                                &nbsp;
                               </div>
-                            </a>
-                          );
-                        })
-                      ) : (
-                        <a href="">
-                          <div className="insurer_block">
-                            <Spin />
-                          </div>
-                        </a>
-                      )}
-                    </div>
-                  </div> */}
+                              <div className="insurer_name">
+                                <span>
+                                  {hmo.name.id}
+                                  
+                                </span>
+                              </div>
+                            </div>
+                          </a>
+                        );
+                      })
+                    ) : (
+                      <a href="">
+                        <div className="insurer_block">
+                          <Spin />
+                        </div>
+                      </a>
+                    )}
+                  </div>
+                </div> */}
                 </div>
               </div>
               {/* <div className="information  container">
-                <div className="col-md-8">
-                  <div className="hmo-def">
-                    <h5>Health Management Organizations (HMOs)</h5>
-                    <p>
-                      HMO is an acronym for a “Health Maintenance Organisation”.
-                      HMOs are organizations mandated solely to manage the
-                      provision of health care services through Health Care
-                      Facilities (Hospitals, Opticians, Dentists etc) accredited
-                      by the Scheme. Basically, they are an intermediary between
-                      the hospital and individuals/ companies seeking to provide
-                      healthcare for themselves, families or employees.
-                    </p>
-                  </div>
-                  <div className="hmo-plans-dev"></div>
-                  <h5>HMO Plans</h5>
+              <div className="col-md-8">
+                <div className="hmo-def">
+                  <h5>Health Management Organizations (HMOs)</h5>
                   <p>
-                    HMO plans offer a wide range of healthcare services through
-                    a network of providers who agree to supply services to
-                    members. With an HMO you'll likely have coverage for a
-                    broader range of preventive healthcare services than you
-                    would through another type of plan.
+                    HMO is an acronym for a “Health Maintenance Organisation”.
+                    HMOs are organizations mandated solely to manage the
+                    provision of health care services through Health Care
+                    Facilities (Hospitals, Opticians, Dentists etc) accredited
+                    by the Scheme. Basically, they are an intermediary between
+                    the hospital and individuals/ companies seeking to provide
+                    healthcare for themselves, families or employees.
                   </p>
-                  <div className="hmo-plans-importance">
-                    <h5>Importance of HMO plans</h5>
-                    <p>
-                      With the increased demand for quality healthcare services,
-                      medical treatment has now become quite expensive,
-                      especially in the private hospitals. And without health
-                      insurance, the hospital bills are enough to drain one's
-                      savings.
-                    </p>
-                    <p>
-                      Therefore, an HMO plan becomes an absolute necessity as it
-                      offers coverage to the insured individual, family members
-                      against the exorbitant hospital expenses in case of an
-                      accident or illness.
-                    </p>
-                    <p>
-                      We at InstaCare can help you buy the right HMO plan that
-                      suits your requirement below is the list of HMO plans with
-                      the top providers. You can do the comparison and find the
-                      best health plan for your family.
-                    </p>
-                  </div>
                 </div>
-              </div> */}
+                <div className="hmo-plans-dev"></div>
+                <h5>HMO Plans</h5>
+                <p>
+                  HMO plans offer a wide range of healthcare services through
+                  a network of providers who agree to supply services to
+                  members. With an HMO you'll likely have coverage for a
+                  broader range of preventive healthcare services than you
+                  would through another type of plan.
+                </p>
+                <div className="hmo-plans-importance">
+                  <h5>Importance of HMO plans</h5>
+                  <p>
+                    With the increased demand for quality healthcare services,
+                    medical treatment has now become quite expensive,
+                    especially in the private hospitals. And without health
+                    insurance, the hospital bills are enough to drain one's
+                    savings.
+                  </p>
+                  <p>
+                    Therefore, an HMO plan becomes an absolute necessity as it
+                    offers coverage to the insured individual, family members
+                    against the exorbitant hospital expenses in case of an
+                    accident or illness.
+                  </p>
+                  <p>
+                    We at InstaCare can help you buy the right HMO plan that
+                    suits your requirement below is the list of HMO plans with
+                    the top providers. You can do the comparison and find the
+                    best health plan for your family.
+                  </p>
+                </div>
+              </div>
+            </div> */}
             </div>
           </div>
+          {/* )} */}
+
           <AppFooter
             //  handleProviderClick={this.onClickProvider}
             {...this.props}

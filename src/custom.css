@@ -1914,7 +1914,7 @@ h5.float-left.top-plans,
 
 .features-action-bar .price-btn .price h5 {
   display: block;
-  color: #333333!important;
+  color: #333333 !important;
   font-weight: bolder;
   font-size: 18px;
 }
@@ -1982,9 +1982,9 @@ ul {
   /* padding-left: 0; */
   /* padding-right: 0; */
   font-size: 18px;
-    /* padding-right: 0; */
-    font-weight: bolder;
-    color: #333333;
+  /* padding-right: 0; */
+  font-weight: bolder;
+  color: #333333;
 }
 
 p.feature-head {
@@ -5812,7 +5812,8 @@ span.logo-widget.widget-insurer-logo {
 
 .plan-features .features-block p {
   color: #aeb6bf !important;
-  font-size: 12px !important;}
+  font-size: 12px !important;
+}
 
 .plan-features .features-block i {
   background: none !important;
@@ -5902,5 +5903,154 @@ span.logo-widget.widget-insurer-logo {
     flex-direction: column;
     margin-top: 15px;
 }
+
+/* skeleton */
+
+.insurerDetails {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #172b4d;
+  font-weight: 400;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+    Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+  letter-spacing: 0;
+  scroll-behavior: smooth;
+  outline: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  margin-top: 119px;
+  float: left;
+  width: 600px;
+  margin-left: 60px;
 }
 
+.skeleton {
+  position: relative;
+  background-color: #efefef !important;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.insurerLogo.skeleton {
+  height: 60px;
+  margin-bottom: 30px;
+}
+
+.skeleton::after {
+  top: 0;
+  display: block;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  animation: loading 0.7s infinite;
+}
+
+.h1.skeleton {
+  height: 36px;
+}
+
+@media only screen and (min-width: 568px) {
+  .insurerDetails .insurerFeatures {
+    max-width: 100%;
+  }
+}
+.insurerDetails .insurerFeatures {
+  height: 114px;
+  padding-top: 27px;
+  width: 100%;
+}
+
+@media only screen and (min-width: 568px) {
+  .insurerDetails .insurerFeatures .features {
+    display: flex !important;
+  }
+}
+.insurerDetails .insurerFeatures .features .block {
+  display: flex;
+  /* width: 33%; */
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  margin-right: 12px;
+}
+.insurerFeatures .features .block.skeleton {
+  height: 71px;
+}
+
+.clearfix:after {
+  display: block;
+  visibility: hidden;
+  height: 0;
+  font-size: 0;
+  content: ".";
+  clear: both;
+}
+
+/*.ant-col.banner-text.ant-col-xs-24.ant-col-md-16 {
+  display: flex !important;
+  align-items: flex-end;
+}
+
+ .svg-and-text {
+  display: flex !important;
+  align-items: flex-end;
+} */
+
+.provider-banner .provider-data .svg-img {
+  margin-bottom: 30px;
+  /* width: auto !important; */
+  width: 80px !important;
+  background: #fff;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.provider-banner div#bannertext {
+  padding-top: 0px !important;
+}
+
+.card-text p {
+  margin-bottom: 0px !important;
+}
+
+.card-text {
+  display: flex;
+  flex-direction: column;
+  margin-left: 0.5rem;
+  justify-content: flex-end;
+}
+
+.ant-col.banner-container.provider-banner.ant-col-xs-24.ant-col-md-16 {
+  margin-top: 3rem;
+}
+
+.cheapest-plan {
+  margin: 0px 0.5rem !important;
+  width: 10% !important;
+  display: inherit !important;
+}
+
+.provider-data img {
+  height: 60px !important;
+  width: auto !important;
+}
+
+/* temporary */
+@media (max-width: 768px) {
+  .ant-col.banner-container.provider-banner.ant-col-xs-24.ant-col-md-16 {
+    display: none !important;
+  }
+}
+}
