@@ -570,27 +570,34 @@ class Home extends Component<QuizProps, {}> {
         data: false,
       });
       if (formelo_resp || formelo_resp.length !== 0) {
-        for (let i = 0; i < formelo_resp.length; i++) {
-          plans.push(formelo_resp[i].data);
-        }
+        // for (let i = 0; i < formelo_resp.length; i++) {
+        //   plans.push(formelo_resp[i].data);
+        // }
+
+        plans = formelo_resp.map((obj) => obj.data);
 
         for (let j = 0; j < plans.length; j++) {
           let hmoID = plans[j]["hmo_id"].id;
+          console.log("hmoID", hmoID);
           let servicesString = plans[j]["service_id"];
           let services = servicesString ? JSON.parse(servicesString) : "";
 
-          const hmo_res = await fetch(`${API_URL}/api/hmos?id=${hmoID}`, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "GET",
-          });
+          // const hmo_res = await fetch(`${API_URL}/api/hmos?id=${hmoID}`, {
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   method: "GET",
+          // });
+
+          let hmo_res = this.props.hmos.filter((hmo) => hmo.id == hmoID);
+          console.log("hmo_res", hmo_res);
 
           if (hmo_res) {
-            let hmo_resp = await hmo_res.json();
+            //let hmo_resp = await hmo_res.json();
+            let hmo_resp = hmo_res[0];
             //console.log("hmo_resp", hmo_resp);
 
-            plans[j]["hmo_id"] = hmo_resp.data;
+            plans[j]["hmo_id"] = hmo_resp;
             plans[j]["service_id"] = services;
           }
         }
@@ -624,13 +631,17 @@ class Home extends Component<QuizProps, {}> {
         data: false,
       });
       if (formelo_resp || formelo_resp.length !== 0) {
-        for (let i = 0; i < formelo_resp.length; i++) {
-          hmos.push(formelo_resp[i].data);
-        }
+        // for (let i = 0; i < formelo_resp.length; i++) {
+        //   hmos.push(formelo_resp[i].data);
+        // }
 
         // formelo_resp.map((hmo) => {
         //   hmos.push(hmo.data);
         // });
+
+        hmos = formelo_resp.map((obj) => {
+          return { id: obj.id, ...obj.data };
+        });
 
         this.props.dispatch({
           type: actions.GET_HMOS,
@@ -661,9 +672,11 @@ class Home extends Component<QuizProps, {}> {
         data: false,
       });
       if (formelo_resp || formelo_resp.length !== 0) {
-        for (let i = 0; i < formelo_resp.length; i++) {
-          services.push(formelo_resp[i].data);
-        }
+        // for (let i = 0; i < formelo_resp.length; i++) {
+        //   services.push(formelo_resp[i].data);
+        // }
+
+        services = formelo_resp.map((obj) => obj.data);
 
         this.props.dispatch({
           type: actions.GET_SERVICES,
@@ -694,9 +707,10 @@ class Home extends Component<QuizProps, {}> {
         data: false,
       });
       if (formelo_resp || formelo_resp.length !== 0) {
-        for (let i = 0; i < formelo_resp.length; i++) {
-          providers.push(formelo_resp[i].data);
-        }
+        providers = formelo_resp.map((obj) => obj.data);
+        // for (let i = 0; i < formelo_resp.length; i++) {
+        //   providers.push(formelo_resp[i].data);
+        // }
 
         this.props.dispatch({
           type: actions.GET_PROVIDERS,
@@ -2932,7 +2946,7 @@ class Home extends Component<QuizProps, {}> {
     //console.log("this.props.providers", this.props.providers);
     //console.log("this.props.plans", this.props.plans);
     console.log("this.props", this.props);
-    console.log("this.state", this.state);
+    //console.log("this.state", this.state);
 
     let current;
     if (this.props.page != 0) {
