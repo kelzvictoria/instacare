@@ -346,9 +346,9 @@ class Home extends Component<QuizProps, {}> {
   }
 
   async UNSAFE_componentWillMount() {
-    this.fetchHmos();
-    this.fetchProviders();
-    this.fetchServices();
+    await this.fetchHmos();
+    // this.fetchProviders();
+    // this.fetchServices();
     await this.fetchPlans();
 
     console.log("this.props.match", this.props.match);
@@ -434,7 +434,7 @@ class Home extends Component<QuizProps, {}> {
               <div className="col-md-4 card mr-3">
                 <span className="naira banner-icon">₦</span>
                 <div className="card-text">
-                  <p>Plans Starting @</p>
+                  <p>Plans Starting from</p>
                   <h5>{this.numberwithCommas(this.getCheapestPlanByHMO())}</h5>
                 </div>
               </div>
@@ -473,7 +473,7 @@ class Home extends Component<QuizProps, {}> {
                   Find Health Plans Starting
                   <br />
                   <span className={styles.headingSpan}>
-                    @
+                    from
                     {
                       this.props.plans.length == 0 && (
                         <Spin className="cheapest-plan" />
@@ -4184,7 +4184,7 @@ class Home extends Component<QuizProps, {}> {
                                   <div className="features-action-bar">
                                     <div className="price-btn">
                                       <div className="price">
-                                        <span>Starting @ </span>
+                                        <span>Starting from </span>
                                         <h5 className="check-premium">
                                           {" "}
                                           ₦
@@ -4288,7 +4288,7 @@ class Home extends Component<QuizProps, {}> {
                                   <div className="features-action-bar">
                                     <div className="price-btn">
                                       <div className="price">
-                                        <span>Starting @ </span>
+                                        <span>Starting from </span>
                                         <h5 className="check-premium">
                                           {" "}
                                           ₦

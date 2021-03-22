@@ -1118,7 +1118,7 @@ class PlanDetails extends Component<DetailsProps> {
                     <div className="col-md-12 details-header">
                       <div className="">
                         <div className="compare-first-row row">
-                          <div className="col-md-4">
+                          <div className="col-md-4 p-logo">
                             <img
                               className="provider-logo"
                               src={plan.hmo_id.logo}
@@ -1688,11 +1688,13 @@ class PlanDetails extends Component<DetailsProps> {
                               Top Hospitals
                             </div>
                             <ul className="features_hosp_list">
-                              {JSON.parse(plan.hmo_id.provider_id).map(
-                                (provider) => {
-                                  return <li>{provider}</li>;
-                                }
-                              )}
+                              {plan.hmo_id.provider_id
+                                ? JSON.parse(plan.hmo_id.provider_id).map(
+                                    (provider) => {
+                                      return <li>{provider}</li>;
+                                    }
+                                  )
+                                : ""}
                             </ul>
                             {/* <div className="features_hospital_catHead">
                         Other Hospitals

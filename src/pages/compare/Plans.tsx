@@ -55,6 +55,8 @@ import AppFooter from "../../components/app-footer/AppFooter";
 
 import { options } from "../home/Options";
 
+import { hmoKeysMapping } from "../home/hmoMapping";
+
 const { Title } = Typography;
 const { Panel } = Collapse;
 const { Meta } = Card;
@@ -405,7 +407,115 @@ class Plans extends Component<PlansProps> {
     this.toggleFeaturesModal();
   }
 
+  async fetchHmos() {
+    this.props.dispatch({
+      type: actions.IS_FETCHING_HMOS,
+      data: true,
+    });
+    const res = await fetch(`${API_URL}/api/hmos`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (res) {
+      let hmos: object[] = [];
+      let formelo_resp = await res.json();
+      this.props.dispatch({
+        type: actions.IS_FETCHING_HMOS,
+        data: false,
+      });
+      if (formelo_resp || formelo_resp.length !== 0) {
+        // for (let i = 0; i < formelo_resp.length; i++) {
+        //   hmos.push(formelo_resp[i].data);
+        // }
+
+        // formelo_resp.map((hmo) => {
+        //   hmos.push(hmo.data);
+        // });
+
+        hmos = formelo_resp.map((obj) => {
+          return { id: obj.id, ...obj.data };
+        });
+
+        this.props.dispatch({
+          type: actions.GET_HMOS,
+          data: hmos,
+        });
+        return;
+      }
+    }
+  }
+
   async fetchPlans() {
+    await this.fetchHmos();
+
+    this.props.dispatch({
+      type: actions.IS_FETCHING_PLANS,
+      data: true,
+    });
+    const res = await fetch(`${API_URL}/api/plans`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "GET",
+    });
+
+    if (res) {
+      let plans: object[] = [];
+      let formelo_resp = await res.json();
+      this.props.dispatch({
+        type: actions.IS_FETCHING_PLANS,
+        data: false,
+      });
+      if (formelo_resp || formelo_resp.length !== 0) {
+        // for (let i = 0; i < formelo_resp.length; i++) {
+        //   plans.push(formelo_resp[i].data);
+        // }
+
+        plans = formelo_resp.map((obj) => obj.data);
+
+        for (let j = 0; j < plans.length; j++) {
+          let hmoID = plans[j]["hmo_id"].id;
+          console.log("hmoID", hmoID);
+          let servicesString = plans[j]["service_id"];
+          let services = servicesString ? JSON.parse(servicesString) : "";
+
+          // const hmo_res = await fetch(`${API_URL}/api/hmos?id=${hmoID}`, {
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   },
+          //   method: "GET",
+          // });
+
+          let hmoDocumentID = hmoKeysMapping[hmoID];
+
+          let hmo_res = this.props.hmos.filter(
+            (hmo) => hmo.id == hmoDocumentID
+          );
+          console.log("hmo_res", hmo_res);
+
+          if (hmo_res) {
+            //let hmo_resp = await hmo_res.json();
+            let hmo_resp = hmo_res[0];
+            //console.log("hmo_resp", hmo_resp);
+
+            plans[j]["hmo_id"] = hmo_resp;
+            plans[j]["service_id"] = services;
+          }
+        }
+
+        this.props.dispatch({
+          type: actions.GET_PLANS,
+          data: plans,
+        });
+        return;
+      }
+    }
+  }
+
+  /*  async fetchPlans() {
     this.props.dispatch({
       type: actions.IS_FETCHING_PLANS,
       data: true,
@@ -462,7 +572,7 @@ class Plans extends Component<PlansProps> {
         return;
       }
     }
-  }
+  } */
 
   async loadRecommendations() {
     this.props.dispatch({
@@ -477,7 +587,7 @@ class Plans extends Component<PlansProps> {
     await this.fetchPlans();
     console.log("this.props.plans", this.props.plans);
     if (this.props.plans) {
-      for (let i = 0; i < this.props.plans.length; i++) {
+      /* for (let i = 0; i < this.props.plans.length; i++) {
         if (
           //this.props.this.props.plansponses.num_of_people == 1 &&
           this.props.plans[i].category_id["id"] == "personal"
@@ -496,12 +606,26 @@ class Plans extends Component<PlansProps> {
           console.log("others");
           others.push(this.props.plans[i]);
         }
-      }
+      }*/
 
-      console.log(
-        "this.props.quiz.responses.num_of_people",
-        this.props.quiz.responses.num_of_people
+      individual_plans = this.props.plans.filter(
+        (plan) => plan.category_id["id"] == "personal"
       );
+
+      family_plans = this.props.plans.filter(
+        (plan) => plan.category_id["id"] == "family"
+      );
+
+      others = this.props.plans.filter(
+        (plan) =>
+          plan.category_id["id"] !== "personal" &&
+          plan.category_id["id"] !== "family"
+      );
+
+      // console.log(
+      //   "this.props.quiz.responses.num_of_people",
+      //   this.props.quiz.responses.num_of_people
+      // );
       if (
         //this.props.quiz.responses.num_of_people === 1
         this.props.quiz.responses.type == "single"
