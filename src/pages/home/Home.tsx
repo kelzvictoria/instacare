@@ -53,6 +53,8 @@ import ratiosvg from "../../svgs/claim_ratio.svg";
 import HMOInfoSkeleton from "../../components/skeletons/SkeletonHMOInfo";
 import CheapestPlanSkeleton from "../../components/skeletons/SkeletonCheapestPlan";
 
+import { hmoKeysMapping } from "./hmoMapping";
+
 // import {
 //   verifyPhoneNumber,
 //   sanitizePhoneNumber,
@@ -589,7 +591,11 @@ class Home extends Component<QuizProps, {}> {
           //   method: "GET",
           // });
 
-          let hmo_res = this.props.hmos.filter((hmo) => hmo.id == hmoID);
+          let hmoDocumentID = hmoKeysMapping[hmoID];
+
+          let hmo_res = this.props.hmos.filter(
+            (hmo) => hmo.id == hmoDocumentID
+          );
           console.log("hmo_res", hmo_res);
 
           if (hmo_res) {
@@ -2946,6 +2952,7 @@ class Home extends Component<QuizProps, {}> {
     //console.log("this.props.providers", this.props.providers);
     //console.log("this.props.plans", this.props.plans);
     console.log("this.props", this.props);
+    console.log("hmoKeys Mapping", hmoKeysMapping);
     //console.log("this.state", this.state);
 
     let current;
@@ -4116,7 +4123,7 @@ class Home extends Component<QuizProps, {}> {
                                   </div>
                                   <div className="title-h6">
                                     <div>{plan.name}</div>
-                                    <span>{plan.hmo_id.name.id}</span>
+                                    <span>{plan.hmo_id.name.text}</span>
 
                                     {/* <div>{plan.hmo_id.name.id}</div>
                                   <span>{plan.name}</span> */}
@@ -4238,7 +4245,7 @@ class Home extends Component<QuizProps, {}> {
                                   </div>
                                   <div className="title-h6">
                                     <div>{plan.name}</div>
-                                    <span>{plan.hmo_id.name.id}</span>
+                                    <span>{plan.hmo_id.name.text}</span>
 
                                     {/* <div>{plan.hmo_id.name.id}</div>
                                   <span>{plan.name}</span> */}
