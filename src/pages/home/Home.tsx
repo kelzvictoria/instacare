@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import {
   Button,
-  Icon,
   Row,
   Col,
   Steps,
@@ -11,16 +9,13 @@ import {
   Form,
   Card,
   Spin,
-  Skeleton,
 } from "antd";
 import {
-  faHome,
   faShieldAlt,
   faMale,
   faFemale,
   faArrowLeft,
   faSmile,
-  faProcedures,
   faGift,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
@@ -35,37 +30,22 @@ import Modal from "react-bootstrap/Modal";
 import { connect } from "react-redux";
 import * as actions from "../../utils/actions";
 
-import { Select } from "./Select";
-import { sections } from "./sections";
-
 import { options } from "./Options";
 import { child_options } from "./ChildOptions";
 
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
-import Plans from "../compare/Plans";
-
-import ic_logo from "../../imgs/logo2.png";
 
 import hospitalsvg from "../../svgs/hospitals.svg";
 import ratiosvg from "../../svgs/claim_ratio.svg";
 
 import HMOInfoSkeleton from "../../components/skeletons/SkeletonHMOInfo";
-import CheapestPlanSkeleton from "../../components/skeletons/SkeletonCheapestPlan";
 
 import { hmoKeysMapping } from "./hmoMapping";
 
-// import {
-//   verifyPhoneNumber,
-//   sanitizePhoneNumber,
-//   COUNTRY_CODE,
-// } from "nigerian-phone-number-validator";
-
 const { Step } = Steps;
-const { Meta } = Card;
 
 const API_URL = "https://instacareconnect.pmglobaltechnology.com";
-const TEST_URL = "http://localhost:5000";
 
 interface QuizProps {
   [x: string]: any;
@@ -120,7 +100,6 @@ interface QuizProps {
 }
 
 class Home extends Component<QuizProps, {}> {
-  //private sonCheck = React.createRef<HTMLInputElement>();
   constructor(props) {
     super(props);
     this.handleType = this.handleType.bind(this);
@@ -284,10 +263,6 @@ class Home extends Component<QuizProps, {}> {
   };
 
   mobileToggleModal = () => {
-    // this.setState({
-    //   isMobileViewModalOpen: !this.props.isMobileViewModalOpen,
-    // });
-
     // if (
     //   !this.props.responses.phone_num ||
     //   this.props.responses.phone_num.length < 14
@@ -306,9 +281,6 @@ class Home extends Component<QuizProps, {}> {
   };
 
   toggleOthersInput = () => {
-    // this.setState({
-    //   isOthersInputOpen: !this.props.isOthersInputOpen,
-    // });
     this.props.dispatch({
       type: actions.TOGGLE_OTHERS_MODAL,
       data: { key: "isOthersInputOpen", value: !this.props.isOthersInputOpen },
@@ -316,8 +288,6 @@ class Home extends Component<QuizProps, {}> {
   };
 
   changePage = (action: string) => {
-    //console.log('called me?');
-
     this.props.dispatch({ type: actions.CHANGE_PAGE, data: action });
   };
 
@@ -389,19 +359,12 @@ class Home extends Component<QuizProps, {}> {
   }
 
   hmoBannerDiv(hmoId) {
-    console.log("this.hmos", this.hmos, "hmoId", hmoId);
-
     const hmoArr = this.hmos.filter((hmo) => hmo["id"] == hmoId);
 
-    console.log("hmoArr", hmoArr);
     let data;
     if (hmoId) {
       data = this.props.hmos.filter((hmo) => hmo.name.id == hmoArr[0].name);
 
-      console.log("data", data);
-
-      //let hospitals = data.provider_id ? JSON.parse(data.provider_id).length : 0;
-      //console.log("hospitals", hospitals);
       return (
         <Col xs={24} md={16} className="banner-container provider-banner">
           <div className="svg-and-text provider-data">
@@ -412,7 +375,6 @@ class Home extends Component<QuizProps, {}> {
             <div className={styles.bannerContent} id="bannertext">
               <p className={styles.textHeading}>
                 {this.state.provider_info["title"]}
-                {/* {data[0].name.id} */}
               </p>
             </div>
           </div>
@@ -420,7 +382,6 @@ class Home extends Component<QuizProps, {}> {
           <div className="banner-bottom">
             <div className="row col-md-12">
               <div className="col-md-4 card mr-3">
-                {/* <FontAwesomeIcon className="banner-icon" icon={faShieldAlt} /> */}
                 <img src={hospitalsvg} className="banner-icon" />
                 <div className="card-text">
                   <p>Hospital Network</p>
@@ -439,7 +400,6 @@ class Home extends Component<QuizProps, {}> {
                 </div>
               </div>
               <div className="col-md-4 card">
-                {/* <FontAwesomeIcon className="far banner-icon" icon={faSmile} /> */}
                 <img src={ratiosvg} className="banner-icon" />
                 <div className="card-text">
                   <p>Claim Ratio</p>
@@ -474,12 +434,9 @@ class Home extends Component<QuizProps, {}> {
                   <br />
                   <span className={styles.headingSpan}>
                     from
-                    {
-                      this.props.plans.length == 0 && (
-                        <Spin className="cheapest-plan" />
-                      )
-                      // <CheapestPlanSkeleton />
-                    }
+                    {this.props.plans.length == 0 && (
+                      <Spin className="cheapest-plan" />
+                    )}
                     {this.props.plans.length > 0 &&
                       ` ₦${this.numberwithCommas(this.getCheapestPlan())}`}
                     /year
@@ -520,29 +477,17 @@ class Home extends Component<QuizProps, {}> {
   }
 
   async getPlansByHMO(hmoId) {
-    //console.log("hmoId", hmoId);
-    //console.log("this.props.plans", this.props.plans);
-
-    //  console.log("this.hmos[0].id", this.hmos[0].id);
-
     const hmoName = this.hmos.filter((hmo) => hmo["id"] == hmoId);
 
-    // console.log("hmoName[0].name", hmoName[0].name);
-
     if (hmoId) {
-      const hmoPlans = await this.props.plans.filter(
-        (plan) => {
-          console.log("plan.hmo_id.name.id", plan.hmo_id.name.id);
-          return plan.hmo_id.name.id == hmoName[0].name;
-        } //data.name.id
-      );
+      const hmoPlans = await this.props.plans.filter((plan) => {
+        return plan.hmo_id.name.id == hmoName[0].name;
+      });
 
       this.setState({
         provider_plans: hmoPlans,
         filter_plans_by_hmo: true,
       });
-
-      console.log("hmoPlans", hmoPlans);
 
       return {
         hmoPlans,
@@ -572,36 +517,22 @@ class Home extends Component<QuizProps, {}> {
         data: false,
       });
       if (formelo_resp || formelo_resp.length !== 0) {
-        // for (let i = 0; i < formelo_resp.length; i++) {
-        //   plans.push(formelo_resp[i].data);
-        // }
-
         plans = formelo_resp.map((obj) => obj.data);
 
         for (let j = 0; j < plans.length; j++) {
           let hmoID = plans[j]["hmo_id"].id;
-          console.log("hmoID", hmoID);
+
           let servicesString = plans[j]["service_id"];
           let services = servicesString ? JSON.parse(servicesString) : "";
-
-          // const hmo_res = await fetch(`${API_URL}/api/hmos?id=${hmoID}`, {
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //   },
-          //   method: "GET",
-          // });
 
           let hmoDocumentID = hmoKeysMapping[hmoID];
 
           let hmo_res = this.props.hmos.filter(
             (hmo) => hmo.id == hmoDocumentID
           );
-          console.log("hmo_res", hmo_res);
 
           if (hmo_res) {
-            //let hmo_resp = await hmo_res.json();
             let hmo_resp = hmo_res[0];
-            //console.log("hmo_resp", hmo_resp);
 
             plans[j]["hmo_id"] = hmo_resp;
             plans[j]["service_id"] = services;
@@ -637,14 +568,6 @@ class Home extends Component<QuizProps, {}> {
         data: false,
       });
       if (formelo_resp || formelo_resp.length !== 0) {
-        // for (let i = 0; i < formelo_resp.length; i++) {
-        //   hmos.push(formelo_resp[i].data);
-        // }
-
-        // formelo_resp.map((hmo) => {
-        //   hmos.push(hmo.data);
-        // });
-
         hmos = formelo_resp.map((obj) => {
           return { id: obj.id, ...obj.data };
         });
@@ -678,10 +601,6 @@ class Home extends Component<QuizProps, {}> {
         data: false,
       });
       if (formelo_resp || formelo_resp.length !== 0) {
-        // for (let i = 0; i < formelo_resp.length; i++) {
-        //   services.push(formelo_resp[i].data);
-        // }
-
         services = formelo_resp.map((obj) => obj.data);
 
         this.props.dispatch({
@@ -714,9 +633,6 @@ class Home extends Component<QuizProps, {}> {
       });
       if (formelo_resp || formelo_resp.length !== 0) {
         providers = formelo_resp.map((obj) => obj.data);
-        // for (let i = 0; i < formelo_resp.length; i++) {
-        //   providers.push(formelo_resp[i].data);
-        // }
 
         this.props.dispatch({
           type: actions.GET_PROVIDERS,
@@ -724,13 +640,11 @@ class Home extends Component<QuizProps, {}> {
         });
         return;
       }
-      console.log("providers", providers);
     }
   }
 
   async fetchRecommendedPlans() {
     this.handleNumOfPeopleCount();
-    // console.log("this.props", this.props);
     let rec_plans: object[] = [];
     let family_plans: object[] = [];
     let individual_plans: object[] = [];
@@ -740,26 +654,21 @@ class Home extends Component<QuizProps, {}> {
       data: true,
     });
     let res = await this.props.plans;
-    console.log("res", res);
+
     if (res) {
       if (res.length !== 0) {
         for (let i = 0; i < res.length; i++) {
-          console.log("res[i].category_id.id:", res[i].category_id.id);
           if (
             //this.props.responses.num_of_people == 1 &&
             res[i].category_id.id == "personal"
           ) {
-            console.log("personal");
             individual_plans.push(res[i]);
-            //rec_plans.push(res[i]);
           }
 
           if (
             //this.props.responses.num_of_people > 1 &&
             res[i].category_id.id == "famiy"
           ) {
-            console.log("family");
-            // rec_plans.push(res[i]);
             family_plans.push(res[i]);
           }
         }
@@ -1358,7 +1267,7 @@ class Home extends Component<QuizProps, {}> {
                   className="chkMembers"
                   defaultChecked={false}
                   onChange={(e) => {
-                    this.handleSonBoxChecked(e.target.value);
+                    this.handleSonBoxChecked();
                   }}
                   id="son"
                 ></input>
@@ -1529,7 +1438,7 @@ class Home extends Component<QuizProps, {}> {
                   className="chkMembers"
                   defaultChecked={false}
                   onChange={(e) => {
-                    this.handleDaughterBoxChecked(e.target.value);
+                    this.handleDaughterBoxChecked();
                   }}
                   id="daughter"
                 ></input>
@@ -1937,14 +1846,14 @@ class Home extends Component<QuizProps, {}> {
             this.fetchRecommendedPlans();
           }
         }
-        console.log(
-          "this.props.isMobileViewModalOpen",
-          this.props.isMobileViewModalOpen,
-          "currentPage",
-          currentPage,
-          "this.props.isDesktopView",
-          this.props.isDesktopView
-        );
+        // console.log(
+        //   "this.props.isMobileViewModalOpen",
+        //   this.props.isMobileViewModalOpen,
+        //   "currentPage",
+        //   currentPage,
+        //   "this.props.isDesktopView",
+        //   this.props.isDesktopView
+        // );
       }
       if (currentPage == 3 && this.props.isDesktopView) {
         if (this.props.responses.state == "") {
@@ -1960,13 +1869,13 @@ class Home extends Component<QuizProps, {}> {
       }
 
       if (currentPage >= this.props.maxPage) {
-        console.log("this.props.responses", this.props.responses);
-        console.log(
-          "currentPage",
-          currentPage,
-          "this.props.maxPage",
-          this.props.maxPage
-        );
+        // console.log("this.props.responses", this.props.responses);
+        // console.log(
+        //   "currentPage",
+        //   currentPage,
+        //   "this.props.maxPage",
+        //   this.props.maxPage
+        // );
         this.submitResponses();
         return;
       }
@@ -2016,7 +1925,7 @@ class Home extends Component<QuizProps, {}> {
     if (value == 2 && this.props.responses.children == 0) {
       this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "couple" });
     }
-    console.log(this.props.responses.type);
+    //console.log(this.props.responses.type);
   };
 
   handleChildren = (value) => {
@@ -2121,7 +2030,7 @@ class Home extends Component<QuizProps, {}> {
     });
   }
 
-  handleSonBoxChecked(val) {
+  handleSonBoxChecked() {
     console.log(this);
     this.props.dispatch({
       type: actions.UPDATE_SON_CHECKED,
@@ -2132,7 +2041,7 @@ class Home extends Component<QuizProps, {}> {
     });
   }
 
-  handleDaughterBoxChecked(val) {
+  handleDaughterBoxChecked() {
     this.props.dispatch({
       type: actions.UPDATE_DAUGHTER_CHECKED,
       data: {
@@ -2159,7 +2068,7 @@ class Home extends Component<QuizProps, {}> {
       });
     }
 
-    console.log("this.props.sonCount", this.props.sonCount);
+    //  console.log("this.props.sonCount", this.props.sonCount);
   }
 
   incrementDaughterCount() {
@@ -2198,100 +2107,6 @@ class Home extends Component<QuizProps, {}> {
 
   renderQuizPages() {
     //console.log('d open')
-    const page1 = (
-      <div id="firstPage">
-        <div className="form-group">
-          <div className="col-md-12">
-            <label>I am a</label>
-            <div className="radios">
-              <label>
-                <input
-                  type="radio"
-                  value="m"
-                  name="radio-group-gender"
-                  defaultChecked={this.defaultGender()}
-                  onChange={(e) => {
-                    this.handleGender(e.target.value);
-                  }}
-                  className="radio-group-gender"
-                ></input>
-                <span>
-                  <FontAwesomeIcon
-                    className="gender icons-gender male"
-                    icon={faMale}
-                  />
-
-                  <em>Male</em>
-                </span>
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="f"
-                  name="radio-group-gender"
-                  className="radio-group-gender"
-                  onChange={(e) => {
-                    this.handleGender(e.target.value);
-                  }}
-                ></input>
-                <span>
-                  <FontAwesomeIcon
-                    className="gender icons-gender female"
-                    icon={faFemale}
-                  />
-                  <em>Female</em>
-                </span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <div className="col-md-12">
-            <label>My name is</label>
-          </div>
-
-          <div className="col-md-12">
-            <input
-              className="form-control"
-              placeholder="Full Name"
-              // required={true}
-              onChange={(e) => {
-                this.handleFullName(e.target.value);
-              }}
-              value={this.props.responses.full_name}
-            ></input>
-          </div>
-        </div>
-        <div className="form-group">
-          <div className="col-md-12">
-            <label>My number is</label>
-          </div>
-
-          <div className="col-md-12">
-            <PhoneInput
-              className={
-                this.state.is_phone_valid
-                  ? "form-control input-phone input-phone-desktop"
-                  : "form-control input-phone input-phone-desktop invalid"
-              }
-              placeholder="11 - digit mobile number"
-              //required={true}
-              onChange={
-                // (e) => {
-                this.handlePhone
-                //   (e.target.value);
-                // }
-              }
-              defaultCountry="NG"
-              value={this.props.responses.phone_num}
-              type="phone"
-              maxLength="13"
-            />
-          </div>
-        </div>
-      </div>
-    );
 
     const page2 = (
       <div id="secondPage">
@@ -2549,8 +2364,6 @@ class Home extends Component<QuizProps, {}> {
       return page3;
     }
 
-    //console.log("this.props.page", this.props.page);
-    //console.log(this.props.responses)
     return <p>Not enough responses collected!</p>;
   }
 
@@ -2952,7 +2765,7 @@ class Home extends Component<QuizProps, {}> {
     //console.log("this.props.providers", this.props.providers);
     //console.log("this.props.plans", this.props.plans);
     console.log("this.props", this.props);
-    console.log("hmoKeys Mapping", hmoKeysMapping);
+    //console.log("hmoKeys Mapping", hmoKeysMapping);
     //console.log("this.state", this.state);
 
     let current;
@@ -4400,53 +4213,6 @@ class Home extends Component<QuizProps, {}> {
                 </div> */}
                 </div>
               </div>
-              {/* <div className="information  container">
-              <div className="col-md-8">
-                <div className="hmo-def">
-                  <h5>Health Management Organizations (HMOs)</h5>
-                  <p>
-                    HMO is an acronym for a “Health Maintenance Organisation”.
-                    HMOs are organizations mandated solely to manage the
-                    provision of health care services through Health Care
-                    Facilities (Hospitals, Opticians, Dentists etc) accredited
-                    by the Scheme. Basically, they are an intermediary between
-                    the hospital and individuals/ companies seeking to provide
-                    healthcare for themselves, families or employees.
-                  </p>
-                </div>
-                <div className="hmo-plans-dev"></div>
-                <h5>HMO Plans</h5>
-                <p>
-                  HMO plans offer a wide range of healthcare services through
-                  a network of providers who agree to supply services to
-                  members. With an HMO you'll likely have coverage for a
-                  broader range of preventive healthcare services than you
-                  would through another type of plan.
-                </p>
-                <div className="hmo-plans-importance">
-                  <h5>Importance of HMO plans</h5>
-                  <p>
-                    With the increased demand for quality healthcare services,
-                    medical treatment has now become quite expensive,
-                    especially in the private hospitals. And without health
-                    insurance, the hospital bills are enough to drain one's
-                    savings.
-                  </p>
-                  <p>
-                    Therefore, an HMO plan becomes an absolute necessity as it
-                    offers coverage to the insured individual, family members
-                    against the exorbitant hospital expenses in case of an
-                    accident or illness.
-                  </p>
-                  <p>
-                    We at InstaCare can help you buy the right HMO plan that
-                    suits your requirement below is the list of HMO plans with
-                    the top providers. You can do the comparison and find the
-                    best health plan for your family.
-                  </p>
-                </div>
-              </div>
-            </div> */}
             </div>
           </div>
           {/* )} */}

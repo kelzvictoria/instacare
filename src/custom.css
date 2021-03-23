@@ -6155,3 +6155,7 @@ juliette
 .col-md-4.p-logo {
   height: 50px !important;
 }
+
+.bot-body .card p {
+  padding: 5px !important;
+}

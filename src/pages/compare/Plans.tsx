@@ -515,65 +515,6 @@ class Plans extends Component<PlansProps> {
     }
   }
 
-  /*  async fetchPlans() {
-    this.props.dispatch({
-      type: actions.IS_FETCHING_PLANS,
-      data: true,
-    });
-    const res = await fetch(`${API_URL}/api/plans`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "GET",
-    });
-
-    if (res) {
-      let plans: object[] = [];
-      let formelo_resp = await res.json();
-      this.props.dispatch({
-        type: actions.IS_FETCHING_PLANS,
-        data: false,
-      });
-      if (formelo_resp || formelo_resp.length !== 0) {
-        for (let i = 0; i < formelo_resp.length; i++) {
-          plans.push(formelo_resp[i].data);
-        }
-
-        for (let j = 0; j < plans.length; j++) {
-          let hmoID = plans[j]["hmo_id"].id;
-          let servicesString = plans[j]["service_id"];
-          //let providersString = plans[j]["hmo_id"].provider_id;
-          //console.log("providersString", providersString);
-          let services = servicesString ? JSON.parse(servicesString) : "";
-          //let providers = providersString ? JSON.parse(providersString) : "";
-          //console.log("providers", providers);
-
-          const hmo_res = await fetch(`${API_URL}/api/hmos?id=${hmoID}`, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "GET",
-          });
-
-          if (hmo_res) {
-            let hmo_resp = await hmo_res.json();
-            //console.log("hmo_resp", hmo_resp);
-
-            plans[j]["hmo_id"] = hmo_resp.data;
-            plans[j]["service_id"] = services;
-            //plans[j]["hmo_id"].provider_id = providers;
-          }
-        }
-
-        this.props.dispatch({
-          type: actions.GET_PLANS,
-          data: plans,
-        });
-        return;
-      }
-    }
-  } */
-
   async loadRecommendations() {
     this.props.dispatch({
       type: actions.GET_NUM_OF_PEOPLE,
@@ -622,6 +563,10 @@ class Plans extends Component<PlansProps> {
           plan.category_id["id"] !== "family"
       );
 
+      console.log("individual_plans", individual_plans);
+      console.log("family_plans", family_plans);
+      console.log("others", others);
+
       // console.log(
       //   "this.props.quiz.responses.num_of_people",
       //   this.props.quiz.responses.num_of_people
@@ -631,8 +576,10 @@ class Plans extends Component<PlansProps> {
         this.props.quiz.responses.type == "single"
       ) {
         rec_plans = individual_plans;
-      } else {
+      } else if (this.props.quiz.responses.type == "family") {
         rec_plans = family_plans;
+      } else {
+        rec_plans = others;
       }
 
       this.props.dispatch({
@@ -648,9 +595,11 @@ class Plans extends Component<PlansProps> {
     }
   }
 
-  componentDidMount() {
-    this.loadRecommendations();
+  async UNSAFE_componentWillMount() {
+    await this.loadRecommendations();
   }
+
+  componentDidMount() {}
 
   handleIndividualAge(val) {
     if (this.props.quiz.responses.type != "others") {
@@ -1917,9 +1866,12 @@ class Plans extends Component<PlansProps> {
                   {recPlansArr ? recPlansArr.length : "Fetching "} Plans for
                 </p>
                 <h6 className="plan-type">
-                  {this.props.quiz.responses.type == "single"
-                    ? "Self"
-                    : "Family"}
+                  {this.props.quiz.responses.type == "single" && "Self"}
+                  {this.props.quiz.responses.type !== "single" &&
+                    this.props.quiz.responses.type !== "parents" &&
+                    "Family"}
+                  {this.props.quiz.responses.type == "parents" &&
+                    "Senior Citizens"}
                 </h6>
               </div>
             </div>
@@ -2059,13 +2011,16 @@ class Plans extends Component<PlansProps> {
                                   }}
                                 >
                                   ₦
-                                  {this.props.quiz.responses.type == "single"
-                                    ? this.numberwithCommas(
-                                        rec_plan.individual_annual_price
-                                      )
-                                    : this.numberwithCommas(
-                                        rec_plan.family_annual_price
-                                      )}{" "}
+                                  {
+                                    // this.props.quiz.responses.type == "single"
+                                    //   ? this.numberwithCommas(
+                                    //       rec_plan.individual_annual_price
+                                    //     )
+                                    //   :
+                                    this.numberwithCommas(
+                                      rec_plan.family_annual_price
+                                    )
+                                  }{" "}
                                   annually
                                   {/* ₦5k/month */}
                                 </button>
@@ -2300,14 +2255,15 @@ class Plans extends Component<PlansProps> {
                 <span className="span_insured_heading">
                   Showing {recPlansArr ? recPlansArr.length : "Fetching "} plans
                   for{" "}
-                  {this.props.quiz.responses.type == "single"
+                  {/* {this.props.quiz.responses.type == "single"
                     ? "Self"
-                    : "Family"}
-                  {" ("}
-                  {this.props.quiz.responses.type == "single"
-                    ? this.props.quiz.responses.individual_age
-                    : ""}{" "}
-                  {" years)"}
+                    : "Family"} */}
+                  {this.props.quiz.responses.type == "single" && "Self"}
+                  {this.props.quiz.responses.type !== "single" &&
+                    this.props.quiz.responses.type !== "parents" &&
+                    "Family"}
+                  {this.props.quiz.responses.type == "parents" &&
+                    "Senior Citizens"}
                 </span>
               </div>
 
@@ -2465,26 +2421,33 @@ class Plans extends Component<PlansProps> {
                                   }}
                                 >
                                   ₦
-                                  {this.props.quiz.responses.type == "single"
-                                    ? this.numberwithCommas(
-                                        rec_plan.individual_annual_price
-                                      )
-                                    : this.numberwithCommas(
-                                        rec_plan.family_annual_price
-                                      )}{" "}
+                                  {
+                                    // this.props.quiz.responses.type == "single"
+                                    //   ?
+                                    this.numberwithCommas(
+                                      rec_plan.individual_annual_price
+                                    )
+                                    // : this.numberwithCommas(
+                                    //     rec_plan.family_annual_price
+                                    //   )
+                                  }{" "}
                                   annually
                                 </div>
-                                <span className="annually_premium">
-                                  ₦
-                                  {this.props.quiz.responses.type == "single"
-                                    ? this.numberwithCommas(
+
+                                {rec_plan.individual_monthly_price && (
+                                  <span className="annually_premium">
+                                    {
+                                      // this.props.quiz.responses.type == "single"
+                                      //   ? this.numberwithCommas(
+                                      //       rec_plan.individual_monthly_price
+                                      //     )
+                                      //   :
+                                      `₦ ${this.numberwithCommas(
                                         rec_plan.individual_monthly_price
-                                      )
-                                    : this.numberwithCommas(
-                                        rec_plan.family_annual_price
-                                      )}
-                                  /month
-                                </span>
+                                      )}/month`
+                                    }
+                                  </span>
+                                )}
                               </div>
                               <div className="shortlist_container">
                                 <div className="Path_shortlist coachMark">
