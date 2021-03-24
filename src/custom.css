@@ -6222,7 +6222,7 @@ img.img_contain {
 .details {
   border-top: 2px solid #fff;
 }
-
+/* 
 @media (min-width: 992px) {
   .container,
   .container-sm,
@@ -6230,7 +6230,7 @@ img.img_contain {
   .container-lg {
     max-width: 960px;
   }
-}
+} */
 
 svg.svg-inline--fa.fa-chevron-right.fa-w-10 {
   margin-left: 0.5rem;
