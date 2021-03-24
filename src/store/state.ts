@@ -96,4 +96,9 @@ export const state: any = {
   compare_plans_mobile_indexes: [],
   compare_plans_desktop_indexes: [],
   checked_plans_list: [],
+  cheapest_plan_by_hmo: 0,
+  cheapest_plan: 0,
+  provider_plans: [],
+  filter_plans_by_hmo: false,
+  provider_info: [],
 };

@@ -277,6 +277,26 @@ export const filterReducer = createReducer(state, {
   FORMAT_PRICES: (value) => {
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   },
+
+  GET_CHEAPEST_PLAN_BY_HMO: (state, actions) => {
+    state.cheapest_plan_by_hmo = actions.data;
+  },
+
+  GET_CHEAPEST_PLAN: (state, actions) => {
+    state.cheapest_plan = actions.data;
+  },
+
+  GET_PLANS_BY_PROVIDER: (state, actions) => {
+    state.provider_plans = actions.data;
+  },
+
+  IS_FETCHING_PLANS_BY_HMO: (state, actions) => {
+    state.filter_plans_by_hmo = actions.data;
+  },
+
+  GET_PROVIDER_INFO: (state, actions) => {
+    state.provider_info = actions.data;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -352,3 +372,8 @@ createAction("SET_PLANS_TO_COMPARE_ON_DESKTOP");
 createAction("SET_CHECKED_PLANS");
 
 createAction("FORMAT_PRICES");
+
+createAction("GET_CHEAPEST_PLAN_BY_HMO");
+createAction("GET_CHEAPEST_PLAN");
+
+createAction("GET_PLANS_BY_PROVIDER");

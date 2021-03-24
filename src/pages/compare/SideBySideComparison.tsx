@@ -55,7 +55,8 @@ import { UPDATE_NOTGETTINGPROVIDERS } from "../../utils/actions";
 
 import PaystackButton from "react-paystack";
 
-import { options } from "../home/Options";
+import * as home_utils from "../../utils/homeUtils";
+
 import { RouteComponentProps } from "react-router-dom";
 
 interface ComparisonProps {
@@ -367,7 +368,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
     console.log("this.props", this.props);
 
     return (
-      <div>
+      <div className="side-by-side_comparison">
         {compare_plans_mobile_indexes.length > 0 ? (
           <div className="mobile-comparison-view quotes_main_container">
             <div className="row compare-plans-header">
@@ -1886,36 +1887,12 @@ class SideBySideComparison extends Component<ComparisonProps> {
           </div>
         ) : compare_plans_desktop_indexes.length > 0 ? (
           <div className="desktop-view quotes_main_container">
-            <div className="navbarWrapper">
-              <div className="">
-                <nav
-                  className="green_theme navbar"
-                  role="navigation"
-                  aria-label="main navigation"
-                >
-                  <Col
-                    className="row nav-info plans-desktop header  details-desktop-header"
-                    xs={24}
-                    md={8}
-                  >
-                    <Link to="/">
-                      <img
-                        src="images/logo2.png"
-                        alt="Logo"
-                        className="details-ic-logo"
-                      />
-                      {/* <div className={styles.connect}>hmo connect</div> */}
-                    </Link>
-                  </Col>
-                </nav>
-              </div>
-            </div>
             <section className="section hero compare_parent sp-top-main">
               <div className="container">
                 <div className="sticky">
                   <div className="top_fixed_box column">
                     <div className="columns difference_column">
-                      <div className="column">
+                      <div className="column tiny-nav">
                         <a
                           className="button back_btn  is-hidden-mobile is-hidden-tablet-only"
                           id="CompareBack"
@@ -4838,7 +4815,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
         ) : (
           this.goToPlans()
         )}
-        <AppFooter />
+        {/* <AppFooter /> */}
       </div>
     );
   }

@@ -1,3 +1,12 @@
+@media (max-width: 600px) {
+}
+
+@media (min-width: 601px) and (max-width: 767px) {
+}
+
+@media (min-width: 768px) {
+}
+
 /* .container .home {
   min-height: 480rem !important;
 } */
@@ -3042,7 +3051,7 @@ select.plan-select {
   }
 
   .tiny-go-back {
-    display: none !important;
+    /* display: none !important; */
   }
 
   a.details-cashless-hosp {
@@ -3064,7 +3073,7 @@ select.plan-select {
   }
 
   .details .pl-3rem {
-    padding-left: 3rem !important;
+    /* padding-left: 3rem !important; */
   }
 
   .compare-first-row .col-md-4,
@@ -3118,7 +3127,7 @@ select.plan-select {
 }
 
 .tiny-go-back .row.nav-info {
-  margin-left: 0px !important;
+  /* margin-left: 0px !important; */
 }
 
 .tiny-go-back button#prev {
@@ -3771,7 +3780,8 @@ select.plan-select {
 .planContent_container {
   display: flex;
   flex-direction: column;
-  width: calc(40% - 40px);
+  /* width: calc(40% - 40px); */
+  width: calc(30% - 40px);
   justify-content: center;
 }
 
@@ -3854,7 +3864,8 @@ select.plan-select {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 20%;
+  width: 30%;
+  /* width: 20%; */
 }
 
 .premium_button,
@@ -3905,7 +3916,9 @@ select.plan-select {
   height: 24px;
   width: 100%;
   position: relative;
-  top: 50%;
+  /* top: 50%; */
+
+  top: 58%;
   transform: translateY(-50%);
 }
 
@@ -4085,17 +4098,6 @@ select.plan-select {
 
   .bottom-menu.details-bottom-menu.row {
     max-width: 500px;
-  }
-
-  img.img_contain {
-    /* height: 80px;
-    width: 80px; */
-
-    object-fit: contain;
-    /* height: 100%;
-    max-width: 100%; */
-
-    height: 50px !important;
   }
 
   /* .fade.modal-backdrop.show {
@@ -4292,6 +4294,7 @@ span.quotes_more_plans.more {
 .sp-without-compare-checkbox {
   width: 100%;
   margin-right: 1rem;
+  margin-left: 1rem;
 }
 
 .hide {
@@ -5017,8 +5020,9 @@ div.sticky {
   position: absolute;
   cursor: pointer;
   top: 121px;
-  left: 20%;
+  /* left: 20%; */
   text-transform: capitalize;
+  margin-left: 25px;
 }
 
 .checkbox_label input {
@@ -5341,14 +5345,16 @@ span.plan-2 {
   padding-left: 0px;
 }
 
-div.sticky {
+/* div.sticky {
   top: 3rem;
-}
+} */
 
-h3.select {
+h3.select,
+span.plan-2 {
   background-color: transparent;
   border: none;
-  font-size: 20px;
+  /* font-size: 20px; */
+  font-size: 16px;
   color: #253858;
   /* font-weight: 600; */
   font-family: Nunito, sans-serif;
@@ -6158,4 +6164,107 @@ juliette
 
 .bot-body .card p {
   padding: 5px !important;
+}
+
+@media (min-width: 577px) {
+  .quotes_toolbar .quotes_toolbar_wrapper {
+    max-width: 1140px !important;
+  }
+
+  .main_quotes_div.is-hidden-mobile.is-hidden-tablet-only-custom.container.col-md-12.row,
+  .AppHeader_appHeader__2t96E .container {
+    max-width: 1140px !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .col-md-4.chat-bot {
+    display: none !important;
+  }
+
+  .col-md-8.main_quotes_container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 599px) {
+  .quotes_mobile_row {
+    margin-bottom: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .single-plan {
+    width: 100%;
+  }
+}
+
+@media (max-width: 899px) {
+  .main_quotes_div .col-md-8 {
+    width: 100% !important;
+  }
+
+  .col-md-8.main_quotes_container {
+    flex: 0 0 100% !important;
+  }
+}
+
+img.img_contain {
+  object-fit: contain;
+  height: 50px !important;
+}
+
+.details .pl-3rem {
+  max-width: 1140px;
+  margin: auto;
+}
+
+.details {
+  border-top: 2px solid #fff;
+}
+
+@media (min-width: 992px) {
+  .container,
+  .container-sm,
+  .container-md,
+  .container-lg {
+    max-width: 960px;
+  }
+}
+
+svg.svg-inline--fa.fa-chevron-right.fa-w-10 {
+  margin-left: 0.5rem;
+}
+
+.side-by-side_comparison {
+  border-top: 2px solid #fff;
+}
+
+h3.select,
+span.plan-2 {
+  font-weight: 16px !important;
+}
+
+.w_100.mobile_diff {
+  margin-left: 15px !important;
+}
+
+a#CompareBack {
+  margin-left: 15px !important;
+}
+
+.column.tiny-nav {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+section.section.hero.compare_parent.sp-top-main {
+  overflow: auto;
+}
+@media (max-width: 991px) {
+  .section.hero.compare_parent.sp-top-main .container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }

@@ -21,23 +21,32 @@ import Details from "./pages/details/Details";
 import Plans from "./pages/compare/Plans";
 import SideBySideComparison from "./pages/compare/SideBySideComparison";
 
+import AppHeader from "./components/app-header/AppHeader";
+import AppFooter from "./components/app-footer/AppFooter";
+import Home2 from "./pages/home/Home2";
+
 //import HMO from "./pages/home/HMO";
 
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/quiz" component={Quiz} />
-        <Route path="/compare-old" component={Compare} />
-        <Route path="/plans" component={Plans} />
-        <Route path="/details-old" component={Details} />
-        <Route path="/details" component={PlanDetails} />
-        <Route path="/compare" component={SideBySideComparison} />
-        <Route exact path="/:hmo" component={Home} />
-        {/* <Route path= {`/${hmo}`} component = {HMO} /> */}
-        <Route component={ErrorPage} />
-      </Switch>
+      <div className="main">
+        <AppHeader />
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/quiz" component={Quiz} />
+          <Route path="/compare-old" component={Compare} />
+          <Route path="/plans" component={Plans} />
+          <Route path="/details-old" component={Details} />
+          <Route path="/details" component={PlanDetails} />
+          <Route path="/compare" component={SideBySideComparison} />
+          <Route path="/new-design" component={Home2} />
+          <Route exact path="/:hmo" component={Home} />
+          {/* <Route path= {`/${hmo}`} component = {HMO} /> */}
+          <Route component={ErrorPage} />
+        </Switch>
+        <AppFooter />
+      </div>
     </Router>
   </Provider>,
   document.getElementById("root")

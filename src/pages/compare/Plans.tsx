@@ -53,9 +53,7 @@ import PaystackButton from "react-paystack";
 
 import AppFooter from "../../components/app-footer/AppFooter";
 
-import { options } from "../home/Options";
-
-import { hmoKeysMapping } from "../home/hmoMapping";
+import * as home_utils from "../../utils/homeUtils";
 
 const { Title } = Typography;
 const { Panel } = Collapse;
@@ -489,7 +487,7 @@ class Plans extends Component<PlansProps> {
           //   method: "GET",
           // });
 
-          let hmoDocumentID = hmoKeysMapping[hmoID];
+          let hmoDocumentID = home_utils.hmoKeysMapping[hmoID];
 
           let hmo_res = this.props.hmos.filter(
             (hmo) => hmo.id == hmoDocumentID
@@ -921,7 +919,7 @@ class Plans extends Component<PlansProps> {
               value={this.props.quiz.responses.individual_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -956,7 +954,7 @@ class Plans extends Component<PlansProps> {
               value={this.props.quiz.responses.spouse_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -1030,7 +1028,7 @@ class Plans extends Component<PlansProps> {
                 value={this.props.quiz.responses.child_1_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1062,7 +1060,7 @@ class Plans extends Component<PlansProps> {
                 value={this.props.quiz.responses.child_2_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1094,7 +1092,7 @@ class Plans extends Component<PlansProps> {
                 value={this.props.quiz.responses.child_3_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1126,7 +1124,7 @@ class Plans extends Component<PlansProps> {
                 value={this.props.quiz.responses.child_4_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1206,7 +1204,7 @@ class Plans extends Component<PlansProps> {
                 value={this.props.quiz.responses.child_5_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1238,7 +1236,7 @@ class Plans extends Component<PlansProps> {
                 value={this.props.quiz.responses.child_6_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1270,7 +1268,7 @@ class Plans extends Component<PlansProps> {
                 value={this.props.quiz.responses.child_7_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1302,7 +1300,7 @@ class Plans extends Component<PlansProps> {
                 value={this.props.quiz.responses.child_8_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -1338,7 +1336,7 @@ class Plans extends Component<PlansProps> {
               value={this.props.quiz.responses.father_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -1373,7 +1371,7 @@ class Plans extends Component<PlansProps> {
               value={this.props.quiz.responses.mother_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -1408,7 +1406,7 @@ class Plans extends Component<PlansProps> {
               value={this.props.quiz.responses.grand_father_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -1443,7 +1441,7 @@ class Plans extends Component<PlansProps> {
               value={this.props.quiz.responses.grand_mother_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -1478,7 +1476,7 @@ class Plans extends Component<PlansProps> {
               value={this.props.quiz.responses.father_in_law_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -1513,7 +1511,7 @@ class Plans extends Component<PlansProps> {
               value={this.props.quiz.responses.mother_in_law_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -2018,7 +2016,8 @@ class Plans extends Component<PlansProps> {
                                     //     )
                                     //   :
                                     this.numberwithCommas(
-                                      rec_plan.family_annual_price
+                                      rec_plan.individual_annual_price
+                                      //rec_plan.family_annual_price
                                     )
                                   }{" "}
                                   annually
@@ -2225,7 +2224,7 @@ class Plans extends Component<PlansProps> {
           </div>
         </div>
         <div className="desktop-view quotes_main_container">
-          <div className="navbarWrapper">
+          {/* <div className="navbarWrapper">
             <div className="">
               <nav
                 className="green_theme navbar"
@@ -2243,12 +2242,12 @@ class Plans extends Component<PlansProps> {
                       alt="Logo"
                       className="details-ic-logo"
                     />
-                    {/* <div className={styles.connect}>hmo connect</div> */}
+           
                   </Link>
                 </Col>
               </nav>
             </div>
-          </div>
+          </div> */}
           <div className="quotes_toolbar is-hidden-mobile is-hidden-tablet-only-custom">
             <div className="quotes_toolbar_wrapper">
               <div className="insured_members_div">
@@ -3132,7 +3131,7 @@ class Plans extends Component<PlansProps> {
             </div>
           </div>
         </Modal>
-        <AppFooter />
+        {/* <AppFooter /> */}
       </div>
     );
   }

@@ -48,7 +48,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { options } from "../home/Options";
+import * as home_utils from "../../utils/homeUtils";
 
 import Modal from "react-bootstrap/Modal";
 
@@ -415,7 +415,7 @@ class PlanDetails extends Component<DetailsProps> {
               value={this.props.responses.individual_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -450,7 +450,7 @@ class PlanDetails extends Component<DetailsProps> {
               value={this.props.responses.spouse_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -524,7 +524,7 @@ class PlanDetails extends Component<DetailsProps> {
                 value={this.props.responses.child_1_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -556,7 +556,7 @@ class PlanDetails extends Component<DetailsProps> {
                 value={this.props.responses.child_2_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -588,7 +588,7 @@ class PlanDetails extends Component<DetailsProps> {
                 value={this.props.responses.child_3_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -620,7 +620,7 @@ class PlanDetails extends Component<DetailsProps> {
                 value={this.props.responses.child_4_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -697,7 +697,7 @@ class PlanDetails extends Component<DetailsProps> {
                 value={this.props.responses.child_5_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -729,7 +729,7 @@ class PlanDetails extends Component<DetailsProps> {
                 value={this.props.responses.child_6_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -761,7 +761,7 @@ class PlanDetails extends Component<DetailsProps> {
                 value={this.props.responses.child_7_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -793,7 +793,7 @@ class PlanDetails extends Component<DetailsProps> {
                 value={this.props.responses.child_8_age}
                 placeholder="Select Age"
               >
-                {options.map((option) => (
+                {home_utils.options.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -829,7 +829,7 @@ class PlanDetails extends Component<DetailsProps> {
               value={this.props.responses.father_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -864,7 +864,7 @@ class PlanDetails extends Component<DetailsProps> {
               value={this.props.responses.mother_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -899,7 +899,7 @@ class PlanDetails extends Component<DetailsProps> {
               value={this.props.responses.grand_father_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -934,7 +934,7 @@ class PlanDetails extends Component<DetailsProps> {
               value={this.props.responses.grand_mother_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -969,7 +969,7 @@ class PlanDetails extends Component<DetailsProps> {
               value={this.props.responses.father_in_law_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -1004,7 +1004,7 @@ class PlanDetails extends Component<DetailsProps> {
               value={this.props.responses.mother_in_law_age}
               placeholder="Select Age"
             >
-              {options.map((option) => (
+              {home_utils.options.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -1063,7 +1063,7 @@ class PlanDetails extends Component<DetailsProps> {
       <div className="details">
         {/*<Row>*/}
         <div className="mobile-view">
-          <div className="row pl-3rem compare-plans-header">
+          {/* <div className="row pl-3rem compare-plans-header">
             <div className="row nav-info details-mobile-header">
               <Button
                 className="nav-btn"
@@ -1089,10 +1089,10 @@ class PlanDetails extends Component<DetailsProps> {
                   alt="Logo"
                   className="details-ic-logo"
                 />
-                {/* <div className={styles.connect}>hmo connect</div> */}
+               
               </Link>
             </Col>
-          </div>
+          </div> */}
 
           <div className=" pl-3rem tiny-go-back">
             <div className="row nav-info">
@@ -1795,7 +1795,7 @@ class PlanDetails extends Component<DetailsProps> {
             this.goToHome()
           )}
         </div>
-        <AppFooter />
+        {/* <AppFooter /> */}
       </div>
     );
   }

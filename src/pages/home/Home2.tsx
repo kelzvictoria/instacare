@@ -40,7 +40,7 @@ import HMOInfoSkeleton from "../../components/skeletons/SkeletonHMOInfo";
 
 import * as home_utils from "../../utils/homeUtils";
 
-import HomeContent from "../../components/home/home";
+import NewContent from "../../components/home/new-design";
 
 const { Step } = Steps;
 
@@ -286,7 +286,7 @@ class Home extends Component<QuizProps, {}> {
     console.log("this.state.provider_info", this.state.provider_info);
     return (
       <React.Fragment>
-        <HomeContent {...this.props} />
+        <NewContent {...this.props} />
       </React.Fragment>
     );
   }
