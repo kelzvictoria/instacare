@@ -3488,7 +3488,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                               </div>
                             </div>
                           </div>
-                          <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap">
+                          <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide-maybe">
                             <div className="plan-card__cost-display">
                               <div
                                 className="font-size--small font-weight--bold
