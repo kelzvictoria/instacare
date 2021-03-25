@@ -14,6 +14,7 @@
 body,
 h5,
 .Home_textHeading__26RD2 {
+  font-family: "Roboto", sans-serif !important;
   color: #172b4d !important;
 }
 
@@ -899,10 +900,10 @@ div#thirdPage {
     /* padding-left: 4.5rem !important; */
   }
 
-  .banner-bottom .col-md-4.card {
+  /* .banner-bottom .col-md-4.card {
     text-align: center;
     justify-content: center;
-  }
+  } */
 
   .banner-bottom .row div:nth-child(2),
   .banner-bottom .row div:nth-child(3) {
@@ -4568,8 +4569,8 @@ span.quotes_more_plans.more {
     font-weight: 400;
     font-size: 16px;
     color: #253858;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif; */
     line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
@@ -4591,9 +4592,9 @@ span.quotes_more_plans.more {
     font-weight: 400;
     font-size: 16px;
     color: #253858;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
       Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
-    line-height: 1.5;
+    line-height: 1.5; */
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
@@ -4612,8 +4613,8 @@ span.quotes_more_plans.more {
     font-weight: 400;
     font-size: 16px;
     color: #253858;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif; */
     line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
@@ -4631,8 +4632,8 @@ span.quotes_more_plans.more {
     font-weight: 400;
     font-size: 16px;
     color: #253858;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif; */
     line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
@@ -4658,8 +4659,8 @@ span.quotes_more_plans.more {
     font-weight: 400;
     font-size: 16px;
     color: #253858;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif; */
     line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
@@ -4683,8 +4684,8 @@ span.quotes_more_plans.more {
     font-weight: 400;
     font-size: 16px;
     color: #253858;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif; */
     line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
@@ -4701,8 +4702,8 @@ span.quotes_more_plans.more {
     text-rendering: optimizeLegibility;
     text-size-adjust: 100%;
     font-weight: 400;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif; */
     line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
@@ -4717,8 +4718,8 @@ span.quotes_more_plans.more {
   .compare_plan_name2 {
     text-rendering: optimizeLegibility;
     text-size-adjust: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif; */
     line-height: 1.5;
     font-size: 14px;
     color: #253858;
@@ -4739,8 +4740,8 @@ span.quotes_more_plans.more {
     text-rendering: optimizeLegibility;
     text-size-adjust: 100%;
     font-weight: 400;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif; */
     line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
     -webkit-font-smoothing: antialiased;
@@ -4992,7 +4993,7 @@ div.sticky {
   border: none;
   background-color: transparent;
   /* font-size: 16px; */
-  font-family: Nunito, sans-serif;
+  /* font-family: Nunito, sans-serif; */
   top: -2px !important;
   justify-content: inherit;
   padding-left: 27px !important;
@@ -5173,7 +5174,7 @@ span.plan-2 {
   font-size: 20px;
   color: #253858;
   font-weight: 600;
-  font-family: Nunito, sans-serif;
+  /* font-family: Nunito, sans-serif; */
   background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iNyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIuMjczIDBMMTMgLjc1NSA3IDcgMSAuNzU1IDEuNzI0IDAgNyA1LjQ4N3oiIGZpbGw9IiMyNTM4NTgiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSIjMjUzODU4Ii8+PC9zdmc+);
   appearance: none;
   background-repeat: no-repeat;
@@ -5357,7 +5358,7 @@ span.plan-2 {
   font-size: 16px;
   color: #253858;
   /* font-weight: 600; */
-  font-family: Nunito, sans-serif;
+  /* font-family: Nunito, sans-serif; */
   /* background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iNyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIuMjczIDBMMTMgLjc1NSA3IDcgMSAuNzU1IDEuNzI0IDAgNyA1LjQ4N3oiIGZpbGw9IiMyNTM4NTgiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSIjMjUzODU4Ii8+PC9zdmc+); */
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -5505,7 +5506,7 @@ span.plan-2 {
   height: 41px;
   font-size: 15px;
   margin-top: 18px;
-  font-family: Nunito, sans-serif;
+  /* font-family: Nunito, sans-serif; */
   font-weight: 500;
   line-height: 29px;
   border-radius: 7px;
@@ -5982,8 +5983,8 @@ juliette
     line-height: 1.5;
     color: #172b4d;
     font-weight: 400;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
-      Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+    /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+      Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif; */
     letter-spacing: 0;
     scroll-behavior: smooth;
     outline: 0;
@@ -6267,4 +6268,12 @@ section.section.hero.compare_parent.sp-top-main {
     width: 100% !important;
     max-width: 100% !important;
   }
+}
+
+.major-focus {
+  font-size: 24px !important;
+}
+
+.minor-focus {
+  font-size: 14px;
 }

@@ -67,13 +67,15 @@ class Home extends Component<QuizProps, {}> {
   componentDidMount() {
     let hmoArr;
 
-    hmoArr =
-      this.props.match.params.hmo !== "hygeia" &&
-      home_utils.hmos.filter((hmo) => hmo["id"] == this.props.match.params.hmo);
+    if (this.props.match.params.hmo == "hygeia") {
+      hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == "1");
+    } else {
+      hmoArr = home_utils.hmos.filter(
+        (hmo) => hmo["id"] == this.props.match.params.hmo
+      );
+    }
 
-    hmoArr =
-      this.props.match.params.hmo == "hygeia" &&
-      home_utils.hmos.filter((hmo) => hmo["id"] == "1");
+    console.log("hmoArr", hmoArr);
 
     document.title = this.props.match.params.hmo
       ? `Instacare - ${hmoArr[0].title}`
@@ -176,28 +178,27 @@ class Home extends Component<QuizProps, {}> {
   async getPlansByHMO(hmoId) {
     console.log("hmoId", hmoId);
     let hmoName;
-    hmoName =
-      hmoId !== "hygeia" && home_utils.hmos.filter((hmo) => hmo["id"] == hmoId);
-    console.log("hmoName", hmoName);
 
-    hmoName =
-      hmoId == "hygeia" && home_utils.hmos.filter((hmo) => hmo["id"] == "1");
-    console.log("hmoName", hmoName);
+    if (hmoId !== "hygeia") {
+      hmoName = home_utils.hmos.filter((hmo) => hmo["id"] == hmoId);
+      console.log("hmoName", hmoName);
+    } else {
+      hmoName = home_utils.hmos.filter((hmo) => hmo["id"] == "1");
+      console.log("hmoName", hmoName);
+    }
 
     if (hmoId) {
       let hmoPlans;
 
-      hmoPlans =
-        hmoId !== "hygeia" &&
-        (await this.props.plans.filter((plan) => {
+      if (hmoId !== "hygeia") {
+        hmoPlans = await this.props.plans.filter((plan) => {
           return plan.hmo_id.name.id == hmoName[0].name;
-        }));
-
-      hmoPlans =
-        hmoId == "hygeia" &&
-        (await this.props.plans.filter((plan) => {
+        });
+      } else {
+        hmoPlans = await this.props.plans.filter((plan) => {
           return plan.hmo_id.name.id == "1";
-        }));
+        });
+      }
 
       this.props.dispatch({
         type: "GET_PLANS_BY_PROVIDER",

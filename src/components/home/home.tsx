@@ -104,22 +104,22 @@ class HomeContent extends React.Component<homeProps, homeState> {
 
   hmoBannerDiv(hmoId) {
     let hmoArr;
-    hmoArr =
-      hmoId !== "hygeia" && home_utils.hmos.filter((hmo) => hmo["id"] == hmoId);
-    hmoArr =
-      hmoId == "hygeia" && home_utils.hmos.filter((hmo) => hmo["id"] == "1");
+
+    if (hmoId !== "hygeia") {
+      hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == hmoId);
+    } else {
+      hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == "1");
+    }
 
     console.log("hmoArr", hmoArr);
 
     let data;
     if (hmoId) {
-      data =
-        hmoId !== "hygeia" &&
-        this.props.hmos.filter((hmo) => hmo.name.id == hmoArr[0].name);
-
-      data =
-        hmoId == "hygeia" &&
-        this.props.hmos.filter((hmo) => hmo.name.id == "1");
+      if (hmoId !== "hygeia") {
+        data = this.props.hmos.filter((hmo) => hmo.name.id == hmoArr[0].name);
+      } else {
+        data = this.props.hmos.filter((hmo) => hmo.name.id == "1");
+      }
 
       console.log("data", data);
 

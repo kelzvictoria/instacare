@@ -18,6 +18,7 @@ import {
   faSmile,
   faGift,
   faChevronRight,
+  faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -34,9 +35,16 @@ import PhoneInput from "react-phone-number-input";
 import hospitalsvg from "../../svgs/hospitals.svg";
 import ratiosvg from "../../svgs/claim_ratio.svg";
 
+import starfilled from "../../svgs/starfilled.svg";
+import star from "../../svgs/star.svg";
+import tooltip from "../../svgs/tooltip.svg";
+import check from "../../svgs/check.svg";
+
 import HMOInfoSkeleton from "../../components/skeletons/SkeletonHMOInfo";
 
 import * as home_utils from "../../utils/homeUtils";
+
+import "./new-design.css";
 
 const { Step } = Steps;
 
@@ -124,7 +132,11 @@ class NewContent extends React.Component<homeProps, homeState> {
       console.log("data", data);
 
       return (
-        <Col xs={24} md={16} className="banner-container provider-banner">
+        <Col
+          xs={24}
+          md={16}
+          className=" left-side-info banner-container provider-banner"
+        >
           <div className="svg-and-text provider-data">
             <div className="svg-img">
               <img src={data[0].logo}></img>
@@ -179,7 +191,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   homeBannerDiv() {
     return (
-      <Col xs={24} md={16} className="banner-container">
+      <Col xs={24} md={16} className="banner-container  left-side-info">
         <div className="svg-and-text">
           <Col xs={24} md={8} className="svg-img-div">
             <div className="svg-img">
@@ -3325,29 +3337,410 @@ class NewContent extends React.Component<homeProps, homeState> {
             )}
           </div>
         </div>
+        <div className="home-plans-div">
+          <div className="results-header margin-top--2">
+            <div className="sticky results-sticky">
+              <div className="padding-y--1 display--flex flex-wrap--wrap md-flex-wrap--nowrap justify-content--between margin-top--1">
+                <div className="margin-bottom--1 md-margin-bottom--0 results-header-left">
+                  <div className="font-size--lead font-weight--bold c-results_header_summary">
+                    1 plan available
+                  </div>
+                  <div>
+                    <button
+                      className="c-button  c-button--primary margin-right--2 margin-bottom--1 lg-margin-bottom--0 c-filter-plans"
+                      type="button"
+                    >
+                      Filter Plans
+                    </button>
+                  </div>
+                </div>
+                <div className="results-header-right">
+                  <div className="c-division display--inline-block rh-plan-type-div">
+                    <label className="rh-plan-type c-label margin-top--0">
+                      <span className="drop-ds-label">Plan type</span>
+                    </label>
+                    <select className="c-field rh-plan-type-select">
+                      <option value="health">Health Plans</option>
+                      <option value="dental">Dental Plans</option>
+                    </select>
+                  </div>
+                  <div className="margin-left--1 display--inline-block rh-sort-by-div">
+                    <label className="c-label margin-top--0 rh-sort-by">
+                      <span className="drop-ds-label">Sort by</span>
+                    </label>
+                    <select className="c-field c-field--medium rh-sort-by-select">
+                      <option value="premium">Premium</option>
+                      <option value=""></option>
+                    </select>
+                  </div>
+                </div>
 
-        {/* <div className={styles.content}>
-          <div className="top-plans container">
-            <p className="breadcrmb">
-              <span className="home-span">
-                <a href="/">Home</a>
-              </span>
-              <span className="sep">
-                <FontAwesomeIcon className="chev" icon={faChevronRight} />
-              </span>
-              <span>
-                {" "}
-                {this.props.provider_info
-                  ? this.props.provider_info["title"]
-                  : "HMO Plans"}{" "}
-              </span>
-            </p>
+                <div>
+                  <ul className="c-list--bare margin-top--2 home-plans-list">
+                    <li className="margin-bottom-4">
+                      <article className="plan-card c-base c-fill-white c-box-shadow c--health">
+                        <div className="plan-card-inner c-clearfix">
+                          <div className="plan-card__top-section display--flex justify-content--between lg-flex-wrap--nowrap flex-wrap--wrap">
+                            <div>
+                              <header className="plan-card-title">
+                                <div className="plan-c-provider font-weight--bold">
+                                  Hygeia
+                                </div>
+                                <h2 className="plan-c-name font-weight--normal margin-y--1">
+                                  <a href="#"> HyBasic</a>
+                                </h2>
+                                <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
+                                  <li className="c-plan-title__info-item">
+                                    <span className="">
+                                      <span>Personal</span>
+                                    </span>
+                                  </li>
+                                  <li className="c-plan-title__info-item">
+                                    <span className="">
+                                      <span>HMO</span>
+                                    </span>
+                                  </li>
+                                  <li className="c-plan-title__info-item">
+                                    Plan ID:
+                                    <span className="font-weight--bold">
+                                      HYG00001
+                                    </span>
+                                  </li>
+                                </ul>
+                              </header>
+                            </div>
 
-            <div className="container row top-plans-content-wrapper">
-              <div className="col-md-12"></div>
+                            <div className="text-align--right plan-c-title-right">
+                              <div className="quality-rating">
+                                <div className="valign--middle star-rating">
+                                  <img
+                                    src={starfilled}
+                                    className="star-rating__star"
+                                  />
+                                  <img
+                                    src={starfilled}
+                                    className="star-rating__star"
+                                  />
+                                  <img
+                                    src={star}
+                                    className="star-rating__star"
+                                  />
+                                  <img
+                                    src={star}
+                                    className="star-rating__star"
+                                  />
+                                  <img
+                                    src={star}
+                                    className="star-rating__star"
+                                  />
+                                </div>
+                                <button
+                                  type="button"
+                                  aria-label="Tooltip: "
+                                  className="tooltip-trigger valign--middle"
+                                >
+                                  <span className="tooltip-icon-container">
+                                    <FontAwesomeIcon
+                                      className=""
+                                      icon={faInfoCircle}
+                                    />
+                                  </span>
+                                </button>
+                              </div>
+                              <div className="display--none lg-display--block plan-c-compare-button">
+                                <button className="c-button c-check-button">
+                                  <span className="c-check-button__checkbox"></span>
+                                  Compare
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="plan-card__summary-section">
+                            <div className="c-plan-summary fill--gray-lightest padding--1 lg-padding--2">
+                              <div className="c-plan-summary__summary">
+                                <div id="">Estimated yearly premium</div>
+                                <div className="c-plan-summary__price">
+                                  ₦18,000
+                                </div>
+                                <ul className="plan-flags c-list--bare"></ul>
+                              </div>
+                              <div className="c-plan-summary__children">
+                                <div className="display--none lg-display--block c-plan-card__desktop-action-buttons margin-top--2">
+                                  <a
+                                    className="c-button c-button--secondary c-plan-card__action-button plan-c-card_action-button"
+                                    href=""
+                                    role="button"
+                                    target="_self"
+                                  >
+                                    Plan Details
+                                  </a>
+
+                                  <a
+                                    className="c-button c-button--primary c-plan-card__action-button plan-c-card_action-button"
+                                    href=""
+                                    role="button"
+                                    target="_self"
+                                  >
+                                    Like This Plan
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap">
+                            <div className="plan-card__cost-display">
+                              <div
+                                className="font-size--small font-weight--bold
+                              display--flex aligh-items--center
+                              "
+                              >
+                                Deductible
+                                <button
+                                  type="button"
+                                  aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
+                                  className="tooltip-trigger padding--0"
+                                >
+                                  <span className="tooltip-icon-container">
+                                    <FontAwesomeIcon
+                                      className="mt---2"
+                                      icon={faInfoCircle}
+                                    />
+                                  </span>
+                                </button>
+                              </div>
+                              <div className="display--flex flex-wrap--wrap plan-flex-wrap">
+                                <div className="cost-display__amount">
+                                  <div className="font-size--h2">₦2,000</div>
+                                  <div className="font-size--small">
+                                    Individual total
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="plan-card__cost-display">
+                              <div
+                                className="font-size--small font-weight--bold
+                              display--flex aligh-items--center"
+                              >
+                                Out-of-pocket maximum
+                                <button
+                                  type="button"
+                                  aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
+                                  className="tooltip-trigger padding--0"
+                                >
+                                  <span className="tooltip-icon-container">
+                                    <FontAwesomeIcon
+                                      className="mt---2"
+                                      icon={faInfoCircle}
+                                    />
+                                  </span>
+                                </button>
+                              </div>
+
+                              <div className="display--flex flex-wrap--wrap plan-flex-wrap">
+                                <div className="cost-display__amount">
+                                  <div className="font-size--h2">₦6,000</div>
+                                  <div className="font-size--small">
+                                    Individual total
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="plan-card__cost-display-yearly-cost display--flex">
+                              <div className="plan-card-cost-display--info-needed fill--gray-lightest">
+                                <div
+                                  className="font-size--small font-weight--bold
+                              display--flex align-items--center"
+                                >
+                                  Estimated total yearly costs
+                                  <button
+                                    type="button"
+                                    aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
+                                    className="tooltip-trigger padding--0"
+                                  >
+                                    <span className="tooltip-icon-container">
+                                      <FontAwesomeIcon
+                                        className=""
+                                        icon={faInfoCircle}
+                                      />
+                                    </span>
+                                  </button>
+                                </div>
+                                <a
+                                  className="c-button c-button--small padding-x--2 margin-y--1"
+                                  href="#"
+                                  role="button"
+                                >
+                                  Add yearly costs
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div
+                            className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap
+                          display--none sm-display--block
+                          "
+                          >
+                            <div className="font-size--small font-weight--bold display--flex align-items--center">
+                              Benefit Limits
+                              <button
+                                type="button"
+                                aria-label="Tooltip: Limits on Coverage"
+                                className="tooltip-trigger padding--0"
+                              >
+                                <span className="tooltip-icon-container">
+                                  <FontAwesomeIcon
+                                    className="mt---2"
+                                    icon={faInfoCircle}
+                                  />
+                                </span>
+                              </button>
+                            </div>
+                            <div className="limits-row font-size--small">
+                              <div className="limits-col--6 limits-lg-col--3 padding-top--1">
+                                <div className="font-weight--bold color--gray">
+                                  In-patient Limit
+                                </div>
+                                <div className="">₦6000</div>
+                              </div>
+
+                              <div className="limits-col--6 limits-lg-col--3 padding-top--1">
+                                <div className="font-weight--bold color--gray">
+                                  Out-patient Limit
+                                </div>
+                                <div className="">₦6000</div>
+                              </div>
+
+                              <div className="limits-col--6 limits-lg-col--3 padding-top--1">
+                                <div className="font-weight--bold color--gray">
+                                  In-patient Limit
+                                </div>
+                                <div className="">₦6000</div>
+                              </div>
+
+                              <div className="limits-col--6 limits-lg-col--3 padding-top--1">
+                                <div className="font-weight--bold color--gray">
+                                  In-patient Limit
+                                </div>
+                                <div className="">₦6000</div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="plan-card__detail-section border--0 c-clearfix display--flex flex-wrap--wrap">
+                            <div className="plan-card__plan-features-container">
+                              <div>
+                                <div className="font-size--small font-weight--bold">
+                                  Plan features
+                                </div>
+                                <ul className="c-status-list c-list--bare">
+                                  <li className="c-status-list__item font-size--small">
+                                    <img
+                                      src={check}
+                                      className="c-status-list__item__icon"
+                                    />
+                                    <span className="text-transform--capitalize">
+                                      Admission
+                                    </span>
+                                  </li>
+                                  <li className="c-status-list__item font-size--small">
+                                    <img
+                                      src={check}
+                                      className="c-status-list__item__icon"
+                                    />
+                                    <span className="text-transform--capitalize">
+                                      Accidents & Emergencies
+                                    </span>
+                                  </li>
+                                  <li className="c-status-list__item font-size--small">
+                                    <img
+                                      src={check}
+                                      className="c-status-list__item__icon"
+                                    />
+                                    <span className="text-transform--capitalize">
+                                      Antenatal
+                                    </span>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div className="c-plan-card__coverables-container">
+                              <div className="c-plan-card-cost-display--info-needed fill--gray-lightest">
+                                <div className="justify-content--center display--flex">
+                                  <a
+                                    className="c-button c-button--small padding-x--2 margin-bottom--1"
+                                    href="#"
+                                  >
+                                    Add medical providers
+                                  </a>
+                                </div>
+                                <div className="font-size--small">
+                                  Add your medical providers and we'll show you
+                                  which plans cover them
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="c-plan-card__coverables-container">
+                              <div className="c-plan-card-cost-display--info-needed fill--gray-lightest">
+                                <div className="justify-content--center display--flex">
+                                  <a
+                                    className="c-button c-button--small padding-x--2 margin-bottom--1"
+                                    href="#"
+                                  >
+                                    Add prescription drugs
+                                  </a>
+                                </div>
+                                <div className="font-size--small">
+                                  Add your prescription drugs and we'll show you
+                                  which plans cover them
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="lg-display--none margin-top--2">
+                            <button
+                              className="c-button c-check-button"
+                              aria-pressed="false"
+                              type="button"
+                            >
+                              <span
+                                className="c-check-button__checkbox"
+                                aria-hidden="true"
+                              ></span>
+                              Compare
+                            </button>
+                            <div className="c-plan-card__mobile-action-buttons">
+                              <a
+                                className="c-button c-button--secondary c-plan-card__action-button"
+                                href="#"
+                                target="_self"
+                                role="button"
+                              >
+                                Plan Details
+                              </a>
+                              <a
+                                className="c-button c-button--primary c-plan-card__action-button"
+                                href="#"
+                                target="_self"
+                                role="button"
+                              >
+                                Like This Plan
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </article>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     );
   }
