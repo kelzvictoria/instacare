@@ -31,7 +31,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <div className="main">
-        <AppHeader />
+        {/* <AppHeader /> */}
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/quiz" component={Quiz} />

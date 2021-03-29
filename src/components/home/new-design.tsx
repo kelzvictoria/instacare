@@ -45,6 +45,7 @@ import HMOInfoSkeleton from "../../components/skeletons/SkeletonHMOInfo";
 import * as home_utils from "../../utils/homeUtils";
 
 import "./new-design.css";
+import AppHeader from "../app-header/AppHeader";
 
 const { Step } = Steps;
 
@@ -191,9 +192,9 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   homeBannerDiv() {
     return (
-      <Col xs={24} md={16} className="banner-container  left-side-info">
+      <Col xs={24} md={14} className="banner-container  left-side-info">
         <div className="svg-and-text">
-          <Col xs={24} md={8} className="svg-img-div">
+          <Col xs={24} md={24} className="svg-img-div">
             <div className="svg-img">
               <img src="images/searching.svg"></img>
             </div>
@@ -2230,7 +2231,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     return (
       <div className="home">
         <div className="banner-div">
-          <div className="container">
+          <AppHeader />
+          <div className="container home-c">
             {/* if /hmo */}
             {
               //this.state.filter_plans_by_hmo &&
@@ -2240,16 +2242,16 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <Row className="banner-content">
                     {this.hmoBannerDiv(this.props.match.params.hmo)}
 
-                    <Col md={8} className="quiz">
+                    <Col md={10} className="quiz">
                       <div className="home-frm form-div">
                         <form
                           onSubmit={this.preventDefault}
                           className="form desktop"
                         >
-                          <p>
+                          <h3 className="no-med">
                             Compare HMO plans in Nigeria from the comfort of
                             your home
-                          </p>
+                          </h3>
                           <h3 className="no-med">No medicals required</h3>
                           <div className="mobile-view-steps">
                             <div className="col-md-12">
@@ -2398,10 +2400,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                           onSubmit={this.preventDefault}
                           className="form mobile"
                         >
-                          <p>
+                          <h3 className="no-med">
                             Compare HMO plans in Nigeria from the comfort of
                             your home
-                          </p>
+                          </h3>
                           <h3 className="no-med">No medicals required</h3>
                           <div className="mobile-view-steps">
                             <div className="col-md-12">
@@ -2608,21 +2610,21 @@ class NewContent extends React.Component<homeProps, homeState> {
               <Row className="banner-content">
                 <Col
                   xs={24}
-                  md={16}
+                  md={14}
                   className="banner-container provider-banner"
                 >
                   <HMOInfoSkeleton />
                 </Col>
-                <Col md={8} className="quiz">
+                <Col md={10} className="quiz">
                   <div className="home-frm form-div">
                     <form
                       onSubmit={this.preventDefault}
                       className="form desktop"
                     >
-                      <p>
+                      <h3 className="no-med">
                         Compare HMO plans in Nigeria from the comfort of your
                         home
-                      </p>
+                      </h3>
                       <h3 className="no-med">No medicals required</h3>
                       <div className="mobile-view-steps">
                         <div className="col-md-12">
@@ -2771,10 +2773,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                       onSubmit={this.preventDefault}
                       className="form mobile"
                     >
-                      <p>
+                      <h3 className="no-med">
                         Compare HMO plans in Nigeria from the comfort of your
                         home
-                      </p>
+                      </h3>
                       <h3 className="no-med">No medicals required</h3>
                       <div className="mobile-view-steps">
                         <div className="col-md-12">
@@ -2977,16 +2979,16 @@ class NewContent extends React.Component<homeProps, homeState> {
             {!this.props.match.params.hmo && (
               <Row className="banner-content">
                 {this.homeBannerDiv()}
-                <Col md={8} className="quiz">
+                <Col md={10} className="quiz">
                   <div className="home-frm form-div">
                     <form
                       onSubmit={this.preventDefault}
                       className="form desktop"
                     >
-                      <p>
+                      <h3 className="no-med">
                         Compare HMO plans in Nigeria from the comfort of your
                         home
-                      </p>
+                      </h3>
                       <h3 className="no-med">No medicals required</h3>
                       <div className="mobile-view-steps">
                         <div className="col-md-12">
@@ -3135,10 +3137,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                       onSubmit={this.preventDefault}
                       className="form mobile"
                     >
-                      <p>
+                      <h3 className="no-med">
                         Compare HMO plans in Nigeria from the comfort of your
                         home
-                      </p>
+                      </h3>
                       <h3 className="no-med">No medicals required</h3>
                       <div className="mobile-view-steps">
                         <div className="col-md-12">

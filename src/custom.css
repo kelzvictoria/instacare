@@ -19,13 +19,14 @@ h5,
 }
 
 .svg-img {
-  width: 100%;
-  height: 50%;
+  /*  width: 100%;*/
+  height: 100%;
 }
 
 .svg-img img {
-  height: 200px !important;
-  width: 100%;
+  /* height: 200px !important;
+  width: 100%; */
+  height: 100% !important;
 }
 
 .svg-img-div {
@@ -195,7 +196,8 @@ form.form.steppers {
 }
 
 .form h3 {
-  font-size: 1.55rem;
+  /* font-size: 1.55rem; */
+  font-size: 1.2rem;
   padding-bottom: 1rem;
 }
 
@@ -618,7 +620,8 @@ button.close:after {
   }
 
   .form h3 {
-    font-size: 1rem !important;
+    /* font-size: 1rem !important; */
+    font-size: 0.65rem !important;
     margin-top: 0.5rem;
   }
   i.gender.icons-gender.male.me {
@@ -920,7 +923,16 @@ div#thirdPage {
 
   .svg-and-text {
     padding-top: 0rem !important;
-    height: 100% !important;
+    /* height: 100% !important; */
+  }
+
+  .svg-img img {
+    height: 70% !important;
+  }
+
+  .svg-img {
+    align-items: center;
+    display: flex;
   }
 
   .Home_banner__93PqY .Home_bannerContent__1ylL5 {
@@ -1023,7 +1035,7 @@ div#thirdPage {
 }
 
 .svg-and-text {
-  height: 300px;
+  /* height: 300px; */
 }
 
 .banner-text {
@@ -1049,7 +1061,8 @@ div#thirdPage {
 }
 
 .banner-div {
-  background-color: #e6fcf6;
+  /* background-color: #e6fcf6; */
+  background-color: #fff;
 }
 
 .breadcrmb {
@@ -6275,5 +6288,80 @@ section.section.hero.compare_parent.sp-top-main {
 }
 
 .minor-focus {
+  font-size: 14px;
+}
+
+/* tweaking the home page design */
+
+.banner-bottom {
+  display: none;
+}
+
+.svg-and-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ant-col.banner-text.ant-col-xs-24.ant-col-md-16 {
+  display: none;
+}
+
+.ant-col.quiz.ant-col-md-8 {
+  height: 100% !important;
+  max-height: 100% !important;
+}
+
+.banner-div {
+  min-height: 100vh;
+  background-image: linear-gradient(
+    to right,
+    #009786,
+    #009b85,
+    #009e84,
+    #00a282,
+    #00a580,
+    #2dae8a,
+    #44b693,
+    #57bf9d,
+    #7dcfb4,
+    #a0decb,
+    #c3ede1,
+    #e6fcf6
+  );
+  background-image: linear-gradient(
+    to right top,
+    #00a093,
+    #5cb7a9,
+    #8dcec1,
+    #bae5db,
+    #e6fcf6
+  );
+
+  background: #007991; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #007991,
+    #78ffd6
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #007991, #78ffd6);
+  background-image: linear-gradient(
+    to right,
+    #e6fcf6,
+    #bae2dd,
+    #8cc9c9,
+    #5aafb8,
+    #03aa7d
+  );
+}
+
+.svg-and-text {
+  height: 400px;
+}
+
+.svg-img-div {
+  height: 100% !important;
+}
+
+input.form-control {
   font-size: 14px;
 }
