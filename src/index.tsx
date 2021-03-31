@@ -31,7 +31,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <div className="main">
-        {/* <AppHeader /> */}
+        <AppHeader />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/quiz" component={Quiz} />
@@ -41,7 +41,7 @@ ReactDOM.render(
           <Route path="/details" component={PlanDetails} />
           <Route path="/compare" component={SideBySideComparison} />
           <Route path="/new-design" component={Home2} />
-          <Route exact path="/:hmo" component={Home} />
+          <Route exact path="/:hmo" component={Home2} />
           {/* <Route path= {`/${hmo}`} component = {HMO} /> */}
           <Route component={ErrorPage} />
         </Switch>

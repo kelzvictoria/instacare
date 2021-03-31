@@ -26,7 +26,8 @@ h5,
 .svg-img img {
   /* height: 200px !important;
   width: 100%; */
-  height: 100% !important;
+  /* height: 100% !important; */
+  height: 50% !important;
 }
 
 .svg-img-div {
@@ -63,7 +64,8 @@ button.btn.btn-primary.btn-large {
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 3px 24px 0 rgba(37, 56, 88, 0.1);
+  /* box-shadow: 0 3px 24px 0 rgba(37, 56, 88, 0.1); */
+  box-shadow: 0 3px 24px 0 rgba(37, 56, 88, 0.5);
 }
 
 .form-div,
@@ -151,7 +153,10 @@ div#bannertext {
 
 .radios label input[type="radio"]:checked + span {
   border: 1px solid #03aa7d;
-  color: #03aa7d;
+  color: #03aa7d !important;
+}
+.num-text-active {
+  color: #03aa7d !important;
 }
 
 .radios label input[type="radio"]:checked + span::before {
@@ -217,7 +222,8 @@ form.form.steppers {
 
 .num-of-people label {
   width: 31.5%;
-  height: 100px !important;
+  /* height: 100px !important; */
+  height: 75px !important;
 }
 
 #firstPage,
@@ -234,15 +240,25 @@ span .num-text {
 
 span.num-div-inner {
   flex-direction: column;
-  height: 100px !important;
+  /* height: 100px !important; */
+  height: 100% !important;
 }
 
 .num-div-inner span {
-  height: 100% !important;
+  /* height: 100% !important;
+  width: 100% !important; */
+  height: 60% !important;
   width: 100% !important;
   align-items: center;
   justify-content: center;
   display: flex;
+}
+
+.num-text {
+  color: #aeb6bf;
+  font-size: 12px !important;
+  height: 40% !important;
+  width: 100% !important;
 }
 
 .me {
@@ -620,8 +636,8 @@ button.close:after {
   }
 
   .form h3 {
-    /* font-size: 1rem !important; */
-    font-size: 0.65rem !important;
+    font-size: 1rem !important;
+    /* font-size: 0.65rem !important; */
     margin-top: 0.5rem;
   }
   i.gender.icons-gender.male.me {
@@ -922,7 +938,7 @@ div#thirdPage {
   }
 
   .svg-and-text {
-    padding-top: 0rem !important;
+    /* padding-top: 0rem !important; */
     /* height: 100% !important; */
   }
 
@@ -1034,9 +1050,9 @@ div#thirdPage {
   }
 }
 
-.svg-and-text {
-  /* height: 300px; */
-}
+/* .svg-and-text {
+  height: 300px;
+} */
 
 .banner-text {
   height: 100% !important;
@@ -6043,22 +6059,6 @@ juliette
     height: 36px;
   }
 
-  @media only screen and (min-width: 568px) {
-    .insurerDetails .insurerFeatures {
-      max-width: 100%;
-    }
-  }
-  .insurerDetails .insurerFeatures {
-    height: 114px;
-    padding-top: 27px;
-    width: 100%;
-  }
-
-  @media only screen and (min-width: 568px) {
-    .insurerDetails .insurerFeatures .features {
-      display: flex !important;
-    }
-  }
   .insurerDetails .insurerFeatures .features .block {
     display: flex;
     /* width: 33%; */
@@ -6187,7 +6187,7 @@ juliette
 
   .main_quotes_div.is-hidden-mobile.is-hidden-tablet-only-custom.container.col-md-12.row,
   .AppHeader_appHeader__2t96E .container {
-    max-width: 1140px !important;
+    /* max-width: 1140px !important; */
   }
 }
 
@@ -6293,18 +6293,18 @@ section.section.hero.compare_parent.sp-top-main {
 
 /* tweaking the home page design */
 
-.banner-bottom {
+.home-banner-bottom {
   display: none;
 }
 
 .svg-and-text {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
 }
 
-.ant-col.banner-text.ant-col-xs-24.ant-col-md-16 {
+/* .ant-col.banner-text.ant-col-xs-24.ant-col-md-16 {
   display: none;
-}
+} */
 
 .ant-col.quiz.ant-col-md-8 {
   height: 100% !important;
@@ -6354,14 +6354,67 @@ section.section.hero.compare_parent.sp-top-main {
   );
 }
 
-.svg-and-text {
-  height: 400px;
-}
-
 .svg-img-div {
   height: 100% !important;
 }
 
 input.form-control {
   font-size: 14px;
+}
+
+.view1-svg-and-text .svg-img {
+  display: flex;
+  height: 50%;
+  flex-direction: column;
+}
+
+.view1-svg-and-text .svg-img img {
+  height: 200px !important;
+}
+
+@media (min-width: 1000px) {
+  .svg-and-text {
+    height: 300px;
+  }
+}
+
+span.num-div-inner {
+  padding: 5px !important;
+}
+
+h3.no-med.no-med-r {
+  color: #aeb6bf !important;
+}
+
+.price-range {
+  color: #03aa7d !important;
+}
+
+.ant-slider.ant-slider-with-marks {
+  overflow: hidden;
+}
+
+.view2-banner-text {
+  display: none !important;
+}
+
+.hide-desktop-home-frm {
+  display: none;
+}
+
+div#desktop-on-page-load-modal .modal-content {
+  border-radius: 10px !important;
+  height: max-content !important;
+}
+
+div#desktop-on-page-load-modal.custom-dialog {
+  top: 10% !important;
+}
+
+/* .mobile-view-steps {
+  display: none !important;
+} */
+
+.no-med-mobile {
+  padding-bottom: 0.5px !important;
 }

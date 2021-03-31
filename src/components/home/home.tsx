@@ -125,7 +125,7 @@ class HomeContent extends React.Component<homeProps, homeState> {
 
       return (
         <Col xs={24} md={16} className="banner-container provider-banner">
-          <div className="svg-and-text provider-data">
+          <div className="view1-svg-and-text svg-and-text provider-data">
             <div className="svg-img">
               <img src={data[0].logo}></img>
             </div>
@@ -180,7 +180,7 @@ class HomeContent extends React.Component<homeProps, homeState> {
   homeBannerDiv() {
     return (
       <Col xs={24} md={16} className="banner-container">
-        <div className="svg-and-text">
+        <div className="view1-svg-and-text svg-and-text">
           <Col xs={24} md={8} className="svg-img-div">
             <div className="svg-img">
               <img src="images/searching.svg"></img>

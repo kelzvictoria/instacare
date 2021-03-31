@@ -297,6 +297,10 @@ export const filterReducer = createReducer(state, {
   GET_PROVIDER_INFO: (state, actions) => {
     state.provider_info = actions.data;
   },
+
+  UPDATE_PRICE_RANGE: (state, actions) => {
+    state.quiz.responses.price_range = actions.data;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -377,3 +381,5 @@ createAction("GET_CHEAPEST_PLAN_BY_HMO");
 createAction("GET_CHEAPEST_PLAN");
 
 createAction("GET_PLANS_BY_PROVIDER");
+
+createAction("UPDATE_PRICE_RANGE");

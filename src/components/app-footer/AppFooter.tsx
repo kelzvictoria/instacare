@@ -193,7 +193,7 @@ class AppFooter extends Component<FooterProps, {}> {
               </li>
             </ul>
             <div className={styles.blockContentWrapper}>
-              <div className={styles.subfooter}>
+              <div className={`${styles.subfooter} container`}>
                 <div className={styles.grid}>
                   <div className={styles.boxleft}>
                     <Title level={3} className={styles.title}>

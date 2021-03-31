@@ -21,7 +21,7 @@ export const state: any = {
     tab_opened: "highlights",
 
     responses: {
-      budget: [300000, 350000],
+      budget: [20000, 80000],
       num_of_people: 1,
       type: "single",
       firstName: "",
@@ -62,6 +62,7 @@ export const state: any = {
       child_7_age: 0,
       child_8_age: 0,
       plan_duration: "1",
+      price_range: "medium",
     },
   },
   compare: {

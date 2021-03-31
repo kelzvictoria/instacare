@@ -6,7 +6,7 @@
     padding-bottom: 0;
     // height: 100px !important;
     // margin-bottom: 1rem;
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
   }
   width: 100%;
   // height: 57px;
@@ -36,6 +36,15 @@
   //   #bae5db,
   //   #e6fcf6
   // );
+  background: linear-gradient(to right, #007991, #78ffd6);
+  background-image: linear-gradient(
+    to right,
+    #e6fcf6,
+    #bae2dd,
+    #8cc9c9,
+    #5aafb8,
+    #03aa7d
+  );
   /*box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.1);*/
   /*display: flex;
     justify-content: space-between;*/
