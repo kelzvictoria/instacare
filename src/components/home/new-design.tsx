@@ -3799,6 +3799,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         onHide={() => this.closeDesktopOnLoadModal()}
         backdrop="static"
       >
+        <Modal.Header translate="true" closeButton></Modal.Header>
         <Modal.Body>{this.renderDesktopQuizForm()}</Modal.Body>
       </Modal>
     );

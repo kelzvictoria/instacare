@@ -802,6 +802,7 @@ a {
 /* .hmo-svg-img img, */
 .home-svg-img img {
   /* height: 100% !important; */
+  margin-bottom: 1.2rem;
   height: 80% !important;
 }
 
@@ -841,6 +842,7 @@ a {
 }
 
 .tiny-descrptn {
+  font-size: 1.2rem;
   text-align: center;
 }
 
@@ -1470,4 +1472,14 @@ a {
 
 .ic-color {
   color: #253858 !important;
+}
+
+#desktop-on-page-load-modal .modal-header .close {
+  /* float: right; */
+  padding: 1rem 1rem;
+  margin: -2.8rem -4.8rem -1rem auto;
+}
+
+#desktop-on-page-load-modal .modal-header {
+  padding: 0px !important;
 }

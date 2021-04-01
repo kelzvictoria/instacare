@@ -6312,7 +6312,8 @@ section.section.hero.compare_parent.sp-top-main {
 }
 
 .banner-div {
-  min-height: 100vh;
+  background-color: #e6fcf6;
+  /* min-height: 100vh;
   background-image: linear-gradient(
     to right,
     #009786,
@@ -6337,12 +6338,12 @@ section.section.hero.compare_parent.sp-top-main {
     #e6fcf6
   );
 
-  background: #007991; /* fallback for old browsers */
+  background: #007991; 
   background: -webkit-linear-gradient(
     to right,
     #007991,
     #78ffd6
-  ); /* Chrome 10-25, Safari 5.1-6 */
+  ); 
   background: linear-gradient(to right, #007991, #78ffd6);
   background-image: linear-gradient(
     to right,
@@ -6351,7 +6352,7 @@ section.section.hero.compare_parent.sp-top-main {
     #8cc9c9,
     #5aafb8,
     #03aa7d
-  );
+  ); */
 }
 
 .svg-img-div {
