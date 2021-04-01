@@ -160,7 +160,7 @@ class Providers extends Component<ProvidersProps> {
                 </div>
               </div>
             </div>
-            <a href="/#plans">
+            <a href="/new-design/#plans">
               <button
                 className="c-button c-button--secondary margin-top--2"
                 type="button"
