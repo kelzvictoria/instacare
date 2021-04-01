@@ -32,6 +32,16 @@ export const mobile_steps = [
     },
 ];
 
+export const providers = [
+    "Living Spring Hospital & Maternity Home",
+    "Westcare Hospital",
+]
+
+export const prescriptions = [
+    "Coartem",
+    "Gascol"
+]
+
 export const locations = [
     "Abia",
     "Adamawa",

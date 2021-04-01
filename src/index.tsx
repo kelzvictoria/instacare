@@ -24,6 +24,8 @@ import SideBySideComparison from "./pages/compare/SideBySideComparison";
 import AppHeader from "./components/app-header/AppHeader";
 import AppFooter from "./components/app-footer/AppFooter";
 import Home2 from "./pages/home/Home2";
+import Providers from "./pages/providers/Providers";
+import Prescriptions from "./pages/prescriptions/Prescriptions";
 
 //import HMO from "./pages/home/HMO";
 
@@ -41,7 +43,9 @@ ReactDOM.render(
           <Route path="/details" component={PlanDetails} />
           <Route path="/compare" component={SideBySideComparison} />
           <Route path="/new-design" component={Home2} />
-          <Route exact path="/:hmo" component={Home2} />
+          <Route exact path="/hmos/:id" component={Home2} />
+          <Route exact path="/find-provider" component={Providers} />
+          <Route exact path="/find-drugs" component={Prescriptions} />
           {/* <Route path= {`/${hmo}`} component = {HMO} /> */}
           <Route component={ErrorPage} />
         </Switch>

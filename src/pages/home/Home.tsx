@@ -67,17 +67,17 @@ class Home extends Component<QuizProps, {}> {
   componentDidMount() {
     let hmoArr;
 
-    if (this.props.match.params.hmo == "hygeia") {
+    if (this.props.match.params.id == "hygeia") {
       hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == "1");
     } else {
       hmoArr = home_utils.hmos.filter(
-        (hmo) => hmo["id"] == this.props.match.params.hmo
+        (hmo) => hmo["id"] == this.props.match.params.id
       );
     }
 
     console.log("hmoArr", hmoArr);
 
-    document.title = this.props.match.params.hmo
+    document.title = this.props.match.params.id
       ? `Instacare - ${hmoArr[0].title}`
       : "Instacare - Home";
 
@@ -231,7 +231,7 @@ class Home extends Component<QuizProps, {}> {
 
     console.log("this.props.match", this.props.match);
 
-    const hmo = this.props.match.params ? this.props.match.params.hmo : "";
+    const hmo = this.props.match.params ? this.props.match.params.id : "";
 
     await this.getPlansByHMO(hmo);
     this.getCheapestPlan();

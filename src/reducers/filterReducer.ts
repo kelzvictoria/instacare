@@ -301,6 +301,22 @@ export const filterReducer = createReducer(state, {
   UPDATE_PRICE_RANGE: (state, actions) => {
     state.quiz.responses.price_range = actions.data;
   },
+
+  FILTER_PROVIDERS: (state, action) => {
+    if (action.data) {
+      state.quiz.dataSource = [];
+      state.quiz.dataSource.push(...action.data);
+    }
+    return state;
+  },
+
+  FILTER_PRESCRIPTIONS: (state, action) => {
+    if (action.data) {
+      state.quiz.dataSource = [];
+      state.quiz.dataSource.push(...action.data);
+    }
+    return state;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -383,3 +399,7 @@ createAction("GET_CHEAPEST_PLAN");
 createAction("GET_PLANS_BY_PROVIDER");
 
 createAction("UPDATE_PRICE_RANGE");
+
+createAction("FILTER_PROVIDERS");
+
+createAction("FILTER_PRESCRIPTIONS");

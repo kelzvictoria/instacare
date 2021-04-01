@@ -204,40 +204,44 @@ class AppFooter extends Component<FooterProps, {}> {
                       style={{ padding: 0, margin: 0 }}
                     >
                       <li>
-                        <a href="/hygeia">Hygeia HMO</a>
+                        <a href="/hmos/hygeia">Hygeia HMO</a>
                       </li>
                       <li>
-                        <a href="/metro-health">MetroHealth HMO</a>
+                        <a href="/hmos/metro-health">MetroHealth HMO</a>
                       </li>
                       <li>
-                        <a href="/novo-health-africa">Novo Health Africa HMO</a>
+                        <a href="/hmos/novo-health-africa">
+                          Novo Health Africa HMO
+                        </a>
                       </li>
                       <li>
-                        <a href="/swift">Swift HMO Ltd</a>
+                        <a href="/hmos/swift">Swift HMO Ltd</a>
                       </li>
                       <li>
-                        <a href="/reliance">Reliance HMO</a>
+                        <a href="/hmos/reliance">Reliance HMO</a>
                       </li>
                       <li>
-                        <a href="/princeton-health-limited">
+                        <a href="/hmos/princeton-health-limited">
                           Princeton Health Limited
                         </a>
                       </li>
                       <li>
-                        <a href="/aiico-multi-shield-nig-ltd">
+                        <a href="/hmos/aiico-multi-shield-nig-ltd">
                           AIICO Multi-Shield Nig. Ltd
                         </a>
                       </li>
                       <li>
-                        <a href="/avon">Avon Health Insurance</a>
+                        <a href="/hmos/avon">Avon Health Insurance</a>
                       </li>
                       <li>
-                        <a href="/integrated-healthcare-ltd">
+                        <a href="/hmos/integrated-healthcare-ltd">
                           Integrated Healthcare Limited
                         </a>
                       </li>
                       <li>
-                        <a href="/total-health-trust">Total Health Trust</a>
+                        <a href="/hmos/total-health-trust">
+                          Total Health Trust
+                        </a>
                       </li>
                       <li>
                         <a

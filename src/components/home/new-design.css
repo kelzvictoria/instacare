@@ -51,6 +51,14 @@
 .font-size--lead {
   font-size: 18px !important;
 }
+
+.font-size--base {
+  font-size: 16px !important;
+}
+
+.margin-top--5 {
+  margin-top: 40px !important;
+}
 @media (min-width: 1024px) {
   .lg-margin-bottom--0 {
     margin-bottom: 0 !important;
@@ -1454,4 +1462,12 @@ a {
   padding-left: 16px;
   padding-right: 16px;
   width: 100%;
+}
+
+.font-size--h1 {
+  font-size: 36px !important;
+}
+
+.ic-color {
+  color: #253858 !important;
 }

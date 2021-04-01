@@ -2222,11 +2222,11 @@ class HomeContent extends React.Component<homeProps, homeState> {
             {/* if /hmo */}
             {
               //this.state.filter_plans_by_hmo &&
-              this.props.match.params.hmo &&
+              this.props.match.params.id &&
                 this.props.plans.length > 0 &&
                 this.props.provider_plans.length > 0 && (
                   <Row className="banner-content">
-                    {this.hmoBannerDiv(this.props.match.params.hmo)}
+                    {this.hmoBannerDiv(this.props.match.params.id)}
 
                     <Col md={8} className="quiz">
                       <div className="home-frm form-div">
@@ -2592,7 +2592,7 @@ class HomeContent extends React.Component<homeProps, homeState> {
                 )
             }
 
-            {this.props.match.params.hmo && this.props.plans.length == 0 && (
+            {this.props.match.params.id && this.props.plans.length == 0 && (
               <Row className="banner-content">
                 <Col
                   xs={24}
@@ -2962,7 +2962,7 @@ class HomeContent extends React.Component<homeProps, homeState> {
 
             {/* if / */}
 
-            {!this.props.match.params.hmo && (
+            {!this.props.match.params.id && (
               <Row className="banner-content">
                 {this.homeBannerDiv()}
                 <Col md={8} className="quiz">

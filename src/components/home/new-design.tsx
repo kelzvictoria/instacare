@@ -3967,11 +3967,11 @@ class NewContent extends React.Component<homeProps, homeState> {
             {/* if the path is /hmo and data has been fetched*/}
             {
               //this.state.filter_plans_by_hmo &&
-              this.props.match.params.hmo &&
+              this.props.match.params.id &&
                 this.props.plans.length > 0 &&
                 this.props.provider_plans.length > 0 && (
                   <Row className="banner-content">
-                    {this.hmoBannerDiv(this.props.match.params.hmo)}
+                    {this.hmoBannerDiv(this.props.match.params.id)}
 
                     <Col md={10} className="quiz">
                       <div className="home-frm form-div">
@@ -3991,7 +3991,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             }
 
             {/* if the path is /hmo and data is being fetched*/}
-            {this.props.match.params.hmo && this.props.plans.length == 0 && (
+            {this.props.match.params.id && this.props.plans.length == 0 && (
               <Row className="banner-content">
                 <Col
                   xs={24}
@@ -4014,7 +4014,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
             {/* if the path is / */}
 
-            {!this.props.match.params.hmo && (
+            {!this.props.match.params.id && (
               <Row className="banner-content">
                 {this.homeBannerDiv()}
                 <Col md={10} className="quiz">
@@ -4530,7 +4530,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         </fieldset>
                         <a
                           className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                          href="#"
+                          href="/find-provider"
                         >
                           Add Providers
                         </a>
@@ -4544,7 +4544,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         </fieldset>
                         <a
                           className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                          href="#"
+                          href="/find-drugs"
                         >
                           Add Drugs
                         </a>

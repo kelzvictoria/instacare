@@ -3,6 +3,8 @@ import styles from "./AppHeader.module.scss";
 import { Link } from "react-router-dom";
 import { Menu, Row, Col } from "antd";
 
+import logo from "../../imgs/logo2.png";
+
 function AppHeader() {
   const links = [
     {
@@ -25,7 +27,7 @@ function AppHeader() {
         <Row>
           <Col xs={24} md={8}>
             <Link to="/">
-              <img src="images/logo2.png" alt="Logo" />
+              <img src={logo} alt="Logo" />
               {/* <div className={styles.connect}>hmo connect</div> */}
             </Link>
           </Col>

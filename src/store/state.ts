@@ -28,6 +28,7 @@ export const state: any = {
       lastName: "",
       email: "",
       state: "",
+      provider: "",
       adult: 1,
       children: 0,
       infants: 0,
