@@ -103,4 +103,5 @@ export const state: any = {
   provider_plans: [],
   filter_plans_by_hmo: false,
   provider_info: [],
+  selected_providers: [],
 };

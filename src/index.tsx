@@ -16,6 +16,7 @@ import Home from "./pages/home/Home";
 import ErrorPage from "./pages/error-page/ErrorPage";
 import Quiz from "./pages/quiz/Quiz";
 import Compare from "./pages/compare/Compare";
+import ComparePlans from "./pages/compare/Compare2";
 import PlanDetails from "./pages/details/PlanDetails";
 import Details from "./pages/details/Details";
 import Plans from "./pages/compare/Plans";
@@ -42,6 +43,7 @@ ReactDOM.render(
           <Route path="/details-old" component={Details} />
           <Route path="/details" component={PlanDetails} />
           <Route path="/compare" component={SideBySideComparison} />
+          <Route path="/compare-plans" component={ComparePlans} />
           <Route path="/new-design" component={Home2} />
           <Route exact path="/hmos/:id" component={Home2} />
           <Route exact path="/find-provider" component={Providers} />

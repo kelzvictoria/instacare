@@ -317,6 +317,10 @@ export const filterReducer = createReducer(state, {
     }
     return state;
   },
+
+  UPDATE_SELECTED_PROVIDERS: (state, actions) => {
+    state.quiz.selected_providers = actions.data;
+  },
 });
 
 createAction("CHANGE_PAGE");
@@ -403,3 +407,5 @@ createAction("UPDATE_PRICE_RANGE");
 createAction("FILTER_PROVIDERS");
 
 createAction("FILTER_PRESCRIPTIONS");
+
+createAction("UPDATE_SELECTED_PROVIDERS");

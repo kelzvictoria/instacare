@@ -35,11 +35,49 @@ export const mobile_steps = [
 export const providers = [
     "Living Spring Hospital & Maternity Home",
     "Westcare Hospital",
+    // {
+    //     name: "",
+    //     id: ""
+    // },
+    // {
+    //     name: "Westcare Hospital",
+    //     id: "wch"
+    // }
+]
+
+export const providersInfo = [{
+    id: "lshmh",
+    name: "Living Spring Hospital & Maternity Home",
+    address: "Alafia Avenue Street",
+    specialty: "Nurse Practioner · Family",
+    city: "Ejigbo",
+    state: "Lagos"
+},
+{
+    id: "wch",
+    name: "Westcare Hospital",
+    address: "Ejibo Last Bustop",
+    specialty: "Nurse Practioner · Family",
+    city: "Ejigbo",
+    state: "Lagos"
+}
 ]
 
 export const prescriptions = [
     "Coartem",
     "Gascol"
+]
+
+export const prescriptionsInfo = [
+    {
+        name: "Coartem",
+        mg: "Coartem 80/480mg"
+    },
+
+    {
+        name: "Gascol",
+        mg: "Gascol Antacid Suspension 150ml"
+    }
 ]
 
 export const locations = [

@@ -94,6 +94,15 @@
   border: none;
 }
 
+.fa-arrow-left:before {
+  content: "\f060";
+}
+
+/* .providers-results,
+.providers-search-selection-controls {
+  display: none;
+} */
+
 @media (min-width: 544px) {
   /* .l-container {
     padding-left: 32px;
@@ -105,5 +114,10 @@
   .c-coverables-search__results .c-coverable-result {
     width: calc(50% - 16px);
     box-sizing: border-box;
+  }
+  .c-coverables-search__results {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
   }
 }
