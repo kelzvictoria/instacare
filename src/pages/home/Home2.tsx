@@ -42,6 +42,8 @@ import * as home_utils from "../../utils/homeUtils";
 
 import NewContent from "../../components/home/new-design";
 
+import { state } from "../../components/home/state";
+
 const { Step } = Steps;
 
 const API_URL = "https://instacareconnect.pmglobaltechnology.com";
@@ -269,18 +271,20 @@ class Home extends Component<QuizProps, {}> {
     let highest = Number.NEGATIVE_INFINITY;
     let tmp;
 
-    let arr = this.props.plans;
+    // let arr = this.props.plans;
+    let arr = state.plans;
     for (let i = arr.length - 1; i >= 0; i--) {
       tmp = arr[i]["individual_annual_price"];
       if (tmp < lowest) lowest = tmp;
       if (tmp > highest) highest = tmp;
     }
     console.log("most expensive plan", highest, "cheapest plan", lowest);
-    this.props.dispatch({
-      type: "GET_CHEAPEST_PLAN",
-      data: lowest,
-    });
-    //return lowest;
+
+    return this.props.cheapest_plan;
+    // this.props.dispatch({
+    //   type: "GET_CHEAPEST_PLAN",
+    //   data: lowest,
+    // });
   }
 
   render() {

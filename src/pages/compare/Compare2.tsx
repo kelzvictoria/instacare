@@ -59,6 +59,8 @@ import * as home_utils from "../../utils/homeUtils";
 
 import { RouteComponentProps } from "react-router-dom";
 
+import { state } from "../../components/home/state";
+
 interface ComparisonProps {
   [x: string]: any;
   dispatch(args: any): any;
@@ -72,16 +74,42 @@ class ComparePlans extends Component<ComparisonProps> {
   state = {
     limit_plans_to_compare_on_desktop: 3,
     limit_plans_to_compare_on_mobile: 2,
+    device: "",
+    plans_to_compare: "",
   };
+
+  setPlansToCompare = () => {
+    console.log("this.props.match.params[0]", this.props.match.params[0]);
+    let params = this.props.match.params[0];
+    let paramsArr = params.split("/");
+    console.log("paramsArr", paramsArr);
+
+    this.setState({
+      plans_to_compare: paramsArr,
+    });
+  };
+
+  UNSAFE_componentWillMount() {
+    this.setPlansToCompare();
+    if (window.screen.width >= 501) {
+      this.setState({
+        device: "desktop",
+      });
+    } else {
+      this.setState({
+        device: "mobile",
+      });
+    }
+  }
 
   componentDidMount() {}
 
   initializeValues = () => {
     // let checked_plans_mobile = this.props.location.state
-    //   .compare_plans_mobile_indexes;
+    //   .this.state.plans_to_compare;
     // let checked_plans_desktop = this.props.location.state
-    //   .compare_plans_desktop_indexes;
-    // let recommended_plans = this.props.recommended_plans;
+    //   .this.state.plans_to_compare;
+    // let recommended_plans = state.plans;
   };
 
   handleCheckedPlanToCompareOnDesktop(index) {
@@ -96,7 +124,7 @@ class ComparePlans extends Component<ComparisonProps> {
     let indexes: string[] = [];
     let checked_values: boolean[] = [];
 
-    indexes = this.props.compare_plans_desktop_indexes;
+    indexes = this.props.this.state.plans_to_compare;
     checked_values = this.props.checked_plans_list;
 
     let i: number = indexes.indexOf(value);
@@ -120,7 +148,7 @@ class ComparePlans extends Component<ComparisonProps> {
 
       this.props.dispatch({
         type: "SET_PLANS_TO_COMPARE_ON_DESKTOP",
-        data: [...this.props.compare_plans_desktop_indexes, value],
+        data: [...this.props.this.state.plans_to_compare, value],
       });
 
       this.props.dispatch({
@@ -130,12 +158,12 @@ class ComparePlans extends Component<ComparisonProps> {
     } else if (i > -1 && j > -1) {
       // console.log(
       //   "there",
-      //   this.state.compare_plans_mobile_indexes.splice(i, 1)
+      //   this.state.this.state.plans_to_compare.splice(i, 1)
       // );
 
       this.props.dispatch({
         type: "SET_PLANS_TO_COMPARE_ON_DESKTOP",
-        data: this.props.compare_plans_desktop_indexes.splice(i, 1),
+        data: this.props.this.state.plans_to_compare.splice(i, 1),
       });
 
       this.props.dispatch({
@@ -145,14 +173,14 @@ class ComparePlans extends Component<ComparisonProps> {
     }
     if (indexes.length == this.state.limit_plans_to_compare_on_desktop) {
       // this.toggleShowDesktopCompareCheckbox();
-      //this.state.compare_plans_mobile_indexes.filter((plan) => index !== plan);
+      //this.state.this.state.plans_to_compare.filter((plan) => index !== plan);
     }
 
     // }
   }
 
   removePlanFromDesktopCheckedIndexes(index) {
-    if (this.props.compare_plans_desktop_indexes.length < 3) {
+    if (this.props.this.state.plans_to_compare.length < 3) {
       message.error("You need to select at least 2 plans to compare");
       return;
     }
@@ -178,7 +206,7 @@ class ComparePlans extends Component<ComparisonProps> {
     let indexes: string[] = [];
     let checked_values: boolean[] = [];
 
-    indexes = this.props.compare_plans_desktop_indexes;
+    indexes = this.props.this.state.plans_to_compare;
     checked_values = this.props.checked_plans_list;
 
     let i: number = indexes.indexOf(index);
@@ -193,10 +221,10 @@ class ComparePlans extends Component<ComparisonProps> {
     ) {
       // console.log(
       //   "there",
-      //   this.state.compare_plans_desktop_indexes.splice(i, 1)
+      //   this.state.this.state.plans_to_compare.splice(i, 1)
       // );
 
-      let x = [...this.props.compare_plans_desktop_indexes];
+      let x = [...this.props.this.state.plans_to_compare];
       let v = x.splice(i, 1) && x;
 
       let y = [...this.props.checked_plans_list];
@@ -230,7 +258,7 @@ class ComparePlans extends Component<ComparisonProps> {
     let indexes: string[] = [];
     let checked_values: boolean[] = [];
 
-    indexes = this.props.compare_plans_mobile_indexes;
+    indexes = this.props.this.state.plans_to_compare;
     checked_values = this.props.checked_plans_list;
 
     let i: number = indexes.indexOf(value);
@@ -254,7 +282,7 @@ class ComparePlans extends Component<ComparisonProps> {
 
       this.props.dispatch({
         type: "SET_PLANS_TO_COMPARE_ON_MOBILE",
-        data: [...this.props.compare_plans_mobile_indexes, value],
+        data: [...this.props.this.state.plans_to_compare, value],
       });
 
       this.props.dispatch({
@@ -264,12 +292,12 @@ class ComparePlans extends Component<ComparisonProps> {
     } else if (i > -1 && j > -1) {
       // console.log(
       //   "there",
-      //   this.state.compare_plans_mobile_indexes.splice(i, 1)
+      //   this.state.this.state.plans_to_compare.splice(i, 1)
       // );
 
       this.props.dispatch({
         type: "SET_PLANS_TO_COMPARE_ON_MOBILE",
-        data: this.props.compare_plans_mobile_indexes.splice(i, 1),
+        data: this.props.this.state.plans_to_compare.splice(i, 1),
       });
 
       this.props.dispatch({
@@ -279,14 +307,14 @@ class ComparePlans extends Component<ComparisonProps> {
     }
     if (indexes.length == this.state.limit_plans_to_compare_on_mobile) {
       // this.toggleShowDesktopCompareCheckbox();
-      //this.state.compare_plans_mobile_indexes.filter((plan) => index !== plan);
+      //this.state.this.state.plans_to_compare.filter((plan) => index !== plan);
     }
 
     // }
   }
 
   removePlanFromMobileCheckedIndexes(index) {
-    if (this.props.compare_plans_mobile_indexes.length < 2) {
+    if (this.props.this.state.plans_to_compare.length < 2) {
       message.error("You need to select 2 plans to compare");
       return;
     }
@@ -312,7 +340,7 @@ class ComparePlans extends Component<ComparisonProps> {
     let indexes: string[] = [];
     let checked_values: boolean[] = [];
 
-    indexes = this.props.compare_plans_mobile_indexes;
+    indexes = this.props.this.state.plans_to_compare;
     checked_values = this.props.checked_plans_list;
 
     let i: number = indexes.indexOf(index);
@@ -327,10 +355,10 @@ class ComparePlans extends Component<ComparisonProps> {
     ) {
       // console.log(
       //   "there",
-      //   this.state.compare_plans_desktop_indexes.splice(i, 1)
+      //   this.state.this.state.plans_to_compare.splice(i, 1)
       // );
 
-      let x = [...this.props.compare_plans_mobile_indexes];
+      let x = [...this.props.this.state.plans_to_compare];
       let v = x.splice(i, 1) && x;
 
       let y = [...this.props.checked_plans_list];
@@ -361,15 +389,18 @@ class ComparePlans extends Component<ComparisonProps> {
   };
 
   render() {
-    const {
-      compare_plans_desktop_indexes,
-      compare_plans_mobile_indexes,
-    } = this.props;
-    console.log("this.props", this.props);
+    console.log(
+      "copied state",
+      state,
+      "copied state.plans",
+      state.plans,
+      "this.state.plans_to_compare",
+      this.state.plans_to_compare
+    );
 
     return (
       <div className="side-by-side_comparison">
-        {compare_plans_mobile_indexes.length > 0 ? (
+        {this.state.device == "mobile" ? (
           <div className="mobile-comparison-view quotes_main_container">
             <div className="row compare-plans-header">
               <div className="row nav-info">
@@ -393,90 +424,19 @@ class ComparePlans extends Component<ComparisonProps> {
                 <div className="sticky">
                   <div className="top_fixed_box column">
                     <div className="columns difference_column">
-                      {/* <div className="column">
-                        <a className="button back_btn" id="CompareBack">
-                          <span className="arrow-icon"></span> Back
-                        </a>
-                        <div className=" w_100 desktop_diff">
-                          <label className="checkbox_label">
-                            <input type="checkbox" className="checkbox" />
-                            <span className="checkbox_custm"></span>Show
-                            differences
-                          </label>
-                        </div>
-                      </div> */}
                       <div className="column w_50 ">
-                        {/* <img
-                          src={
-                            this.props.plans[
-                              compare_plans_mobile_indexes[0]
-                            ].hmo_id.logo
-                          }
-                          alt={
-                            this.props.recommended_plans[
-                              compare_plans_mobile_indexes[0].name
-                            ]
-                          }
-                          className="img-compare"
-                          // width="80"
-                        /> */}
                         <p className="box-plan-2">
                           <span className="plan-2">
-                            {
-                              this.props.plans[compare_plans_mobile_indexes[0]]
-                                .name
-                            }
+                            {state.plans[this.state.plans_to_compare[0]].name}
                           </span>
                           <a className="is-inline-flex edit-plan-close">×</a>
-                          <a
-                            className="close_plan edit-plan-close"
-                            // onClick={() => {
-                            //   this.removePlanFromMobileCheckedIndexes(
-                            //     compare_plans_mobile_indexes[0]
-                            //   );
-                            // }}
-                          >
-                            ×
-                          </a>
+                          <a className="close_plan edit-plan-close">×</a>
                         </p>
-
-                        {/* <button className="button ">
-                          {this.props.quiz.responses.type == "single"
-                            ? `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_mobile_indexes[0]
-                                ].individual_annual_price
-                              )}`
-                            : `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_mobile_indexes[0]
-                                ].family_annual_price
-                              )}`}{" "}
-                          annually<span className="arrow-icon-right"></span>
-                        </button> */}
-                        {/* <span className="yearly-text"> ₹ 7,921 paid annually</span> */}
                       </div>
                       <div className="column w_50 ">
-                        {/* <img
-                          src={
-                            this.props.plans[
-                              compare_plans_mobile_indexes[1]
-                            ].hmo_id.logo
-                          }
-                          alt={
-                            this.props.recommended_plans[
-                              compare_plans_mobile_indexes
-                            ].name
-                          }
-                          // width="80"
-                          className="img-compare"
-                        /> */}
                         <p className="box-plan-2">
                           <span className="plan-2">
-                            {
-                              this.props.plans[compare_plans_mobile_indexes[1]]
-                                .name
-                            }
+                            {state.plans[this.state.plans_to_compare[1]].name}
                           </span>
                           <a className="is-inline-flex is-hidden-mobile is-hidden-tablet-only edit-plan-close">
                             ×
@@ -485,28 +445,13 @@ class ComparePlans extends Component<ComparisonProps> {
                             className="close_plan edit-plan-close"
                             // onClick={() => {
                             //   this.removePlanFromMobileCheckedIndexes(
-                            //     compare_plans_mobile_indexes[1]
+                            //     this.state.plans_to_compare[1]
                             //   );
                             // }}
                           >
                             ×
                           </a>
                         </p>
-                        {/* <button className="button ">
-                          {this.props.quiz.responses.type == "single"
-                            ? `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_mobile_indexes[1]
-                                ].individual_annual_price
-                              )}`
-                            : `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_mobile_indexes[1]
-                                ].family_annual_price
-                              )}`}{" "}
-                          annually<span className="arrow-icon-right"></span>
-                        </button> */}
-                        {/* <span className="yearly-text"> ₹ 10,992 paid annually</span> */}
                       </div>
                     </div>
                   </div>
@@ -516,19 +461,16 @@ class ComparePlans extends Component<ComparisonProps> {
                     Estimated monthly
                   </div>
                   <div className="columns green_background">
-                    {/* <div className="column w_100">SUM INSURED</div> */}
                     <div className="column w_50 grey-bg-col">
                       <h3 className="select">
                         {this.props.quiz.responses.type == "single"
                           ? `₦${this.numberwithCommas(
-                              this.props.recommended_plans[
-                                compare_plans_mobile_indexes[0]
-                              ].individual_annual_price
+                              state.plans[this.state.plans_to_compare[0]]
+                                .individual_annual_price
                             )}`
                           : `₦${this.numberwithCommas(
-                              this.props.recommended_plans[
-                                compare_plans_mobile_indexes[0]
-                              ].family_annual_price
+                              state.plans[this.state.plans_to_compare[0]]
+                                .family_annual_price
                             )}`}{" "}
                       </h3>
                     </div>
@@ -536,14 +478,12 @@ class ComparePlans extends Component<ComparisonProps> {
                       <h3 className="select">
                         {this.props.quiz.responses.type == "single"
                           ? `₦${this.numberwithCommas(
-                              this.props.recommended_plans[
-                                compare_plans_mobile_indexes[1]
-                              ].individual_annual_price
+                              state.plans[this.state.plans_to_compare[1]]
+                                .individual_annual_price
                             )}`
                           : `₦${this.numberwithCommas(
-                              this.props.recommended_plans[
-                                compare_plans_mobile_indexes[1]
-                              ].family_annual_price
+                              state.plans[this.state.plans_to_compare[1]]
+                                .family_annual_price
                             )}`}{" "}
                       </h3>
                     </div>
@@ -552,26 +492,15 @@ class ComparePlans extends Component<ComparisonProps> {
                     TERM
                   </div>
                   <div className="columns green_background">
-                    {/* <div className="column w_100">TERM</div> */}
                     <div className="column w_50 grey-bg-col">
                       <h3 className="select">
-                        {
-                          this.props.recommended_plans[
-                            compare_plans_mobile_indexes[0]
-                          ].duration
-                        }
+                        {state.plans[this.state.plans_to_compare[0]].duration}
                       </h3>
-                      {/* <span className="span_saves">&nbsp;</span> */}
                     </div>
                     <div className="column w_50 grey-bg-col">
                       <h3 className="select">
-                        {
-                          this.props.recommended_plans[
-                            compare_plans_mobile_indexes[1]
-                          ].duration
-                        }
+                        {state.plans[this.state.plans_to_compare[1]].duration}
                       </h3>
-                      {/* <span className="span_saves">&nbsp;</span> */}
                     </div>
                   </div>
                 </section>
@@ -582,25 +511,19 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_100">
                       <h3 className="subtitle">Admission</h3>
-                      {/* <a
-                    className="is-primary tooltip is-tooltip-multiline is-tooltip-right tip-box"
-                    data-tooltip="Room rent capping have a direct implication on your claim payout, (Eg.Room rent limit is 4K and You have availed 5k room rent, then also you will be eligible for only 4K i.e 80% of total room rent.)"
-                  >
-                    Why is it important?
-                  </a> */}
                     </div>
                   </div>
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Accommodation")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Accommodation") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -641,14 +564,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Accommodation")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Accommodation") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -697,14 +620,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Accidents & Emergencies")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Accidents & Emergencies") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -745,14 +668,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Accidents & Emergencies")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Accidents & Emergencies") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -801,14 +724,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Investigations")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Investigations") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -849,14 +772,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Investigations")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Investigations") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -905,14 +828,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Minor Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Minor Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -953,14 +876,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Minor Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Minor Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1010,14 +933,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Intermediate Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Intermediate Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1058,14 +981,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Intermediate Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Intermediate Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1115,14 +1038,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Major Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Major Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1163,14 +1086,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Major Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Major Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1219,14 +1142,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Intensive Care Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Intensive Care Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1267,14 +1190,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Intensive Care Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Intensive Care Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1323,14 +1246,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Maternity Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Maternity Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1371,14 +1294,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Maternity Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Maternity Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1427,14 +1350,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Ante Natal Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Ante Natal Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1475,14 +1398,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Ante Natal Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Ante Natal Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1532,14 +1455,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Post Natal Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Post Natal Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1580,14 +1503,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Post Natal Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Post Natal Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1627,9 +1550,6 @@ class ComparePlans extends Component<ComparisonProps> {
                       )}
                     </div>
                   </div>
-                  {/* <div>
-                    <section className="section grey_background similar_plans call_scheduling_compare"></section>
-                  </div> */}
 
                   <div className="columns  call_schedule_hospitals">
                     <div className="column w_100">
@@ -1645,11 +1565,10 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className=" has-text-weight-bold sp-more">
-                        {this.props.recommended_plans &&
+                        {state.plans &&
                           JSON.parse(
-                            this.props.recommended_plans[
-                              compare_plans_mobile_indexes[0]
-                            ].hmo_id.provider_id
+                            state.plans[this.state.plans_to_compare[0]].hmo_id
+                              .provider_id
                           ).map((prov) => prov + ", ")}
                       </p>
                       <a className="block is-active link-bottom">
@@ -1659,9 +1578,8 @@ class ComparePlans extends Component<ComparisonProps> {
                     <div className="column w_50 ">
                       <p className=" has-text-weight-bold sp-more">
                         {JSON.parse(
-                          this.props.recommended_plans[
-                            compare_plans_mobile_indexes[1]
-                          ].hmo_id.provider_id
+                          state.plans[this.state.plans_to_compare[1]].hmo_id
+                            .provider_id
                         ).map((prov) => prov + ", ")}
                       </p>
                       <a className="block is-active link-bottom">
@@ -1682,14 +1600,14 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Ambulance")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Ambulance") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1730,14 +1648,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_mobile_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Ambulance")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_mobile_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Ambulance") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -1786,96 +1704,82 @@ class ComparePlans extends Component<ComparisonProps> {
                       </h4>
                       <div className="box-mob-slider">
                         <div className="slider-new ">
-                          {this.props.recommended_plans.map(
-                            (similar_plan, i) => {
-                              // console.log(
-                              //   "i",
-                              //   i,
-                              //   "compare_plans_mobile_indexes",
-                              //   compare_plans_mobile_indexes,
-                              //   "compare_plans_mobile_indexes.includes(i.toString())",
-                              //   compare_plans_mobile_indexes.includes(i.toString())
-                              // );
-                              return compare_plans_mobile_indexes.includes(
-                                i.toString()
-                              ) == false ? (
-                                <div className="box-new">
-                                  <ul className="similar_plan_ul">
-                                    <li>
-                                      <div className="box_block">
-                                        <div className="img-box-logo-similar">
-                                          <img
-                                            src={similar_plan.hmo_id.logo}
-                                            alt="Aditya Birla"
-                                            width="100"
-                                          />
-                                        </div>
-                                        <span className="grey-mob">
-                                          {similar_plan.name}
-                                        </span>
+                          {state.plans.map((similar_plan, i) => {
+                            return this.state.plans_to_compare.includes(
+                              i.toString()
+                            ) == false ? (
+                              <div className="box-new">
+                                <ul className="similar_plan_ul">
+                                  <li>
+                                    <div className="box_block">
+                                      <div className="img-box-logo-similar">
+                                        <img
+                                          src={similar_plan.hmo_id.logo}
+                                          alt="Aditya Birla"
+                                          width="100"
+                                        />
                                       </div>
-                                      <p className="is-hidden-mobile">
-                                        ₦
-                                        {this.props.quiz.responses.type ==
-                                        "single"
-                                          ? this.numberwithCommas(
-                                              similar_plan.individual_annual_price
-                                            )
-                                          : this.numberwithCommas(
-                                              similar_plan.family_annual_price
-                                            )}
-                                        / year
-                                      </p>
-                                      <ul>
-                                        <li>
-                                          {
-                                            this.props.quiz.responses
-                                              .num_of_people
-                                          }{" "}
-                                          {this.props.quiz.responses
-                                            .num_of_people > 1
-                                            ? " people"
-                                            : " person"}{" "}
-                                          <span>Sum Insured</span>
-                                        </li>
-                                        <li>
-                                          {
-                                            JSON.parse(
-                                              similar_plan.hmo_id.provider_id
-                                            ).length
-                                          }{" "}
-                                          <span>Hospitals</span>
-                                        </li>
-                                      </ul>
-                                      {/* <div className="like-covers">
-                                  <div className="usp_image"></div>1 Cr in less
-                                  premium
-                                </div> */}
-                                      <button
-                                        className="button "
-                                        disabled={
-                                          compare_plans_mobile_indexes.length <
-                                          2
-                                            ? false
-                                            : true
-                                        }
-                                        onClick={() => {
-                                          this.handleCheckedPlanToCompareOnMobile(
-                                            i.toString()
-                                          );
-                                        }}
-                                      >
-                                        <i className="fas fa-plus"></i>+ Add to
-                                        compare
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </div>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
+                                      <span className="grey-mob">
+                                        {similar_plan.name}
+                                      </span>
+                                    </div>
+                                    <p className="is-hidden-mobile">
+                                      ₦
+                                      {this.props.quiz.responses.type ==
+                                      "single"
+                                        ? this.numberwithCommas(
+                                            similar_plan.individual_annual_price
+                                          )
+                                        : this.numberwithCommas(
+                                            similar_plan.family_annual_price
+                                          )}
+                                      / year
+                                    </p>
+                                    <ul>
+                                      <li>
+                                        {
+                                          this.props.quiz.responses
+                                            .num_of_people
+                                        }{" "}
+                                        {this.props.quiz.responses
+                                          .num_of_people > 1
+                                          ? " people"
+                                          : " person"}{" "}
+                                        <span>Sum Insured</span>
+                                      </li>
+                                      <li>
+                                        {
+                                          JSON.parse(
+                                            similar_plan.hmo_id.provider_id
+                                          ).length
+                                        }{" "}
+                                        <span>Hospitals</span>
+                                      </li>
+                                    </ul>
+
+                                    <button
+                                      className="button "
+                                      disabled={
+                                        this.state.plans_to_compare.length < 2
+                                          ? false
+                                          : true
+                                      }
+                                      onClick={() => {
+                                        this.handleCheckedPlanToCompareOnMobile(
+                                          i.toString()
+                                        );
+                                      }}
+                                    >
+                                      <i className="fas fa-plus"></i>+ Add to
+                                      compare
+                                    </button>
+                                  </li>
+                                </ul>
+                              </div>
+                            ) : (
+                              ""
+                            );
+                          })}
                         </div>
                       </div>
                     </section>
@@ -1884,7 +1788,7 @@ class ComparePlans extends Component<ComparisonProps> {
               </div>
             </section>
           </div>
-        ) : compare_plans_desktop_indexes.length > 0 ? (
+        ) : this.state.device == "desktop" ? (
           <div className="desktop-view quotes_main_container">
             <section className="section hero compare_parent sp-top-main">
               <div className="container">
@@ -1910,25 +1814,16 @@ class ComparePlans extends Component<ComparisonProps> {
                       <div className="column w_50 ">
                         <img
                           src={
-                            this.props.recommended_plans[
-                              compare_plans_desktop_indexes[0]
-                            ].hmo_id.logo
+                            state.plans[this.state.plans_to_compare[0]].hmo_id
+                              .logo
                           }
-                          alt={
-                            this.props.recommended_plans[
-                              compare_plans_desktop_indexes[0]
-                            ].name
-                          }
+                          alt={state.plans[this.state.plans_to_compare[0]].name}
                           // width="80"
                           className="img-compare"
                         />
                         <p className="box-plan-2">
                           <span className="plan-2">
-                            {
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[0]
-                              ].name
-                            }
+                            {state.plans[this.state.plans_to_compare[0]].name}
                           </span>
                           <a className="is-inline-flex is-hidden-mobile is-hidden-tablet-only edit-plan-close">
                             ×
@@ -1937,7 +1832,7 @@ class ComparePlans extends Component<ComparisonProps> {
                             className="close_plan is-hidden-desktop edit-plan-close"
                             onClick={() => {
                               this.removePlanFromDesktopCheckedIndexes(
-                                compare_plans_desktop_indexes[0]
+                                this.state.plans_to_compare[0]
                               );
                             }}
                           >
@@ -1948,41 +1843,29 @@ class ComparePlans extends Component<ComparisonProps> {
                         <button className="button ">
                           {this.props.quiz.responses.type == "single"
                             ? `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_desktop_indexes[0]
-                                ].individual_annual_price
+                                state.plans[this.state.plans_to_compare[0]]
+                                  .individual_annual_price
                               )}`
                             : `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_desktop_indexes[0]
-                                ].family_annual_price
+                                state.plans[this.state.plans_to_compare[0]]
+                                  .family_annual_price
                               )}`}{" "}
                           annually<span className="arrow-icon-right"></span>
                         </button>
-                        {/* <span className="yearly-text"> ₹ 7,921 paid annually</span> */}
                       </div>
                       <div className="column w_50 ">
                         <img
                           src={
-                            this.props.recommended_plans[
-                              compare_plans_desktop_indexes[1]
-                            ].hmo_id.logo
+                            state.plans[this.state.plans_to_compare[1]].hmo_id
+                              .logo
                           }
-                          alt={
-                            this.props.recommended_plans[
-                              compare_plans_desktop_indexes[1]
-                            ].name
-                          }
+                          alt={state.plans[this.state.plans_to_compare[1]].name}
                           // width="80"
                           className="img-compare"
                         />
                         <p className="box-plan-2">
                           <span className="plan-2">
-                            {
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[1]
-                              ].name
-                            }
+                            {state.plans[this.state.plans_to_compare[1]].name}
                           </span>
                           <a className="is-inline-flex is-hidden-mobile is-hidden-tablet-only edit-plan-close">
                             ×
@@ -1991,7 +1874,7 @@ class ComparePlans extends Component<ComparisonProps> {
                             className="close_plan is-hidden-desktop edit-plan-close"
                             onClick={() => {
                               this.removePlanFromDesktopCheckedIndexes(
-                                compare_plans_desktop_indexes[1]
+                                this.state.plans_to_compare[1]
                               );
                             }}
                           >
@@ -2001,42 +1884,32 @@ class ComparePlans extends Component<ComparisonProps> {
                         <button className="button ">
                           {this.props.quiz.responses.type == "single"
                             ? `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_desktop_indexes[1]
-                                ].individual_annual_price
+                                state.plans[this.state.plans_to_compare[1]]
+                                  .individual_annual_price
                               )}`
                             : `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_desktop_indexes[1]
-                                ].family_annual_price
+                                state.plans[this.state.plans_to_compare[1]]
+                                  .family_annual_price
                               )}`}{" "}
                           annually<span className="arrow-icon-right"></span>
                         </button>
-                        {/* <span className="yearly-text"> ₹ 10,992 paid annually</span> */}
                       </div>
-                      {compare_plans_desktop_indexes[2] ? (
+                      {this.state.plans_to_compare[2] ? (
                         <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                           <img
                             src={
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[2]
-                              ].hmo_id.logo
+                              state.plans[this.state.plans_to_compare[2]].hmo_id
+                                .logo
                             }
                             alt={
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[2]
-                              ].name
+                              state.plans[this.state.plans_to_compare[2]].name
                             }
                             className="img-compare"
                             // width="80"
                           />
                           <p className="box-plan-2">
                             <span className="plan-2">
-                              {
-                                this.props.recommended_plans[
-                                  compare_plans_desktop_indexes[2]
-                                ].name
-                              }
+                              {state.plans[this.state.plans_to_compare[2]].name}
                             </span>
                             <a className="is-inline-flex is-hidden-mobile is-hidden-tablet-only edit-plan-close">
                               ×
@@ -2045,7 +1918,7 @@ class ComparePlans extends Component<ComparisonProps> {
                               className="close_plan is-hidden-desktop edit-plan-close"
                               onClick={() => {
                                 this.removePlanFromDesktopCheckedIndexes(
-                                  compare_plans_desktop_indexes[2]
+                                  this.state.plans_to_compare[2]
                                 );
                               }}
                             >
@@ -2055,18 +1928,15 @@ class ComparePlans extends Component<ComparisonProps> {
                           <button className="button ">
                             {this.props.quiz.responses.type == "single"
                               ? `₦${this.numberwithCommas(
-                                  this.props.recommended_plans[
-                                    compare_plans_desktop_indexes[2]
-                                  ].individual_annual_price
+                                  state.plans[this.state.plans_to_compare[2]]
+                                    .individual_annual_price
                                 )}`
                               : `₦${this.numberwithCommas(
-                                  this.props.recommended_plans[
-                                    compare_plans_desktop_indexes[2]
-                                  ].family_annual_price
+                                  state.plans[this.state.plans_to_compare[2]]
+                                    .family_annual_price
                                 )}`}{" "}
                             annually<span className="arrow-icon-right"></span>
                           </button>
-                          {/* <span className="yearly-text"> ₹ 7,432 paid annually</span> */}
                         </div>
                       ) : (
                         ""
@@ -2081,14 +1951,12 @@ class ComparePlans extends Component<ComparisonProps> {
                       <h3 className="select">
                         {this.props.quiz.responses.type == "single"
                           ? `₦${this.numberwithCommas(
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[0]
-                              ].individual_annual_price
+                              state.plans[this.state.plans_to_compare[0]]
+                                .individual_annual_price
                             )}`
                           : `₦${this.numberwithCommas(
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[0]
-                              ].family_annual_price
+                              state.plans[this.state.plans_to_compare[0]]
+                                .family_annual_price
                             )}`}{" "}
                       </h3>
                     </div>
@@ -2096,30 +1964,26 @@ class ComparePlans extends Component<ComparisonProps> {
                       <h3 className="select">
                         {this.props.quiz.responses.type == "single"
                           ? `₦${this.numberwithCommas(
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[1]
-                              ].individual_annual_price
+                              state.plans[this.state.plans_to_compare[1]]
+                                .individual_annual_price
                             )}`
                           : `₦${this.numberwithCommas(
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[1]
-                              ].family_annual_price
+                              state.plans[this.state.plans_to_compare[1]]
+                                .family_annual_price
                             )}`}{" "}
                       </h3>
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <h3 className="select">
                           {this.props.quiz.responses.type == "single"
                             ? `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_desktop_indexes[2]
-                                ].individual_annual_price
+                                state.plans[this.state.plans_to_compare[2]]
+                                  .individual_annual_price
                               )}`
                             : `₦${this.numberwithCommas(
-                                this.props.recommended_plans[
-                                  compare_plans_desktop_indexes[2]
-                                ].family_annual_price
+                                state.plans[this.state.plans_to_compare[2]]
+                                  .family_annual_price
                               )}`}{" "}
                         </h3>
                       </div>
@@ -2131,34 +1995,19 @@ class ComparePlans extends Component<ComparisonProps> {
                     <div className="column w_100">TERM</div>
                     <div className="column w_50 ">
                       <h3 className="select">
-                        {
-                          this.props.recommended_plans[
-                            compare_plans_desktop_indexes[0]
-                          ].duration
-                        }
+                        {state.plans[this.state.plans_to_compare[0]].duration}
                       </h3>
-                      {/* <span className="span_saves">&nbsp;</span> */}
                     </div>
                     <div className="column w_50 ">
                       <h3 className="select">
-                        {
-                          this.props.recommended_plans[
-                            compare_plans_desktop_indexes[1]
-                          ].duration
-                        }
+                        {state.plans[this.state.plans_to_compare[1]].duration}
                       </h3>
-                      {/* <span className="span_saves">&nbsp;</span> */}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <h3 className="select">
-                          {
-                            this.props.recommended_plans[
-                              compare_plans_desktop_indexes[2]
-                            ].duration
-                          }
+                          {state.plans[this.state.plans_to_compare[2]].duration}
                         </h3>
-                        {/* <span className="span_saves">&nbsp;</span> */}
                       </div>
                     ) : (
                       ""
@@ -2172,23 +2021,17 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_100">
                       <p className="subtitle">Admission</p>
-                      {/* <a
-                    className="is-primary tooltip is-tooltip-multiline is-tooltip-right tip-box"
-                    data-tooltip="Room rent capping have a direct implication on your claim payout, (Eg.Room rent limit is 4K and You have availed 5k room rent, then also you will be eligible for only 4K i.e 80% of total room rent.)"
-                  >
-                    Why is it important?
-                  </a> */}
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Accommodation")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Accommodation") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2229,14 +2072,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Accommodation")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Accommodation") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2275,17 +2118,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Accommodation")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Accommodation") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -2331,23 +2174,17 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_100">
                       <p className="subtitle">Accidents & Emergencies</p>
-                      {/* <a
-                    className="is-primary tooltip is-tooltip-multiline is-tooltip-right tip-box"
-                    data-tooltip="Percentage of Current SumInsured will be added at the same premium if Claim is not taken in current policy year, So higher the Percentage, better the coverage"
-                  >
-                    Why is it important?
-                  </a> */}
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Accidents & Emergencies")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Accidents & Emergencies") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2388,14 +2225,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Accidents & Emergencies")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Accidents & Emergencies") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2434,17 +2271,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Accidents & Emergencies")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Accidents & Emergencies") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -2493,14 +2330,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Investigations")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Investigations") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2541,14 +2378,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Investigations")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Investigations") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2587,17 +2424,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Investigations")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Investigations") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -2643,23 +2480,17 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_100">
                       <p className="subtitle">Minor Surgeries</p>
-                      {/* <a
-                    className="is-primary tooltip is-tooltip-multiline is-tooltip-right tip-box"
-                    data-tooltip="Insurance companies will deduct this share and then settle the claim. Lower the Co-Pay, better the coverage"
-                  >
-                    Why is it important?
-                  </a> */}
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Minor Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Minor Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2700,14 +2531,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Minor Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Minor Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2746,17 +2577,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Minor Surgeries")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Minor Surgeries") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -2805,14 +2636,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Intermediate Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Intermediate Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2853,14 +2684,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Intermediate Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Intermediate Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -2899,17 +2730,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Intermediate Surgeries")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Intermediate Surgeries") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -2955,23 +2786,17 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_100">
                       <p className="subtitle">Major Surgeries</p>
-                      {/* <a
-                    className="is-primary tooltip is-tooltip-multiline is-tooltip-right tip-box"
-                    data-tooltip="Covers Normal and Caesarean delivery expenses and may cover lawful medical complication of pregnancy"
-                  >
-                    Why is it important?
-                  </a> */}
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Major Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Major Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3012,14 +2837,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Major Surgeries")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Major Surgeries") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3058,17 +2883,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Major Surgeries")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Major Surgeries") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -3117,14 +2942,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Intensive Care Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Intensive Care Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3165,14 +2990,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Intensive Care Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Intensive Care Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3211,17 +3036,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Intensive Care Services")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Intensive Care Services") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -3270,14 +3095,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Maternity Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Maternity Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3318,14 +3143,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Maternity Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Maternity Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3364,17 +3189,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Maternity Services")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Maternity Services") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -3424,14 +3249,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Ante Natal Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Ante Natal Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3472,14 +3297,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Ante Natal Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Ante Natal Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3518,17 +3343,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Ante Natal Services")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Ante Natal Services") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -3578,14 +3403,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Post Natal Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Post Natal Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3626,14 +3451,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Post Natal Services")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Post Natal Services") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -3672,17 +3497,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Post Natal Services")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Post Natal Services") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -3741,13 +3566,11 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className=" has-text-weight-bold sp-more">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
-                        ].hmo_id.provider_id
+                        {state.plans[this.state.plans_to_compare[0]].hmo_id
+                          .provider_id
                           ? JSON.parse(
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[0]
-                              ].hmo_id.provider_id
+                              state.plans[this.state.plans_to_compare[0]].hmo_id
+                                .provider_id
                             ).map((prov) => prov + ", ")
                           : ""}
                       </p>
@@ -3757,13 +3580,11 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className=" has-text-weight-bold sp-more">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
-                        ].hmo_id.provider_id
+                        {state.plans[this.state.plans_to_compare[1]].hmo_id
+                          .provider_id
                           ? JSON.parse(
-                              this.props.recommended_plans[
-                                compare_plans_desktop_indexes[1]
-                              ].hmo_id.provider_id
+                              state.plans[this.state.plans_to_compare[1]].hmo_id
+                                .provider_id
                             ).map((prov) => prov + ", ")
                           : ""}
                       </p>
@@ -3771,16 +3592,14 @@ class ComparePlans extends Component<ComparisonProps> {
                         View network hospitals
                       </a>
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className=" has-text-weight-bold sp-more">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
-                          ].hmo_id.provider_id
+                          {state.plans[this.state.plans_to_compare[2]].hmo_id
+                            .provider_id
                             ? JSON.parse(
-                                this.props.recommended_plans[
-                                  compare_plans_desktop_indexes[2]
-                                ].hmo_id.provider_id
+                                state.plans[this.state.plans_to_compare[2]]
+                                  .hmo_id.provider_id
                               ).map((prov) => prov + ", ")
                             : ""}
                         </p>
@@ -3792,499 +3611,6 @@ class ComparePlans extends Component<ComparisonProps> {
                       ""
                     )}
                   </div>
-                  {/* <div className="column grey_background w_100">
-                In-patient Care
-              </div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Before Hospitalization</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">
-                    Medical expenses that are incurred in 30 days before
-                    hospitalisation are covered up to SI
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green half">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">
-                    Medical expenses that are incurred in 30 days before
-                    hospitalization are covered upto SI.
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green half">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">
-                    Medical Expenses Up to 30 days before hospitalization will
-                    be covered
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green half">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">After Hospitalization</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">
-                    Medical expenses that are incurred in 60 days post
-                    hospitalization are covered Upto SI
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">
-                    Medical expenses that are incurred in 60 days post
-                    hospitalization are covered Upto SI
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">
-                    Medical expenses Up to 60 days(Up to 7% of hospitalisation
-                    charges,Max Up to Rs 5,000)
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green yellow">
-                      <span></span>
-                    </li>
-                    <li className="green yellow">
-                      <span></span>
-                    </li>
-                    <li className="green yellow">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Day Care Treatments</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">
-                    541 Day care treatments that take less than 24 hours of
-                    hospitalization due to technological advancement but
-                    otherwise would have needed a day are covered
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">All Day Care Procedures covered</p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">
-                    101 Day care treatments are covered
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green red">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Hospitalization at Home</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not Applicable</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">
-                    Treatments done at home due to patient condition or
-                    unavailability of hospital bed are covered Up to Sum Insured
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">Not covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Alternate Medicine</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not Applicable</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Up to SI for utilizing AYUSH</p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">
-                    Up to Rs 25,000 for utilizing AYUSH
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green yellow">
-                      <span></span>
-                    </li>
-                    <li className="green yellow">
-                      <span></span>
-                    </li>
-                    <li className="green yellow">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Network Hospitals Covered</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">
-                    6500+ Network hospitals offer cashless hospitalisation
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green half">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">
-                    6100+ Network hospitals offer cashless hospitalisation
-                  </p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">9900+ Network hospitals</p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green half">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="column grey_background w_100">Coverage Terms</div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Family Floater Option</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Upto 2 Adult and 4 Children</p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Up to 2 Adults and 4 Children</p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">Only 1 Adult</p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-               */}
 
                   <div className="column grey_background w_100">
                     Emergency Coverage
@@ -4295,14 +3621,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[0]
+                        {state.plans[
+                          this.state.plans_to_compare[0]
                         ].service_id.includes("Ambulance")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[0]
+                      {state.plans[
+                        this.state.plans_to_compare[0]
                       ].service_id.includes("Ambulance") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -4343,14 +3669,14 @@ class ComparePlans extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className="feature-box">
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[1]
+                        {state.plans[
+                          this.state.plans_to_compare[1]
                         ].service_id.includes("Ambulance")
                           ? "Covered"
                           : "Not Covered"}
                       </p>
-                      {this.props.recommended_plans[
-                        compare_plans_desktop_indexes[1]
+                      {state.plans[
+                        this.state.plans_to_compare[1]
                       ].service_id.includes("Ambulance") ? (
                         <ul className="progress_bar">
                           <li className="green">
@@ -4389,17 +3715,17 @@ class ComparePlans extends Component<ComparisonProps> {
                         </ul>
                       )}
                     </div>
-                    {compare_plans_desktop_indexes[2] ? (
+                    {this.state.plans_to_compare[2] ? (
                       <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
                         <p className="feature-box">
-                          {this.props.recommended_plans[
-                            compare_plans_desktop_indexes[2]
+                          {state.plans[
+                            this.state.plans_to_compare[2]
                           ].service_id.includes("Ambulance")
                             ? "Covered"
                             : "Not Covered"}
                         </p>
-                        {this.props.recommended_plans[
-                          compare_plans_desktop_indexes[2]
+                        {state.plans[
+                          this.state.plans_to_compare[2]
                         ].service_id.includes("Ambulance") ? (
                           <ul className="progress_bar">
                             <li className="green">
@@ -4442,269 +3768,7 @@ class ComparePlans extends Component<ComparisonProps> {
                       ""
                     )}
                   </div>
-                  {/* <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Worldwide Emergency</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not Covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                {compare_plans_desktop_indexes[2] ? (<div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">Not Covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>) : ""}
-              </div>
-              <div className="column grey_background w_100">
-                Wellness Benefits
-              </div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Telemedicine</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not Covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not Covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                {compare_plans_desktop_indexes[2] ? (<div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">Not Covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>) : ""}
-              </div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Health Checks</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not Covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                {compare_plans_desktop_indexes[2] ? ( <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">Not Covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>) : ""}
-              </div>
-              <div className="columns">
-                <div className="column w_100">
-                  <p className="subtitle">Wellness Factors</p>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 ">
-                  <p className="feature-box">Not Covered</p>
-                  <ul className="progress_bar">
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                    <li className="">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="column w_50 is-hidden-mobile is-hidden-tablet-only">
-                  <p className="feature-box">Provide wellness benefits</p>
-                  <ul className="progress_bar">
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                    <li className="green">
-                      <span></span>
-                    </li>
-                  </ul>
-                </div>
-              </div> */}
+
                   <div>
                     <section className="section grey_background similar_plans">
                       <h3>SIMILAR PLANS</h3>
@@ -4713,96 +3777,85 @@ class ComparePlans extends Component<ComparisonProps> {
                       </h4>
                       <div className="box-mob-slider">
                         <div className="slider-new ">
-                          {this.props.recommended_plans.map(
-                            (similar_plan, i) => {
-                              // console.log(
-                              //   "i",
-                              //   i,
-                              //   "compare_plans_desktop_indexes",
-                              //   compare_plans_desktop_indexes,
-                              //   "compare_plans_desktop_indexes.includes(i.toString())",
-                              //   compare_plans_desktop_indexes.includes(i.toString())
-                              // );
-                              return compare_plans_desktop_indexes.includes(
-                                i.toString()
-                              ) == false ? (
-                                <div className="box-new">
-                                  <ul className="similar_plan_ul">
-                                    <li>
-                                      <div className="box_block">
-                                        <div className="img-box-logo-similar">
-                                          <img
-                                            src={similar_plan.hmo_id.logo}
-                                            alt="Aditya Birla"
-                                            width="100"
-                                          />
-                                        </div>
-                                        <span className="grey-mob">
-                                          {similar_plan.name}
-                                        </span>
+                          {state.plans.map((similar_plan, i) => {
+                            return this.state.plans_to_compare.includes(
+                              i.toString()
+                            ) == false ? (
+                              <div className="box-new">
+                                <ul className="similar_plan_ul">
+                                  <li>
+                                    <div className="box_block">
+                                      <div className="img-box-logo-similar">
+                                        <img
+                                          src={similar_plan.hmo_id.logo}
+                                          alt="Aditya Birla"
+                                          width="100"
+                                        />
                                       </div>
-                                      <p className="is-hidden-mobile">
-                                        ₦
-                                        {this.props.quiz.responses.type ==
-                                        "single"
-                                          ? this.numberwithCommas(
-                                              similar_plan.individual_annual_price
-                                            )
-                                          : this.numberwithCommas(
-                                              similar_plan.family_annual_price
-                                            )}
-                                        / year
-                                      </p>
-                                      <ul>
-                                        <li>
-                                          {
-                                            this.props.quiz.responses
-                                              .num_of_people
-                                          }{" "}
-                                          {this.props.quiz.responses
-                                            .num_of_people > 1
-                                            ? " people"
-                                            : " person"}{" "}
-                                          <span>Sum Insured</span>
-                                        </li>
-                                        <li>
-                                          {similar_plan.hmo_id.provider_id
-                                            ? JSON.parse(
-                                                similar_plan.hmo_id.provider_id
-                                              ).length
-                                            : 0}{" "}
-                                          <span>Hospitals</span>
-                                        </li>
-                                      </ul>
-                                      {/* <div className="like-covers">
+                                      <span className="grey-mob">
+                                        {similar_plan.name}
+                                      </span>
+                                    </div>
+                                    <p className="is-hidden-mobile">
+                                      ₦
+                                      {this.props.quiz.responses.type ==
+                                      "single"
+                                        ? this.numberwithCommas(
+                                            similar_plan.individual_annual_price
+                                          )
+                                        : this.numberwithCommas(
+                                            similar_plan.family_annual_price
+                                          )}
+                                      / year
+                                    </p>
+                                    <ul>
+                                      <li>
+                                        {
+                                          this.props.quiz.responses
+                                            .num_of_people
+                                        }{" "}
+                                        {this.props.quiz.responses
+                                          .num_of_people > 1
+                                          ? " people"
+                                          : " person"}{" "}
+                                        <span>Sum Insured</span>
+                                      </li>
+                                      <li>
+                                        {similar_plan.hmo_id.provider_id
+                                          ? JSON.parse(
+                                              similar_plan.hmo_id.provider_id
+                                            ).length
+                                          : 0}{" "}
+                                        <span>Hospitals</span>
+                                      </li>
+                                    </ul>
+                                    {/* <div className="like-covers">
                                   <div className="usp_image"></div>1 Cr in less
                                   premium
                                 </div> */}
-                                      <button
-                                        className="button "
-                                        disabled={
-                                          compare_plans_desktop_indexes.length <
-                                          3
-                                            ? false
-                                            : true
-                                        }
-                                        onClick={() => {
-                                          this.handleCheckedPlanToCompareOnDesktop(
-                                            i.toString()
-                                          );
-                                        }}
-                                      >
-                                        <i className="fas fa-plus"></i>+ Add to
-                                        compare
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </div>
-                              ) : (
-                                ""
-                              );
-                            }
-                          )}
+                                    <button
+                                      className="button "
+                                      disabled={
+                                        this.state.plans_to_compare.length < 3
+                                          ? false
+                                          : true
+                                      }
+                                      onClick={() => {
+                                        this.handleCheckedPlanToCompareOnDesktop(
+                                          i.toString()
+                                        );
+                                      }}
+                                    >
+                                      <i className="fas fa-plus"></i>+ Add to
+                                      compare
+                                    </button>
+                                  </li>
+                                </ul>
+                              </div>
+                            ) : (
+                              ""
+                            );
+                          })}
                         </div>
                       </div>
                     </section>

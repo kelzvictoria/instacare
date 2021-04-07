@@ -52,6 +52,8 @@ import * as home_utils from "../../utils/homeUtils";
 
 import Modal from "react-bootstrap/Modal";
 
+import { state } from "../../components/home/state";
+
 const { Title } = Typography;
 
 let responses: any;
@@ -93,11 +95,11 @@ class PlanDetails extends Component<DetailsProps> {
   };
 
   goToPlans() {
-    this.props.history.push({ pathname: "/plans" });
+    this.props.history.push({ pathname: "/new-design/#plans" });
   }
 
   goToHome = () => {
-    this.props.history.push({ pathname: "/" });
+    this.props.history.push({ pathname: "/new-design" });
   };
 
   handlePlanDuration(val) {
@@ -1272,72 +1274,68 @@ class PlanDetails extends Component<DetailsProps> {
                       <div className="similar_plan_feature">
                         <div className="box-slider">
                           <div className="slider-plans">
-                            {this.props.quiz.recommended_plans.map(
-                              (similar_plan) => {
-                                return similar_plan.name !== plan.name ? (
-                                  <div className="box">
-                                    <ul className="similar-plan-ul">
-                                      <li>
-                                        <div className="box_block">
-                                          <div className="img-box-logo-similar">
-                                            <img
-                                              src={similar_plan.hmo_id.logo}
-                                            />
-                                          </div>
-                                          <span className="greyed-text">
-                                            {similar_plan.name}
+                            {state.plans.map((similar_plan) => {
+                              return similar_plan.name !== plan.name ? (
+                                <div className="box">
+                                  <ul className="similar-plan-ul">
+                                    <li>
+                                      <div className="box_block">
+                                        <div className="img-box-logo-similar">
+                                          <img src={similar_plan.hmo_id.logo} />
+                                        </div>
+                                        <span className="greyed-text">
+                                          {similar_plan.name}
+                                        </span>
+                                      </div>
+                                      <ul>
+                                        <li>
+                                          <span>
+                                            Covers{" "}
+                                            <b>
+                                              {
+                                                this.props.quiz.quiz.responses
+                                                  .num_of_people
+                                              }{" "}
+                                              {this.props.quiz.quiz.responses
+                                                .num_of_people > 1
+                                                ? " people"
+                                                : " person"}
+                                            </b>
                                           </span>
-                                        </div>
-                                        <ul>
-                                          <li>
-                                            <span>
-                                              Covers{" "}
-                                              <b>
-                                                {
-                                                  this.props.quiz.quiz.responses
-                                                    .num_of_people
-                                                }{" "}
-                                                {this.props.quiz.quiz.responses
-                                                  .num_of_people > 1
-                                                  ? " people"
-                                                  : " person"}
-                                              </b>
-                                            </span>
-                                          </li>
-                                          <li>
-                                            <span>
-                                              Premium{" "}
-                                              <b>
-                                                ₦
-                                                {this.props.responses.type ==
-                                                "single"
-                                                  ? this.numberwithCommas(
-                                                      similar_plan.individual_annual_price
-                                                    )
-                                                  : this.numberwithCommas(
-                                                      similar_plan.family_annual_price
-                                                    )}
-                                                / year
-                                              </b>
-                                            </span>
-                                          </li>
-                                        </ul>
-                                        <div className="similar-plans-btm">
-                                          <button
-                                            className="btn"
-                                            onClick={this.goToPlans}
-                                          >
-                                            COMPARE NOW
-                                          </button>
-                                        </div>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                ) : (
-                                  ""
-                                );
-                              }
-                            )}
+                                        </li>
+                                        <li>
+                                          <span>
+                                            Premium{" "}
+                                            <b>
+                                              ₦
+                                              {this.props.responses.type ==
+                                              "single"
+                                                ? this.numberwithCommas(
+                                                    similar_plan.individual_annual_price
+                                                  )
+                                                : this.numberwithCommas(
+                                                    similar_plan.family_annual_price
+                                                  )}
+                                              / year
+                                            </b>
+                                          </span>
+                                        </li>
+                                      </ul>
+                                      <div className="similar-plans-btm">
+                                        <button
+                                          className="btn"
+                                          onClick={this.goToPlans}
+                                        >
+                                          COMPARE NOW
+                                        </button>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </div>
+                              ) : (
+                                ""
+                              );
+                            })}
                           </div>
                         </div>
                       </div>

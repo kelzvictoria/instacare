@@ -466,7 +466,7 @@ class SideBySideComparison extends Component<ComparisonProps> {
                           }
                           alt={
                             this.props.recommended_plans[
-                              compare_plans_mobile_indexes
+                              parseInt(compare_plans_mobile_indexes)
                             ].name
                           }
                           // width="80"
@@ -1647,11 +1647,14 @@ class SideBySideComparison extends Component<ComparisonProps> {
                   <div className="columns">
                     <div className="column w_50 ">
                       <p className=" has-text-weight-bold sp-more">
-                        {JSON.parse(
-                          this.props.recommended_plans[
-                            compare_plans_mobile_indexes[0]
-                          ].hmo_id.provider_id
-                        ).map((prov) => prov + ", ")}
+                        {this.props.recommended_plans[
+                          parseInt(compare_plans_mobile_indexes[0])
+                        ] &&
+                          JSON.parse(
+                            this.props.recommended_plans[
+                              parseInt(compare_plans_mobile_indexes[0])
+                            ].hmo_id.provider_id
+                          ).map((prov) => prov + ", ")}
                       </p>
                       <a className="block is-active link-bottom">
                         View hospitals
@@ -1659,11 +1662,14 @@ class SideBySideComparison extends Component<ComparisonProps> {
                     </div>
                     <div className="column w_50 ">
                       <p className=" has-text-weight-bold sp-more">
-                        {JSON.parse(
-                          this.props.recommended_plans[
-                            compare_plans_mobile_indexes[1]
-                          ].hmo_id.provider_id
-                        ).map((prov) => prov + ", ")}
+                        {this.props.recommended_plans[
+                          compare_plans_mobile_indexes[1]
+                        ] &&
+                          JSON.parse(
+                            this.props.recommended_plans[
+                              compare_plans_mobile_indexes[1]
+                            ].hmo_id.provider_id
+                          ).map((prov) => prov + ", ")}
                       </p>
                       <a className="block is-active link-bottom">
                         View network hospitals

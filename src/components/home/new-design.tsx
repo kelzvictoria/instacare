@@ -2272,8 +2272,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.provider_plans.length == 0 &&
       this.props.dispatch({
         type: actions.GET_CLICKED_PLAN,
-        data: this.props.plans[index],
-        //data: this.props.recommended_plans[index],
+        data: state.plans[index],
+        //data: this.props.plans[index],
       });
   };
 
@@ -3894,9 +3894,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       //console.log"window.screen.width < 501", window.screen.width >= 501);
       //this.mobileOnLoadModal();
     }
-
-    //window.addEventListener("scroll", this.handleSticky);
-    //document.addEventListener("scroll", this.trackScrolling);
   }
 
   componentWillMount() {
@@ -4251,11 +4248,24 @@ class NewContent extends React.Component<homeProps, homeState> {
     // });
   };
 
+  buildQueryParams = () => {
+    let query_string = "/plans/" + this.state.plans_to_compare[0];
+
+    for (let i = 1; i < this.state.plans_to_compare.length; i++) {
+      query_string += "/" + this.state.plans_to_compare[i];
+    }
+
+    console.log("query_string", query_string);
+    return query_string;
+  };
+
   goToComparison = () => {
     if (this.state.plans_to_compare.length > 1) {
+      let q = this.buildQueryParams();
+
       this.setRecPlansIndexesToCompare();
       this.props.history.push({
-        pathname: "/compare-plans",
+        pathname: `/compare-plans${q}`,
       });
     } else {
       message.error("You need to select at least 2 plans to compare");
@@ -4285,30 +4295,10 @@ class NewContent extends React.Component<homeProps, homeState> {
       sticky_styles: css,
     });
   }
-
-  // handleSticky(event) {
-  //   console.log("in");
-  //   let scroll_top = event.srcElement.body.scrollTop,
-  //     itemTranslate = Math.min(0, scroll_top / 3 - 60);
-  //   console.log("scroll_top", scroll_top);
-
-  //   this.setState({
-  //     transform: itemTranslate,
-  //   });
-
-  //   //this.onScrollDownStickyPosition();
   // }
 
   isBottom(el) {
-    // el &&
-    //   console.log(
-    //     "el.getBoundingClientRect()",
-    //     el.getBoundingClientRect(),
-    //     "window.innerHeight",
-    //     window.innerHeight
-    //   );
-    //return el ? el.getBoundingClientRect().bottom <= window.innerHeight : false;
-    return el ? el.getBoundingClientRect().top <= 100 : false;
+    return el ? el.getBoundingClientRect().top <= 120 : false;
   }
 
   trackScrolling = () => {
@@ -4468,8 +4458,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                               ? "c-button c-button--secondary margin-right--2 qa-compare-plans"
                               : "display--none"
                           }
-                          href="#"
-                          //onClick={this.goToComparison}
+                          // href="#"
+                          onClick={this.goToComparison}
                           role="button"
                         >
                           Compare {plans_to_compare.length}{" "}

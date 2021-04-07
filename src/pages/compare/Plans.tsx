@@ -2249,7 +2249,7 @@ class Plans extends Component<PlansProps> {
             </div>
           </div> */}
           <div className="quotes_toolbar is-hidden-mobile is-hidden-tablet-only-custom">
-            <div className="quotes_toolbar_wrapper">
+            <div className="quotes_toolbar_wrapper container">
               <div className="insured_members_div">
                 <span className="span_insured_heading">
                   Showing {recPlansArr ? recPlansArr.length : "Fetching "} plans
@@ -2336,7 +2336,7 @@ class Plans extends Component<PlansProps> {
               </div>
             </div>
           </div>
-          <div className="main_quotes_div is-hidden-mobile is-hidden-tablet-only-custom container col-md-12 row">
+          <div className="main_quotes_div is-hidden-mobile is-hidden-tablet-only-custom col-md-12 row">
             <div className="col-md-8 main_quotes_container">
               {this.props.fetching_plans == true || recPlansArr.length == 0 ? (
                 <Col xs={24} className={styles.example}>

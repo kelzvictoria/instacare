@@ -2096,11 +2096,11 @@ div#Compare_wrapper__2_PoT a h6 {
 }
 
 .details .middle-col a {
-  color: #ff5630;
+  color: #046791;
 }
 
 .details {
-  background-color: #f4f5f7;
+  background-color: #fff;
 }
 
 .col-md-12.details-header {
@@ -2451,8 +2451,8 @@ input[type="radio"]:checked:before {
   font-weight: 500;
   /* border-radius: 4px; */
   background-color: #fff;
-  border: 1px solid #ff5630 !important;
-  color: #ff5630 !important;
+  border: 1px solid #046791 !important;
+  color: #046791 !important;
 }
 
 .similar-plans-inner {
@@ -3254,7 +3254,7 @@ select.plan-select {
   display: inline-block;
   width: 100%;
   height: 48px;
-  background: #ff5630;
+  background: #046791;
   color: #fff;
   font-size: 14px;
   font-weight: 500;
@@ -4957,7 +4957,7 @@ div.sticky {
   padding-top: 35px;
   color: #253858;
   border-radius: 8px 8px 0 0;
-  box-shadow: 0 2px 13px 0 hsla(0, 0%, 62.7%, 0.8);
+  /* box-shadow: 0 2px 13px 0 hsla(0, 0%, 62.7%, 0.8); */
 }
 
 .column {
@@ -5005,7 +5005,7 @@ div.sticky {
 .back_btn,
 .top_fixed_box a {
   font-weight: 400;
-  color: #253858;
+  /* color: #253858; */
 }
 
 .top_fixed_box a {
@@ -5134,11 +5134,14 @@ span.plan-2 {
   /* width: 223px;
   height: 41px; */
   border-radius: 7px;
-  background-color: #ff5630;
+  /* background-color: #ff5630; */
+  background-color: transparent;
+  border: 2px solid #046791 !important;
+  color: #046791;
   font-size: 14px;
   font-weight: 600;
   /* color: #fff; */
-  border: none;
+  /* border: none; */
 }
 
 .arrow-icon-right {
@@ -5171,7 +5174,7 @@ span.plan-2 {
   background: #fff;
   border-radius: 8px;
   border-top-left-radius: 0;
-  box-shadow: 0 2px 13px 0 hsla(0, 0%, 62.7%, 0.5);
+  /* box-shadow: 0 2px 13px 0 hsla(0, 0%, 62.7%, 0.5); */
   border-top-right-radius: 0;
   width: 100%;
   float: left;
@@ -5282,11 +5285,11 @@ span.plan-2 {
   width: 223px;
   height: 41px;
   border-radius: 7px;
-  background-color: #ff5630;
+  /* background-color: #ff5630; */
   font-size: 14px;
   font-weight: 600;
-  color: #fff;
-  border: none;
+  color: #046791;
+  /* border: none; */
 }
 
 .content_section .column p {
@@ -5540,8 +5543,8 @@ span.plan-2 {
   line-height: 29px;
   border-radius: 7px;
   background-color: #fff;
-  border: 1px solid #ff5630 !important;
-  color: #ff5630 !important;
+  border: 1px solid #046791 !important;
+  color: #046791 !important;
 }
 
 .similar_plan_ul button .fa-plus {
@@ -6418,4 +6421,12 @@ div#desktop-on-page-load-modal.custom-dialog {
 
 .no-med-mobile {
   padding-bottom: 0.5px !important;
+}
+
+.compare_parent .top_fixed_box {
+  background-color: #fff !important;
+}
+
+.quotes_main_container {
+  background: #fff !important;
 }
