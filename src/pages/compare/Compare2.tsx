@@ -1242,43 +1242,46 @@ class ComparePlans extends Component<ComparisonProps> {
                       </button>
                     </div>
                   </div>
-                  <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
-                    <div className="c-compare-title__info padding--1">
-                      <div className="font-size--small font-weight--bold">
-                        {
-                          state.plans[this.state.plans_to_compare[2]].hmo_id
-                            .name.text
-                        }
+
+                  {this.state.plans_to_compare[2] && (
+                    <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
+                      <div className="c-compare-title__info padding--1">
+                        <div className="font-size--small font-weight--bold">
+                          {
+                            state.plans[this.state.plans_to_compare[2]].hmo_id
+                              .name.text
+                          }
+                        </div>
+                        <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
+                          <a href="javascript:;">
+                            {state.plans[this.state.plans_to_compare[2]].name}
+                          </a>
+                        </h2>
+                        <div className="margin-top--auto print-display--none">
+                          <button
+                            className="c-button c-button--primary c-button--small qa-details"
+                            type="button"
+                          >
+                            Like This Plan
+                          </button>
+                        </div>
                       </div>
-                      <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                        <a href="javascript:;">
-                          {state.plans[this.state.plans_to_compare[2]].name}
-                        </a>
-                      </h2>
-                      <div className="margin-top--auto print-display--none">
+                      <div className="fill--gray-lightest print-display--none">
                         <button
-                          className="c-button c-button--primary c-button--small qa-details"
+                          className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
                           type="button"
                         >
-                          Like This Plan
+                          <FontAwesomeIcon
+                            className="fas  fa-lg color--primary"
+                            icon={faTimes}
+                          />
+                          <span className="visibility--screen-reader">
+                            Remove
+                          </span>
                         </button>
                       </div>
                     </div>
-                    <div className="fill--gray-lightest print-display--none">
-                      <button
-                        className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
-                        type="button"
-                      >
-                        <FontAwesomeIcon
-                          className="fas  fa-lg color--primary"
-                          icon={faTimes}
-                        />
-                        <span className="visibility--screen-reader">
-                          Remove
-                        </span>
-                      </button>
-                    </div>
-                  </div>
+                  )}
                 </div>
                 <section className="c-detail-section margin-bottom--4">
                   <h2 className="border-bottom--1 border--dark padding-bottom--2">

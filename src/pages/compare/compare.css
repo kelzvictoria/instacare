@@ -13,10 +13,3 @@
   line-height: 0.75em;
   vertical-align: -0.0667em;
 }
-
-@media (min-width: 544px) {
-  .l-container {
-    padding-left: 32px !important;
-    padding-right: 32px !important;
-  }
-}
