@@ -1,0 +1,22 @@
+.c-compare-title__card {
+  margin: 1px;
+}
+
+.c-compare-title__info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.fa-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+@media (min-width: 544px) {
+  .l-container {
+    padding-left: 32px !important;
+    padding-right: 32px !important;
+  }
+}
