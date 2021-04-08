@@ -239,6 +239,10 @@ a {
   text-align: right !important;
 }
 
+.text-align--center {
+  text-align: center !important;
+}
+
 .quality-rating {
   margin-right: -8px;
   white-space: nowrap;
@@ -1761,6 +1765,59 @@ th span.display--block {
   margin-right: 3px;
   width: 17px;
   height: 16px;
+}
+
+.fill--primary {
+  background-color: #046791 !important;
+}
+
+.l-col--4 {
+  flex: 0 0 33.33333%;
+  max-width: 33.33333%;
+
+  box-sizing: border-box;
+  min-height: 1px;
+  min-width: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  width: 100%;
+}
+
+.color--muted-inverse:not(:focus) {
+  color: #bac5cf !important;
+}
+
+.color--white {
+  color: #fff !important;
+}
+
+.color--white:not(:focus) {
+  color: #fff !important;
+}
+
+.padding-x--0 {
+  padding-right: 0 !important;
+}
+
+.padding-left--0,
+.padding-x--0 {
+  padding-left: 0 !important;
+}
+
+/* .fa-circle:before {
+  content: "\f111";
+} 
+
+.fa-chevron-right:before {
+  content: "\f054";
+}*/
+.padding-x--1 {
+  padding-right: 8px !important;
+}
+
+.padding-left--1,
+.padding-x--1 {
+  padding-left: 8px !important;
 }
 
 /* *,

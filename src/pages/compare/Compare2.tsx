@@ -49,10 +49,12 @@ import {
   faChevronRight,
   faChevronDown,
   faChevronUp,
+  faChevronLeft,
   faPrint,
   faEnvelope,
   faLink,
   faTimes,
+  faCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PAYSTACK_PUBLIC_KEY } from "../../utils/index";
@@ -87,10 +89,77 @@ class ComparePlans extends Component<ComparisonProps> {
     limit_plans_to_compare_on_desktop: 3,
     limit_plans_to_compare_on_mobile: 2,
     device: "",
-    plans_to_compare: "",
+    plans_to_compare: [],
     collapse_star_rating: true,
     collapse_plan_documents: true,
     collapse_other_services: true,
+    show_prev_button: false,
+    show_next_button: true,
+    num_of_pages: 0,
+    current_page: 1,
+  };
+
+  showPrevBtn = () => {
+    this.setState({
+      show_prev_button: true,
+    });
+  };
+
+  hidePrevBtn = () => {
+    this.setState({
+      show_prev_button: false,
+    });
+  };
+
+  showNextBtn = () => {
+    this.setState({
+      show_next_button: true,
+    });
+  };
+
+  hideNextBtn = () => {
+    this.setState({
+      show_next_button: false,
+    });
+  };
+
+  onPrevBtnClick = () => {
+    this.state.current_page <= this.state.num_of_pages &&
+      this.state.current_page >= this.state.num_of_pages - 1 &&
+      this.setState({
+        current_page: this.state.current_page - 1,
+      });
+  };
+
+  onNextBtnClick = () => {
+    this.state.current_page < this.state.num_of_pages &&
+      this.setState({
+        current_page: this.state.current_page + 1,
+      });
+  };
+
+  handleMobileNav = (btnType) => {
+    //console.log("in here");
+    if (btnType == "prev") {
+      this.onPrevBtnClick();
+    } else {
+      this.onNextBtnClick();
+    }
+
+    if (this.state.current_page == 1) {
+      // console.log("==1");
+      this.showPrevBtn();
+      // this.hidePrevBtn();
+      // this.showNextBtn();
+    } else if (this.state.current_page == this.state.num_of_pages - 1) {
+      //this.hideNextBtn();
+      // console.log("==2");
+    } else if (this.state.current_page == this.state.num_of_pages) {
+      this.showNextBtn();
+    }
+
+    console.log("this.state inside handleMob", this.state);
+    // console.log("this.state.show_prev_button", this.state.show_next_button);
   };
 
   setPlansToCompare = () => {
@@ -101,6 +170,7 @@ class ComparePlans extends Component<ComparisonProps> {
 
     this.setState({
       plans_to_compare: paramsArr,
+      num_of_pages: paramsArr.length,
     });
   };
 
@@ -422,20 +492,22 @@ class ComparePlans extends Component<ComparisonProps> {
   };
 
   render() {
-    console.log(
-      "copied state",
-      state,
-      "copied state.plans",
-      state.plans,
-      "this.state.plans_to_compare",
-      this.state.plans_to_compare
-    );
+    // console.log(
+    //   "copied state",
+    //   state,
+    //   "copied state.plans",
+    //   state.plans,
+    //   "this.state",
+    //   this.state
+    // );
+    console.log("this.state.current_page - 1", this.state.current_page - 1);
+    let plans_to_compare: string[] = this.state.plans_to_compare;
 
     return (
       <div className="side-by-side_comparison c-plan-details-page">
         <div className="c-plan-details-page__header">
           <header className="c-plan-nav-bar">
-            <div className="l-container padding-y--2 display--flex justify-content--between align-items--center">
+            <div className="container padding-y--2 display--flex justify-content--between align-items--center">
               <div>
                 <a
                   className="c-button c-button--transparent c-plan-nav-bar__back-link padding--0 text-decoration--underline"
@@ -545,716 +617,534 @@ class ComparePlans extends Component<ComparisonProps> {
         </div>
 
         <div className="c-plan-details-page__body">
-          <div className="l-container">
-            <div className="margin-y--1">
-              {/* mobile view begins */}
-              <div className="md-display--none print-display--none">
-                <header className="c-plan-title">
-                  <div className="c-plan-title__issuer font-weight--bold">
-                    Blue Cross and Blue Shield of Illinois
-                  </div>
-                  <h2 className="c-plan-title__name font-weight--normal margin-y--1">
-                    <a
-                      href="#/plan/results/36096IL1000009/details"
-                      target="_self"
-                    >
-                      Blue FocusCare Bronze℠ 209
-                    </a>
-                  </h2>
-                  <ul className="c-plan-title__info c-list--bare font-size--small">
-                    <li className="c-plan-title__info-item">
-                      <span className="visibility--screen-reader">
-                        Metal Level: <span>Bronze</span>
-                      </span>
-                      <span aria-hidden="true">
-                        <span>Bronze</span>
-                      </span>
-                    </li>
-                    <li className="c-plan-title__info-item">
-                      <span className="visibility--screen-reader">
-                        Plan type: <span>HMO</span>
-                      </span>
-                      <span aria-hidden="true">
-                        <span>HMO</span>
-                      </span>
-                    </li>
-                    <li className="c-plan-title__info-item">
-                      Plan ID:
-                      <span className="font-weight--bold">36096IL1000009</span>
-                    </li>
-                  </ul>
-                </header>
-                <button
-                  className="c-button c-button--primary c-button--small margin-top--2 qa-mobile-visible-plan"
+          <div className="fill--primary md-display--none print-display--none">
+            <div className="l-row justify-content--between">
+              <div className="l-col--4 text-align--left">
+                {this.state.show_prev_button && (
+                  <button
+                    className="c-button c-button--transparent color--white padding-x--1 qa-compare-prev"
+                    type="button"
+                    onClick={() => {
+                      this.handleMobileNav("prev");
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon={faChevronLeft}
+                      className="margin-right--1"
+                    />
+                    Prev
+                  </button>
+                )}
+              </div>
+              <div className="l-col--4 text-align--center">
+                {/* <button
+                  className="c-button c-button--transparent padding-x--0 color--muted-inverse"
                   type="button"
                 >
-                  Like This Plan? Take the Next Step
-                </button>
-                <section className="c-detail-section margin-bottom--4">
-                  <h2 className="border-bottom--1 border--dark padding-bottom--2">
-                    Highlights
-                  </h2>
-                  <div>
-                    <table className="c-details-table">
-                      <tbody className="valign--top">
-                        <tr>
-                          <th scope="row">Estimated monthly premium</th>
-                          <td>
-                            <div className="qa-premium">$256.43</div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Deductible</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>$7,400 Individual total</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Out-of-pocket maximum</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>$8,550 Individual total</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr className="print-display--none">
-                          <th scope="row">Estimated total yearly costs</th>
-                          <td>
-                            <a
-                              className="c-button c-button--small padding-x--2 margin-bottom--1"
-                              href="javascript:;"
-                              role="button"
-                            >
-                              Add yearly cost
-                            </a>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Plan metal level</th>
-                          <td>
-                            <span>Bronze</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Plan type</th>
-                          <td>
-                            <span>HMO</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Plan ID</th>
-                          <td>
-                            <span>36096IL1000009</span>
-                          </td>
-                        </tr>
-                        <tr className="print-display--none">
-                          <th scope="row">Medical providers in-network</th>
-                          <td>
-                            <a
-                              className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                              href="#/coverage/search/medical-providers"
-                              role="button"
-                            >
-                              Add medical providers
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="print-display--none">
-                          <th scope="row">Drugs covered/not covered</th>
-                          <td>
-                            <a
-                              className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                              href="#/coverage/search/prescription-drugs"
-                              role="button"
-                            >
-                              Add prescription drugs
-                            </a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-                <section className="c-detail-section margin-bottom--4">
-                  <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                  <FontAwesomeIcon icon={faCircle} />
+                </button> */}
+
+                {this.state.plans_to_compare.map((plan, i) => {
+                  return (
                     <button
-                      className="ds-h2 text-align--left sans fill--transparent"
-                      aria-expanded="false"
+                      className={`c-button c-button--transparent padding-x--0 ${
+                        i == this.state.current_page - 1
+                          ? "color--muted-inverse"
+                          : "color--white"
+                      }`}
+                      type="button"
+                      id={i.toString()}
                     >
-                      Star rating
-                      {this.state.collapse_star_rating ? (
+                      <FontAwesomeIcon icon={faCircle} />
+                    </button>
+                  );
+                })}
+
+                {/* <button
+                  className="c-button c-button--transparent padding-x--0 color--white"
+                  type="button"
+                >
+                  <FontAwesomeIcon icon={faCircle} />
+                </button> */}
+              </div>
+
+              <div className="l-col--4 text-align--right">
+                {this.state.show_next_button && (
+                  <button
+                    className="c-button c-button--transparent color--white padding-x--1 qa-compare-next"
+                    type="button"
+                    onClick={() => {
+                      this.handleMobileNav("next");
+                    }}
+                  >
+                    Next
+                    <FontAwesomeIcon
+                      icon={faChevronRight}
+                      className="margin-left--1"
+                    />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="fill--white">
+            <div className="container">
+              <div className="margin-y--1">
+                {/* mobile view begins */}
+                <div className="md-display--none print-display--none">
+                  <header className="c-plan-title">
+                    <div className="c-plan-title__issuer font-weight--bold">
+                      {this.state.current_page - 1 < 0
+                        ? state.plans[this.state.plans_to_compare[0]].hmo_id
+                            .name.text
+                        : state.plans[
+                            this.state.plans_to_compare[
+                              this.state.current_page - 1
+                            ]
+                          ].hmo_id.name.text}
+                      {/* Blue Cross and Blue Shield of Illinois */}
+                    </div>
+                    <h2 className="c-plan-title__name font-weight--normal margin-y--1">
+                      <a
+                        href="#/plan/results/36096IL1000009/details"
+                        target="_self"
+                      >
+                        {this.state.current_page - 1 < 0
+                          ? state.plans[this.state.plans_to_compare[0]].name
+                          : state.plans[
+                              this.state.plans_to_compare[
+                                this.state.current_page - 1
+                              ]
+                            ].name}
+                        {/* Blue FocusCare Bronze℠ 209 */}
+                      </a>
+                    </h2>
+                    <ul className="c-plan-title__info c-list--bare font-size--small">
+                      <li className="c-plan-title__info-item">
+                        <span className="visibility--screen-reader">
+                          Metal Level: <span>Bronze</span>
+                        </span>
+                        <span aria-hidden="true">
+                          <span>Bronze</span>
+                        </span>
+                      </li>
+                      <li className="c-plan-title__info-item">
+                        <span className="visibility--screen-reader">
+                          Plan type: <span>HMO</span>
+                        </span>
+                        <span aria-hidden="true">
+                          <span>HMO</span>
+                        </span>
+                      </li>
+                      <li className="c-plan-title__info-item">
+                        Plan ID:
+                        <span className="font-weight--bold">
+                          36096IL1000009
+                        </span>
+                      </li>
+                    </ul>
+                  </header>
+                  <button
+                    className="c-button c-button--primary c-button--small margin-top--2 qa-mobile-visible-plan"
+                    type="button"
+                  >
+                    Like This Plan? Take the Next Step
+                  </button>
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      Highlights
+                    </h2>
+                    <div>
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          {" "}
+                          <tr>
+                            <th scope="row">Plan metal level</th>
+                            <td>
+                              <span>Bronze</span>
+                            </td>
+                          </tr>{" "}
+                          <tr>
+                            <th scope="row">Plan ID</th>
+                            <td>
+                              <span>36096IL1000009</span>
+                            </td>
+                          </tr>
+                          <tr className="print-display--none">
+                            <th scope="row">Medical providers in-network</th>
+                            <td>
+                              <a
+                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                href="/find-provider"
+                                role="button"
+                              >
+                                Add medical providers
+                              </a>
+                            </td>
+                          </tr>
+                          <tr className="print-display--none">
+                            <th scope="row">Drugs covered/not covered</th>
+                            <td>
+                              <a
+                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                href="/find-drugs"
+                                role="button"
+                              >
+                                Add prescription drugs
+                              </a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={this.toggleStarRatingCollapsible}
+                      >
+                        Star rating
+                        {this.state.collapse_star_rating ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div
+                      hidden={this.state.collapse_star_rating ? true : false}
+                    >
+                      <table
+                        className={
+                          this.state.collapse_star_rating
+                            ? "display--none"
+                            : "c-details-table"
+                        }
+                      >
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Overall star rating
+                              </span>
+                              <p className="font-weight--normal margin-y--0">
+                                Overall star rating is based on the categories
+                                below
+                              </p>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 3 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span className="display--block">
+                                Member Experience
+                              </span>
+                              <p className="font-weight--normal margin-y--0">
+                                Based on member satisfaction surveys about their
+                                health care, doctors, and ease of getting
+                                appointments and services
+                              </p>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 2 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span className="display--block">
+                                Medical Care
+                              </span>
+                              <p className="font-weight--normal margin-y--0">
+                                Based on providers improving or maintaining the
+                                health of their patients with regular
+                                screenings, tests, vaccines, and condition
+                                monitoring.
+                              </p>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 3 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span className="display--block">
+                                Plan Administration
+                              </span>
+                              <p className="font-weight--normal margin-y--0">
+                                Based on how well a plan is run, including
+                                customer service, access to needed information,
+                                and providers ordering appropriate tests and
+                                treatment.
+                              </p>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 3 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={this.toggleOtherServicesCollapsible}
+                      >
+                        Other services
                         <FontAwesomeIcon
                           className="fas md-margin-right--1"
                           icon={faChevronDown}
                         />
-                      ) : (
-                        <FontAwesomeIcon
-                          className="fas md-margin-right--1"
-                          icon={faChevronUp}
-                        />
-                      )}
-                    </button>
-                  </h2>
-                  <div hidden={this.state.collapse_star_rating ? true : false}>
-                    <table
-                      className={
-                        this.state.collapse_star_rating
-                          ? "display--none"
-                          : "c-details-table"
-                      }
-                    >
-                      <tbody className="valign--top">
-                        <tr className="border-bottom--2">
-                          <th scope="row">
-                            <span className="display--block">
-                              Overall star rating
-                            </span>
-                            <p className="font-weight--normal margin-y--0">
-                              Overall star rating is based on the categories
-                              below
-                            </p>
-                          </th>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 3 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span className="display--block">
-                              Member Experience
-                            </span>
-                            <p className="font-weight--normal margin-y--0">
-                              Based on member satisfaction surveys about their
-                              health care, doctors, and ease of getting
-                              appointments and services
-                            </p>
-                          </th>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 2 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span className="display--block">Medical Care</span>
-                            <p className="font-weight--normal margin-y--0">
-                              Based on providers improving or maintaining the
-                              health of their patients with regular screenings,
-                              tests, vaccines, and condition monitoring.
-                            </p>
-                          </th>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 3 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span className="display--block">
-                              Plan Administration
-                            </span>
-                            <p className="font-weight--normal margin-y--0">
-                              Based on how well a plan is run, including
-                              customer service, access to needed information,
-                              and providers ordering appropriate tests and
-                              treatment.
-                            </p>
-                          </th>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 3 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-                <section className="c-detail-section margin-bottom--4">
-                  <h2 className="border-bottom--1 border--dark padding-bottom--2">
-                    <button
-                      className="ds-h2 text-align--left sans fill--transparent"
-                      aria-expanded="false"
-                    >
-                      Plan documents
-                      <FontAwesomeIcon
-                        className="fas md-margin-right--1"
-                        icon={faChevronDown}
-                      />
-                    </button>
-                  </h2>
-                  <div hidden={false}>
-                    <table className="c-details-table c-details-table--transparent">
-                      <tbody>
-                        <tr>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>
-                                <a
-                                  className="c-pdf-link"
-                                  href="https://www.bcbsil.com/sbc/ind/sbc-bhsh31bfciilp-il-2021.pdf"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src="/see-plans/static/media/file-pdf.8b71a6e7.svg"
-                                    alt="document"
-                                    className="c-pdf-link__icon"
-                                  />
-                                  <span className="c-pdf-link__text">
-                                    Summary of Benefits
-                                  </span>
-                                </a>
-                              </li>
-                              <li>
-                                <a
-                                  className="c-pdf-link"
-                                  href="https://www.bcbsil.com/plan-docs/ind/brochure-il-2021.pdf"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src="/see-plans/static/media/file-pdf.8b71a6e7.svg"
-                                    alt="document"
-                                    className="c-pdf-link__icon"
-                                  />
-                                  <span className="c-pdf-link__text">
-                                    Plan brochure
-                                  </span>
-                                </a>
-                              </li>
-                              <li>
-                                <a
-                                  className="c-pdf-link"
-                                  href="https://my.providerfinderonline.com/?ci=il-bluefocuscare"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src="/see-plans/static/media/file-pdf.8b71a6e7.svg"
-                                    alt="document"
-                                    className="c-pdf-link__icon"
-                                  />
-                                  <span className="c-pdf-link__text">
-                                    Provider directory
-                                  </span>
-                                </a>
-                              </li>
-                              <li>
-                                <a
-                                  className="c-pdf-link"
-                                  href="https://www.myprime.com/content/dam/prime/memberportal/forms/AuthorForms/HIM/2021/2021_IL_6T_HMO_HIM.pdf"
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <img
-                                    src="/see-plans/static/media/file-pdf.8b71a6e7.svg"
-                                    alt="document"
-                                    className="c-pdf-link__icon"
-                                  />
-                                  <span className="c-pdf-link__text">
-                                    List of covered drugs
-                                  </span>
-                                </a>
-                              </li>
-                            </ul>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-
-                <section className="c-detail-section margin-bottom--4">
-                  <h2 className="border-bottom--1 border--dark padding-bottom--2">
-                    <button
-                      className="ds-h2 text-align--left sans fill--transparent"
-                      aria-expanded="false"
-                    >
-                      Other services
-                      <FontAwesomeIcon
-                        className="fas md-margin-right--1"
-                        icon={faChevronDown}
-                      />
-                    </button>
-                  </h2>
-                  <div hidden={false}>
-                    <table className="c-details-table">
-                      <tbody className="valign--top">
-                        <tr>
-                          <th scope="row">Abortion services</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>
-                                Provides coverage for abortion services that
-                                can't be paid for by federal funding.
-                              </li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Acupuncture</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>Benefit Not Covered</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Chiropractic care</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>
-                                In Network: 50% Coinsurance after deductible
-                              </li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                            <button
-                              className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
-                              type="button"
-                            >
-                              View limits and exclusions
-                              <span className="visibility--screen-reader">
-                                : Chiropractic care
-                              </span>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Infertility treatment</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>
-                                In Network: 50% Coinsurance after deductible
-                              </li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                            <button
-                              className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
-                              type="button"
-                            >
-                              View limits and exclusions
-                              <span className="visibility--screen-reader">
-                                : Infertility treatment
-                              </span>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span>
-                              Mental/
-                              <span className="ws-wbr">
-                                <wbr />
-                              </span>
-                            </span>
-                            behavioral health outpatient services
-                          </th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: $60</li>
-                              <li>Out of Network: $60</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span>
-                              Mental/
-                              <span className="ws-wbr">
-                                <wbr />
-                              </span>
-                            </span>
-                            behavioral health inpatient services
-                          </th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: $850 Copay per Day</li>
-                              <li>Out of Network: $850 Copay per Day</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Habilitative services</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: $70</li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                            <button
-                              className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
-                              type="button"
-                            >
-                              View limits and exclusions
-                              <span className="visibility--screen-reader">
-                                : Habilitative services
-                              </span>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Bariatric services</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>
-                                In Network: 50% Coinsurance after deductible
-                              </li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            Outpatient rehabilitation services
-                          </th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: $70</li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Skilled Nursing Facility care</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: $500 Copay per Day</li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Private-duty nursing</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>
-                                In Network: 50% Coinsurance after deductible
-                              </li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                            <button
-                              className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
-                              type="button"
-                            >
-                              View limits and exclusions
-                              <span className="visibility--screen-reader">
-                                : Private-duty nursing
-                              </span>
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-              </div>
-
-              {/* mobile view ends */}
-              <div className="display--none md-display--block print-display--block">
-                <div className="display--flex ">
-                  <div className="l-col padding--0"></div>
-                  <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
-                    <div className="c-compare-title__info padding--1">
-                      <div className="font-size--small font-weight--bold">
-                        {
-                          state.plans[this.state.plans_to_compare[0]].hmo_id
-                            .name.text
-                        }
-                      </div>
-                      <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                        <a href="javascript:;">
-                          {state.plans[this.state.plans_to_compare[0]].name}
-                        </a>
-                      </h2>
-                      <div className="margin-top--auto print-display--none">
-                        <button
-                          className="c-button c-button--primary c-button--small qa-details"
-                          type="button"
-                        >
-                          Like This Plan
-                        </button>
-                      </div>
-                    </div>
-                    <div className="fill--gray-lightest print-display--none">
-                      <button
-                        className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
-                        type="button"
-                      >
-                        <FontAwesomeIcon
-                          className="fas  fa-lg color--primary"
-                          icon={faTimes}
-                        />
-
-                        <span className="visibility--screen-reader">
-                          Remove
-                        </span>
                       </button>
+                    </h2>
+                    <div
+                      hidden={this.state.collapse_other_services ? true : false}
+                    >
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          {" "}
+                          <tr>
+                            <th scope="row">Infertility treatment</th>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>
+                                  In Network: 50% Coinsurance after deductible
+                                </li>
+                                <li>Out of Network: Benefit Not Covered</li>
+                              </ul>
+                              <button
+                                className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
+                                type="button"
+                              >
+                                View limits and exclusions
+                                <span className="visibility--screen-reader">
+                                  : Infertility treatment
+                                </span>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span>
+                                Mental/
+                                <span className="ws-wbr">
+                                  <wbr />
+                                </span>
+                              </span>
+                              behavioral health outpatient services
+                            </th>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>In Network: $60</li>
+                                <li>Out of Network: $60</li>
+                              </ul>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span>
+                                Mental/
+                                <span className="ws-wbr">
+                                  <wbr />
+                                </span>
+                              </span>
+                              behavioral health inpatient services
+                            </th>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>In Network: $850 Copay per Day</li>
+                                <li>Out of Network: $850 Copay per Day</li>
+                              </ul>
+                            </td>
+                          </tr>{" "}
+                        </tbody>
+                      </table>
                     </div>
-                  </div>
-                  <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
-                    <div className="c-compare-title__info padding--1">
-                      <div className="font-size--small font-weight--bold">
-                        {
-                          state.plans[this.state.plans_to_compare[1]].hmo_id
-                            .name.text
-                        }
-                      </div>
-                      <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                        <a href="javascript:;">
-                          {state.plans[this.state.plans_to_compare[1]].name}
-                        </a>
-                      </h2>
-                      <div className="margin-top--auto print-display--none">
-                        <button
-                          className="c-button c-button--primary c-button--small qa-details"
-                          type="button"
-                        >
-                          Like This Plan
-                        </button>
-                      </div>
-                    </div>
-                    <div className="fill--gray-lightest print-display--none">
-                      <button
-                        className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
-                        type="button"
-                      >
-                        <FontAwesomeIcon
-                          className="fas  fa-lg color--primary"
-                          icon={faTimes}
-                        />
-                        <span className="visibility--screen-reader">
-                          Remove
-                        </span>
-                      </button>
-                    </div>
-                  </div>
+                  </section>
+                </div>
 
-                  {this.state.plans_to_compare[2] && (
+                {/* mobile view ends */}
+                <div className="display--none md-display--block print-display--block">
+                  <div className="display--flex ">
+                    <div className="l-col padding--0"></div>
                     <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
                       <div className="c-compare-title__info padding--1">
                         <div className="font-size--small font-weight--bold">
                           {
-                            state.plans[this.state.plans_to_compare[2]].hmo_id
+                            state.plans[this.state.plans_to_compare[0]].hmo_id
                               .name.text
                           }
                         </div>
                         <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
                           <a href="javascript:;">
-                            {state.plans[this.state.plans_to_compare[2]].name}
+                            {state.plans[this.state.plans_to_compare[0]].name}
+                          </a>
+                        </h2>
+                        <div className="margin-top--auto print-display--none">
+                          <button
+                            className="c-button c-button--primary c-button--small qa-details"
+                            type="button"
+                          >
+                            Like This Plan
+                          </button>
+                        </div>
+                      </div>
+                      <div className="fill--gray-lightest print-display--none">
+                        <button
+                          className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
+                          type="button"
+                        >
+                          <FontAwesomeIcon
+                            className="fas  fa-lg color--primary"
+                            icon={faTimes}
+                          />
+
+                          <span className="visibility--screen-reader">
+                            Remove
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                    <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
+                      <div className="c-compare-title__info padding--1">
+                        <div className="font-size--small font-weight--bold">
+                          {
+                            state.plans[this.state.plans_to_compare[1]].hmo_id
+                              .name.text
+                          }
+                        </div>
+                        <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
+                          <a href="javascript:;">
+                            {state.plans[this.state.plans_to_compare[1]].name}
                           </a>
                         </h2>
                         <div className="margin-top--auto print-display--none">
@@ -1281,608 +1171,653 @@ class ComparePlans extends Component<ComparisonProps> {
                         </button>
                       </div>
                     </div>
-                  )}
-                </div>
-                <section className="c-detail-section margin-bottom--4">
-                  <h2 className="border-bottom--1 border--dark padding-bottom--2">
-                    Highlights
-                  </h2>
-                  <div>
-                    <table className="c-details-table">
-                      <tbody className="valign--top">
-                        <tr>
-                          <th scope="row">Plan metal level</th>
-                          <td>
-                            <span>Bronze</span>
-                          </td>
-                          <td>
-                            <span>Bronze</span>
-                          </td>
-                          <td>
-                            <span>Bronze</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Plan type</th>
-                          <td>
-                            <span>HMO</span>
-                          </td>
-                          <td>
-                            <span>HMO</span>
-                          </td>
-                          <td>
-                            <span>HMO</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">Plan ID</th>
-                          <td>
-                            <span>36096IL1000009</span>
-                          </td>
-                          <td>
-                            <span>44522IL0010008</span>
-                          </td>
-                          <td>
-                            <span>27833IL0140016</span>
-                          </td>
-                        </tr>
-                        <tr className="print-display--none">
-                          <th scope="row">Medical providers in-network</th>
-                          <td>
-                            <a
-                              className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                              href="#/coverage/search/medical-providers"
-                              role="button"
-                            >
-                              Add medical providers
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                              href="#/coverage/search/medical-providers"
-                              role="button"
-                            >
-                              Add medical providers
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                              href="#/coverage/search/medical-providers"
-                              role="button"
-                            >
-                              Add medical providers
-                            </a>
-                          </td>
-                        </tr>
-                        <tr className="print-display--none">
-                          <th scope="row">Drugs covered/not covered</th>
-                          <td>
-                            <a
-                              className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                              href="#/coverage/search/prescription-drugs"
-                              role="button"
-                            >
-                              Add prescription drugs
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                              href="#/coverage/search/prescription-drugs"
-                              role="button"
-                            >
-                              Add prescription drugs
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                              href="#/coverage/search/prescription-drugs"
-                              role="button"
-                            >
-                              Add prescription drugs
-                            </a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-                <section className="c-detail-section margin-bottom--4">
-                  <h2 className="border-bottom--1 border--dark padding-bottom--2">
-                    <button
-                      className="ds-h2 text-align--left sans fill--transparent"
-                      aria-expanded="false"
-                      onClick={this.toggleStarRatingCollapsible}
-                    >
-                      Star rating
-                      {this.state.collapse_star_rating ? (
-                        <FontAwesomeIcon
-                          className="fas md-margin-right--1"
-                          icon={faChevronDown}
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          className="fas md-margin-right--1"
-                          icon={faChevronUp}
-                        />
-                      )}
-                    </button>
-                  </h2>
-                  <div hidden={this.state.collapse_star_rating ? true : false}>
-                    <table className="c-details-table">
-                      <tbody className="valign--top">
-                        <tr className="border-bottom--2">
-                          <th scope="row">
-                            <span className="display--block">
-                              Overall star rating
-                            </span>
-                            <p className="font-weight--normal margin-y--0">
-                              Overall star rating is based on the categories
-                              below
-                            </p>
-                          </th>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 3 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                          <td>
-                            <span>New plan Not rated</span>
-                          </td>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 3 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span className="display--block">
-                              Member Experience
-                            </span>
-                            <p className="font-weight--normal margin-y--0">
-                              Based on member satisfaction surveys about their
-                              health care, doctors, and ease of getting
-                              appointments and services
-                            </p>
-                          </th>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 2 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                          <td>
-                            <span>Not rated</span>
-                          </td>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 2 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span className="display--block">Medical Care</span>
-                            <p className="font-weight--normal margin-y--0">
-                              Based on providers improving or maintaining the
-                              health of their patients with regular screenings,
-                              tests, vaccines, and condition monitoring.
-                            </p>
-                          </th>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 3 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                          <td>
-                            <span>Not rated</span>
-                          </td>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 3 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span className="display--block">
-                              Plan Administration
-                            </span>
-                            <p className="font-weight--normal margin-y--0">
-                              Based on how well a plan is run, including
-                              customer service, access to needed information,
-                              and providers ordering appropriate tests and
-                              treatment.
-                            </p>
-                          </th>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 3 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                          <td>
-                            <span>Not rated</span>
-                          </td>
-                          <td>
-                            <div className="c-star-rating">
-                              <div className="visibility--screen-reader">
-                                Quality Rating: 3 of 5 stars
-                              </div>
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={starfilled}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                              <img
-                                src={star}
-                                className="c-star-rating__star"
-                                alt=""
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
 
-                <section className="c-detail-section margin-bottom--4">
-                  <h2 className="border-bottom--1 border--dark padding-bottom--2">
-                    <button
-                      className="ds-h2 text-align--left sans fill--transparent"
-                      aria-expanded="false"
-                      onClick={this.toggleOtherServicesCollapsible}
-                    >
-                      Other services
-                      {this.state.collapse_other_services ? (
-                        <FontAwesomeIcon
-                          className="fas md-margin-right--1"
-                          icon={faChevronDown}
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          className="fas md-margin-right--1"
-                          icon={faChevronUp}
-                        />
-                      )}
-                    </button>
-                  </h2>
-                  <div
-                    hidden={this.state.collapse_other_services ? true : false}
-                  >
-                    <table className="c-details-table">
-                      <tbody className="valign--top">
-                        {" "}
-                        <tr>
-                          <th scope="row">Infertility treatment</th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>
-                                In Network: 50% Coinsurance after deductible
-                              </li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
+                    {this.state.plans_to_compare[2] && (
+                      <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
+                        <div className="c-compare-title__info padding--1">
+                          <div className="font-size--small font-weight--bold">
+                            {
+                              state.plans[this.state.plans_to_compare[2]].hmo_id
+                                .name.text
+                            }
+                          </div>
+                          <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
+                            <a href="javascript:;">
+                              {state.plans[this.state.plans_to_compare[2]].name}
+                            </a>
+                          </h2>
+                          <div className="margin-top--auto print-display--none">
                             <button
-                              className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
+                              className="c-button c-button--primary c-button--small qa-details"
                               type="button"
                             >
-                              View limits and exclusions
-                              <span className="visibility--screen-reader">
-                                : Infertility treatment
-                              </span>
+                              Like This Plan
                             </button>
-                          </td>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: No Charge After Deductible</li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                            <button
-                              className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
-                              type="button"
-                            >
-                              View limits and exclusions
-                              <span className="visibility--screen-reader">
-                                : Infertility treatment
-                              </span>
-                            </button>
-                          </td>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>
-                                In Network: 50% Coinsurance after deductible
-                              </li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span>
-                              Mental/
-                              <span className="ws-wbr">
-                                <wbr />
-                              </span>
+                          </div>
+                        </div>
+                        <div className="fill--gray-lightest print-display--none">
+                          <button
+                            className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
+                            type="button"
+                          >
+                            <FontAwesomeIcon
+                              className="fas  fa-lg color--primary"
+                              icon={faTimes}
+                            />
+                            <span className="visibility--screen-reader">
+                              Remove
                             </span>
-                            behavioral health outpatient services
-                          </th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: $60</li>
-                              <li>Out of Network: $60</li>
-                            </ul>
-                          </td>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: No Charge After Deductible</li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                          </td>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: $40</li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th scope="row">
-                            <span>
-                              Mental/
-                              <span className="ws-wbr">
-                                <wbr />
-                              </span>
-                            </span>
-                            behavioral health inpatient services
-                          </th>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: $850 Copay per Day</li>
-                              <li>Out of Network: $850 Copay per Day</li>
-                            </ul>
-                          </td>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>In Network: No Charge After Deductible</li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                            <button
-                              className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
-                              type="button"
-                            >
-                              View limits and exclusions
-                              <span className="visibility--screen-reader">
-                                : Mental/behavioral health inpatient services
-                              </span>
-                            </button>
-                          </td>
-                          <td>
-                            <ul className="c-list--bare">
-                              <li>
-                                In Network: 50% Coinsurance after deductible
-                              </li>
-                              <li>Out of Network: Benefit Not Covered</li>
-                            </ul>
-                          </td>
-                        </tr>{" "}
-                      </tbody>
-                    </table>
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </section>
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      Highlights
+                    </h2>
+                    <div>
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr>
+                            <th scope="row">Plan metal level</th>
+                            <td>
+                              <span>Bronze</span>
+                            </td>
+                            <td>
+                              <span>Bronze</span>
+                            </td>
+                            <td>
+                              <span>Bronze</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Plan type</th>
+                            <td>
+                              <span>HMO</span>
+                            </td>
+                            <td>
+                              <span>HMO</span>
+                            </td>
+                            <td>
+                              <span>HMO</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Plan ID</th>
+                            <td>
+                              <span>36096IL1000009</span>
+                            </td>
+                            <td>
+                              <span>44522IL0010008</span>
+                            </td>
+                            <td>
+                              <span>27833IL0140016</span>
+                            </td>
+                          </tr>
+                          <tr className="print-display--none">
+                            <th scope="row">Medical providers in-network</th>
+                            <td>
+                              <a
+                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                href="/find-provider"
+                                role="button"
+                              >
+                                Add medical providers
+                              </a>
+                            </td>
+                            <td>
+                              <a
+                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                href="/find-provider"
+                                role="button"
+                              >
+                                Add medical providers
+                              </a>
+                            </td>
+                            <td>
+                              <a
+                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                href="/find-provider"
+                                role="button"
+                              >
+                                Add medical providers
+                              </a>
+                            </td>
+                          </tr>
+                          <tr className="print-display--none">
+                            <th scope="row">Drugs covered/not covered</th>
+                            <td>
+                              <a
+                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                href="/find-drugs"
+                                role="button"
+                              >
+                                Add prescription drugs
+                              </a>
+                            </td>
+                            <td>
+                              <a
+                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                href="/find-drugs"
+                                role="button"
+                              >
+                                Add prescription drugs
+                              </a>
+                            </td>
+                            <td>
+                              <a
+                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                href="/find-drugs"
+                                role="button"
+                              >
+                                Add prescription drugs
+                              </a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={this.toggleStarRatingCollapsible}
+                      >
+                        Star rating
+                        {this.state.collapse_star_rating ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div
+                      hidden={this.state.collapse_star_rating ? true : false}
+                    >
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Overall star rating
+                              </span>
+                              <p className="font-weight--normal margin-y--0">
+                                Overall star rating is based on the categories
+                                below
+                              </p>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 3 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                            <td>
+                              <span>New plan Not rated</span>
+                            </td>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 3 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span className="display--block">
+                                Member Experience
+                              </span>
+                              <p className="font-weight--normal margin-y--0">
+                                Based on member satisfaction surveys about their
+                                health care, doctors, and ease of getting
+                                appointments and services
+                              </p>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 2 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                            <td>
+                              <span>Not rated</span>
+                            </td>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 2 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span className="display--block">
+                                Medical Care
+                              </span>
+                              <p className="font-weight--normal margin-y--0">
+                                Based on providers improving or maintaining the
+                                health of their patients with regular
+                                screenings, tests, vaccines, and condition
+                                monitoring.
+                              </p>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 3 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                            <td>
+                              <span>Not rated</span>
+                            </td>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 3 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span className="display--block">
+                                Plan Administration
+                              </span>
+                              <p className="font-weight--normal margin-y--0">
+                                Based on how well a plan is run, including
+                                customer service, access to needed information,
+                                and providers ordering appropriate tests and
+                                treatment.
+                              </p>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 3 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                            <td>
+                              <span>Not rated</span>
+                            </td>
+                            <td>
+                              <div className="c-star-rating">
+                                <div className="visibility--screen-reader">
+                                  Quality Rating: 3 of 5 stars
+                                </div>
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={starfilled}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                                <img
+                                  src={star}
+                                  className="c-star-rating__star"
+                                  alt=""
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={this.toggleOtherServicesCollapsible}
+                      >
+                        Other services
+                        {this.state.collapse_other_services ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div
+                      hidden={this.state.collapse_other_services ? true : false}
+                    >
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          {" "}
+                          <tr>
+                            <th scope="row">Infertility treatment</th>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>
+                                  In Network: 50% Coinsurance after deductible
+                                </li>
+                                <li>Out of Network: Benefit Not Covered</li>
+                              </ul>
+                              <button
+                                className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
+                                type="button"
+                              >
+                                View limits and exclusions
+                                <span className="visibility--screen-reader">
+                                  : Infertility treatment
+                                </span>
+                              </button>
+                            </td>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>In Network: No Charge After Deductible</li>
+                                <li>Out of Network: Benefit Not Covered</li>
+                              </ul>
+                              <button
+                                className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
+                                type="button"
+                              >
+                                View limits and exclusions
+                                <span className="visibility--screen-reader">
+                                  : Infertility treatment
+                                </span>
+                              </button>
+                            </td>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>
+                                  In Network: 50% Coinsurance after deductible
+                                </li>
+                                <li>Out of Network: Benefit Not Covered</li>
+                              </ul>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span>
+                                Mental/
+                                <span className="ws-wbr">
+                                  <wbr />
+                                </span>
+                              </span>
+                              behavioral health outpatient services
+                            </th>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>In Network: $60</li>
+                                <li>Out of Network: $60</li>
+                              </ul>
+                            </td>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>In Network: No Charge After Deductible</li>
+                                <li>Out of Network: Benefit Not Covered</li>
+                              </ul>
+                            </td>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>In Network: $40</li>
+                                <li>Out of Network: Benefit Not Covered</li>
+                              </ul>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th scope="row">
+                              <span>
+                                Mental/
+                                <span className="ws-wbr">
+                                  <wbr />
+                                </span>
+                              </span>
+                              behavioral health inpatient services
+                            </th>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>In Network: $850 Copay per Day</li>
+                                <li>Out of Network: $850 Copay per Day</li>
+                              </ul>
+                            </td>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>In Network: No Charge After Deductible</li>
+                                <li>Out of Network: Benefit Not Covered</li>
+                              </ul>
+                              <button
+                                className="c-button c-button--transparent c-benefit-listing__modal-button display--block"
+                                type="button"
+                              >
+                                View limits and exclusions
+                                <span className="visibility--screen-reader">
+                                  : Mental/behavioral health inpatient services
+                                </span>
+                              </button>
+                            </td>
+                            <td>
+                              <ul className="c-list--bare">
+                                <li>
+                                  In Network: 50% Coinsurance after deductible
+                                </li>
+                                <li>Out of Network: Benefit Not Covered</li>
+                              </ul>
+                            </td>
+                          </tr>{" "}
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                </div>
               </div>
-            </div>
-          </div>{" "}
+            </div>{" "}
+          </div>
         </div>
 
-        <section className="section hero compare_parent sp-top-main">
-          <div className="container">
+        <section className="section container hero compare_parent sp-top-main">
+          <div className="">
             <section className="section content_section mt-top">
               <div>
                 <section className="section grey_background similar_plans">
@@ -1892,76 +1827,77 @@ class ComparePlans extends Component<ComparisonProps> {
                   </h4>
                   <div className="box-mob-slider">
                     <div className="slider-new ">
-                      {state.plans.map((similar_plan, i) => {
-                        return this.state.plans_to_compare.includes(
-                          i.toString()
-                        ) == false ? (
-                          <div className="box-new">
-                            <ul className="similar_plan_ul">
-                              <li>
-                                <div className="box_block">
-                                  <div className="plan-c-provider font-weight--bold">
-                                    {similar_plan.hmo_id.name["text"]}
+                      {plans_to_compare.length > 0 &&
+                        state.plans.map((similar_plan, i: number) => {
+                          return plans_to_compare.includes(i.toString()) ==
+                            false ? (
+                            <div className="box-new">
+                              <ul className="similar_plan_ul">
+                                <li>
+                                  <div className="box_block">
+                                    <div className="plan-c-provider font-weight--bold">
+                                      {similar_plan.hmo_id.name["text"]}
+                                    </div>
+                                    <h2 className="plan-c-name font-weight--normal margin-y--1">
+                                      <a href="#">{similar_plan.name}</a>
+                                    </h2>
                                   </div>
-                                  <h2 className="plan-c-name font-weight--normal margin-y--1">
-                                    <a href="#">{similar_plan.name}</a>
-                                  </h2>
-                                </div>
-                                <p className="is-hidden-mobile">
-                                  ₦
-                                  {this.props.quiz.responses.type == "single"
-                                    ? this.numberwithCommas(
-                                        similar_plan.individual_annual_price
-                                      )
-                                    : this.numberwithCommas(
-                                        similar_plan.family_annual_price
-                                      )}
-                                  / year
-                                </p>
-                                <ul>
-                                  <li>
-                                    {this.props.quiz.responses.num_of_people}{" "}
-                                    {this.props.quiz.responses.num_of_people > 1
-                                      ? " people"
-                                      : " person"}{" "}
-                                    <span>Sum Insured</span>
-                                  </li>
-                                  <li>
-                                    {similar_plan.hmo_id.provider_id
-                                      ? JSON.parse(
-                                          similar_plan.hmo_id.provider_id
-                                        ).length
-                                      : 0}{" "}
-                                    <span>Hospitals</span>
-                                  </li>
-                                </ul>
-                                {/* <div className="like-covers">
+                                  <p className="is-hidden-mobile">
+                                    ₦
+                                    {this.props.quiz.responses.type == "single"
+                                      ? this.numberwithCommas(
+                                          similar_plan.individual_annual_price
+                                        )
+                                      : this.numberwithCommas(
+                                          similar_plan.family_annual_price
+                                        )}
+                                    / year
+                                  </p>
+                                  <ul>
+                                    <li>
+                                      {this.props.quiz.responses.num_of_people}{" "}
+                                      {this.props.quiz.responses.num_of_people >
+                                      1
+                                        ? " people"
+                                        : " person"}{" "}
+                                      <span>Sum Insured</span>
+                                    </li>
+                                    <li>
+                                      {similar_plan.hmo_id.provider_id
+                                        ? JSON.parse(
+                                            similar_plan.hmo_id.provider_id
+                                          ).length
+                                        : 0}{" "}
+                                      <span>Hospitals</span>
+                                    </li>
+                                  </ul>
+                                  {/* <div className="like-covers">
                                   <div className="usp_image"></div>1 Cr in less
                                   premium
                                 </div> */}
-                                <button
-                                  className="button "
-                                  disabled={
-                                    this.state.plans_to_compare.length < 3
-                                      ? false
-                                      : true
-                                  }
-                                  onClick={() => {
-                                    this.handleCheckedPlanToCompareOnDesktop(
-                                      i.toString()
-                                    );
-                                  }}
-                                >
-                                  <i className="fas fa-plus"></i>+ Add to
-                                  compare
-                                </button>
-                              </li>
-                            </ul>
-                          </div>
-                        ) : (
-                          ""
-                        );
-                      })}
+                                  <button
+                                    className="button "
+                                    disabled={
+                                      this.state.plans_to_compare.length < 3
+                                        ? false
+                                        : true
+                                    }
+                                    onClick={() => {
+                                      this.handleCheckedPlanToCompareOnDesktop(
+                                        i.toString()
+                                      );
+                                    }}
+                                  >
+                                    <i className="fas fa-plus"></i>+ Add to
+                                    compare
+                                  </button>
+                                </li>
+                              </ul>
+                            </div>
+                          ) : (
+                            ""
+                          );
+                        })}
                     </div>
                   </div>
                 </section>

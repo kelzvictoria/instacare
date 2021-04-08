@@ -108,7 +108,7 @@ class Providers extends Component<ProvidersProps> {
     let providers_arr: string[] = this.state.selected_providers;
     return (
       <div className="main-body-content">
-        <div className="l-container c-page-wrapper qa-provider-search-page">
+        <div className="container c-page-wrapper qa-provider-search-page">
           <div
             className={
               !this.state.show_providers_listing_div

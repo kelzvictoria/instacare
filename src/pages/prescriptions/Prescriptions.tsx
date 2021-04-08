@@ -110,7 +110,7 @@ class Prescriptions extends Component<PrescriptionsProps> {
     let prescriptions_arr: string[] = this.state.selected_prescriptions;
     return (
       <div className="main-body-content">
-        <div className="l-container c-page-wrapper qa-prescription-search-page">
+        <div className="container c-page-wrapper qa-prescription-search-page">
           <div
             className={
               !this.state.show_prescriptions_listing_div

@@ -4223,9 +4223,12 @@ class NewContent extends React.Component<homeProps, homeState> {
     if (isPlanChecked > -1) {
       indexes.splice(isPlanChecked, 1);
     } else {
-      indexes.push(index);
+      if (indexes.length <= 2) {
+        indexes.push(index);
+      } else {
+        message.error("You can only compare a maximum of 3 plans at a time");
+      }
     }
-
     this.setState({
       plans_to_compare: indexes,
     });

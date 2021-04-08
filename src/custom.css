@@ -5555,7 +5555,7 @@ span.plan-2 {
 
 @media (max-width: 600px) {
   section.section.hero.compare_parent.sp-top-main {
-    padding: 0px !important;
+    /* padding: 0px !important; */
     overflow: auto;
   }
 
