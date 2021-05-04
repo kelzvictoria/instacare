@@ -63,7 +63,7 @@ export const state: any = {
       child_7_age: 0,
       child_8_age: 0,
       plan_duration: "1",
-      price_range: "medium",
+      price_range: "silver",
     },
   },
   compare: {

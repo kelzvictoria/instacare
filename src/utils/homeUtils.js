@@ -335,3 +335,71 @@ export const child_options = [
     { value: 17, label: "17 Years" },
     { value: 18, label: "18 Years" },
 ];
+
+export const plan_types = [
+    {
+        id: "single",
+        name: "Individual",
+        max_num: 1
+    },
+
+    {
+        id: "fam-of-4",
+        name: "Family",
+        max_num: ""
+    },
+
+    {
+        id: "couple",
+        name: "Couples",
+        max_num: "2"
+    },
+    {
+        id: "parents",
+        name: "Senior Citizens",
+        max_num: ""
+    },
+    {
+        id: "smes",
+        name: "SMES and Small Groups",
+        max_num: ""
+    },
+    {
+        id: "corporate",
+        name: "Corporate and Large Groups",
+        max_num: ""
+    },
+    {
+        id: "intl_coverage",
+        name: "International Coverage",
+        max_num: ""
+    }
+]
+
+export const plan_range = [
+    {
+        id: "bronze",
+        name: "Bronze",
+        price_range: [0, 20000]
+    },
+    {
+        id: "silver",
+        name: "Silver",
+        price_range: [20000, 50000]
+    },
+    {
+        id: "gold",
+        name: "Gold",
+        price_range: [50000, 100000]
+    },
+    {
+        id: "platinum",
+        name: "Platinum",
+        price_range: [100000, 150000]
+    },
+    {
+        id: "platinum_plus",
+        name: "Platinum Plus",
+        price_range: [150000, 2000000]
+    }
+]

@@ -1,51 +1,13 @@
 import React, { Component } from "react";
 
-import AppHeader from "../../components/app-header/AppHeader";
-import AppFooter from "../../components/app-footer/AppFooter";
-
 /*import { API_URL } from "../../config";*/
-import styles from "./Compare.module.scss";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import * as actions from "../../utils/actions";
-import numeral from "numeral";
 
-import Modal from "react-bootstrap/Modal";
-
-import shortlist from "../../imgs/shortlist-yellow.svg";
-import bottom_filter from "../../imgs/bottom_filter.svg";
-import bottom_shortlist from "../../imgs/bottom_shortlist.svg";
-import bottom_compare from "../../imgs/bottom_compare.svg";
-
-import {
-  Card,
-  Col,
-  Row,
-  Icon,
-  Checkbox,
-  Radio,
-  Slider,
-  Spin,
-  Skeleton,
-  Button,
-  Divider,
-  Typography,
-  Empty,
-  InputNumber,
-  Collapse,
-  message,
-  Input,
-  Tabs,
-  Form,
-  Table,
-} from "antd";
-import { formatAsCurrency, NAIRA_SIGN } from "../../utils";
+import { message } from "antd";
 import { Plan } from "../../interfaces/Plan";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBalanceScale,
   faArrowLeft,
-  faFilter,
   faChevronRight,
   faChevronDown,
   faChevronUp,
@@ -56,16 +18,6 @@ import {
   faTimes,
   faCircle,
 } from "@fortawesome/free-solid-svg-icons";
-
-import { PAYSTACK_PUBLIC_KEY } from "../../utils/index";
-import { UPDATE_PRICE, TOGGLE_BUYING_PLAN } from "../../utils/actions";
-import { UPDATE_NOTGETTINGPROVIDERS } from "../../utils/actions";
-
-import PaystackButton from "react-paystack";
-
-import * as home_utils from "../../utils/homeUtils";
-
-import { RouteComponentProps } from "react-router-dom";
 
 import { state } from "../../components/home/state";
 
@@ -285,14 +237,11 @@ class ComparePlans extends Component<ComparisonProps> {
     }
 
     /* let value = index.value;*/
-    let checked = this.props.checked_plans_list[index];
     //this.checkChecked(index);
 
     let indexes: string[] = [];
-    let checked_values: boolean[] = [];
 
     indexes = this.props.this.state.plans_to_compare;
-    checked_values = this.props.checked_plans_list;
 
     let i: number = indexes.indexOf(index);
     let j: number = i;
@@ -419,14 +368,11 @@ class ComparePlans extends Component<ComparisonProps> {
     }
 
     /* let value = index.value;*/
-    let checked = this.props.checked_plans_list[index];
     //this.checkChecked(index);
 
     let indexes: string[] = [];
-    let checked_values: boolean[] = [];
 
     indexes = this.props.this.state.plans_to_compare;
-    checked_values = this.props.checked_plans_list;
 
     let i: number = indexes.indexOf(index);
     let j: number = i;

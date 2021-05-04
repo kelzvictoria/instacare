@@ -78,7 +78,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     show_desktop_on_load_modal: false,
     show_mobile_on_load_modal: false,
     show_desktop_home_frm: true,
-    type_selected: "medium",
+    range_selected: "silver",
     show_filter: false,
     show_med_mgt_program_multiselect: false,
     plans_to_compare: [],
@@ -557,12 +557,13 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handleType(val) {
     //let id = document.getElementById(val.target.id) as HTMLInputElement;
+    console.log("val", val);
 
     this.props.dispatch({
       type: actions.UPDATE_TYPE,
       data: {
         key: "type",
-        value: val.target.id,
+        value: val.target ? val.target.id : val,
       },
     });
   }
@@ -1775,7 +1776,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.props.responses.type === "others"}
+                  defaultChecked={["others", "smes", "intl_coverage"].includes(
+                    this.props.responses.type
+                  )}
+                  //{this.props.responses.type === "others"}
                   onClick={(e) => {
                     this.toggleOthersInput();
                     this.handleType(e);
@@ -2086,7 +2090,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.props.responses.type === "others"}
+                  defaultChecked={["others", "smes", "intl_coverage"].includes(
+                    this.props.responses.type
+                  )}
+                  //{this.props.responses.type === "others"}
                   onClick={this.toggleOthersInput}
                 ></input>
                 <span className="num-div-inner">
@@ -2468,7 +2475,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.props.responses.type === "others"}
+                  checked={["others", "smes", "intl_coverage"].includes(
+                    //{this.props.responses.type === "others"}
+                    this.props.responses.type
+                  )}
                   onChange={this.handleType}
                   onClick={(e) => {
                     this.toggleOthersInput();
@@ -2815,7 +2825,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.props.responses.type === "others"}
+                  checked={["others", "smes", "intl_coverage"].includes(
+                    //{this.props.responses.type === "others"}
+                    this.props.responses.type
+                  )}
                   onClick={(e) => {
                     this.toggleOthersInput();
                     this.handleType(e);
@@ -3879,7 +3892,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   async UNSAFE_componentWillMount() {
-    // await console.log(this.props.plans);
+    this.handlePlanTypesCheck(this.props.responses.type);
+    this.handlePlanRangeCheck(this.props.responses.price_range);
   }
 
   componentDidMount() {
@@ -3940,7 +3954,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       this.changek(this.minBudget, this.maxBudget);
       await this.props.dispatch({ type: actions.RESET_PLANS, data: true });
       await this.props.dispatch({ type: actions.UPDATE_BUDGET, budget: value });
-      this.handlePriceRange();
+      this.handlePriceRangeTitle();
       //this.eventHandlers.handleCheckbox(this.props.checked);
       /* await this.fetchData("recommend", this.props.responses);*/
     },
@@ -3965,48 +3979,116 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   changeType(val) {
+    // console.log("changeType val", val);
+    this.handlePlanTypesCheck(val);
     if (
-      val == "single" ||
-      val == "couple" ||
-      val == "parents" ||
-      val == "corporate" ||
-      val == "fam-of-4"
+      [
+        "single",
+        "couple",
+        "parents",
+        "corporate",
+        "fam-of-4",
+        "smes",
+        "intl_coverage",
+      ].includes(val)
     ) {
       this.handleType(val);
     }
   }
 
-  handlePriceRange() {
+  updatePriceRange(title) {
+    this.props.dispatch({
+      type: actions.UPDATE_PRICE_RANGE,
+      data: title,
+    });
+  }
+
+  handlePriceRangeTitle() {
     if (
       this.props.quiz.responses.budget[1] > 0 &&
-      this.props.quiz.responses.budget[1] <= 30000
+      this.props.quiz.responses.budget[1] <= 20000
     ) {
-      this.props.dispatch({
-        type: actions.UPDATE_PRICE_RANGE,
-        data: "small",
-      });
-      // this.setState({
-      //   type_selected: "small",
-      // });
+      this.updatePriceRange("bronze");
     } else if (
-      this.props.quiz.responses.budget[1] >= 30001 &&
+      this.props.quiz.responses.budget[1] >= 20001 &&
+      this.props.quiz.responses.budget[1] <= 49999
+    ) {
+      this.updatePriceRange("silver");
+    } else if (
+      this.props.quiz.responses.budget[1] >= 50000 &&
       this.props.quiz.responses.budget[1] <= 99999
     ) {
-      this.props.dispatch({
-        type: actions.UPDATE_PRICE_RANGE,
-        data: "medium",
-      });
-      // this.setState({
-      //   type_selected: "medium",
-      // });
+      this.updatePriceRange("gold");
+    } else if (
+      this.props.quiz.responses.budget[1] >= 100000 &&
+      this.props.quiz.responses.budget[1] <= 149000
+    ) {
+      this.updatePriceRange("platinum");
     } else {
-      this.props.dispatch({
-        type: actions.UPDATE_PRICE_RANGE,
-        data: "big",
-      });
-      // this.setState({ type_selected: "big" });
+      this.updatePriceRange("platinum_plus");
     }
   }
+
+  setPriceRangeBasedOnTitle = (e) => {
+    console.log("e.target", e.target);
+
+    this.setState({
+      range_selected: e.target.value,
+    });
+
+    let title = e.target.value;
+    console.log("title", title);
+
+    switch (title) {
+      case "bronze":
+        this.eventHandlers.changeBudget([0, 20000]);
+        this.updatePriceRange("bronze");
+        this.handlePlanRangeCheck("bronze");
+        break;
+
+      case "silver":
+        this.eventHandlers.changeBudget([20001, 49999]);
+        this.updatePriceRange("silver");
+        this.handlePlanRangeCheck("silver");
+        // this.handleMinRangeChange(20001);
+        // this.handleMinRangeChange(49999);
+        break;
+
+      case "gold":
+        this.eventHandlers.changeBudget([50000, 99999]);
+        this.updatePriceRange("gold");
+        this.handlePlanRangeCheck("gold");
+        // this.handleMinRangeChange(50000);
+        // this.handleMinRangeChange(99999);
+        break;
+
+      case "platinum":
+        this.eventHandlers.changeBudget([100000, 149000]);
+        this.updatePriceRange("platinum");
+        this.handlePlanRangeCheck("platinum");
+        // this.handleMinRangeChange(100000);
+        // this.handleMinRangeChange(149000);
+        break;
+
+      case "platinum_plus":
+        this.eventHandlers.changeBudget([150000, 1000000]);
+        this.updatePriceRange("platinum_plus");
+        this.handlePlanRangeCheck("platinum_plus");
+        // this.handleMinRangeChange(150000);
+        // this.handleMinRangeChange(1000000);
+        break;
+
+      default:
+        this.eventHandlers.changeBudget([
+          this.state.filter_params.annual_range_min,
+          this.state.filter_params.annual_range_max,
+        ]);
+        this.updatePriceRange(this.props.responses.price_range);
+
+      // this.handleMinRangeChange(this.state.filter_params.annual_range_min);
+      // this.handleMinRangeChange(this.state.filter_params.annual_range_max);
+    }
+  };
 
   toggleShowFilter = () => {
     this.setState({
@@ -4321,7 +4403,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     if (this.props.page != 0) {
     } else {
     }
-    //console.log"this.state", this.state);
+    // console.log("this.state.range_selected", this.state.range_selected);
     //console.log"this.props", this.props);
 
     let med_mgt_programs_selected: string[] = this.state.filter_params[
@@ -4338,7 +4420,8 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     let plans_to_compare: number[] = this.state.plans_to_compare;
 
-    //console.log"plan_range_checked", plan_range_checked);
+    // console.log("plan_range_checked", plan_range_checked);
+    // console.log("plan_types_checked", plan_types_checked);
 
     const {
       annual_range_min,
@@ -4480,11 +4563,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                           onChange={(e) => this.changeType(e.target.value)}
                           value={this.props.responses.type}
                         >
-                          <option value="single">Personal</option>
-                          <option value="fam-of-4">Family</option>
-                          <option value="parents">Senior Citizens</option>
-                          <option value="couple">Couples</option>
-                          <option value="corporate">Corporate</option>
+                          {home_utils.plan_types.map((plan_type) => {
+                            return (
+                              <option value={plan_type.id} id={plan_type.id}>
+                                {plan_type.name}
+                              </option>
+                            );
+                          })}
                         </select>
                       </div>
                       <div className="margin-left--1 display--inline-block rh-sort-by-div">
@@ -4493,12 +4578,18 @@ class NewContent extends React.Component<homeProps, homeState> {
                         </label>
                         <select
                           className="c-field c-field--medium rh-sort-by-select"
-                          //onChange={this.handlePriceRange}
-                          value={this.props.responses.price_range}
+                          onChange={(e) => this.setPriceRangeBasedOnTitle(e)}
+                          value={
+                            this.props.responses.price_range //{this.state.range_selected}
+                          }
                         >
-                          <option value="small">Small</option>
-                          <option value="medium">Medium</option>
-                          <option value="big">Big</option>
+                          {home_utils.plan_range.map((plan_range) => {
+                            return (
+                              <option value={plan_range.id}>
+                                {plan_range.name}
+                              </option>
+                            );
+                          })}
                         </select>
                       </div>
                     </div>
@@ -4543,6 +4634,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         pattern="[0-9.,-]*"
                                         type="text"
                                         name="premium-start"
+                                        value={
+                                          this.props.quiz.responses.budget[0]
+                                        }
                                         onChange={(e) =>
                                           this.handleMinRangeChange(
                                             e.target.value
@@ -4572,6 +4666,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         pattern="[0-9.,-]*"
                                         type="text"
                                         name="premium-end"
+                                        value={
+                                          this.props.quiz.responses.budget[1]
+                                        }
                                         onChange={(e) =>
                                           this.handleMaxRangeChange(
                                             e.target.value
@@ -4612,7 +4709,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     {annual_deductible_min
                                       ? annual_deductible_min
                                       : ""}{" "}
-                                    - {annual_range_max ? annual_range_max : ""}
+                                    -{" "}
+                                    {annual_deductible_max
+                                      ? annual_deductible_max
+                                      : ""}
                                     {/* ₦0 - ₦10,000 */}
                                   </span>
                                 </legend>
@@ -4690,25 +4790,23 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     className="c-choice c-choice--small"
                                     type="checkbox"
                                     name=""
-                                    value="personal"
+                                    value="single"
                                     onChange={() =>
-                                      this.handlePlanTypesCheck("personal")
+                                      this.handlePlanTypesCheck("single")
                                     }
                                     checked={
                                       plan_types_checked
-                                        ? plan_types_checked.includes(
-                                            "personal"
-                                          )
+                                        ? plan_types_checked.includes("single")
                                         : false
                                     }
                                   />
                                   <label
                                     className="c-label"
                                     onClick={() =>
-                                      this.handlePlanTypesCheck("personal")
+                                      this.handlePlanTypesCheck("single")
                                     }
                                   >
-                                    <span className="">Personal (1)</span>
+                                    <span className="">Individual</span>
                                   </label>
                                 </div>
 
@@ -4717,23 +4815,53 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     className="c-choice c-choice--small"
                                     type="checkbox"
                                     name=""
-                                    value="family"
+                                    value="fam-of-4"
                                     onChange={() =>
-                                      this.handlePlanTypesCheck("family")
+                                      this.handlePlanTypesCheck("fam-of-4")
                                     }
                                     checked={
                                       plan_types_checked
-                                        ? plan_types_checked.includes("family")
+                                        ? plan_types_checked.includes(
+                                            "fam-of-4"
+                                          )
                                         : false
                                     }
                                   />
                                   <label
                                     className="c-label"
                                     onClick={() =>
-                                      this.handlePlanTypesCheck("family")
+                                      this.handlePlanTypesCheck("fam-of-4")
                                     }
                                   >
-                                    <span className="">Family (2)</span>
+                                    <span className="">Family</span>
+                                  </label>
+                                </div>
+
+                                <div className="">
+                                  <input
+                                    className="c-choice c-choice--small"
+                                    type="checkbox"
+                                    name=""
+                                    value="couple"
+                                    onChange={() =>
+                                      this.handlePlanTypesCheck("couple")
+                                    }
+                                    checked={
+                                      plan_types_checked
+                                        ? plan_types_checked.includes("couple")
+                                        : false
+                                    }
+                                  />
+                                  <label
+                                    className="c-label"
+                                    onClick={() =>
+                                      this.handlePlanTypesCheck("couple")
+                                    }
+                                  >
+                                    <span className="">
+                                      Couples
+                                      {/* (2) */}
+                                    </span>
                                   </label>
                                 </div>
 
@@ -4759,7 +4887,96 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     }
                                   >
                                     <span className="">
-                                      Senior Citizens (2)
+                                      Senior Citizens
+                                      {/* (2) */}
+                                    </span>
+                                  </label>
+                                </div>
+
+                                <div className="">
+                                  <input
+                                    className="c-choice c-choice--small"
+                                    type="checkbox"
+                                    name=""
+                                    value="smes"
+                                    onChange={() =>
+                                      this.handlePlanTypesCheck("smes")
+                                    }
+                                    checked={
+                                      plan_types_checked
+                                        ? plan_types_checked.includes("smes")
+                                        : false
+                                    }
+                                  />
+                                  <label
+                                    className="c-label"
+                                    onClick={() =>
+                                      this.handlePlanTypesCheck("smes")
+                                    }
+                                  >
+                                    <span className="">
+                                      SMEs and Small Groups
+                                      {/* (2) */}
+                                    </span>
+                                  </label>
+                                </div>
+
+                                <div className="">
+                                  <input
+                                    className="c-choice c-choice--small"
+                                    type="checkbox"
+                                    name=""
+                                    value="corporate"
+                                    onChange={() =>
+                                      this.handlePlanTypesCheck("corporate")
+                                    }
+                                    checked={
+                                      plan_types_checked
+                                        ? plan_types_checked.includes(
+                                            "corporate"
+                                          )
+                                        : false
+                                    }
+                                  />
+                                  <label
+                                    className="c-label"
+                                    onClick={() =>
+                                      this.handlePlanTypesCheck("corporate")
+                                    }
+                                  >
+                                    <span className="">
+                                      Corporate and Large Groups
+                                      {/* (2) */}
+                                    </span>
+                                  </label>
+                                </div>
+
+                                <div className="">
+                                  <input
+                                    className="c-choice c-choice--small"
+                                    type="checkbox"
+                                    name=""
+                                    value="intl_coverage"
+                                    onChange={() =>
+                                      this.handlePlanTypesCheck("intl_coverage")
+                                    }
+                                    checked={
+                                      plan_types_checked
+                                        ? plan_types_checked.includes(
+                                            "intl_coverage"
+                                          )
+                                        : false
+                                    }
+                                  />
+                                  <label
+                                    className="c-label"
+                                    onClick={() =>
+                                      this.handlePlanTypesCheck("intl_coverage")
+                                    }
+                                  >
+                                    <span className="">
+                                      International Coverage
+                                      {/* (2) */}
                                     </span>
                                   </label>
                                 </div>
@@ -4777,23 +4994,23 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     className="c-choice c-choice--small"
                                     type="checkbox"
                                     name=""
-                                    value="small"
+                                    value="bronze"
                                     onChange={() =>
-                                      this.handlePlanRangeCheck("small")
+                                      this.handlePlanRangeCheck("bronze")
                                     }
                                     checked={
                                       plan_range_checked
-                                        ? plan_range_checked.includes("small")
+                                        ? plan_range_checked.includes("bronze")
                                         : false
                                     }
                                   />
                                   <label
                                     className="c-label"
                                     onClick={() =>
-                                      this.handlePlanRangeCheck("small")
+                                      this.handlePlanRangeCheck("bronze")
                                     }
                                   >
-                                    <span className="">Small</span>
+                                    <span className="">Bronze</span>
                                   </label>
                                 </div>
 
@@ -4802,23 +5019,23 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     className="c-choice c-choice--small"
                                     type="checkbox"
                                     name=""
-                                    value="medium"
+                                    value="silver"
                                     onChange={() =>
-                                      this.handlePlanRangeCheck("medium")
+                                      this.handlePlanRangeCheck("silver")
                                     }
                                     checked={
                                       plan_range_checked
-                                        ? plan_range_checked.includes("medium")
+                                        ? plan_range_checked.includes("silver")
                                         : false
                                     }
                                   />
                                   <label
                                     className="c-label"
                                     onClick={() =>
-                                      this.handlePlanRangeCheck("medium")
+                                      this.handlePlanRangeCheck("silver")
                                     }
                                   >
-                                    <span className="">Medium</span>
+                                    <span className="">Silver</span>
                                   </label>
                                 </div>
 
@@ -4827,23 +5044,77 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     className="c-choice c-choice--small"
                                     type="checkbox"
                                     name=""
-                                    value="big"
+                                    value="gold"
                                     onChange={() =>
-                                      this.handlePlanRangeCheck("big")
+                                      this.handlePlanRangeCheck("gold")
                                     }
                                     checked={
                                       plan_range_checked
-                                        ? plan_range_checked.includes("big")
+                                        ? plan_range_checked.includes("gold")
                                         : false
                                     }
                                   />
                                   <label
                                     className="c-label"
                                     onClick={() =>
-                                      this.handlePlanRangeCheck("big")
+                                      this.handlePlanRangeCheck("gold")
                                     }
                                   >
-                                    <span className="">Big</span>
+                                    <span className="">Gold</span>
+                                  </label>
+                                </div>
+
+                                <div className="">
+                                  <input
+                                    className="c-choice c-choice--small"
+                                    type="checkbox"
+                                    name=""
+                                    value="platinum"
+                                    onChange={() =>
+                                      this.handlePlanRangeCheck("platinum")
+                                    }
+                                    checked={
+                                      plan_range_checked
+                                        ? plan_range_checked.includes(
+                                            "platinum"
+                                          )
+                                        : false
+                                    }
+                                  />
+                                  <label
+                                    className="c-label"
+                                    onClick={() =>
+                                      this.handlePlanRangeCheck("platinum")
+                                    }
+                                  >
+                                    <span className="">Platinum</span>
+                                  </label>
+                                </div>
+
+                                <div className="">
+                                  <input
+                                    className="c-choice c-choice--small"
+                                    type="checkbox"
+                                    name=""
+                                    value="platinum_plus"
+                                    onChange={() =>
+                                      this.handlePlanRangeCheck("platinum_plus")
+                                    }
+                                    checked={
+                                      plan_range_checked
+                                        ? plan_range_checked.includes(
+                                            "platinum_plus"
+                                          )
+                                        : false
+                                    }
+                                  />
+                                  <label
+                                    className="c-label"
+                                    onClick={() =>
+                                      this.handlePlanRangeCheck("platinum_plus")
+                                    }
+                                  >
+                                    <span className="">Platinum Plus</span>
                                   </label>
                                 </div>
                               </fieldset>
