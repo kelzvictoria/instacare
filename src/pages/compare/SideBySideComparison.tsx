@@ -7,7 +7,7 @@ import AppFooter from "../../components/app-footer/AppFooter";
 import styles from "./Compare.module.scss";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import * as actions from "../../utils/actions";
+import * as actions from "../../actions/types";
 import numeral from "numeral";
 
 import Modal from "react-bootstrap/Modal";
@@ -50,8 +50,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { PAYSTACK_PUBLIC_KEY } from "../../utils/index";
-import { UPDATE_PRICE, TOGGLE_BUYING_PLAN } from "../../utils/actions";
-import { UPDATE_NOTGETTINGPROVIDERS } from "../../utils/actions";
+import { UPDATE_PRICE, TOGGLE_BUYING_PLAN } from "../../actions/types";
+import { UPDATE_NOTGETTINGPROVIDERS } from "../../actions/types";
 
 import PaystackButton from "react-paystack";
 

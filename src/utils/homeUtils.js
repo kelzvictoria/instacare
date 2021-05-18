@@ -122,64 +122,76 @@ export const locations = [
 
 export const hmos = [
     {
+        id: "HYG00001",
         name: "Hygeia",
-        id: "1",//"hygeia",
         title: "Hygeia HMO",
     },
 
     {
         name: "Metrohealth",
-        id: "metro-health",
+        id: "MET00001",
         title: "Metrohealth HMO",
     },
 
     {
         name: "Novo Health Africa",
-        id: "novo-health-africa",
+        id: "NOV00001",
         title: "Novo Health Africa HMO",
     },
 
     {
         name: "Swift",
-        id: "swift",
+        id: "SWI00001",
         title: "Swift HMO",
     },
 
     {
-        name: "Reliance ",
-        id: "reliance",
+        name: "Reliance",
+        id: "REL00001",
         title: "Reliance HMO",
     },
 
     {
         name: "Princeton Health Limited",
-        id: "princeton-health-limited",
+        id: "PRI00001",
         title: "Princeton Health Limited HMO",
     },
 
     {
         name: "AIICO Multi-Shield Nig Ltd",
-        id: "aiico-multi-shield-nig-ltd",
+        id: "AMS00001",
         title: "AIICO Multi-Shield Nig Ltd HMO",
     },
 
     {
         name: "Integrated Healthcare Limited",
-        id: "integrated-healthcare-ltd",
+        id: "IHC00001",
         title: "Integrated Healthcare Limited HMO",
     },
 
     {
         name: "Total Health Trust",
-        id: "total-health-trust",
+        id: "THT00001",
         title: "Total Health Trust HMO",
     },
 
     {
         name: "Avon ",
-        id: "avon",
+        id: "AVON00001",
         title: "Avon HMO",
     },
+
+    {
+        id: "AXA00001",
+        name: "AXA Mansard Health",
+        title: "AXA Mansard Health HMO",
+    },
+
+    {
+        id: "PRO00001",
+        name: "Pro-Health",
+        title: "Pro Health HMO"
+    }
 ];
 
 export const options = [

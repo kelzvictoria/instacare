@@ -19,7 +19,7 @@ import styles from "./Quiz.module.scss";
 import { NAIRA_SIGN } from "../../utils/index";
 import { connect } from "react-redux";
 import AppHeader from "../../components/app-header/AppHeader";
-import * as actions from "../../utils/actions";
+import * as actions from "../../actions/types";
 import { Redirect } from "react-router";
 
 const { Step } = Steps;

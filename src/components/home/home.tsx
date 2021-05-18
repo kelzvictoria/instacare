@@ -26,7 +26,13 @@ import "../../custom.css";
 import Modal from "react-bootstrap/Modal";
 
 import { connect } from "react-redux";
-import * as actions from "../../utils/actions";
+
+import * as userInputActions from "../../actions/userInputActions";
+import * as compareActions from "../../actions/compareActions";
+import * as errorActions from "../../actions/errorActions";
+import * as fetchDataActions from "../../actions/fetchDataActions";
+
+import * as actions from "../../actions/types";
 
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
@@ -62,8 +68,8 @@ class HomeContent extends React.Component<homeProps, homeState> {
     is_phone_valid: "null",
     show_provider_info: false,
     provider_info: [],
-    filter_plans_by_hmo: false,
-    provider_plans: [],
+    filter_PLANS_BY_HMO: false,
+    plansByHMO: [],
   };
 
   toggleModal = () => {
@@ -164,8 +170,7 @@ class HomeContent extends React.Component<homeProps, homeState> {
                 <div className="card-text">
                   <p>Claim Ratio</p>
                   <h5>{`${
-                    (this.props.provider_plans.length /
-                      this.props.plans.length) *
+                    (this.props.plansByHMO.length / this.props.plans.length) *
                     100
                   }%`}</h5>
                 </div>
@@ -194,9 +199,11 @@ class HomeContent extends React.Component<homeProps, homeState> {
                   <br />
                   <span className={styles.headingSpan}>
                     from
-                    {this.props.plans.length == 0 && (
-                      <Spin className="cheapest-plan" />
-                    )}
+                    {this.props.plans
+                      ? this.props.plans.length == 0 && (
+                          <Spin className="cheapest-plan" />
+                        )
+                      : ""}
                     {this.props.plans.length > 0 &&
                       ` ₦${this.numberwithCommas(this.props.cheapest_plan)}`}
                     /year
@@ -237,7 +244,9 @@ class HomeContent extends React.Component<homeProps, homeState> {
   }
 
   numberwithCommas = (value) => {
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
   };
 
   preventDefault(e: React.FormEvent<HTMLFormElement>) {
@@ -2188,14 +2197,14 @@ class HomeContent extends React.Component<homeProps, homeState> {
 
   getClickedPlan = (index) => {
     console.log("index", index);
-    this.props.provider_plans.length > 0 &&
+    this.props.plansByHMO.length > 0 &&
       this.props.dispatch({
         type: actions.GET_CLICKED_PLAN,
-        data: this.props.provider_plans[index],
+        data: this.props.plansByHMO[index],
         //data: this.props.recommended_plans[index],
       });
 
-    this.props.provider_plans.length == 0 &&
+    this.props.plansByHMO.length == 0 &&
       this.props.dispatch({
         type: actions.GET_CLICKED_PLAN,
         data: this.props.plans[index],
@@ -2213,7 +2222,7 @@ class HomeContent extends React.Component<homeProps, homeState> {
       current = 0;
     }
 
-    let providerPlans: any[] = this.props.provider_plans;
+    let providerPlans: any[] = this.props.plansByHMO;
 
     return (
       <div className="home">
@@ -2221,10 +2230,10 @@ class HomeContent extends React.Component<homeProps, homeState> {
           <div className="container">
             {/* if /hmo */}
             {
-              //this.state.filter_plans_by_hmo &&
+              //this.state.filter_PLANS_BY_HMO &&
               this.props.match.params.id &&
                 this.props.plans.length > 0 &&
-                this.props.provider_plans.length > 0 && (
+                this.props.plansByHMO.length > 0 && (
                   <Row className="banner-content">
                     {this.hmoBannerDiv(this.props.match.params.id)}
 
@@ -3357,7 +3366,7 @@ class HomeContent extends React.Component<homeProps, homeState> {
                   </div>
                   <div className="tabs_details top_plans">
                     {this.props.plans.length > 0 &&
-                    !this.props.filter_plans_by_hmo ? (
+                    !this.props.filter_PLANS_BY_HMO ? (
                       this.props.plans.map((plan, i) => {
                         return (
                           <div className="card">
@@ -3476,7 +3485,7 @@ class HomeContent extends React.Component<homeProps, homeState> {
                         );
                       })
                     ) : providerPlans.length > 0 &&
-                      this.props.filter_plans_by_hmo ? (
+                      this.props.filter_PLANS_BY_HMO ? (
                       providerPlans.map((plan, i) => {
                         return (
                           <div className="card">
@@ -3577,7 +3586,7 @@ class HomeContent extends React.Component<homeProps, homeState> {
                         );
                       })
                     ) : providerPlans.length == 0 &&
-                      this.props.filter_plans_by_hmo ? (
+                      this.props.filter_PLANS_BY_HMO ? (
                       <div>No plans available yet</div>
                     ) : (
                       // <div className="card">

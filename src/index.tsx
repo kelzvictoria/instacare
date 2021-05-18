@@ -28,35 +28,50 @@ import Home2 from "./pages/home/Home2";
 import Providers from "./pages/providers/Providers";
 import Prescriptions from "./pages/prescriptions/Prescriptions";
 
+import { getToken } from "../src/actions/authActions";
+
 //import HMO from "./pages/home/HMO";
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router>
-      <div className="main">
-        <AppHeader />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/quiz" component={Quiz} />
-          <Route path="/compare-old" component={Compare} />
-          <Route path="/plans" component={Plans} />
-          <Route path="/details-old" component={Details} />
-          <Route path="/details" component={PlanDetails} />
-          <Route exact path="/compare" component={SideBySideComparison} />
-          <Route path="/compare-plans/plans/*" component={ComparePlans} />
-          <Route path="/new-design" component={Home2} />
-          <Route exact path="/hmos/:id" component={Home2} />
-          <Route exact path="/find-provider" component={Providers} />
-          <Route exact path="/find-drugs" component={Prescriptions} />
-          {/* <Route path= {`/${hmo}`} component = {HMO} /> */}
-          <Route component={ErrorPage} />
-        </Switch>
-        <AppFooter />
-      </div>
-    </Router>
-  </Provider>,
-  document.getElementById("root")
-);
+export class App extends React.Component {
+  state = {
+    authCredLoaded: false,
+  };
+
+  UNSAFE_componentWillMount() {
+    // store.dispatch(getToken());
+  }
+
+  render() {
+    return (
+      <Provider store={store}>
+        <Router>
+          <div className="main">
+            <AppHeader />
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/quiz" component={Quiz} />
+              <Route path="/compare-old" component={Compare} />
+              <Route path="/plans" component={Plans} />
+              <Route path="/details-old" component={Details} />
+              <Route path="/details" component={PlanDetails} />
+              <Route exact path="/compare" component={SideBySideComparison} />
+              <Route path="/compare-plans/plans/*" component={ComparePlans} />
+              <Route path="/new-design" component={Home2} />
+              <Route exact path="/hmos/:id" component={Home2} />
+              <Route exact path="/find-provider" component={Providers} />
+              <Route exact path="/find-drugs" component={Prescriptions} />
+              {/* <Route path= {`/${hmo}`} component = {HMO} /> */}
+              <Route component={ErrorPage} />
+            </Switch>
+            <AppFooter />
+          </div>
+        </Router>
+      </Provider>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

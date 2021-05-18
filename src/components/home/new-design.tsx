@@ -8,12 +8,17 @@ import {
   AutoComplete,
   Form,
   Slider,
+  Spin,
 } from "antd";
 import {
   faShieldAlt,
   faArrowLeft,
   faSmile,
   faInfoCircle,
+  faChevronRight,
+  faChevronDown,
+  faChevronUp,
+  faChevronLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -21,7 +26,7 @@ import styles from "../../pages/home/Home.module.scss";
 import "../../custom.css";
 import Modal from "react-bootstrap/Modal";
 
-import * as actions from "../../utils/actions";
+import * as actions from "../../actions/types";
 
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
@@ -32,12 +37,13 @@ import ratiosvg from "../../svgs/claim_ratio.svg";
 import starfilled from "../../svgs/starfilled.svg";
 import star from "../../svgs/star.svg";
 import check from "../../svgs/check.svg";
+import uncheck from "../../svgs/uncheck.svg";
 
 import HMOInfoSkeleton from "../../components/skeletons/SkeletonHMOInfo";
 
 import * as home_utils from "../../utils/homeUtils";
 
-import { state } from "./state";
+//import { state } from "./state";
 
 import "./new-design.css";
 
@@ -62,19 +68,14 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.incrementSonCount = this.incrementSonCount.bind(this);
     this.decrementDaughterCount = this.decrementDaughterCount.bind(this);
     this.incrementDaughterCount = this.incrementDaughterCount.bind(this);
-    //this.goToDetails = this.goToDetails.bind(this);
     this.handlePhone = this.handlePhone.bind(this);
-    //this.handleSticky = this.handleSticky.bind(this);
-    // this.toggleMedMgtProgramsMultiselect = this.toggleMedMgtProgramsMultiselect.bind(
-    //   this
-    // );
   }
   state = {
     is_phone_valid: "null",
     show_provider_info: false,
     provider_info: [],
-    filter_plans_by_hmo: false,
-    provider_plans: [],
+    filter_PLANS_BY_HMO: false,
+    plansByHMO: [],
     show_desktop_on_load_modal: false,
     show_mobile_on_load_modal: false,
     show_desktop_home_frm: true,
@@ -87,7 +88,9 @@ class NewContent extends React.Component<homeProps, homeState> {
     sticky_inner_optional_style: "",
 
     filter_params: {
+      //this.props.responses.budget[0],
       annual_range_min: undefined,
+      //this.props.responses.budget[1],
       annual_range_max: undefined,
       annual_deductible_min: undefined,
       annual_deductible_max: undefined,
@@ -100,45 +103,38 @@ class NewContent extends React.Component<homeProps, homeState> {
       prescriptions_selected: [],
       healthSA_eligibility: false,
     },
+    plan_ids: [],
+    plan_desc_show_less: true,
   };
 
   toggleModal = () => {
     if (this.state.show_desktop_on_load_modal) {
       this.closeDesktopOnLoadModal();
     }
-    this.props.dispatch({
-      type: actions.TOGGLE_DESKTOP_MODAL,
-      data: { key: "isOpen", value: !this.props.isOpen },
-    });
+    let data = { key: "isOpen", value: !this.props.isOpen };
+    this.props.toggleDestopModal(data);
   };
 
   mobileToggleModal = () => {
-    // if (
-    //   !this.props.responses.phone_num ||
-    //   this.props.responses.phone_num.length < 14
-    // ) {
-    //   message.error("Please enter your phone number");
-    //   return;
-    // } else {
-    this.props.dispatch({
-      type: actions.TOGGLE_MOBILE_MODAL,
-      data: {
-        key: "isMobileViewModalOpen",
-        value: !this.props.isMobileViewModalOpen,
-      },
-    });
-    // }
+    let data = {
+      key: "isMobileViewModalOpen",
+      value: !this.props.isMobileViewModalOpen,
+    };
+
+    this.props.toggleMobileModal(data);
   };
 
   toggleOthersInput = () => {
-    this.props.dispatch({
-      type: actions.TOGGLE_OTHERS_MODAL,
-      data: { key: "isOthersInputOpen", value: !this.props.isOthersInputOpen },
-    });
+    let data = {
+      key: "isOthersInputOpen",
+      value: !this.props.isOthersInputOpen,
+    };
+    this.props.toggleOthersModal(data);
   };
 
   changePage = (action: string) => {
-    this.props.dispatch({ type: actions.CHANGE_PAGE, data: action });
+    let data = action;
+    this.props.changePage(data);
   };
 
   hmoBannerDiv(hmoId) {
@@ -150,8 +146,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == "1");
     }
 
-    //console.log"hmoArr", hmoArr);
-
     let data;
     if (hmoId) {
       if (hmoId !== "hygeia") {
@@ -159,8 +153,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       } else {
         data = this.props.hmos.filter((hmo) => hmo.name.id == "1");
       }
-
-      //console.log"data", data);
 
       return (
         <Col
@@ -207,13 +199,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                 <div className="card-text">
                   <p>Claim Ratio</p>
                   {/* <h5>{`${
-                    (this.props.provider_plans.length /
+                    (this.props.plansByHMO.length /
                       this.props.plans.length) *
                     100
                   }%`}</h5> */}
 
                   <h5>{`${
-                    (this.props.provider_plans.length / state.plans.length) *
+                    (this.props.plansByHMO.length / this.props.plans.length) *
                     100
                   }%`}</h5>
                 </div>
@@ -231,23 +223,15 @@ class NewContent extends React.Component<homeProps, homeState> {
         <div className="view2-svg-and-text svg-and-text">
           <Col xs={24} md={24} className="svg-img-div">
             <div className="svg-img home-svg-img">
-              <img
-                src={searching}
-                // "images/searching.svg"
-              ></img>
+              <img src={searching}></img>
               <p className="tiny-descrptn">
                 Find HMO Plans Starting from{" "}
                 <span className={styles.headingSpan}>
-                  {
-                    // this.props.plans.length == 0 && "..."
-                    state.plans.length == 0 && "..."
-                  }
-                  {
-                    // this.props.plans.length > 0
-                    state.plans.length > 0 &&
-                      ` ₦${this.numberwithCommas(this.props.cheapest_plan)}`
-                  }
-                  /year
+                  {this.props.cheapest_plan == 0 ? (
+                    <Spin className="cheapest-plan" />
+                  ) : (
+                    ` ₦${this.numberwithCommas(this.props.cheapest_plan)} /year`
+                  )}
                 </span>
               </p>
             </div>
@@ -260,15 +244,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <br />
                   <span className={styles.headingSpan}>
                     from
-                    {
-                      // this.props.plans.length == 0
-                      state.plans.length == 0 && "..."
-                    }
-                    {
-                      // this.props.plans.length > 0
-                      state.plans.length > 0 &&
-                        ` ₦${this.numberwithCommas(this.props.cheapest_plan)}`
-                    }
+                    {this.props.plans.length == 0 && "..."}
+                    {this.props.plans.length > 0 &&
+                      ` ₦${this.numberwithCommas(this.props.cheapest_plan)}`}
                     /year
                   </span>
                 </p>
@@ -316,7 +294,6 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handlePhone(val) {
     if (val) {
-      //console.log"val.length", val.length, "val", val);
       if (val.toString().length == 14) {
         this.setState({
           is_phone_valid: true,
@@ -326,11 +303,8 @@ class NewContent extends React.Component<homeProps, homeState> {
           is_phone_valid: false,
         });
       }
-
-      this.props.dispatch({
-        type: actions.UPDATE_PHONE,
-        data: { key: "phone_num", value: val },
-      });
+      let data = { key: "phone_num", value: val };
+      this.props.updatePhone(data);
     }
   }
 
@@ -339,40 +313,24 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   handleGender(val) {
-    // this.setState ({
-    //   gender: val
-    // })
-    // console.log('this:', this, "this.props:", this.props)
-    this.props.dispatch({
-      type: actions.UPDATE_GENDER,
-      data: { key: "gender", value: val },
-    });
+    let data = { key: "gender", value: val };
+    this.props.updateGender(data);
   }
 
   handleFullName(val) {
-    this.props.dispatch({
-      type: actions.UPDATE_FULL_NAME,
-      data: { key: "full_name", value: val },
-    });
+    let data = { key: "full_name", value: val };
+    this.props.updateFullName(data);
   }
 
   handleDesktopView() {
-    // this.setState({
-    //   isDesktopView: !this.props.isDesktopView,
-    // });
-    this.props.dispatch({
-      type: actions.TOGGLE_DESKTOP_VIEW,
-      data: { key: "isDesktopView", value: false },
-    });
+    let data = { key: "isDesktopView", value: false };
+    this.props.toggleDesktopView(data);
   }
 
   submitResponses() {
     let stringResp: any = JSON.stringify(this.props.responses);
-
-    //console.log"this.props.responses", this.props.responses);
     localStorage.setItem("responses", stringResp);
     this.props.history.push({
-      //pathname: "/compare",
       pathname: "/plans",
       data: this.props.responses,
     });
@@ -380,17 +338,9 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handleNavigation = (e: any) => {
     let currentPage = this.props.page;
-    // console.log("currentPage:", currentPage);
     const targetId = e.target.id;
-    // if (
-    //   !this.props.responses.phone_num ||
-    //   this.props.responses.phone_num.length < 14
-    // ) {
-    //   message.error("Please enter your phone number");
-    //   return;
-    // }
+
     if (targetId === "next") {
-      //console.log('this.props.isDesktopView', this.props.isDesktopView);
       if (this.props.isMobileViewModalOpen) {
         if (currentPage == 4) {
           if (this.props.responses.state == "") {
@@ -420,44 +370,29 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
 
       this.changePage("next");
-      // console.log('changePage("next")', this.props.page);
     } else if (targetId === "prev") {
       if (currentPage <= this.props.minPage) {
-        // console.log("currentPage <= this.props.minPage");
         return;
       }
       this.changePage("prev");
-      // console.log('changePage("prev")', this.props.page);
     }
   };
 
   handleNumOfPeopleCount() {
-    // if (this.props.responses.type != "single") {
-    //   this.props.dispatch({
-    //     type: actions.RESET_NUM_OF_PEOPLE,
-    //   });
-    // }
+    let data;
 
     if (this.props.responses.type == "couple") {
-      this.props.dispatch({
-        type: actions.UPDATE_NUM_OF_PEOPLE,
-        data: 1,
-      });
+      data = 1;
+      this.props.updateNumOfPeople(data);
     } else if (this.props.responses.type == "fam-of-4") {
-      this.props.dispatch({
-        type: actions.UPDATE_NUM_OF_PEOPLE,
-        data: 3,
-      });
+      data = 3;
+      this.props.updateNumOfPeople(data);
     } else if (this.props.responses.type == "fam-of-3") {
-      this.props.dispatch({
-        type: actions.UPDATE_NUM_OF_PEOPLE,
-        data: 2,
-      });
+      data = 2;
+      this.props.updateNumOfPeople(data);
     } else if (this.props.responses.type == "parents") {
-      this.props.dispatch({
-        type: actions.UPDATE_NUM_OF_PEOPLE,
-        data: 1,
-      });
+      data = 1;
+      this.props.updateNumOfPeople(data);
     } else if (this.props.responses.type == "others") {
       let ages = [
         this.props.responses.child_1_age,
@@ -479,22 +414,12 @@ class NewContent extends React.Component<homeProps, homeState> {
       ];
 
       for (let i = 0; i < ages.length; i++) {
-        //console.log("ages[i]", ages[i]);
         if (parseInt(ages[i]) !== 0) {
-          this.props.dispatch({
-            type: actions.UPDATE_NUM_OF_PEOPLE,
-            data: 1,
-          });
+          data = 1;
+          this.props.updateNumOfPeople(data);
         }
       }
     }
-
-    // console.log(
-    //   `
-    //   this.props.responses.num_of_people
-    //   `,
-    //   this.props.responses.num_of_people
-    // );
   }
 
   async fetchRecommendedPlans() {
@@ -503,329 +428,121 @@ class NewContent extends React.Component<homeProps, homeState> {
     let family_plans: object[] = [];
     let individual_plans: object[] = [];
 
-    this.props.dispatch({
-      type: actions.IS_FETCHING_RECOMMENDED_PLANS,
-      data: true,
-    });
+    this.props.setIsFetchingRecPlans(true);
+
     let res = await this.props.plans;
 
     if (res) {
       if (res.length !== 0) {
         for (let i = 0; i < res.length; i++) {
-          if (
-            //this.props.responses.num_of_people == 1 &&
-            res[i].category_id.id == "personal"
-          ) {
+          if (res[i].category_id.id == "personal") {
             individual_plans.push(res[i]);
           }
 
-          if (
-            //this.props.responses.num_of_people > 1 &&
-            res[i].category_id.id == "famiy"
-          ) {
+          if (res[i].category_id.id == "famiy") {
             family_plans.push(res[i]);
           }
         }
+        let data = this.props.responses.num_of_people;
+        this.props.getNumOfPeople(data);
 
-        this.props.dispatch({
-          type: actions.GET_NUM_OF_PEOPLE,
-          data: this.props.quiz.responses.num_of_people,
-        });
-
-        if (
-          //this.props.responses.num_of_people === 1 ||
-          this.props.quiz.responses.type == "single"
-        ) {
+        if (this.props.responses.type == "single") {
           rec_plans = individual_plans;
-        } else if (this.props.quiz.responses.type !== "single") {
+        } else if (this.props.responses.type !== "single") {
           rec_plans = family_plans;
         }
 
-        this.props.dispatch({
-          type: actions.GET_RECOMMENDED_PLANS,
-          data: rec_plans,
-        });
+        this.props.getRecommendedPlans(rec_plans);
+        this.props.setIsFetchingRecPlans(false);
 
-        this.props.dispatch({
-          type: actions.IS_FETCHING_RECOMMENDED_PLANS,
-          data: false,
-        });
         return;
       }
     }
   }
 
   handleType(val) {
-    //let id = document.getElementById(val.target.id) as HTMLInputElement;
-    console.log("val", val);
-
-    this.props.dispatch({
-      type: actions.UPDATE_TYPE,
-      data: {
-        key: "type",
-        value: val.target ? val.target.id : val,
-      },
-    });
+    let data = {
+      key: "type",
+      value: val.target ? val.target.id : val,
+    };
+    this.props.updateType(data);
   }
 
-  handleIndividualAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
+  handleAge(key, val) {
+    let data = { key: key, value: val };
 
-    this.props.dispatch({
-      type: actions.UPDATE_INDIVIDUAL_AGE,
-      data: { key: "individual_age", value: val },
-    });
-  }
-
-  handleFatherAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_FATHER_AGE,
-      data: { key: "father_age", value: val },
-    });
-  }
-
-  handleMotherAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_MOTHER_AGE,
-      data: { key: "mother_age", value: val },
-    });
-  }
-
-  handleGrandFatherAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_GRAND_FATHER_AGE,
-      data: { key: "phone_num", value: val },
-    });
-  }
-
-  handleGrandMotherAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_GRAND_MOTHER_AGE,
-      data: { key: "grand_mother_age", value: val },
-    });
-  }
-
-  handleFatherInLawAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_FATHER_IN_LAW_AGE,
-      data: { key: "father_in_law_age", value: val },
-    });
-  }
-
-  handleMotherInLawAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_MOTHER_IN_LAW_AGE,
-      data: { key: "mother_in_law_age", value: val },
-    });
-  }
-
-  handleSpouseAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_SPOUSE_AGE,
-      data: { key: "spouse_age", value: val },
-    });
-  }
-
-  handleChild1Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_1_AGE,
-      data: { key: "child_1_age", value: val },
-    });
-  }
-
-  handleChild2Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_2_AGE,
-      data: { key: "child_2_age", value: val },
-    });
-  }
-
-  handleChild3Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_3_AGE,
-      data: { key: "child_3_age", value: val },
-    });
-  }
-
-  handleChild4Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_4_AGE,
-      data: { key: "child_4_age", value: val },
-    });
-  }
-
-  handleChild5Age(val) {
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_5_AGE,
-      data: { key: "child_5_age", value: val },
-    });
-  }
-
-  handleChild6Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_6_AGE,
-      data: { key: "child_6_age", value: val },
-    });
-  }
-
-  handleChild7Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_7_AGE,
-      data: { key: "child_7_age", value: val },
-    });
-  }
-
-  handleChild8Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_8_AGE,
-      data: { key: "child_8_age", value: val },
-    });
+    this.props.updateAge(data);
   }
 
   handleSonBoxChecked() {
-    //console.logthis);
-    this.props.dispatch({
-      type: actions.UPDATE_SON_CHECKED,
-      data: {
-        key: "isSonCheckboxChecked",
-        value: !this.props.isSonCheckboxChecked,
-      },
-    });
+    let data = {
+      key: "isSonCheckboxChecked",
+      value: !this.props.isSonCheckboxChecked,
+    };
+    this.props.updateSonCheck(data);
   }
 
   handleDaughterBoxChecked() {
-    this.props.dispatch({
-      type: actions.UPDATE_DAUGHTER_CHECKED,
-      data: {
-        key: "isDaughterCheckboxChecked",
-        value: !this.props.isDaughterCheckboxChecked,
-      },
-    });
+    let data = {
+      key: "isDaughterCheckboxChecked",
+      value: !this.props.isDaughterCheckboxChecked,
+    };
+
+    this.props.updateDaughterCheck(data);
   }
 
   incrementSonCount() {
     if (this.props.sonCount < 4 && this.props.sonCount > 0) {
-      this.props.dispatch({
-        type: actions.INCREMENT_SON_COUNT,
-        data: { key: "sonCount", value: this.props.sonCount + 1 },
-      });
+      let data = { key: "sonCount", value: this.props.sonCount + 1 };
+      this.props.incrementSonCount(data);
     }
   }
 
   decrementSonCount() {
     if (this.props.sonCount > 1) {
-      this.props.dispatch({
-        type: actions.DECREMENT_SON_COUNT,
-        data: { key: "sonCount", value: this.props.sonCount - 1 },
-      });
+      let data = { key: "sonCount", value: this.props.sonCount - 1 };
+      this.props.decrementSonCount(data);
     }
-
-    //console.log"this.props.sonCount", this.props.sonCount);
   }
 
   incrementDaughterCount() {
     if (this.props.daughterCount < 4 && this.props.daughterCount > 0) {
-      this.props.dispatch({
-        type: actions.INCREMENT_DAUGHTER_COUNT,
-        data: { key: "daughterCount", value: this.props.daughterCount + 1 },
-      });
+      let data = { key: "daughterCount", value: this.props.daughterCount + 1 };
+      this.props.incrementDaughterCount(data);
     }
   }
 
   decrementDaughterCount() {
     if (this.props.daughterCount > 1) {
-      this.props.dispatch({
-        type: actions.DECREMENT_DAUGHTER_COUNT,
-        data: { key: "daughterCount", value: this.props.daughterCount - 1 },
-      });
+      let data = { key: "daughterCount", value: this.props.daughterCount - 1 };
+      this.props.decrementDaughterCount(data);
     }
   }
 
   handleChildrenCheckboxes(e) {
     let val = e.target.checked;
-    //console.logval);
   }
 
   resetAges() {
-    this.props.dispatch({
-      type: actions.RESET_RESPONSES,
-      data: {
-        individual_age: 0,
-        father_age: 0,
-        mother_age: 0,
-        grand_father_age: 0,
-        grand_mother_age: 0,
-        father_in_law_age: 0,
-        mother_in_law_age: 0,
-        spouse_age: 0,
-        child_1_age: 0,
-        child_2_age: 0,
-        child_3_age: 0,
-        child_4_age: 0,
-        child_5_age: 0,
-        child_6_age: 0,
-        child_7_age: 0,
-        child_8_age: 0,
-      },
-    });
+    let data = {
+      individual_age: 0,
+      father_age: 0,
+      mother_age: 0,
+      grand_father_age: 0,
+      grand_mother_age: 0,
+      father_in_law_age: 0,
+      mother_in_law_age: 0,
+      spouse_age: 0,
+      child_1_age: 0,
+      child_2_age: 0,
+      child_3_age: 0,
+      child_4_age: 0,
+      child_5_age: 0,
+      child_6_age: 0,
+      child_7_age: 0,
+      child_8_age: 0,
+    };
+    this.props.resetResponses(data);
   }
 
   showOthersInput() {
@@ -854,7 +571,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               name="individual_age"
               className="form-control"
               onChange={(e) => {
-                this.handleIndividualAge(e.target.value);
+                this.handleAge("individual_age", e.target.value);
               }}
               value={this.props.responses.individual_age}
               placeholder="Select Age"
@@ -889,7 +606,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               name="spouse_age"
               className="form-control"
               onChange={(e) => {
-                this.handleSpouseAge(e.target.value);
+                this.handleAge("spouse_age", e.target.value);
               }}
               value={this.props.responses.spouse_age}
               placeholder="Select Age"
@@ -963,7 +680,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                 name="child_1_age"
                 className="form-control"
                 onChange={(e) => {
-                  this.handleChild1Age(e.target.value);
+                  this.handleAge("child_1_age", e.target.value);
                 }}
                 value={this.props.responses.child_1_age}
                 placeholder="Select Age"
@@ -995,7 +712,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                 name="child_2_age"
                 className="form-control"
                 onChange={(e) => {
-                  this.handleChild2Age(e.target.value);
+                  this.handleAge("child_2_age", e.target.value);
                 }}
                 value={this.props.responses.child_2_age}
                 placeholder="Select Age"
@@ -1027,7 +744,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                 name="child_3_age"
                 className="form-control"
                 onChange={(e) => {
-                  this.handleChild3Age(e.target.value);
+                  this.handleAge("child_3_age", e.target.value);
                 }}
                 value={this.props.responses.child_3_age}
                 placeholder="Select Age"
@@ -1059,7 +776,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                 name="child_4_age"
                 className="form-control"
                 onChange={(e) => {
-                  this.handleChild4Age(e.target.value);
+                  this.handleAge("child_4_age", e.target.value);
                 }}
                 value={this.props.responses.child_4_age}
                 placeholder="Select Age"
@@ -1136,7 +853,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                 name="child_5_age"
                 className="form-control"
                 onChange={(e) => {
-                  this.handleChild5Age(e.target.value);
+                  this.handleAge("child_5_age", e.target.value);
                 }}
                 value={this.props.responses.child_5_age}
                 placeholder="Select Age"
@@ -1168,7 +885,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                 name="child_6_age"
                 className="form-control"
                 onChange={(e) => {
-                  this.handleChild6Age(e.target.value);
+                  this.handleAge("child_6_age", e.target.value);
                 }}
                 value={this.props.responses.child_6_age}
                 placeholder="Select Age"
@@ -1200,7 +917,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                 name="child_7_age"
                 className="form-control"
                 onChange={(e) => {
-                  this.handleChild7Age(e.target.value);
+                  this.handleAge("child_7_age", e.target.value);
                 }}
                 value={this.props.responses.child_7_age}
                 placeholder="Select Age"
@@ -1232,7 +949,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                 name="child_8_age"
                 className="form-control"
                 onChange={(e) => {
-                  this.handleChild8Age(e.target.value);
+                  this.handleAge("child_8_age", e.target.value);
                 }}
                 value={this.props.responses.child_8_age}
                 placeholder="Select Age"
@@ -1268,7 +985,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               name="father_age"
               className="form-control"
               onChange={(e) => {
-                this.handleFatherAge(e.target.value);
+                this.handleAge("father_age", e.target.value);
               }}
               value={this.props.responses.father_age}
               placeholder="Select Age"
@@ -1303,7 +1020,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               name="mother_age"
               className="form-control"
               onChange={(e) => {
-                this.handleMotherAge(e.target.value);
+                this.handleAge("mother_age", e.target.value);
               }}
               value={this.props.responses.mother_age}
               placeholder="Select Age"
@@ -1338,7 +1055,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               name="grand_father_age"
               className="form-control"
               onChange={(e) => {
-                this.handleGrandFatherAge(e.target.value);
+                this.handleAge("grand_father_age", e.target.value);
               }}
               value={this.props.responses.grand_father_age}
               placeholder="Select Age"
@@ -1373,7 +1090,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               name="grand_mother_age"
               className="form-control"
               onChange={(e) => {
-                this.handleGrandMotherAge(e.target.value);
+                this.handleAge("grand_mother_age", e.target.value);
               }}
               value={this.props.responses.grand_mother_age}
               placeholder="Select Age"
@@ -1408,7 +1125,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               name="father_in_law_age"
               className="form-control"
               onChange={(e) => {
-                this.handleFatherInLawAge(e.target.value);
+                this.handleAge("father_in_law_age", e.target.value);
               }}
               value={this.props.responses.father_in_law_age}
               placeholder="Select Age"
@@ -1443,7 +1160,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               name="mother_in_law_age"
               className="form-control"
               onChange={(e) => {
-                this.handleMotherInLawAge(e.target.value);
+                this.handleAge("mother_in_law_age", e.target.value);
               }}
               value={this.props.responses.mother_in_law_age}
               placeholder="Select Age"
@@ -1469,7 +1186,7 @@ class NewContent extends React.Component<homeProps, homeState> {
           name="individual"
           className="form-control"
           onChange={(e) => {
-            this.handleIndividualAge(e.target.value);
+            this.handleAge("individual_age", e.target.value);
           }}
           value={this.props.responses.individual_age}
           placeholder="Select Age"
@@ -1495,7 +1212,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             name="spouse_age"
             className="form-control"
             onChange={(e) => {
-              this.handleSpouseAge(e.target.value);
+              this.handleAge("spouse_age", e.target.value);
             }}
             value={this.props.responses.spouse_age}
             placeholder="Select Age"
@@ -1513,7 +1230,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             name="child_1_age"
             className="form-control"
             onChange={(e) => {
-              this.handleChild1Age(e.target.value);
+              this.handleAge("child_1_age", e.target.value);
             }}
             value={this.props.responses.child_1_age}
             placeholder="Select Age"
@@ -1539,7 +1256,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             name="father_age"
             className="form-control"
             onChange={(e) => {
-              this.handleFatherAge(e.target.value);
+              this.handleAge("father_age", e.target.value);
             }}
             value={this.props.responses.father_age}
             placeholder="Select Age"
@@ -1567,7 +1284,7 @@ class NewContent extends React.Component<homeProps, homeState> {
           className="form-control"
           value={this.props.responses.spouse_age}
           onChange={(e) => {
-            this.handleSpouseAge(e.target.value);
+            this.handleAge("spouse_age", e.target.value);
           }}
           placeholder="Select Age"
         >
@@ -1592,7 +1309,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             name="spouse_age"
             className="form-control"
             onChange={(e) => {
-              this.handleSpouseAge(e.target.value);
+              this.handleAge("spouse_age", e.target.value);
             }}
             value={this.props.responses.spouse_age}
             placeholder="Select Age"
@@ -1610,7 +1327,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             name="child_1_age"
             className="form-control"
             onChange={(e) => {
-              this.handleChild1Age(e.target.value);
+              this.handleAge("child_1_age", e.target.value);
             }}
             value={this.props.responses.child_1_age}
             placeholder="Select Age"
@@ -1636,27 +1353,18 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
     });
     if (tempLocations.length > 0) {
-      this.props.dispatch({
-        type: actions.FILTER_LOCATIONS,
-        data: tempLocations,
-      });
+      this.props.filterLocations(tempLocations);
     }
   };
 
   onSelectChange = (value: any) => {
-    this.props.dispatch({
-      type: actions.UPDATE_TEXT_RESPONSE,
-      data: { key: "state", value },
-    });
-    //console.logthis.props.responses.state);
+    let data = { key: "state", value };
+    this.props.updateTextResponse(data);
   };
 
   updateLocation = (location: any) => {
-    this.props.dispatch({
-      type: actions.UPDATE_TEXT_RESPONSE,
-      data: { key: "state", value: location },
-    });
-    //console.logthis.props.responses.state);
+    let data = { key: "state", value: location };
+    this.props.updateTextResponse(data);
   };
 
   renderQuizPages() {
@@ -2268,20 +1976,11 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   getClickedPlan = (index) => {
-    //console.log"index", index);
-    this.props.provider_plans.length > 0 &&
-      this.props.dispatch({
-        type: actions.GET_CLICKED_PLAN,
-        data: this.props.provider_plans[index],
-        //data: this.props.recommended_plans[index],
-      });
+    let propsData = this.props.plansByHMO[index];
+    let data = this.props.plans[index];
+    this.props.plansByHMO.length > 0 && this.props.getClickedPlan(propsData);
 
-    this.props.provider_plans.length == 0 &&
-      this.props.dispatch({
-        type: actions.GET_CLICKED_PLAN,
-        data: state.plans[index],
-        //data: this.props.plans[index],
-      });
+    this.props.plansByHMO.length == 0 && this.props.getClickedPlan(data);
   };
 
   renderDesktopQuizForm() {
@@ -3952,11 +3651,16 @@ class NewContent extends React.Component<homeProps, homeState> {
       this.minBudget = value[0];
       this.maxBudget = value[1];
       this.changek(this.minBudget, this.maxBudget);
-      await this.props.dispatch({ type: actions.RESET_PLANS, data: true });
-      await this.props.dispatch({ type: actions.UPDATE_BUDGET, budget: value });
+
+      let data = true;
+      let budget = value;
+
+      await this.props.resetPlans(data);
+      await this.props.updateBudget(budget);
+      await this.props.getServices();
+      this.props.filterByBudget(budget);
+
       this.handlePriceRangeTitle();
-      //this.eventHandlers.handleCheckbox(this.props.checked);
-      /* await this.fetchData("recommend", this.props.responses);*/
     },
   };
   formatter(value: number) {
@@ -3996,37 +3700,61 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   }
 
-  updatePriceRange(title) {
-    this.props.dispatch({
-      type: actions.UPDATE_PRICE_RANGE,
-      data: title,
-    });
-  }
+  // updatePriceRange(title) {
+  //   let data = title;
+  //   this.props.updatePriceRange(data);
+  // }
 
   handlePriceRangeTitle() {
+    console.log(
+      "hit handle",
+      "this.props.responses.budget[0]",
+      this.props.responses.budget[0],
+      "this.props.responses.budget[1]",
+      this.props.responses.budget[1],
+
+      "this.props.responses.price_range",
+      this.props.responses.price_range
+    );
+
     if (
-      this.props.quiz.responses.budget[1] > 0 &&
-      this.props.quiz.responses.budget[1] <= 20000
+      this.props.responses.budget[1] > 0 &&
+      this.props.responses.budget[1] <= 49999
     ) {
-      this.updatePriceRange("bronze");
+      console.log("bronze");
+
+      this.props.updatePriceRange("bronze");
     } else if (
-      this.props.quiz.responses.budget[1] >= 20001 &&
-      this.props.quiz.responses.budget[1] <= 49999
+      this.props.responses.budget[1] >= 50000 &&
+      this.props.responses.budget[1] <= 149999
     ) {
-      this.updatePriceRange("silver");
+      console.log("silver");
+
+      this.props.updatePriceRange("silver");
     } else if (
-      this.props.quiz.responses.budget[1] >= 50000 &&
-      this.props.quiz.responses.budget[1] <= 99999
+      this.props.responses.budget[1] >= 150000 &&
+      this.props.responses.budget[1] <= 299999
     ) {
-      this.updatePriceRange("gold");
+      console.log("gold");
+
+      this.props.updatePriceRange("gold");
     } else if (
-      this.props.quiz.responses.budget[1] >= 100000 &&
-      this.props.quiz.responses.budget[1] <= 149000
+      this.props.responses.budget[1] >= 300000 &&
+      this.props.responses.budget[1] <= 599999
     ) {
-      this.updatePriceRange("platinum");
+      console.log("platinum");
+      this.props.updatePriceRange("platinum");
+    } else if (this.props.responses.budget[1] >= 600000) {
+      console.log("platinum_plus");
+
+      this.props.updatePriceRange("platinum_plus");
     } else {
-      this.updatePriceRange("platinum_plus");
+      console.log("none");
     }
+    console.log(
+      "this.props.responses.price_range",
+      this.props.responses.price_range
+    );
   }
 
   setPriceRangeBasedOnTitle = (e) => {
@@ -4042,13 +3770,13 @@ class NewContent extends React.Component<homeProps, homeState> {
     switch (title) {
       case "bronze":
         this.eventHandlers.changeBudget([0, 20000]);
-        this.updatePriceRange("bronze");
+        this.props.updatePriceRange("bronze");
         this.handlePlanRangeCheck("bronze");
         break;
 
       case "silver":
         this.eventHandlers.changeBudget([20001, 49999]);
-        this.updatePriceRange("silver");
+        this.props.updatePriceRange("silver");
         this.handlePlanRangeCheck("silver");
         // this.handleMinRangeChange(20001);
         // this.handleMinRangeChange(49999);
@@ -4056,7 +3784,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
       case "gold":
         this.eventHandlers.changeBudget([50000, 99999]);
-        this.updatePriceRange("gold");
+        this.props.updatePriceRange("gold");
         this.handlePlanRangeCheck("gold");
         // this.handleMinRangeChange(50000);
         // this.handleMinRangeChange(99999);
@@ -4064,7 +3792,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
       case "platinum":
         this.eventHandlers.changeBudget([100000, 149000]);
-        this.updatePriceRange("platinum");
+        this.props.updatePriceRange("platinum");
         this.handlePlanRangeCheck("platinum");
         // this.handleMinRangeChange(100000);
         // this.handleMinRangeChange(149000);
@@ -4072,7 +3800,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
       case "platinum_plus":
         this.eventHandlers.changeBudget([150000, 1000000]);
-        this.updatePriceRange("platinum_plus");
+        this.props.updatePriceRange("platinum_plus");
         this.handlePlanRangeCheck("platinum_plus");
         // this.handleMinRangeChange(150000);
         // this.handleMinRangeChange(1000000);
@@ -4083,7 +3811,7 @@ class NewContent extends React.Component<homeProps, homeState> {
           this.state.filter_params.annual_range_min,
           this.state.filter_params.annual_range_max,
         ]);
-        this.updatePriceRange(this.props.responses.price_range);
+        this.props.updatePriceRange(this.props.responses.price_range);
 
       // this.handleMinRangeChange(this.state.filter_params.annual_range_min);
       // this.handleMinRangeChange(this.state.filter_params.annual_range_max);
@@ -4249,8 +3977,12 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   updateBugetWithFilterRange = () => {
     this.eventHandlers.changeBudget([
-      this.state.filter_params.annual_range_min,
-      this.state.filter_params.annual_range_max,
+      this.state.filter_params.annual_range_min
+        ? this.state.filter_params.annual_range_min
+        : this.props.responses.budget[0],
+      this.state.filter_params.annual_range_max
+        ? this.state.filter_params.annual_range_max
+        : this.props.responses.budget[1],
     ]);
   };
 
@@ -4317,20 +4049,10 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   setRecPlansIndexesToCompare = () => {
-    this.props.dispatch({
-      type: "SET_PLANS_TO_COMPARE_ON_DESKTOP",
-      data: this.state.plans_to_compare,
-    });
+    let data = this.state.plans_to_compare;
 
-    this.props.dispatch({
-      type: "SET_PLANS_TO_COMPARE_ON_MOBILE",
-      data: this.state.plans_to_compare,
-    });
-
-    // this.props.dispatch({
-    //   type: "SET_CHECKED_PLANS",
-    //   data: this.state.checked_plans_list,
-    // });
+    this.props.setPlansToCompareOnDesktop(data);
+    this.props.setPlansToCompareOnMobile(data);
   };
 
   buildQueryParams = () => {
@@ -4399,7 +4121,52 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   };
 
+  togglePlanCollapse = (plan_id) => {
+    this.handleExpandedPlan(plan_id);
+  };
+
+  handleExpandedPlan = (plan_id) => {
+    let plan_ids: string[] = this.state.plan_ids;
+    let isPlanExpanded = plan_ids.indexOf(plan_id);
+
+    if (isPlanExpanded > -1) {
+      plan_ids.splice(isPlanExpanded, 1);
+    } else {
+      plan_ids.push(plan_id);
+    }
+
+    this.setState({
+      plan_ids: plan_ids,
+    });
+  };
+
+  planDescCollapse() {
+    return <button></button>;
+  }
+
+  stripNonNumeric(x) {
+    x = x !== undefined ? x.toString() : "";
+    var n = parseFloat(
+      (x.charAt(0) == "-" ? "-" : "") + x.replace(/[^0-9]+/g, "")
+    );
+    return isNaN(n) ? 0 : n;
+  }
+
+  handleTotalBenefitLimit(in_limit, out_limit) {
+    let inLimit = this.stripNonNumeric(in_limit); //parseInt(in_limit.split("₦")[1]);
+    let outLimit = this.stripNonNumeric(out_limit); //parseInt(out_limit.split("₦")[1]);
+
+    if (inLimit && outLimit) {
+      return inLimit + outLimit;
+    }
+  }
+
   render() {
+    // console.log(
+    //   "this.state.filter_params.annual_range_min",
+    //   this.state.filter_params.annual_range_min
+    // );
+
     if (this.props.page != 0) {
     } else {
     }
@@ -4420,6 +4187,10 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     let plans_to_compare: number[] = this.state.plans_to_compare;
 
+    // let plansWithPackages =
+    //   this.props.plans &&
+    //   this.props.plans.filter((plan) => plan.packages.length > 0);
+
     // console.log("plan_range_checked", plan_range_checked);
     // console.log("plan_types_checked", plan_types_checked);
 
@@ -4433,6 +4204,8 @@ class NewContent extends React.Component<homeProps, homeState> {
       healthSA_eligibility,
     } = this.state.filter_params;
 
+    let plan_ids: string[] = this.state.plan_ids;
+
     return (
       <div className="home">
         <div className="banner-div">
@@ -4440,11 +4213,10 @@ class NewContent extends React.Component<homeProps, homeState> {
           <div className="container home-c">
             {/* if the path is /hmo and data has been fetched*/}
             {
-              //this.state.filter_plans_by_hmo &&
+              //this.state.filter_PLANS_BY_HMO &&
               this.props.match.params.id &&
-                // this.props.plans.length > 0
-                state.plans.length > 0 &&
-                this.props.provider_plans.length > 0 && (
+                this.props.plans.length > 0 &&
+                this.props.plansByHMO.length > 0 && (
                   <Row className="banner-content">
                     {this.hmoBannerDiv(this.props.match.params.id)}
 
@@ -4466,28 +4238,26 @@ class NewContent extends React.Component<homeProps, homeState> {
             }
 
             {/* if the path is /hmo and data is being fetched*/}
-            {this.props.match.params.id &&
-              // this.props.plans.length == 0
-              state.plans.length == 0 && (
-                <Row className="banner-content">
-                  <Col
-                    xs={24}
-                    md={14}
-                    className="banner-container provider-banner"
-                  >
-                    <HMOInfoSkeleton />
-                  </Col>
-                  <Col md={10} className="quiz">
-                    <div className="home-frm form-div">
-                      {/* call desktop form 2 */ this.renderDesktopQuizForm()}
+            {this.props.match.params.id && this.props.plans.length == 0 && (
+              <Row className="banner-content">
+                <Col
+                  xs={24}
+                  md={14}
+                  className="banner-container provider-banner"
+                >
+                  <HMOInfoSkeleton />
+                </Col>
+                <Col md={10} className="quiz">
+                  <div className="home-frm form-div">
+                    {/* call desktop form 2 */ this.renderDesktopQuizForm()}
 
-                      {/* call mobile form 2 */ this.renderMobileQuizForm()}
-                      {/* call desktop quiz modal 2 this.renderDesktopQuizModal()*/}
-                      {/* call mobile quiz modal 2  this.renderMobileQuizModal()*/}
-                    </div>
-                  </Col>
-                </Row>
-              )}
+                    {/* call mobile form 2 */ this.renderMobileQuizForm()}
+                    {/* call desktop quiz modal 2 this.renderDesktopQuizModal()*/}
+                    {/* call mobile quiz modal 2  this.renderMobileQuizModal()*/}
+                  </div>
+                </Col>
+              </Row>
+            )}
 
             {/* if the path is / */}
 
@@ -4515,987 +4285,1005 @@ class NewContent extends React.Component<homeProps, homeState> {
           </div>
         </div>
 
-        {
-          // this.props.plans.length > 0
-          state.plans.length > 0 ? (
-            <div className="home-plans-div container" id="plans">
-              <div className="results-header margin-top--2">
-                <div className={this.state.sticky_styles}>
-                  <div
-                    className={`padding-y--1 display--flex flex-wrap--wrap md-flex-wrap--nowrap justify-content--between ${this.state.sticky_inner_optional_style}`}
-                  >
-                    <div className="margin-bottom--1 md-margin-bottom--0 results-header-left">
-                      <div className="font-size--lead font-weight--bold c-results_header_summary">
-                        {/* {this.props.plans.length}  */}
-                        {state.plans.length} plans available
-                      </div>
-                      <div>
-                        <button
-                          className="c-button  c-button--primary margin-right--2 margin-bottom--1 lg-margin-bottom--0 c-filter-plans"
-                          type="button"
-                          onClick={this.toggleShowFilter}
-                        >
-                          {this.state.show_filter ? "Cancel" : "Filter Plans"}
-                        </button>
-
-                        <a
-                          className={
-                            this.state.show_compare_button
-                              ? "c-button c-button--secondary margin-right--2 qa-compare-plans"
-                              : "display--none"
-                          }
-                          // href="#"
-                          onClick={this.goToComparison}
-                          role="button"
-                        >
-                          Compare {plans_to_compare.length}{" "}
-                          {plans_to_compare.length > 1 ? "plans" : "plan"}
-                        </a>
-                      </div>
-                    </div>
-                    <div className="results-header-right">
-                      <div className="c-division display--inline-block rh-plan-type-div">
-                        <label className="rh-plan-type c-label margin-top--0">
-                          <span className="drop-ds-label">Plan type</span>
-                        </label>
-                        <select
-                          className="c-field rh-plan-type-select"
-                          onChange={(e) => this.changeType(e.target.value)}
-                          value={this.props.responses.type}
-                        >
-                          {home_utils.plan_types.map((plan_type) => {
-                            return (
-                              <option value={plan_type.id} id={plan_type.id}>
-                                {plan_type.name}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                      <div className="margin-left--1 display--inline-block rh-sort-by-div">
-                        <label className="c-label margin-top--0 rh-sort-by">
-                          <span className="drop-ds-label">Plan range</span>
-                        </label>
-                        <select
-                          className="c-field c-field--medium rh-sort-by-select"
-                          onChange={(e) => this.setPriceRangeBasedOnTitle(e)}
-                          value={
-                            this.props.responses.price_range //{this.state.range_selected}
-                          }
-                        >
-                          {home_utils.plan_range.map((plan_range) => {
-                            return (
-                              <option value={plan_range.id}>
-                                {plan_range.name}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
+        {this.props.plans.length > 0 ? (
+          <div className="home-plans-div container" id="plans">
+            <div className="results-header margin-top--2">
+              <div className={this.state.sticky_styles}>
                 <div
-                  className={
-                    this.state.show_filter
-                      ? "l-col fill--white c-filter-panel"
-                      : "display--none"
-                  }
+                  className={`padding-y--1 display--flex flex-wrap--wrap md-flex-wrap--nowrap justify-content--between ${this.state.sticky_inner_optional_style}`}
                 >
-                  <div className="c-filter-panel-margin-for-mobile-buttons">
-                    <div className="l-form-row margin-y--2">
-                      <div className="l-lg-col--8">
-                        <div className="l-form-row margin-bottom--2">
-                          <div className="l-lg-col--6 c-plan-filter-container">
-                            <div className="fill--gray-lightest padding--2">
-                              <fieldset className="c-range-field c-fieldset margin-top--0">
-                                <legend className="c-label c-range-field__label">
-                                  <span className="bolden-it">
-                                    Annual premium
-                                  </span>
-                                  <span className="c-field__hint">
-                                    Your annual premium range is
-                                    {/* { annual_range_min ? annual_range_min : "" }  - {annual_range_min ? annual_range_max : ""} */}
-                                    ( {this.formatter(this.minbudgett)} -{" "}
-                                    {this.formatter(this.maxbudgett)})
-                                    {/* ₦20,000 ₦50,000 */}
-                                  </span>
-                                </legend>
-                                <div className="display--flex justify-content--between align-items--center">
-                                  <div className="clearfix c-range-field__input">
-                                    <div className="c-field-mask c-field-mask--currency">
-                                      <div className="c-field__before c-field__before--currency">
-                                        ₦
-                                      </div>
-                                      <input
-                                        className="c-field c-field--currency"
-                                        inputMode="numeric"
-                                        pattern="[0-9.,-]*"
-                                        type="text"
-                                        name="premium-start"
-                                        value={
-                                          this.props.quiz.responses.budget[0]
-                                        }
-                                        onChange={(e) =>
-                                          this.handleMinRangeChange(
-                                            e.target.value
-                                          )
-                                        }
-                                        onKeyUp={
-                                          this.updateBugetWithFilterRange
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-                                  <div
-                                    className="c-range-field__to"
-                                    aria-hidden="true"
-                                  >
-                                    to
-                                  </div>
+                  <div className="margin-bottom--1 md-margin-bottom--0 results-header-left">
+                    <div className="font-size--lead font-weight--bold c-results_header_summary">
+                      {/* {this.props.plans.length} plans available */}
+                      {this.props.planServices.length} plans available
+                    </div>
+                    <div>
+                      <button
+                        className="c-button  c-button--primary margin-right--2 margin-bottom--1 lg-margin-bottom--0 c-filter-plans"
+                        type="button"
+                        onClick={this.toggleShowFilter}
+                      >
+                        {this.state.show_filter ? "Cancel" : "Filter Plans"}
+                      </button>
 
-                                  <div className="clearfix c-range-field__input">
-                                    <div className="c-field-mask c-field-mask--currency">
-                                      <div className="c-field__before c-field__before--currency">
-                                        ₦
-                                      </div>
-                                      <input
-                                        className="c-field c-field--currency"
-                                        inputMode="numeric"
-                                        pattern="[0-9.,-]*"
-                                        type="text"
-                                        name="premium-end"
-                                        value={
-                                          this.props.quiz.responses.budget[1]
-                                        }
-                                        onChange={(e) =>
-                                          this.handleMaxRangeChange(
-                                            e.target.value
-                                          )
-                                        }
-                                        onKeyUp={
-                                          this.updateBugetWithFilterRange
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-                                  <button
-                                    className="c-button c-button--secondary c-button--small c-range-field__button"
-                                    disabled={
-                                      annual_range_min != undefined ||
-                                      annual_range_max != undefined
-                                        ? false
-                                        : true
-                                    }
-                                    type="button"
-                                  >
-                                    Apply range
-                                  </button>
-                                </div>
-                                <div></div>
-                              </fieldset>
-                            </div>
-                          </div>
-                          <div className="l-lg-col--6 c-plan-filter-container">
-                            <div className="fill--gray-lightest padding--2">
-                              <fieldset className="c-range-field c-fieldset margin-top--0">
-                                <legend className="c-label c-range-field__label">
-                                  <span className="bolden-it">
-                                    Maximum yearly deductible
-                                  </span>
-                                  <span className="c-field__hint">
-                                    Your yearly deductible range is{" "}
-                                    {annual_deductible_min
-                                      ? annual_deductible_min
-                                      : ""}{" "}
-                                    -{" "}
-                                    {annual_deductible_max
-                                      ? annual_deductible_max
-                                      : ""}
-                                    {/* ₦0 - ₦10,000 */}
-                                  </span>
-                                </legend>
-                                <div className="display--flex justify-content--between align-items--center">
-                                  <div className="clearfix c-range-field__input">
-                                    <div className="c-field-mask c-field-mask--currency">
-                                      <div className="c-field__before c-field__before--currency">
-                                        ₦
-                                      </div>
-                                      <input
-                                        className="c-field c-field--currency"
-                                        inputMode="numeric"
-                                        pattern="[0-9.,-]*"
-                                        type="text"
-                                        name="deductible-start"
-                                        onChange={(e) =>
-                                          this.handleMinDedChange(
-                                            e.target.value
-                                          )
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-                                  <div
-                                    className="c-range-field__to"
-                                    aria-hidden="true"
-                                  >
-                                    to
-                                  </div>
-                                  <div className="clearfix c-range-field__input">
-                                    <div className="c-field-mask c-field-mask--currency">
-                                      <div className="c-field__before c-field__before--currency">
-                                        ₦
-                                      </div>
-                                      <input
-                                        className="c-field c-field--currency"
-                                        inputMode="numeric"
-                                        pattern="[0-9.,-]*"
-                                        type="text"
-                                        name="deductible-end"
-                                        onChange={(e) =>
-                                          this.handleMaxDedChange(
-                                            e.target.value
-                                          )
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-
-                                  <button
-                                    className="c-button c-button--secondary c-button--small c-range-field__button"
-                                    disabled={
-                                      annual_deductible_min != undefined ||
-                                      annual_deductible_max != undefined
-                                        ? false
-                                        : true
-                                    }
-                                    type="button"
-                                  >
-                                    Apply range
-                                  </button>
-                                </div>
-                                <div></div>
-                              </fieldset>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="l-form-row">
-                          <div className="l-lg-col--6 c-plan-filter-container">
-                            <div className="fill--gray-lightest padding--2">
-                              <fieldset className="c-fieldset margin-top--0">
-                                <legend className="c-label">Plan Types</legend>
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="single"
-                                    onChange={() =>
-                                      this.handlePlanTypesCheck("single")
-                                    }
-                                    checked={
-                                      plan_types_checked
-                                        ? plan_types_checked.includes("single")
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanTypesCheck("single")
-                                    }
-                                  >
-                                    <span className="">Individual</span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="fam-of-4"
-                                    onChange={() =>
-                                      this.handlePlanTypesCheck("fam-of-4")
-                                    }
-                                    checked={
-                                      plan_types_checked
-                                        ? plan_types_checked.includes(
-                                            "fam-of-4"
-                                          )
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanTypesCheck("fam-of-4")
-                                    }
-                                  >
-                                    <span className="">Family</span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="couple"
-                                    onChange={() =>
-                                      this.handlePlanTypesCheck("couple")
-                                    }
-                                    checked={
-                                      plan_types_checked
-                                        ? plan_types_checked.includes("couple")
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanTypesCheck("couple")
-                                    }
-                                  >
-                                    <span className="">
-                                      Couples
-                                      {/* (2) */}
-                                    </span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="parents"
-                                    onChange={() =>
-                                      this.handlePlanTypesCheck("parents")
-                                    }
-                                    checked={
-                                      plan_types_checked
-                                        ? plan_types_checked.includes("parents")
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanTypesCheck("parents")
-                                    }
-                                  >
-                                    <span className="">
-                                      Senior Citizens
-                                      {/* (2) */}
-                                    </span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="smes"
-                                    onChange={() =>
-                                      this.handlePlanTypesCheck("smes")
-                                    }
-                                    checked={
-                                      plan_types_checked
-                                        ? plan_types_checked.includes("smes")
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanTypesCheck("smes")
-                                    }
-                                  >
-                                    <span className="">
-                                      SMEs and Small Groups
-                                      {/* (2) */}
-                                    </span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="corporate"
-                                    onChange={() =>
-                                      this.handlePlanTypesCheck("corporate")
-                                    }
-                                    checked={
-                                      plan_types_checked
-                                        ? plan_types_checked.includes(
-                                            "corporate"
-                                          )
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanTypesCheck("corporate")
-                                    }
-                                  >
-                                    <span className="">
-                                      Corporate and Large Groups
-                                      {/* (2) */}
-                                    </span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="intl_coverage"
-                                    onChange={() =>
-                                      this.handlePlanTypesCheck("intl_coverage")
-                                    }
-                                    checked={
-                                      plan_types_checked
-                                        ? plan_types_checked.includes(
-                                            "intl_coverage"
-                                          )
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanTypesCheck("intl_coverage")
-                                    }
-                                  >
-                                    <span className="">
-                                      International Coverage
-                                      {/* (2) */}
-                                    </span>
-                                  </label>
-                                </div>
-                              </fieldset>
-                            </div>
-                          </div>
-
-                          <div className="l-lg-col--6 c-plan-filter-container">
-                            <div className="fill--gray-lightest padding--2">
-                              <fieldset className="c-fieldset margin-top--0">
-                                <legend className="c-label">Plan Range</legend>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="bronze"
-                                    onChange={() =>
-                                      this.handlePlanRangeCheck("bronze")
-                                    }
-                                    checked={
-                                      plan_range_checked
-                                        ? plan_range_checked.includes("bronze")
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanRangeCheck("bronze")
-                                    }
-                                  >
-                                    <span className="">Bronze</span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="silver"
-                                    onChange={() =>
-                                      this.handlePlanRangeCheck("silver")
-                                    }
-                                    checked={
-                                      plan_range_checked
-                                        ? plan_range_checked.includes("silver")
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanRangeCheck("silver")
-                                    }
-                                  >
-                                    <span className="">Silver</span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="gold"
-                                    onChange={() =>
-                                      this.handlePlanRangeCheck("gold")
-                                    }
-                                    checked={
-                                      plan_range_checked
-                                        ? plan_range_checked.includes("gold")
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanRangeCheck("gold")
-                                    }
-                                  >
-                                    <span className="">Gold</span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="platinum"
-                                    onChange={() =>
-                                      this.handlePlanRangeCheck("platinum")
-                                    }
-                                    checked={
-                                      plan_range_checked
-                                        ? plan_range_checked.includes(
-                                            "platinum"
-                                          )
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanRangeCheck("platinum")
-                                    }
-                                  >
-                                    <span className="">Platinum</span>
-                                  </label>
-                                </div>
-
-                                <div className="">
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    name=""
-                                    value="platinum_plus"
-                                    onChange={() =>
-                                      this.handlePlanRangeCheck("platinum_plus")
-                                    }
-                                    checked={
-                                      plan_range_checked
-                                        ? plan_range_checked.includes(
-                                            "platinum_plus"
-                                          )
-                                        : false
-                                    }
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() =>
-                                      this.handlePlanRangeCheck("platinum_plus")
-                                    }
-                                  >
-                                    <span className="">Platinum Plus</span>
-                                  </label>
-                                </div>
-                              </fieldset>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="l-form-row">
-                          <div className="l-lg-col--12">
-                            <label className="c-label">
-                              <span className="font-weight--bold">
-                                Search by plan ID (10 characters)
-                              </span>
-                            </label>
-                            <input
-                              className="display--inline-block c-field"
-                              id="plan-id-filter"
-                              name="plan-id"
-                              type="text"
-                              maxLength={10}
-                              placeholder="Example: HYG0123456"
-                              onChange={(e) =>
-                                this.handlePlanIDChange(e.target.value)
-                              }
-                            />
-                            <button
-                              className="c-button plan-id-search-button"
-                              disabled={planID !== undefined ? false : true}
-                              type="button"
-                            >
-                              Search
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="l-form-row">
-                          <div className="l-lg-col--6">
-                            <div className="hmo-filter">
-                              <label className="c-label">
-                                <span className="font-weight--bold">HMOs</span>
-                              </label>
-                              <select
-                                className="c-field"
-                                id="select_hmo_filter"
-                              >
-                                <option value="">Select an HMO</option>
-                                <option value="hygeia">Hygeia</option>
-                                <option value="avon">Avon</option>
-                                <option value="reliance">Reliance</option>
-                                <option value="metro-health">
-                                  Metro Health
-                                </option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="l-lg-col--6">
-                            <div className="c-multiselect-dropdown">
-                              <label className="c-label">
-                                <span className="font-weight--bold">
-                                  Health management program
-                                </span>
-                              </label>
-
-                              <div
-                                className="c-multiselect-dropdown__button-wrapper"
-                                tabIndex={0}
-                              >
-                                <button
-                                  aria-expanded="false"
-                                  className="c-field c-multiselect-dropdown__button"
-                                  onClick={this.toggleMedMgtProgramsMultiselect}
-                                  // onBlur={this.closeMedMgtProgramsMultiselect}
-                                  // onFocus={this.openMedMgtProgramsMultiselect}
-                                >
-                                  Select any program
-                                </button>
-                                <ul
-                                  className={
-                                    this.state.show_med_mgt_program_multiselect
-                                      ? "c-multiselect-dropdown__list c-list--bare"
-                                      : "display--none"
-                                  }
-                                >
-                                  <li
-                                    className="c-multiselect-dropdown__list-item"
-                                    value="Asthma"
-                                    id="asthma"
-                                    onClick={() => {
-                                      this.handleMedMgtProgCheck("asthma");
-                                    }}
-                                  >
-                                    <div>
-                                      <input
-                                        className="c-choice c-choice--small"
-                                        id="asthma"
-                                        type="checkbox"
-                                        value="Asthma"
-                                        onChange={() => {
-                                          this.handleMedMgtProgCheck("asthma");
-                                        }}
-                                        checked={
-                                          med_mgt_programs_selected
-                                            ? med_mgt_programs_selected.includes(
-                                                "asthma"
-                                              )
-                                            : false
-                                        }
-                                      />
-                                      <label className="c-label">
-                                        <span>Asthma</span>
-                                      </label>
-                                    </div>
-                                  </li>
-
-                                  <li
-                                    className="c-multiselect-dropdown__list-item"
-                                    value="HBP and High Cholesterol"
-                                    id="hbp_and_h_cholesterol"
-                                    onClick={() =>
-                                      this.handleMedMgtProgCheck(
-                                        "hbp_and_h_cholesterol"
-                                      )
-                                    }
-                                  >
-                                    <div>
-                                      <input
-                                        className="c-choice c-choice--small"
-                                        id="hbp_and_h_cholesterol"
-                                        type="checkbox"
-                                        value="HBP and High Cholesterol"
-                                        checked={
-                                          med_mgt_programs_selected
-                                            ? med_mgt_programs_selected.includes(
-                                                "hbp_and_h_cholesterol"
-                                              )
-                                            : false
-                                        }
-                                        onChange={() =>
-                                          this.handleMedMgtProgCheck(
-                                            "hbp_and_h_cholesterol"
-                                          )
-                                        }
-                                      />
-                                      <label className="c-label">
-                                        <span>
-                                          High Blood Pressure and High
-                                          Cholesterol
-                                        </span>
-                                      </label>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </div>
-                              {this.state.filter_params.mgt_program_selected
-                                ? this.state.filter_params.mgt_program_selected.map(
-                                    (item) => {
-                                      return (
-                                        <ul className="c-list--bare">
-                                          <li className="display--inline-block">
-                                            <div className="c-filter-tag">
-                                              <button
-                                                className="c-filter-tag__button"
-                                                id="Asthma (43)-tag"
-                                                onClick={() =>
-                                                  this.handleMedMgtProgCheck(
-                                                    item
-                                                  )
-                                                }
-                                              >
-                                                {/* <span className="">Deselect</span> */}
-                                                <span className="c-filter-tag__label">
-                                                  {item}
-                                                </span>
-                                                <span className="c-filter-tag__clear-icon">
-                                                  <svg
-                                                    className="c-clear-icon"
-                                                    width="15px"
-                                                    height="15px"
-                                                    viewBox="0 0 15 15"
-                                                    version="1.1"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    focusable="false"
-                                                    role="presentation"
-                                                    pointer-events="none"
-                                                  >
-                                                    <path
-                                                      className="c-clear-icon__x"
-                                                      d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
-                                                    ></path>
-                                                  </svg>
-                                                </span>
-                                              </button>
-                                            </div>
-                                          </li>
-                                        </ul>
-                                      );
-                                    }
-                                  )
-                                : ""}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="l-lg-col--4">
-                        <div className="l-form-row">
-                          <div className="l-lg-col--12 c-plan-filter-container">
-                            <div className="fill--gray-lightest padding--2">
-                              <fieldset className="c-fieldset margin-top--0">
-                                <legend className="c-label">
-                                  <span className="bolden-it">
-                                    Health Savings Account Eligibility (HSA)
-                                  </span>
-                                </legend>
-                                <div>
-                                  <input
-                                    className="c-choice c-choice--small"
-                                    type="checkbox"
-                                    value="hsa-true"
-                                    checked={healthSA_eligibility}
-                                    onChange={() => this.handleHSAChange()}
-                                  />
-                                  <label
-                                    className="c-label"
-                                    onClick={() => this.handleHSAChange()}
-                                  >
-                                    <span className="">
-                                      Eligible for an HSA
-                                    </span>
-                                  </label>
-                                </div>
-                              </fieldset>
-                            </div>
-                          </div>
-
-                          <div className="padding--2 c-plan-filter-container">
-                            <fieldset className="c-fieldset margin-top--0">
-                              <legend className="c-label">
-                                Medical providers
-                              </legend>
-                            </fieldset>
-                            <a
-                              className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                              href="/find-provider"
-                            >
-                              Add Providers
-                            </a>
-                          </div>
-
-                          <div className="padding--2 c-plan-filter-container">
-                            <fieldset className="c-fieldset margin-top--0">
-                              <legend className="c-label">
-                                Prescription Drugs
-                              </legend>
-                            </fieldset>
-                            <a
-                              className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                              href="/find-drugs"
-                            >
-                              Add Drugs
-                            </a>
-                          </div>
-                        </div>
-                      </div>
+                      <a
+                        className={
+                          this.state.show_compare_button
+                            ? "c-button c-button--secondary margin-right--2 qa-compare-plans"
+                            : "display--none"
+                        }
+                        // href="#"
+                        onClick={this.goToComparison}
+                        role="button"
+                      >
+                        Compare {plans_to_compare.length}{" "}
+                        {plans_to_compare.length > 1 ? "plans" : "plan"}
+                      </a>
                     </div>
                   </div>
-
-                  <div className="l-row padding-y--2 display--none md-display--block margin-top--2 fill--gray-lightest">
-                    <div className="l-col--12 text-align--right">
-                      <button
-                        className="c-button margin-right--2 qa-close-desktop"
-                        type="button"
+                  <div className="results-header-right">
+                    <div className="c-division display--inline-block rh-plan-type-div">
+                      <label className="rh-plan-type c-label margin-top--0">
+                        <span className="drop-ds-label">Plan type</span>
+                      </label>
+                      <select
+                        className="c-field rh-plan-type-select"
+                        onChange={(e) => this.changeType(e.target.value)}
+                        value={this.props.responses.type}
                       >
-                        Cancel
-                      </button>
-                      <button
-                        className="c-button c-button--secondary margin-right--2 text-transform--capitalize qa-clear-desktop"
-                        type="button"
-                      >
-                        Clear filters
-                      </button>
-                      <button
-                        className="c-button c-button--success qa-apply-desktop"
-                        type="button"
-                      >
-                        Apply filters
-                      </button>
+                        {home_utils.plan_types.map((plan_type) => {
+                          return (
+                            <option value={plan_type.id} id={plan_type.id}>
+                              {plan_type.name}
+                            </option>
+                          );
+                        })}
+                      </select>
                     </div>
-                  </div>
-
-                  <div className="l-col c-filter-panel-fixed-mobile-buttons fill--gray-lightest md-display--none">
-                    <div className="l-row">
-                      <div className="l-col--12">
-                        <button
-                          className="c-button c-button--success margin-top--2 qa-apply-mobile"
-                          type="button"
-                        >
-                          Apply Filters
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="l-row">
-                      <div className="l-col--6">
-                        <button
-                          className="c-button c-button--secondary margin-y--2 text-transform--capitalize qa-clear-mobile"
-                          type="button"
-                        >
-                          Clear filters
-                        </button>
-                      </div>
-
-                      <div className="l-col--6">
-                        <button
-                          className="c-button margin-y--2 qa-close-mobile"
-                          type="button"
-                        >
-                          Cancel
-                        </button>
-                      </div>
+                    <div className="margin-left--1 display--inline-block rh-sort-by-div">
+                      <label className="c-label margin-top--0 rh-sort-by">
+                        <span className="drop-ds-label">Plan range</span>
+                      </label>
+                      <select
+                        className="c-field c-field--medium rh-sort-by-select"
+                        onChange={(e) => this.setPriceRangeBasedOnTitle(e)}
+                        value={
+                          this.props.responses.price_range //{this.state.range_selected}
+                        }
+                      >
+                        {home_utils.plan_range.map((plan_range) => {
+                          return (
+                            <option value={plan_range.id}>
+                              {plan_range.name}
+                            </option>
+                          );
+                        })}
+                      </select>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="" id="plans-section">
-                <ul className="c-list--bare margin-top--2 home-plans-list">
-                  {/* {this.props.plans.map((plan, i) => { */}
-                  {state.plans.map((plan, i) => {
-                    return (
-                      <li className="margin-bottom--4">
-                        <article
-                          className={`plan-card c-base c-fill-white c-box-shadow c--health ${
-                            plans_to_compare && plans_to_compare.includes(i)
-                              ? // plans_to_compare && plans_to_compare.includes(i.toString())
-                                "c-plan-card--compare-checked"
-                              : ""
-                          }`}
-                        >
-                          <div className="plan-card-inner c-clearfix">
-                            <div className="plan-card__top-section display--flex justify-content--between lg-flex-wrap--nowrap flex-wrap--wrap">
-                              <div>
-                                <header className="plan-card-title">
-                                  <div className="plan-c-provider font-weight--bold">
-                                    {/* Hygeia */}
-                                    {plan.hmo_id.name.text}
+              <div
+                className={
+                  this.state.show_filter
+                    ? "l-col fill--white c-filter-panel"
+                    : "display--none"
+                }
+              >
+                <div className="c-filter-panel-margin-for-mobile-buttons">
+                  <div className="l-form-row margin-y--2">
+                    <div className="l-lg-col--8">
+                      <div className="l-form-row margin-bottom--2">
+                        <div className="l-lg-col--6 c-plan-filter-container">
+                          <div className="fill--gray-lightest padding--2">
+                            <fieldset className="c-range-field c-fieldset margin-top--0">
+                              <legend className="c-label c-range-field__label">
+                                <span className="bolden-it">
+                                  Annual premium
+                                </span>
+                                <span className="c-field__hint">
+                                  Your annual premium range is
+                                  {/* { annual_range_min ? annual_range_min : "" }  - {annual_range_min ? annual_range_max : ""} */}
+                                  ( {this.formatter(this.minbudgett)} -{" "}
+                                  {this.formatter(this.maxbudgett)})
+                                  {/* ₦20,000 ₦50,000 */}
+                                </span>
+                              </legend>
+                              <div className="display--flex justify-content--between align-items--center">
+                                <div className="clearfix c-range-field__input">
+                                  <div className="c-field-mask c-field-mask--currency">
+                                    <div className="c-field__before c-field__before--currency">
+                                      ₦
+                                    </div>
+                                    <input
+                                      className="c-field c-field--currency"
+                                      inputMode="numeric"
+                                      pattern="[0-9.,-]*"
+                                      type="text"
+                                      name="premium-start"
+                                      value={this.props.responses.budget[0]}
+                                      onChange={(e) =>
+                                        this.handleMinRangeChange(
+                                          e.target.value
+                                        )
+                                      }
+                                      onKeyUp={this.updateBugetWithFilterRange}
+                                    />
                                   </div>
-                                  <h2 className="plan-c-name font-weight--normal margin-y--1">
-                                    <a href="#">
-                                      {/* HyBasic */}
-                                      {plan.name}
-                                    </a>
-                                  </h2>
-                                  <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
-                                    <li
-                                      className="c-plan-title__info-item"
-                                      key={plan.id}
-                                    >
-                                      <span className="">
-                                        <span>
-                                          {/* Personal */}
-                                          {plan.category_id.name}
-                                        </span>
-                                      </span>
-                                    </li>
-                                    <li className="c-plan-title__info-item">
-                                      <span className="">
-                                        <span>HMO</span>
-                                      </span>
-                                    </li>
-                                    <li className="c-plan-title__info-item">
-                                      Plan ID:
-                                      <span className="font-weight--bold">
-                                        HYG00001
-                                      </span>
-                                    </li>
-                                  </ul>
-                                </header>
+                                </div>
+                                <div
+                                  className="c-range-field__to"
+                                  aria-hidden="true"
+                                >
+                                  to
+                                </div>
+
+                                <div className="clearfix c-range-field__input">
+                                  <div className="c-field-mask c-field-mask--currency">
+                                    <div className="c-field__before c-field__before--currency">
+                                      ₦
+                                    </div>
+                                    <input
+                                      className="c-field c-field--currency"
+                                      inputMode="numeric"
+                                      pattern="[0-9.,-]*"
+                                      type="text"
+                                      name="premium-end"
+                                      value={this.props.responses.budget[1]}
+                                      onChange={(e) =>
+                                        this.handleMaxRangeChange(
+                                          e.target.value
+                                        )
+                                      }
+                                      onKeyUp={this.updateBugetWithFilterRange}
+                                    />
+                                  </div>
+                                </div>
+                                <button
+                                  className="c-button c-button--secondary c-button--small c-range-field__button"
+                                  disabled={
+                                    annual_range_min != undefined ||
+                                    annual_range_max != undefined
+                                      ? false
+                                      : true
+                                  }
+                                  type="button"
+                                >
+                                  Apply range
+                                </button>
+                              </div>
+                              <div></div>
+                            </fieldset>
+                          </div>
+                        </div>
+                        <div className="l-lg-col--6 c-plan-filter-container">
+                          <div className="fill--gray-lightest padding--2">
+                            <fieldset className="c-range-field c-fieldset margin-top--0">
+                              <legend className="c-label c-range-field__label">
+                                <span className="bolden-it">
+                                  Maximum yearly deductible
+                                </span>
+                                <span className="c-field__hint">
+                                  Your yearly deductible range is{" "}
+                                  {annual_deductible_min
+                                    ? annual_deductible_min
+                                    : ""}{" "}
+                                  -{" "}
+                                  {annual_deductible_max
+                                    ? annual_deductible_max
+                                    : ""}
+                                  {/* ₦0 - ₦10,000 */}
+                                </span>
+                              </legend>
+                              <div className="display--flex justify-content--between align-items--center">
+                                <div className="clearfix c-range-field__input">
+                                  <div className="c-field-mask c-field-mask--currency">
+                                    <div className="c-field__before c-field__before--currency">
+                                      ₦
+                                    </div>
+                                    <input
+                                      className="c-field c-field--currency"
+                                      inputMode="numeric"
+                                      pattern="[0-9.,-]*"
+                                      type="text"
+                                      name="deductible-start"
+                                      onChange={(e) =>
+                                        this.handleMinDedChange(e.target.value)
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                                <div
+                                  className="c-range-field__to"
+                                  aria-hidden="true"
+                                >
+                                  to
+                                </div>
+                                <div className="clearfix c-range-field__input">
+                                  <div className="c-field-mask c-field-mask--currency">
+                                    <div className="c-field__before c-field__before--currency">
+                                      ₦
+                                    </div>
+                                    <input
+                                      className="c-field c-field--currency"
+                                      inputMode="numeric"
+                                      pattern="[0-9.,-]*"
+                                      type="text"
+                                      name="deductible-end"
+                                      onChange={(e) =>
+                                        this.handleMaxDedChange(e.target.value)
+                                      }
+                                    />
+                                  </div>
+                                </div>
+
+                                <button
+                                  className="c-button c-button--secondary c-button--small c-range-field__button"
+                                  disabled={
+                                    annual_deductible_min != undefined ||
+                                    annual_deductible_max != undefined
+                                      ? false
+                                      : true
+                                  }
+                                  type="button"
+                                >
+                                  Apply range
+                                </button>
+                              </div>
+                              <div></div>
+                            </fieldset>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="l-form-row">
+                        <div className="l-lg-col--6 c-plan-filter-container">
+                          <div className="fill--gray-lightest padding--2">
+                            <fieldset className="c-fieldset margin-top--0">
+                              <legend className="c-label">Plan Types</legend>
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="single"
+                                  onChange={() =>
+                                    this.handlePlanTypesCheck("single")
+                                  }
+                                  checked={
+                                    plan_types_checked
+                                      ? plan_types_checked.includes("single")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanTypesCheck("single")
+                                  }
+                                >
+                                  <span className="">Individual</span>
+                                </label>
                               </div>
 
-                              <div className="text-align--right plan-c-title-right">
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="fam-of-4"
+                                  onChange={() =>
+                                    this.handlePlanTypesCheck("fam-of-4")
+                                  }
+                                  checked={
+                                    plan_types_checked
+                                      ? plan_types_checked.includes("fam-of-4")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanTypesCheck("fam-of-4")
+                                  }
+                                >
+                                  <span className="">Family</span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="couple"
+                                  onChange={() =>
+                                    this.handlePlanTypesCheck("couple")
+                                  }
+                                  checked={
+                                    plan_types_checked
+                                      ? plan_types_checked.includes("couple")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanTypesCheck("couple")
+                                  }
+                                >
+                                  <span className="">
+                                    Couples
+                                    {/* (2) */}
+                                  </span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="parents"
+                                  onChange={() =>
+                                    this.handlePlanTypesCheck("parents")
+                                  }
+                                  checked={
+                                    plan_types_checked
+                                      ? plan_types_checked.includes("parents")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanTypesCheck("parents")
+                                  }
+                                >
+                                  <span className="">
+                                    Senior Citizens
+                                    {/* (2) */}
+                                  </span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="smes"
+                                  onChange={() =>
+                                    this.handlePlanTypesCheck("smes")
+                                  }
+                                  checked={
+                                    plan_types_checked
+                                      ? plan_types_checked.includes("smes")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanTypesCheck("smes")
+                                  }
+                                >
+                                  <span className="">
+                                    SMEs and Small Groups
+                                    {/* (2) */}
+                                  </span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="corporate"
+                                  onChange={() =>
+                                    this.handlePlanTypesCheck("corporate")
+                                  }
+                                  checked={
+                                    plan_types_checked
+                                      ? plan_types_checked.includes("corporate")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanTypesCheck("corporate")
+                                  }
+                                >
+                                  <span className="">
+                                    Corporate and Large Groups
+                                    {/* (2) */}
+                                  </span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="intl_coverage"
+                                  onChange={() =>
+                                    this.handlePlanTypesCheck("intl_coverage")
+                                  }
+                                  checked={
+                                    plan_types_checked
+                                      ? plan_types_checked.includes(
+                                          "intl_coverage"
+                                        )
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanTypesCheck("intl_coverage")
+                                  }
+                                >
+                                  <span className="">
+                                    International Coverage
+                                    {/* (2) */}
+                                  </span>
+                                </label>
+                              </div>
+                            </fieldset>
+                          </div>
+                        </div>
+
+                        <div className="l-lg-col--6 c-plan-filter-container">
+                          <div className="fill--gray-lightest padding--2">
+                            <fieldset className="c-fieldset margin-top--0">
+                              <legend className="c-label">Plan Range</legend>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="bronze"
+                                  onChange={() =>
+                                    this.handlePlanRangeCheck("bronze")
+                                  }
+                                  checked={
+                                    plan_range_checked
+                                      ? plan_range_checked.includes("bronze")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanRangeCheck("bronze")
+                                  }
+                                >
+                                  <span className="">Bronze</span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="silver"
+                                  onChange={() =>
+                                    this.handlePlanRangeCheck("silver")
+                                  }
+                                  checked={
+                                    plan_range_checked
+                                      ? plan_range_checked.includes("silver")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanRangeCheck("silver")
+                                  }
+                                >
+                                  <span className="">Silver</span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="gold"
+                                  onChange={() =>
+                                    this.handlePlanRangeCheck("gold")
+                                  }
+                                  checked={
+                                    plan_range_checked
+                                      ? plan_range_checked.includes("gold")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanRangeCheck("gold")
+                                  }
+                                >
+                                  <span className="">Gold</span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="platinum"
+                                  onChange={() =>
+                                    this.handlePlanRangeCheck("platinum")
+                                  }
+                                  checked={
+                                    plan_range_checked
+                                      ? plan_range_checked.includes("platinum")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanRangeCheck("platinum")
+                                  }
+                                >
+                                  <span className="">Platinum</span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
+                                  value="platinum_plus"
+                                  onChange={() =>
+                                    this.handlePlanRangeCheck("platinum_plus")
+                                  }
+                                  checked={
+                                    plan_range_checked
+                                      ? plan_range_checked.includes(
+                                          "platinum_plus"
+                                        )
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanRangeCheck("platinum_plus")
+                                  }
+                                >
+                                  <span className="">Platinum Plus</span>
+                                </label>
+                              </div>
+                            </fieldset>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="l-form-row">
+                        <div className="l-lg-col--12">
+                          <label className="c-label">
+                            <span className="font-weight--bold">
+                              Search by plan ID (10 characters)
+                            </span>
+                          </label>
+                          <input
+                            className="display--inline-block c-field"
+                            id="plan-id-filter"
+                            name="plan-id"
+                            type="text"
+                            maxLength={10}
+                            placeholder="Example: HYG0123456"
+                            onChange={(e) =>
+                              this.handlePlanIDChange(e.target.value)
+                            }
+                          />
+                          <button
+                            className="c-button plan-id-search-button"
+                            disabled={planID !== undefined ? false : true}
+                            type="button"
+                          >
+                            Search
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="l-form-row">
+                        <div className="l-lg-col--6">
+                          <div className="hmo-filter">
+                            <label className="c-label">
+                              <span className="font-weight--bold">HMOs</span>
+                            </label>
+                            <select className="c-field" id="select_hmo_filter">
+                              <option value="">Select an HMO</option>
+                              <option value="hygeia">Hygeia</option>
+                              <option value="avon">Avon</option>
+                              <option value="reliance">Reliance</option>
+                              <option value="metro-health">Metro Health</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="l-lg-col--6">
+                          <div className="c-multiselect-dropdown">
+                            <label className="c-label">
+                              <span className="font-weight--bold">
+                                Health management program
+                              </span>
+                            </label>
+
+                            <div
+                              className="c-multiselect-dropdown__button-wrapper"
+                              tabIndex={0}
+                            >
+                              <button
+                                aria-expanded="false"
+                                className="c-field c-multiselect-dropdown__button"
+                                onClick={this.toggleMedMgtProgramsMultiselect}
+                                // onBlur={this.closeMedMgtProgramsMultiselect}
+                                // onFocus={this.openMedMgtProgramsMultiselect}
+                              >
+                                Select any program
+                              </button>
+                              <ul
+                                className={
+                                  this.state.show_med_mgt_program_multiselect
+                                    ? "c-multiselect-dropdown__list c-list--bare"
+                                    : "display--none"
+                                }
+                              >
+                                <li
+                                  className="c-multiselect-dropdown__list-item"
+                                  value="Asthma"
+                                  id="asthma"
+                                  onClick={() => {
+                                    this.handleMedMgtProgCheck("asthma");
+                                  }}
+                                >
+                                  <div>
+                                    <input
+                                      className="c-choice c-choice--small"
+                                      id="asthma"
+                                      type="checkbox"
+                                      value="Asthma"
+                                      onChange={() => {
+                                        this.handleMedMgtProgCheck("asthma");
+                                      }}
+                                      checked={
+                                        med_mgt_programs_selected
+                                          ? med_mgt_programs_selected.includes(
+                                              "asthma"
+                                            )
+                                          : false
+                                      }
+                                    />
+                                    <label className="c-label">
+                                      <span>Asthma</span>
+                                    </label>
+                                  </div>
+                                </li>
+
+                                <li
+                                  className="c-multiselect-dropdown__list-item"
+                                  value="HBP and High Cholesterol"
+                                  id="hbp_and_h_cholesterol"
+                                  onClick={() =>
+                                    this.handleMedMgtProgCheck(
+                                      "hbp_and_h_cholesterol"
+                                    )
+                                  }
+                                >
+                                  <div>
+                                    <input
+                                      className="c-choice c-choice--small"
+                                      id="hbp_and_h_cholesterol"
+                                      type="checkbox"
+                                      value="HBP and High Cholesterol"
+                                      checked={
+                                        med_mgt_programs_selected
+                                          ? med_mgt_programs_selected.includes(
+                                              "hbp_and_h_cholesterol"
+                                            )
+                                          : false
+                                      }
+                                      onChange={() =>
+                                        this.handleMedMgtProgCheck(
+                                          "hbp_and_h_cholesterol"
+                                        )
+                                      }
+                                    />
+                                    <label className="c-label">
+                                      <span>
+                                        High Blood Pressure and High Cholesterol
+                                      </span>
+                                    </label>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            {this.state.filter_params.mgt_program_selected
+                              ? this.state.filter_params.mgt_program_selected.map(
+                                  (item) => {
+                                    return (
+                                      <ul className="c-list--bare">
+                                        <li className="display--inline-block">
+                                          <div className="c-filter-tag">
+                                            <button
+                                              className="c-filter-tag__button"
+                                              id="Asthma (43)-tag"
+                                              onClick={() =>
+                                                this.handleMedMgtProgCheck(item)
+                                              }
+                                            >
+                                              {/* <span className="">Deselect</span> */}
+                                              <span className="c-filter-tag__label">
+                                                {item}
+                                              </span>
+                                              <span className="c-filter-tag__clear-icon">
+                                                <svg
+                                                  className="c-clear-icon"
+                                                  width="15px"
+                                                  height="15px"
+                                                  viewBox="0 0 15 15"
+                                                  version="1.1"
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  focusable="false"
+                                                  role="presentation"
+                                                  pointer-events="none"
+                                                >
+                                                  <path
+                                                    className="c-clear-icon__x"
+                                                    d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                                                  ></path>
+                                                </svg>
+                                              </span>
+                                            </button>
+                                          </div>
+                                        </li>
+                                      </ul>
+                                    );
+                                  }
+                                )
+                              : ""}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="l-lg-col--4">
+                      <div className="l-form-row">
+                        <div className="l-lg-col--12 c-plan-filter-container">
+                          <div className="fill--gray-lightest padding--2">
+                            <fieldset className="c-fieldset margin-top--0">
+                              <legend className="c-label">
+                                <span className="bolden-it">
+                                  Health Savings Account Eligibility (HSA)
+                                </span>
+                              </legend>
+                              <div>
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  value="hsa-true"
+                                  checked={healthSA_eligibility}
+                                  onChange={() => this.handleHSAChange()}
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() => this.handleHSAChange()}
+                                >
+                                  <span className="">Eligible for an HSA</span>
+                                </label>
+                              </div>
+                            </fieldset>
+                          </div>
+                        </div>
+
+                        <div className="padding--2 c-plan-filter-container">
+                          <fieldset className="c-fieldset margin-top--0">
+                            <legend className="c-label">
+                              Medical providers
+                            </legend>
+                          </fieldset>
+                          <a
+                            className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
+                            href="/find-provider"
+                          >
+                            Add Providers
+                          </a>
+                        </div>
+
+                        <div className="padding--2 c-plan-filter-container">
+                          <fieldset className="c-fieldset margin-top--0">
+                            <legend className="c-label">
+                              Prescription Drugs
+                            </legend>
+                          </fieldset>
+                          <a
+                            className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
+                            href="/find-drugs"
+                          >
+                            Add Drugs
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="l-row padding-y--2 display--none md-display--block margin-top--2 fill--gray-lightest">
+                  <div className="l-col--12 text-align--right">
+                    <button
+                      className="c-button margin-right--2 qa-close-desktop"
+                      type="button"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="c-button c-button--secondary margin-right--2 text-transform--capitalize qa-clear-desktop"
+                      type="button"
+                    >
+                      Clear filters
+                    </button>
+                    <button
+                      className="c-button c-button--success qa-apply-desktop"
+                      type="button"
+                    >
+                      Apply filters
+                    </button>
+                  </div>
+                </div>
+
+                <div className="l-col c-filter-panel-fixed-mobile-buttons fill--gray-lightest md-display--none">
+                  <div className="l-row">
+                    <div className="l-col--12">
+                      <button
+                        className="c-button c-button--success margin-top--2 qa-apply-mobile"
+                        type="button"
+                      >
+                        Apply Filters
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="l-row">
+                    <div className="l-col--6">
+                      <button
+                        className="c-button c-button--secondary margin-y--2 text-transform--capitalize qa-clear-mobile"
+                        type="button"
+                      >
+                        Clear filters
+                      </button>
+                    </div>
+
+                    <div className="l-col--6">
+                      <button
+                        className="c-button margin-y--2 qa-close-mobile"
+                        type="button"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="" id="plans-section">
+              <ul className="c-list--bare margin-top--2 home-plans-list">
+                {this.props.planServices &&
+                  this.props.planServices.map((plan, i) => {
+                    return (
+                      //plan.packages.length > 0 && (
+                      <li className="margin-bottom--4">
+                        <section className="c-detail-section margin-bottom--4">
+                          {/* <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                            <button
+                              className="ds-h2 text-align--left sans fill--transparent outline--none"
+                              aria-expanded="false"
+                              onClick={() =>
+                                this.togglePlanCollapse(plan.plan_id)
+                              }
+                            >
+                              {`${plan.name} (${plan.packages.length})`}
+                              {!plan_ids.includes(plan.plan_id) ? (
+                                <FontAwesomeIcon
+                                  className="fas md-margin-right--1"
+                                  icon={faChevronDown}
+                                />
+                              ) : (
+                                <FontAwesomeIcon
+                                  className="fas md-margin-right--1"
+                                  icon={faChevronUp}
+                                />
+                              )}
+                            </button>
+                            <span
+                              className="plan-desc"
+                              onClick={() =>
+                                this.togglePlanCollapse(plan.plan_id)
+                              }
+                            >
+                              {plan.desc.length > 150 &&
+                              !plan_ids.includes(plan.plan_id)
+                                ? `${plan.desc.substring(0, 150)}... Read more`
+                                : `${plan.desc}`}
+                            </span>
+                          </h2> 
+                        {plan.packages.map((pckage) => {
+                          return (*/}
+                          <article
+                            // hidden={
+                            //   !plan_ids.includes(plan.plan_id) ? true : false
+                            // }
+                            className={`plan-card c-base c-fill-white c-box-shadow c--health margin-bottom--4 ${
+                              plans_to_compare && plans_to_compare.includes(i)
+                                ? // plans_to_compare && plans_to_compare.includes(i.toString())
+                                  "c-plan-card--compare-checked"
+                                : ""
+                            }
+                          
+                          `}
+                            // ${
+                            //   !plan_ids.includes(plan.plan_id)
+                            //     ? "display--none"
+                            //     : ""
+                            // }
+                          >
+                            <div className="plan-card-inner c-clearfix">
+                              <div className="plan-card__top-section display--flex justify-content--between lg-flex-wrap--nowrap flex-wrap--wrap">
+                                <div>
+                                  <header className="plan-card-title">
+                                    <div className="plan-c-provider font-weight--bold">
+                                      {/* Hygeia */}
+                                      {plan.hmo_id.name}
+                                    </div>
+                                    <h2 className="plan-c-name font-weight--normal margin-y--1">
+                                      <a href="#">
+                                        {/* HyBasic */}
+                                        {plan.name}
+                                      </a>
+                                    </h2>
+                                    <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
+                                      <li
+                                        className="c-plan-title__info-item"
+                                        key={plan.id}
+                                      >
+                                        <span className="">
+                                          {plan.category}
+                                        </span>
+                                      </li>
+                                      <li className="c-plan-title__info-item">
+                                        <span className="">
+                                          <span>
+                                            {plan.hmo_id.hmo_id}
+                                            {/* HMO */}
+                                          </span>
+                                        </span>
+                                      </li>
+                                      <li className="c-plan-title__info-item">
+                                        Plan ID:
+                                        <span className="font-weight--bold">
+                                          {plan.plan_id}
+                                        </span>
+                                      </li>
+                                    </ul>
+                                  </header>
+                                </div>
+
+                                <div className="text-align--right plan-c-title-right">
+                                  {/*                                 
                                 <div className="quality-rating">
                                   <div className="valign--middle star-rating">
                                     <img
@@ -5532,333 +5320,446 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </span>
                                   </button>
                                 </div>
-                                <div className="display--none lg-display--block plan-c-compare-button">
-                                  <button
-                                    id="desktop"
-                                    className={`c-button c-check-button ${
-                                      plans_to_compare &&
-                                      plans_to_compare.includes(i)
-                                        ? //plans_to_compare.includes(i.toString())
-                                          "c-check-button--checked c-button--secondary"
-                                        : ""
-                                    } `}
-                                    onClick={() => {
-                                      this.handleCheckedPlanToCompare(i);
-                                    }}
-                                  >
-                                    <span className="c-check-button__checkbox">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 216 146"
-                                        className="check-plan display--none"
-                                      >
-                                        <path d="M168.86 37.966l-11.08-11.08c-1.52-1.52-3.367-2.28-5.54-2.28-2.172 0-4.02.76-5.54 2.28L93.254 80.414 69.3 56.38c-1.52-1.522-3.367-2.282-5.54-2.282-2.172 0-4.02.76-5.54 2.28L47.14 67.46c-1.52 1.522-2.28 3.37-2.28 5.542 0 2.172.76 4.02 2.28 5.54l29.493 29.493 11.08 11.08c1.52 1.52 3.368 2.28 5.54 2.28 2.173 0 4.02-.76 5.54-2.28l11.082-11.08L168.86 49.05c1.52-1.52 2.283-3.37 2.283-5.54 0-2.174-.76-4.02-2.28-5.54z"></path>
-                                      </svg>
-                                    </span>
-                                    Compare
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="plan-card__summary-section">
-                              <div className="c-plan-summary fill--gray-lightest padding--1 lg-padding--2">
-                                <div className="c-plan-summary__summary">
-                                  <div id="">Estimated yearly premium</div>
-                                  <div className="c-plan-summary__price">
-                                    {/* 18,000 */}
-                                    {"₦"}
-                                    {this.numberwithCommas(
-                                      plan.individual_annual_price
-                                    )}
-                                  </div>
-                                  <ul className="plan-flags c-list--bare"></ul>
-                                </div>
-                                <div className="c-plan-summary__children">
-                                  <div className="display--none lg-display--block c-plan-card__desktop-action-buttons margin-top--2">
-                                    <a
-                                      className="c-button c-button--secondary c-plan-card__action-button plan-c-card_action-button"
-                                      // href=""
+                                */}
+                                  <div className="display--none lg-display--block plan-c-compare-button">
+                                    <button
+                                      id="desktop"
+                                      className={`c-button c-check-button ${
+                                        plans_to_compare &&
+                                        plans_to_compare.includes(i)
+                                          ? //plans_to_compare.includes(i.toString())
+                                            "c-check-button--checked c-button--secondary"
+                                          : ""
+                                      } `}
                                       onClick={() => {
-                                        this.goToDetails();
-                                        this.getClickedPlan(i);
+                                        this.handleCheckedPlanToCompare(i);
                                       }}
-                                      role="button"
-                                      target="_self"
                                     >
-                                      Plan Details
-                                    </a>
-
-                                    <a
-                                      className="c-button c-button--primary c-plan-card__action-button plan-c-card_action-button"
-                                      href=""
-                                      role="button"
-                                      target="_self"
-                                    >
-                                      Like This Plan
-                                    </a>
+                                      <span className="c-check-button__checkbox">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="16"
+                                          height="16"
+                                          viewBox="0 0 216 146"
+                                          className="check-plan display--none"
+                                        >
+                                          <path d="M168.86 37.966l-11.08-11.08c-1.52-1.52-3.367-2.28-5.54-2.28-2.172 0-4.02.76-5.54 2.28L93.254 80.414 69.3 56.38c-1.52-1.522-3.367-2.282-5.54-2.282-2.172 0-4.02.76-5.54 2.28L47.14 67.46c-1.52 1.522-2.28 3.37-2.28 5.542 0 2.172.76 4.02 2.28 5.54l29.493 29.493 11.08 11.08c1.52 1.52 3.368 2.28 5.54 2.28 2.173 0 4.02-.76 5.54-2.28l11.082-11.08L168.86 49.05c1.52-1.52 2.283-3.37 2.283-5.54 0-2.174-.76-4.02-2.28-5.54z"></path>
+                                        </svg>
+                                      </span>
+                                      Compare
+                                    </button>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide-maybe">
-                              <div className="plan-card__cost-display">
-                                <div
-                                  className="font-size--small font-weight--bold
-                              display--flex aligh-items--center
-                              "
-                                >
-                                  Deductible
-                                  <button
-                                    type="button"
-                                    aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
-                                    className="tooltip-trigger padding--0"
-                                  >
-                                    <span className="tooltip-icon-container">
-                                      <FontAwesomeIcon
-                                        className="mt---2"
-                                        icon={faInfoCircle}
-                                      />
-                                    </span>
-                                  </button>
-                                </div>
-                                <div className="display--flex flex-wrap--wrap plan-flex-wrap">
-                                  <div className="cost-display__amount">
-                                    <div className="font-size--h2">₦2,000</div>
-                                    <div className="font-size--small">
-                                      Individual total
+
+                              <div className="plan-card__summary-section">
+                                <div className="c-plan-summary fill--gray-lightest padding--1 lg-padding--2">
+                                  <div className="c-plan-summary__summary">
+                                    <div id="">Estimated yearly premium</div>
+                                    <div className="c-plan-summary__price">
+                                      {/* 18,000 */}
+                                      {"₦"}
+                                      {this.numberwithCommas(
+                                        this.stripNonNumeric(plan.price)
+                                      )}
+                                    </div>
+                                    <ul className="plan-flags c-list--bare"></ul>
+                                  </div>
+                                  <div className="c-plan-summary__children">
+                                    <div className="display--none lg-display--block c-plan-card__desktop-action-buttons margin-top--2">
+                                      <a
+                                        className="c-button c-button--secondary c-plan-card__action-button plan-c-card_action-button"
+                                        // href=""
+                                        onClick={() => {
+                                          this.goToDetails();
+                                          this.getClickedPlan(i);
+                                        }}
+                                        role="button"
+                                        target="_self"
+                                      >
+                                        Plan Details
+                                      </a>
+
+                                      <a
+                                        className="c-button c-button--primary c-plan-card__action-button plan-c-card_action-button"
+                                        href=""
+                                        role="button"
+                                        target="_self"
+                                      >
+                                        Like This Plan
+                                      </a>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-
-                              <div className="plan-card__cost-display">
-                                <div
-                                  className="font-size--small font-weight--bold
-                              display--flex aligh-items--center"
-                                >
-                                  Out-of-pocket maximum
-                                  <button
-                                    type="button"
-                                    aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
-                                    className="tooltip-trigger padding--0"
-                                  >
-                                    <span className="tooltip-icon-container">
-                                      <FontAwesomeIcon
-                                        className="mt---2"
-                                        icon={faInfoCircle}
-                                      />
-                                    </span>
-                                  </button>
-                                </div>
-
-                                <div className="display--flex flex-wrap--wrap plan-flex-wrap">
-                                  <div className="cost-display__amount">
-                                    <div className="font-size--h2">₦6,000</div>
-                                    <div className="font-size--small">
-                                      Individual total
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="plan-card__cost-display-yearly-cost display--flex">
-                                <div className="plan-card-cost-display--info-needed fill--gray-lightest">
+                              <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide-maybe">
+                                <div className="plan-card__cost-display">
                                   <div
                                     className="font-size--small font-weight--bold
-                              display--flex align-items--center"
+                              display--flex aligh-items--center
+                              "
                                   >
-                                    Estimated total yearly costs
+                                    Total Benefit Limit
                                     <button
                                       type="button"
-                                      aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
+                                      aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
                                       className="tooltip-trigger padding--0"
                                     >
                                       <span className="tooltip-icon-container">
                                         <FontAwesomeIcon
-                                          className=""
+                                          className="mt---2"
                                           icon={faInfoCircle}
                                         />
                                       </span>
                                     </button>
                                   </div>
+                                  <div className="display--flex flex-wrap--wrap plan-flex-wrap">
+                                    <div className="cost-display__amount">
+                                      <div className="font-size--h2">
+                                        {plan.out_patient_limit == "N/A" ||
+                                        plan.in_patient_limit == "N/A"
+                                          ? "N/A"
+                                          : `₦${this.numberwithCommas(
+                                              this.handleTotalBenefitLimit(
+                                                plan.out_patient_limit,
+                                                plan.in_patient_limit
+                                              )
+                                            )}`}
+                                        {/* ₦2,000 */}
+                                      </div>
+                                      <div className="font-size--small">
+                                        Individual total
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="plan-card__cost-display">
+                                  <div
+                                    className="font-size--small font-weight--bold
+                              display--flex aligh-items--center"
+                                  >
+                                    Out-of-pocket maximum
+                                    <button
+                                      type="button"
+                                      aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
+                                      className="tooltip-trigger padding--0"
+                                    >
+                                      <span className="tooltip-icon-container">
+                                        <FontAwesomeIcon
+                                          className="mt---2"
+                                          icon={faInfoCircle}
+                                        />
+                                      </span>
+                                    </button>
+                                  </div>
+
+                                  <div className="display--flex flex-wrap--wrap plan-flex-wrap">
+                                    <div className="cost-display__amount">
+                                      <div className="font-size--h2">
+                                        Not yet in Collection
+                                      </div>
+                                      <div className="font-size--small">
+                                        Individual total
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="plan-card__cost-display-yearly-cost display--flex">
+                                  <div className="plan-card-cost-display--info-needed fill--gray-lightest">
+                                    <div
+                                      className="font-size--small font-weight--bold
+                              display--flex align-items--center"
+                                    >
+                                      Estimated total yearly costs
+                                      <button
+                                        type="button"
+                                        aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
+                                        className="tooltip-trigger padding--0"
+                                      >
+                                        <span className="tooltip-icon-container">
+                                          <FontAwesomeIcon
+                                            className=""
+                                            icon={faInfoCircle}
+                                          />
+                                        </span>
+                                      </button>
+                                    </div>
+                                    <a
+                                      className="c-button c-button--small padding-x--2 margin-y--1"
+                                      onClick={this.toggleShowFilter}
+                                      role="button"
+                                    >
+                                      Add yearly costs
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div
+                                className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap
+                          display--none sm-display--block
+                          "
+                              >
+                                <div className="font-size--small font-weight--bold display--flex align-items--center">
+                                  Benefit Limits
+                                  <button
+                                    type="button"
+                                    aria-label="Tooltip: Limits on Coverage"
+                                    className="tooltip-trigger padding--0"
+                                  >
+                                    <span className="tooltip-icon-container">
+                                      <FontAwesomeIcon
+                                        className="mt---2"
+                                        icon={faInfoCircle}
+                                      />
+                                    </span>
+                                  </button>
+                                </div>
+                                <div className="limits-row font-size--small">
+                                  <div className="limits-col--6 limits-lg-col--3 padding-top--1">
+                                    <div className="font-weight--bold color--gray">
+                                      In-patient Limit
+                                    </div>
+                                    <div className="">
+                                      {plan.in_patient_limit == "N/A"
+                                        ? "N/A"
+                                        : `₦${this.numberwithCommas(
+                                            this.stripNonNumeric(
+                                              plan.in_patient_limit
+                                            )
+                                          )}`}
+                                    </div>
+                                  </div>
+
+                                  <div className="limits-col--6 limits-lg-col--3 padding-top--1">
+                                    <div className="font-weight--bold color--gray">
+                                      Out-patient Limit
+                                    </div>
+                                    <div className="">
+                                      {plan.out_patient_limit == "N/A"
+                                        ? "N/A"
+                                        : `₦${this.numberwithCommas(
+                                            this.stripNonNumeric(
+                                              plan.out_patient_limit
+                                            )
+                                          )}`}
+                                    </div>
+                                  </div>
+
+                                  <div className="limits-col--6 limits-lg-col--3 padding-top--1">
+                                    <div className="font-weight--bold color--gray">
+                                      Age Limit
+                                    </div>
+                                    <div className="">
+                                      Not yet in Collection
+                                    </div>
+                                  </div>
+
+                                  <div className="limits-col--6 limits-lg-col--3 padding-top--1">
+                                    <div className="font-weight--bold color--gray">
+                                      Plan Range
+                                    </div>
+                                    <div className="">{plan.category}</div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="plan-card__detail-section border--0 c-clearfix display--flex flex-wrap--wrap">
+                                <div className="plan-card__plan-features-container">
+                                  <div>
+                                    <div className="font-size--small font-weight--bold">
+                                      Plan features
+                                    </div>
+                                    <ul className="c-status-list c-list--bare">
+                                      <li className="c-status-list__item font-size--small">
+                                        <img
+                                          src={
+                                            plan.intermediate_surgeries !== "No"
+                                              ? check
+                                              : uncheck
+                                          }
+                                          className="c-status-list__item__icon"
+                                        />
+                                        <span className="text-transform--capitalize">
+                                          Intermediate Surgeries
+                                        </span>
+                                      </li>
+                                      <li className="c-status-list__item font-size--small">
+                                        <img
+                                          src={
+                                            plan.major_surgeries !== "No"
+                                              ? check
+                                              : uncheck
+                                          }
+                                          className="c-status-list__item__icon"
+                                        />
+                                        <span className="text-transform--capitalize">
+                                          Major Surgeries
+                                        </span>
+                                      </li>
+                                      <li className="c-status-list__item font-size--small">
+                                        <img
+                                          src={
+                                            plan.hospital_admissions !== "No"
+                                              ? check
+                                              : uncheck
+                                          }
+                                          className="c-status-list__item__icon"
+                                        />
+                                        <span className="text-transform--capitalize">
+                                          Hospital Admissions
+                                        </span>
+                                      </li>
+
+                                      <li className="c-status-list__item font-size--small">
+                                        <img
+                                          src={
+                                            plan.optical_care !== "No"
+                                              ? check
+                                              : uncheck
+                                          }
+                                          className="c-status-list__item__icon"
+                                        />
+                                        <span className="text-transform--capitalize">
+                                          Optical Care
+                                        </span>
+                                      </li>
+                                      <li className="c-status-list__item font-size--small">
+                                        <img
+                                          src={
+                                            plan.lab_investigations !== "No"
+                                              ? check
+                                              : uncheck
+                                          }
+                                          className="c-status-list__item__icon"
+                                        />
+                                        <span className="text-transform--capitalize">
+                                          Lab Investigations
+                                        </span>
+                                      </li>
+                                      <li className="c-status-list__item font-size--small">
+                                        <img
+                                          src={
+                                            plan.accidents_emergencies !== "No"
+                                              ? check
+                                              : uncheck
+                                          }
+                                          className="c-status-list__item__icon"
+                                        />
+                                        <span className="text-transform--capitalize">
+                                          Accidents & Emergencies
+                                        </span>
+                                      </li>
+                                      <li className="c-status-list__item font-size--small">
+                                        <img
+                                          src={
+                                            plan.cancer_care !== "No"
+                                              ? check
+                                              : uncheck
+                                          }
+                                          className="c-status-list__item__icon"
+                                        />
+                                        <span className="text-transform--capitalize">
+                                          Cancer Care
+                                        </span>
+                                      </li>
+                                      <li className="c-status-list__item font-size--small">
+                                        <img
+                                          src={
+                                            plan.covid_19_treatment !== "No"
+                                              ? check
+                                              : uncheck
+                                          }
+                                          className="c-status-list__item__icon"
+                                        />
+                                        <span className="text-transform--capitalize">
+                                          Covid 19 Treatment
+                                        </span>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
+                                <div className="c-plan-card__coverables-container">
+                                  <div className="c-plan-card-cost-display--info-needed fill--gray-lightest">
+                                    <div className="justify-content--center display--flex">
+                                      <a
+                                        className="c-button c-button--small padding-x--2 margin-bottom--1"
+                                        href="/find-provider"
+                                      >
+                                        Add medical providers
+                                      </a>
+                                    </div>
+                                    <div className="font-size--small">
+                                      Add your medical providers and we'll show
+                                      you which plans cover them
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="c-plan-card__coverables-container">
+                                  <div className="c-plan-card-cost-display--info-needed fill--gray-lightest">
+                                    <div className="justify-content--center display--flex">
+                                      <a
+                                        className="c-button c-button--small padding-x--2 margin-bottom--1"
+                                        href="/find-drugs"
+                                      >
+                                        Add prescription drugs
+                                      </a>
+                                    </div>
+                                    <div className="font-size--small">
+                                      Add your prescription drugs and we'll show
+                                      you which plans cover them
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="lg-display--none margin-top--2">
+                                <button
+                                  className="c-button c-check-button"
+                                  aria-pressed="false"
+                                  type="button"
+                                >
+                                  <span
+                                    className="c-check-button__checkbox"
+                                    aria-hidden="true"
+                                  ></span>
+                                  Compare
+                                </button>
+                                <div className="c-plan-card__mobile-action-buttons">
                                   <a
-                                    className="c-button c-button--small padding-x--2 margin-y--1"
-                                    onClick={this.toggleShowFilter}
+                                    className="c-button c-button--secondary c-plan-card__action-button"
+                                    href="#"
+                                    target="_self"
                                     role="button"
                                   >
-                                    Add yearly costs
+                                    Plan Details
+                                  </a>
+                                  <a
+                                    className="c-button c-button--primary c-plan-card__action-button"
+                                    href="#"
+                                    target="_self"
+                                    role="button"
+                                  >
+                                    Like This Plan
                                   </a>
                                 </div>
                               </div>
                             </div>
-
-                            <div
-                              className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap
-                          display--none sm-display--block
-                          "
-                            >
-                              <div className="font-size--small font-weight--bold display--flex align-items--center">
-                                Benefit Limits
-                                <button
-                                  type="button"
-                                  aria-label="Tooltip: Limits on Coverage"
-                                  className="tooltip-trigger padding--0"
-                                >
-                                  <span className="tooltip-icon-container">
-                                    <FontAwesomeIcon
-                                      className="mt---2"
-                                      icon={faInfoCircle}
-                                    />
-                                  </span>
-                                </button>
-                              </div>
-                              <div className="limits-row font-size--small">
-                                <div className="limits-col--6 limits-lg-col--3 padding-top--1">
-                                  <div className="font-weight--bold color--gray">
-                                    In-patient Limit
-                                  </div>
-                                  <div className="">₦6000</div>
-                                </div>
-
-                                <div className="limits-col--6 limits-lg-col--3 padding-top--1">
-                                  <div className="font-weight--bold color--gray">
-                                    Out-patient Limit
-                                  </div>
-                                  <div className="">₦6000</div>
-                                </div>
-
-                                <div className="limits-col--6 limits-lg-col--3 padding-top--1">
-                                  <div className="font-weight--bold color--gray">
-                                    In-patient Limit
-                                  </div>
-                                  <div className="">₦6000</div>
-                                </div>
-
-                                <div className="limits-col--6 limits-lg-col--3 padding-top--1">
-                                  <div className="font-weight--bold color--gray">
-                                    In-patient Limit
-                                  </div>
-                                  <div className="">₦6000</div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="plan-card__detail-section border--0 c-clearfix display--flex flex-wrap--wrap">
-                              <div className="plan-card__plan-features-container">
-                                <div>
-                                  <div className="font-size--small font-weight--bold">
-                                    Plan features
-                                  </div>
-                                  <ul className="c-status-list c-list--bare">
-                                    <li className="c-status-list__item font-size--small">
-                                      <img
-                                        src={check}
-                                        className="c-status-list__item__icon"
-                                      />
-                                      <span className="text-transform--capitalize">
-                                        Admission
-                                      </span>
-                                    </li>
-                                    <li className="c-status-list__item font-size--small">
-                                      <img
-                                        src={check}
-                                        className="c-status-list__item__icon"
-                                      />
-                                      <span className="text-transform--capitalize">
-                                        Accidents & Emergencies
-                                      </span>
-                                    </li>
-                                    <li className="c-status-list__item font-size--small">
-                                      <img
-                                        src={check}
-                                        className="c-status-list__item__icon"
-                                      />
-                                      <span className="text-transform--capitalize">
-                                        Antenatal
-                                      </span>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                              <div className="c-plan-card__coverables-container">
-                                <div className="c-plan-card-cost-display--info-needed fill--gray-lightest">
-                                  <div className="justify-content--center display--flex">
-                                    <a
-                                      className="c-button c-button--small padding-x--2 margin-bottom--1"
-                                      href="/find-provider"
-                                    >
-                                      Add medical providers
-                                    </a>
-                                  </div>
-                                  <div className="font-size--small">
-                                    Add your medical providers and we'll show
-                                    you which plans cover them
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="c-plan-card__coverables-container">
-                                <div className="c-plan-card-cost-display--info-needed fill--gray-lightest">
-                                  <div className="justify-content--center display--flex">
-                                    <a
-                                      className="c-button c-button--small padding-x--2 margin-bottom--1"
-                                      href="/find-drugs"
-                                    >
-                                      Add prescription drugs
-                                    </a>
-                                  </div>
-                                  <div className="font-size--small">
-                                    Add your prescription drugs and we'll show
-                                    you which plans cover them
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="lg-display--none margin-top--2">
-                              <button
-                                className="c-button c-check-button"
-                                aria-pressed="false"
-                                type="button"
-                              >
-                                <span
-                                  className="c-check-button__checkbox"
-                                  aria-hidden="true"
-                                ></span>
-                                Compare
-                              </button>
-                              <div className="c-plan-card__mobile-action-buttons">
-                                <a
-                                  className="c-button c-button--secondary c-plan-card__action-button"
-                                  href="#"
-                                  target="_self"
-                                  role="button"
-                                >
-                                  Plan Details
-                                </a>
-                                <a
-                                  className="c-button c-button--primary c-plan-card__action-button"
-                                  href="#"
-                                  target="_self"
-                                  role="button"
-                                >
-                                  Like This Plan
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        </article>
+                          </article>
+                          {/* );
+                         })}{" "} */}
+                        </section>{" "}
                       </li>
+                      //)
                     );
                   })}
-                </ul>
-              </div>
+              </ul>
             </div>
-          ) : (
-            ""
-          )
-        }
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     );
   }

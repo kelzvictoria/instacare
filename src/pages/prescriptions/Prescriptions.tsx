@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Form, AutoComplete } from "antd";
 
 import { connect } from "react-redux";
-import * as actions from "../../utils/actions";
+import * as actions from "../../actions/types";
 import * as home_utils from "../../utils/homeUtils";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

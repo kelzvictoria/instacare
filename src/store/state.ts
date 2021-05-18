@@ -1,12 +1,12 @@
 export const state: any = {
-  quiz: {
+  data: {
     page: 2,
     minPage: 1,
     maxPage: 4,
     checked: [],
     dataSource: [],
-    didRequestReturnEmptyResult: false,
-    familyPlanSelected: false,
+    //didRequestReturnEmptyResult: false,
+    //familyPlanSelected: false,
     covers: "",
     isOpen: false,
     isMobileViewModalOpen: false,
@@ -66,7 +66,7 @@ export const state: any = {
       price_range: "silver",
     },
   },
-  compare: {
+  /*compare: {
     fetching: false,
     plans: [],
     sort: {
@@ -83,7 +83,7 @@ export const state: any = {
     price: 0,
     notGettingProviders: true,
     buyingPlan: false,
-  },
+  },*/
   plans: [],
   recommended_plans: [],
   clicked_plan: [],
@@ -100,8 +100,10 @@ export const state: any = {
   checked_plans_list: [],
   cheapest_plan_by_hmo: 0,
   cheapest_plan: 19999,
-  provider_plans: [],
-  filter_plans_by_hmo: false,
+  plansByHMO: [],
+  filter_PLANS_BY_HMO: false,
   provider_info: [],
   selected_providers: [],
+  access_token: localStorage.getItem("access_token"),
+  isAuthenticated: null,
 };

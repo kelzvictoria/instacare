@@ -2,7 +2,7 @@ import React, { Component } from "react";
 /*import { API_URL } from "../../config";*/
 //import styles from "../compare/Compare.module.scss";
 import { connect } from "react-redux";
-import * as actions from "../../utils/actions";
+import * as actions from "../../actions/types";
 
 import bottom_filter from "../../imgs/bottom_filter.svg";
 import bottom_shortlist from "../../imgs/bottom_shortlist.svg";
@@ -10,8 +10,8 @@ import bottom_compare from "../../imgs/bottom_compare.svg";
 
 import { Link } from "react-router-dom";
 import { PAYSTACK_PUBLIC_KEY } from "../../utils/index";
-import { UPDATE_PRICE, TOGGLE_BUYING_PLAN } from "../../utils/actions";
-import { UPDATE_NOTGETTINGPROVIDERS } from "../../utils/actions";
+import { UPDATE_PRICE, TOGGLE_BUYING_PLAN } from "../../actions/types";
+import { UPDATE_NOTGETTINGPROVIDERS } from "../../actions/types";
 import PaystackButton from "react-paystack";
 
 import AppFooter from "../../components/app-footer/AppFooter";

@@ -3,7 +3,8 @@ import React, { Component } from "react";
 import styles from "./Compare.module.scss";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import * as actions from "../../utils/actions";
+import * as actions from "../../actions/types";
+//import * as actions from "../../utils/actions";
 import numeral from "numeral";
 import {
   Card,

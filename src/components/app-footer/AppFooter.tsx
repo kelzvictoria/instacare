@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 import { connect } from "react-redux";
-import * as actions from "../../utils/actions";
+import * as actions from "../../actions/types";
 
 const { Title } = Typography;
 
