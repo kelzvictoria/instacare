@@ -22,7 +22,9 @@ import {
     IS_FILTERING_BY_PLAN_TYPE,
     IS_FILTERING_BY_PLAN_RANGE,
     IS_FILTERING_BY_PLAN_ID,
-    FILTER_BY_BUDGET
+    FILTER_BY_BUDGET,
+    FILTER_BY_HMO,
+    FILTER_BY_PLAN_ID
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions";
@@ -87,6 +89,28 @@ export const getPlans = () => async (dispatch, getState) => {
 
             err.response && dispatch(returnErrors(err.response.data, err.response.status))
         })
+}
+
+export const getPlansByID = (planID) => async (dispatch, getState) => {
+    dispatch({
+        type: IS_FILTERING_BY_PLAN_ID,
+        payload: true
+    });
+
+    let services = getState().fetchData.services;
+    console.log("planID", planID);
+    console.log("services", services);
+    let plansByID = services.filter(plan => {
+        console.log("plan_id", plan.plan_id);
+        return plan.plan_id == planID
+    });
+
+    console.log("plansByID", plansByID);
+
+    dispatch({
+        type: FILTER_BY_PLAN_ID,
+        payload: plansByID
+    })
 }
 
 export const getHMOs = () => async (dispatch, getState) => {
@@ -290,6 +314,7 @@ export const filterByBudget = (budget) => (dispatch, getState) => {
         payload: filteredPackagesByBudget
     })
 }
+
 
 export const setIsFetchingPlansByHMO = () => (dispatch, getState) => {
 

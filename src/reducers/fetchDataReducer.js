@@ -23,7 +23,8 @@ import {
     IS_FILTERING_BY_PLAN_TYPE,
     IS_FILTERING_BY_PLAN_RANGE,
     IS_FILTERING_BY_PLAN_ID,
-    FILTER_BY_BUDGET
+    FILTER_BY_BUDGET,
+    FILTER_BY_PLAN_ID
 } from "../actions/types";
 
 const initialState = {
@@ -47,7 +48,8 @@ const initialState = {
     is_fetching_plans_by_hmo: false,
     cheapest_plan_by_hmo: 0,
     cheapest_plan: localStorage["cheapest_plan"] ? localStorage.getItem("cheapest_plan") : 0,
-    is_filtering_by_budget: false
+    is_filtering_by_budget: false,
+    is_filtering_by_plan_id: false
 }
 
 export default function (state = initialState, action) {
@@ -102,7 +104,8 @@ export default function (state = initialState, action) {
         case GET_PLANS_BY_HMO:
             return {
                 ...state,
-                plansByHMO: action.payload
+                plansByHMO: action.payload,
+                is_fetching_plans_by_hmo: false
             }
 
         case GET_CHEAPEST_PLAN_BY_HMO:
@@ -153,33 +156,19 @@ export default function (state = initialState, action) {
             }
 
         case FILTER_BY_BUDGET:
-            // console.log("action.payload", action.payload);
-
-            // // let found = state.plans
-            // let arr = [];
-            // state.plans.filter(plan => {
-            //     for (let i = 0; i < action.payload.length; i++) {
-            //         if (plan.plan_id == action.payload[i].plan_id) {
-            //             arr.push(plan)
-            //         }
-            //     }
-
-            //     return
-            // })
-            // console.log("arr", arr);
-
             return {
                 ...state,
                 services: action.payload,
                 is_filtering_by_budget: false
-                // plans: arr
-                // plans: state.plans
-                //     .filter(plan => {
-                //         action.payload.some(pckg => pckg.plan_id == plan.plan_id)
-
-                //     })
-                //plansByBudget: action.payload.filter(plan=>plan.packages)
             }
+
+        case FILTER_BY_PLAN_ID:
+            return {
+                ...state,
+                services: action.payload,
+                is_filtering_by_plan_id: false
+            }
+
         case IS_FILTERING_BY_BUDGET:
             return {
                 ...state,

@@ -30,6 +30,7 @@ import {
   setIsFetchingRecPlans,
   setIsFetchingServices,
   filterByBudget,
+  getPlansByID,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -277,4 +278,5 @@ export default connect(mapProps, {
   resetPlans,
   updatePriceRange,
   filterByBudget,
+  getPlansByID,
 })(Home);

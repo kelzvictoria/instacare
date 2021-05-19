@@ -285,7 +285,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   numberwithCommas = (value) => {
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return value && value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   preventDefault(e: React.FormEvent<HTMLFormElement>) {
@@ -4876,7 +4876,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                         <div className="l-lg-col--12">
                           <label className="c-label">
                             <span className="font-weight--bold">
-                              Search by plan ID (10 characters)
+                              Search by plan ID
+                              {/* (10 characters) */}
                             </span>
                           </label>
                           <input
@@ -4884,7 +4885,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                             id="plan-id-filter"
                             name="plan-id"
                             type="text"
-                            maxLength={10}
+                            // maxLength={10}
                             placeholder="Example: HYG0123456"
                             onChange={(e) =>
                               this.handlePlanIDChange(e.target.value)
@@ -4894,6 +4895,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                             className="c-button plan-id-search-button"
                             disabled={planID !== undefined ? false : true}
                             type="button"
+                            onClick={() => {
+                              this.props.getServices();
+                              this.props.getPlansByID(planID);
+                            }}
                           >
                             Search
                           </button>
@@ -4908,10 +4913,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                             </label>
                             <select className="c-field" id="select_hmo_filter">
                               <option value="">Select an HMO</option>
-                              <option value="hygeia">Hygeia</option>
-                              <option value="avon">Avon</option>
-                              <option value="reliance">Reliance</option>
-                              <option value="metro-health">Metro Health</option>
+                              {this.props.hmos.map((hmo) => (
+                                <option value={hmo.hmo_id}>{hmo.name}</option>
+                              ))}
                             </select>
                           </div>
                         </div>
