@@ -24,7 +24,8 @@ import {
     IS_FILTERING_BY_PLAN_RANGE,
     IS_FILTERING_BY_PLAN_ID,
     FILTER_BY_BUDGET,
-    FILTER_BY_PLAN_ID
+    FILTER_BY_PLAN_ID,
+    FILTER_BY_PLAN_TYPE
 } from "../actions/types";
 
 const initialState = {
@@ -49,7 +50,8 @@ const initialState = {
     cheapest_plan_by_hmo: 0,
     cheapest_plan: localStorage["cheapest_plan"] ? localStorage.getItem("cheapest_plan") : 0,
     is_filtering_by_budget: false,
-    is_filtering_by_plan_id: false
+    is_filtering_by_plan_id: false,
+    is_filtering_by_plan_type: false
 }
 
 export default function (state = initialState, action) {
@@ -169,10 +171,23 @@ export default function (state = initialState, action) {
                 is_filtering_by_plan_id: false
             }
 
+        case FILTER_BY_PLAN_TYPE:
+            return {
+                ...state,
+                services: action.payload,
+                is_filtering_by_plan_type: false
+            }
+
         case IS_FILTERING_BY_BUDGET:
             return {
                 ...state,
                 is_filtering_by_budget: action.payload
+            }
+
+        case IS_FILTERING_BY_PLAN_TYPE:
+            return {
+                ...state,
+                is_filtering_by_plan_type: action.payload
             }
         default:
             return state

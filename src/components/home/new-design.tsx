@@ -96,7 +96,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       annual_deductible_max: undefined,
       plan_types_checked: [],
       plan_range_checked: [],
-      planID: undefined,
+      planID: "",
       hmo_selected: undefined,
       mgt_program_selected: [],
       providers_selected: [],
@@ -336,47 +336,47 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   }
 
-  handleNavigation = (e: any) => {
-    let currentPage = this.props.page;
-    const targetId = e.target.id;
+  // handleNavigation = (e: any) => {
+  //   let currentPage = this.props.page;
+  //   const targetId = e.target.id;
 
-    if (targetId === "next") {
-      if (this.props.isMobileViewModalOpen) {
-        if (currentPage == 4) {
-          if (this.props.responses.state == "") {
-            message.error("Please provide a location");
-            return;
-          } else {
-            this.props.fetchRecommendedPlans();
-          }
-        }
-      }
-      if (currentPage == 3 && this.props.isDesktopView) {
-        if (this.props.responses.state == "") {
-          message.error("Please provide a location");
-          return;
-        } else {
-          this.fetchRecommendedPlans();
-        }
-      }
+  //   if (targetId === "next") {
+  //     if (this.props.isMobileViewModalOpen) {
+  //       if (currentPage == 4) {
+  //         if (this.props.responses.state == "") {
+  //           message.error("Please provide a location");
+  //           return;
+  //         } else {
+  //           this.props.fetchRecommendedPlans();
+  //         }
+  //       }
+  //     }
+  //     if (currentPage == 3 && this.props.isDesktopView) {
+  //       if (this.props.responses.state == "") {
+  //         message.error("Please provide a location");
+  //         return;
+  //       } else {
+  //         this.fetchRecommendedPlans();
+  //       }
+  //     }
 
-      if (this.props.isDesktopView) {
-        currentPage = currentPage + 1;
-      }
+  //     if (this.props.isDesktopView) {
+  //       currentPage = currentPage + 1;
+  //     }
 
-      if (currentPage >= this.props.maxPage) {
-        this.submitResponses();
-        return;
-      }
+  //     if (currentPage >= this.props.maxPage) {
+  //       this.submitResponses();
+  //       return;
+  //     }
 
-      this.changePage("next");
-    } else if (targetId === "prev") {
-      if (currentPage <= this.props.minPage) {
-        return;
-      }
-      this.changePage("prev");
-    }
-  };
+  //     this.changePage("next");
+  //   } else if (targetId === "prev") {
+  //     if (currentPage <= this.props.minPage) {
+  //       return;
+  //     }
+  //     this.changePage("prev");
+  //   }
+  // };
 
   handleNumOfPeopleCount() {
     let data;
@@ -422,50 +422,52 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   }
 
-  async fetchRecommendedPlans() {
-    this.handleNumOfPeopleCount();
-    let rec_plans: object[] = [];
-    let family_plans: object[] = [];
-    let individual_plans: object[] = [];
+  // async fetchRecommendedPlans() {
+  //   this.handleNumOfPeopleCount();
+  //   let rec_plans: object[] = [];
+  //   let family_plans: object[] = [];
+  //   let individual_plans: object[] = [];
 
-    this.props.setIsFetchingRecPlans(true);
+  //   this.props.setIsFetchingRecPlans(true);
 
-    let res = await this.props.plans;
+  //   let res = await this.props.plans;
 
-    if (res) {
-      if (res.length !== 0) {
-        for (let i = 0; i < res.length; i++) {
-          if (res[i].category_id.id == "personal") {
-            individual_plans.push(res[i]);
-          }
+  //   if (res) {
+  //     if (res.length !== 0) {
+  //       for (let i = 0; i < res.length; i++) {
+  //         if (res[i].category_id.id == "personal") {
+  //           individual_plans.push(res[i]);
+  //         }
 
-          if (res[i].category_id.id == "famiy") {
-            family_plans.push(res[i]);
-          }
-        }
-        let data = this.props.responses.num_of_people;
-        this.props.getNumOfPeople(data);
+  //         if (res[i].category_id.id == "famiy") {
+  //           family_plans.push(res[i]);
+  //         }
+  //       }
+  //       let data = this.props.responses.num_of_people;
+  //       this.props.getNumOfPeople(data);
 
-        if (this.props.responses.type == "single") {
-          rec_plans = individual_plans;
-        } else if (this.props.responses.type !== "single") {
-          rec_plans = family_plans;
-        }
+  //       if (this.props.responses.type == "single") {
+  //         rec_plans = individual_plans;
+  //       } else if (this.props.responses.type !== "single") {
+  //         rec_plans = family_plans;
+  //       }
 
-        this.props.getRecommendedPlans(rec_plans);
-        this.props.setIsFetchingRecPlans(false);
+  //       this.props.getRecommendedPlans(rec_plans);
+  //       this.props.setIsFetchingRecPlans(false);
 
-        return;
-      }
-    }
-  }
+  //       return;
+  //     }
+  //   }
+  // }
 
-  handleType(val) {
+  async handleType(val) {
     let data = {
       key: "type",
       value: val.target ? val.target.id : val,
     };
     this.props.updateType(data);
+    await this.props.getServices();
+    this.props.filterByPlanType(data.value);
   }
 
   handleAge(key, val) {
@@ -1982,7 +1984,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     this.props.plansByHMO.length == 0 && this.props.getClickedPlan(data);
   };
-
+  //leave o
   renderDesktopQuizForm() {
     return (
       <form
@@ -2617,921 +2619,921 @@ class NewContent extends React.Component<homeProps, homeState> {
     );
   }
 
-  renderDesktopQuizModal() {
-    let current;
-    if (this.props.page != 0) {
-      current = this.props.page - 1;
-    } else {
-      current = 0;
-    }
-    return (
-      <Modal
-        id="desktop-quiz-modal-form1"
-        dialogClassName="custom-dialog"
-        className="desktop-modal right"
-        show={this.props.isOpen}
-        onHide={this.toggleModal}
-      >
-        <Modal.Body>
-          <form
-            name="modalForm"
-            onSubmit={this.preventDefault}
-            className="form steppers"
-          >
-            <div className="modal-head" id="modal-head">
-              <Button
-                id="prev"
-                type="default"
-                onClick={
-                  this.props.page < 3 ? this.toggleModal : this.handleNavigation
-                }
-              >
-                <FontAwesomeIcon className="" icon={faArrowLeft} />
-              </Button>
-              <div className="modal-title">
-                {this.props.isDesktopView ? (
-                  current >= 0 && current < 3 ? (
-                    <div>
-                      <p>{home_utils.steps[current].p}</p>
-                      <h3>{home_utils.steps[current].h3}</h3>
-                    </div>
-                  ) : current < 0 || current == 0 ? (
-                    //this.toggleModal()
-                    <div>
-                      <p>{home_utils.steps[0].p}</p>
-                      <h3>{home_utils.steps[0].h3}</h3>
-                    </div>
-                  ) : (
-                    console.log("current is > 0", current)
-                  )
-                ) : (
-                  console.log("!this.props.isDesktopView")
-                )}
+  // renderDesktopQuizModal() {
+  //   let current;
+  //   if (this.props.page != 0) {
+  //     current = this.props.page - 1;
+  //   } else {
+  //     current = 0;
+  //   }
+  //   return (
+  //     <Modal
+  //       id="desktop-quiz-modal-form1"
+  //       dialogClassName="custom-dialog"
+  //       className="desktop-modal right"
+  //       show={this.props.isOpen}
+  //       onHide={this.toggleModal}
+  //     >
+  //       <Modal.Body>
+  //         <form
+  //           name="modalForm"
+  //           onSubmit={this.preventDefault}
+  //           className="form steppers"
+  //         >
+  //           <div className="modal-head" id="modal-head">
+  //             <Button
+  //               id="prev"
+  //               type="default"
+  //               onClick={
+  //                 this.props.page < 3 ? this.toggleModal : this.handleNavigation
+  //               }
+  //             >
+  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
+  //             </Button>
+  //             <div className="modal-title">
+  //               {this.props.isDesktopView ? (
+  //                 current >= 0 && current < 3 ? (
+  //                   <div>
+  //                     <p>{home_utils.steps[current].p}</p>
+  //                     <h3>{home_utils.steps[current].h3}</h3>
+  //                   </div>
+  //                 ) : current < 0 || current == 0 ? (
+  //                   //this.toggleModal()
+  //                   <div>
+  //                     <p>{home_utils.steps[0].p}</p>
+  //                     <h3>{home_utils.steps[0].h3}</h3>
+  //                   </div>
+  //                 ) : (
+  //                   console.log("current is > 0", current)
+  //                 )
+  //               ) : (
+  //                 console.log("!this.props.isDesktopView")
+  //               )}
 
-                <Steps current={current}>
-                  {home_utils.steps.map((step, i) => {
-                    return <Step key={i} />;
-                  })}
-                </Steps>
-              </div>
-            </div>
-            {this.renderQuizPages()}
-            <div className="nav-row row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                    onClick={this.handleNavigation}
-                    id="next"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </Modal.Body>
-      </Modal>
-    );
-  }
+  //               <Steps current={current}>
+  //                 {home_utils.steps.map((step, i) => {
+  //                   return <Step key={i} />;
+  //                 })}
+  //               </Steps>
+  //             </div>
+  //           </div>
+  //           {this.renderQuizPages()}
+  //           <div className="nav-row row">
+  //             <div className="col-md-12">
+  //               <div className="form-group">
+  //                 <button
+  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+  //                   onClick={this.handleNavigation}
+  //                   id="next"
+  //                 >
+  //                   Continue
+  //                 </button>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </form>
+  //       </Modal.Body>
+  //     </Modal>
+  //   );
+  // }
 
-  renderMobileQuizModal() {
-    let current;
-    if (this.props.page != 0) {
-      current = this.props.page - 1;
-    } else {
-      current = 0;
-    }
-    return (
-      <Modal
-        id="mobile-quiz-modal-form1"
-        dialogClassName="custom-dialog"
-        className="mobile-modal right"
-        show={this.props.isMobileViewModalOpen}
-        onHide={this.mobileToggleModal}
-      >
-        <Modal.Body>
-          <form
-            name="modalForm"
-            onSubmit={this.preventDefault}
-            className="form steppers"
-          >
-            <div className="modal-head" id="modal-head">
-              {/*
-                    {this.props.page != 1 ? (
-                    */}
+  // renderMobileQuizModal() {
+  //   let current;
+  //   if (this.props.page != 0) {
+  //     current = this.props.page - 1;
+  //   } else {
+  //     current = 0;
+  //   }
+  //   return (
+  //     <Modal
+  //       id="mobile-quiz-modal-form1"
+  //       dialogClassName="custom-dialog"
+  //       className="mobile-modal right"
+  //       show={this.props.isMobileViewModalOpen}
+  //       onHide={this.mobileToggleModal}
+  //     >
+  //       <Modal.Body>
+  //         <form
+  //           name="modalForm"
+  //           onSubmit={this.preventDefault}
+  //           className="form steppers"
+  //         >
+  //           <div className="modal-head" id="modal-head">
+  //             {/*
+  //                   {this.props.page != 1 ? (
+  //                   */}
 
-              <Button
-                id="prev"
-                type="default"
-                onClick={
-                  this.props.page < 3
-                    ? this.mobileToggleModal
-                    : this.handleNavigation
-                }
-              >
-                <FontAwesomeIcon className="" icon={faArrowLeft} />
-              </Button>
+  //             <Button
+  //               id="prev"
+  //               type="default"
+  //               onClick={
+  //                 this.props.page < 3
+  //                   ? this.mobileToggleModal
+  //                   : this.handleNavigation
+  //               }
+  //             >
+  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
+  //             </Button>
 
-              <div className="modal-title">
-                {current >= 0 ? (
-                  <div>
-                    <p>{home_utils.mobile_steps[current].p}</p>
-                    <h3>{home_utils.mobile_steps[current].h3}</h3>
-                  </div>
-                ) : current < 0 ? (
-                  <div>
-                    <p>{home_utils.mobile_steps[0].p}</p>
-                    <h3>{home_utils.mobile_steps[0].h3}</h3>
-                  </div>
-                ) : (
-                  ""
-                )}
+  //             <div className="modal-title">
+  //               {current >= 0 ? (
+  //                 <div>
+  //                   <p>{home_utils.mobile_steps[current].p}</p>
+  //                   <h3>{home_utils.mobile_steps[current].h3}</h3>
+  //                 </div>
+  //               ) : current < 0 ? (
+  //                 <div>
+  //                   <p>{home_utils.mobile_steps[0].p}</p>
+  //                   <h3>{home_utils.mobile_steps[0].h3}</h3>
+  //                 </div>
+  //               ) : (
+  //                 ""
+  //               )}
 
-                <Steps current={current}>
-                  {home_utils.mobile_steps.map((step, i) => {
-                    return <Step key={i} />;
-                  })}
-                </Steps>
-              </div>
-            </div>
-            {this.renderMobileViewQuizPages()}
-            <div className="nav-row row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                    onClick={this.handleNavigation}
-                    id="next"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/*here*/}
-          </form>
-        </Modal.Body>
-        {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
-      </Modal>
-    );
-  }
+  //               <Steps current={current}>
+  //                 {home_utils.mobile_steps.map((step, i) => {
+  //                   return <Step key={i} />;
+  //                 })}
+  //               </Steps>
+  //             </div>
+  //           </div>
+  //           {this.renderMobileViewQuizPages()}
+  //           <div className="nav-row row">
+  //             <div className="col-md-12">
+  //               <div className="form-group">
+  //                 <button
+  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+  //                   onClick={this.handleNavigation}
+  //                   id="next"
+  //                 >
+  //                   Continue
+  //                 </button>
+  //               </div>
+  //             </div>
+  //           </div>
+  //           {/*here*/}
+  //         </form>
+  //       </Modal.Body>
+  //       {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
+  //     </Modal>
+  //   );
+  // }
 
-  renderDesktopQuizForm2() {
-    return (
-      <form
-        id="desktop-quiz-form2"
-        onSubmit={this.preventDefault}
-        className="form desktop"
-      >
-        <h3 className="no-med">
-          Compare HMO plans in Nigeria from the comfort of your home
-        </h3>
-        <h3 className="no-med">No medicals required</h3>
-        <div className="mobile-view-steps">
-          <div className="col-md-12">
-            <Steps current={0}>
-              {home_utils.steps.map((step, i) => {
-                return <Step key={i} />;
-              })}
-            </Steps>
-          </div>
-        </div>
-        <div className="mobile-view-phone form-group">
-          <div className="col-md-12">
-            <label>Tell us about you</label>
-            <PhoneInput
-              className={
-                this.state.is_phone_valid
-                  ? "form-control"
-                  : "form-control invalid"
-              }
-              placeholder="Enter phone number"
-              type="phone"
-              maxLength="13"
-              defaultCountry="NG"
-              //required={true}
-              onChange={
-                // (e) => {
-                this.handlePhone
-                //   (e.target.value);
-                // }
-              }
-              value={this.props.responses.phone_num}
-            />
-          </div>
-        </div>
-        <div className="form-group home-gender">
-          <div className="col-md-12">
-            <label>I am a</label>
-            <div className="radios">
-              <label>
-                <input
-                  type="radio"
-                  value="m"
-                  name="radio-group-gender"
-                  defaultChecked={this.defaultGender()}
-                  onChange={(e) => {
-                    this.handleGender(e.target.value);
-                  }}
-                  className="radio-group-gender"
-                ></input>
-                <span>
-                  <i className="gender icons-gender male male-icon"></i>
-                  <em>Male</em>
-                </span>
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="f"
-                  name="radio-group-gender"
-                  className="radio-group-gender"
-                  onChange={(e) => {
-                    this.handleGender(e.target.value);
-                  }}
-                ></input>
-                <span>
-                  <i className="gender icons-gender male female-icon"></i>
-                  <em>Female</em>
-                </span>
-              </label>
-            </div>
-          </div>
-        </div>
+  // renderDesktopQuizForm2() {
+  //   return (
+  //     <form
+  //       id="desktop-quiz-form2"
+  //       onSubmit={this.preventDefault}
+  //       className="form desktop"
+  //     >
+  //       <h3 className="no-med">
+  //         Compare HMO plans in Nigeria from the comfort of your home
+  //       </h3>
+  //       <h3 className="no-med">No medicals required</h3>
+  //       <div className="mobile-view-steps">
+  //         <div className="col-md-12">
+  //           <Steps current={0}>
+  //             {home_utils.steps.map((step, i) => {
+  //               return <Step key={i} />;
+  //             })}
+  //           </Steps>
+  //         </div>
+  //       </div>
+  //       <div className="mobile-view-phone form-group">
+  //         <div className="col-md-12">
+  //           <label>Tell us about you</label>
+  //           <PhoneInput
+  //             className={
+  //               this.state.is_phone_valid
+  //                 ? "form-control"
+  //                 : "form-control invalid"
+  //             }
+  //             placeholder="Enter phone number"
+  //             type="phone"
+  //             maxLength="13"
+  //             defaultCountry="NG"
+  //             //required={true}
+  //             onChange={
+  //               // (e) => {
+  //               this.handlePhone
+  //               //   (e.target.value);
+  //               // }
+  //             }
+  //             value={this.props.responses.phone_num}
+  //           />
+  //         </div>
+  //       </div>
+  //       <div className="form-group home-gender">
+  //         <div className="col-md-12">
+  //           <label>I am a</label>
+  //           <div className="radios">
+  //             <label>
+  //               <input
+  //                 type="radio"
+  //                 value="m"
+  //                 name="radio-group-gender"
+  //                 defaultChecked={this.defaultGender()}
+  //                 onChange={(e) => {
+  //                   this.handleGender(e.target.value);
+  //                 }}
+  //                 className="radio-group-gender"
+  //               ></input>
+  //               <span>
+  //                 <i className="gender icons-gender male male-icon"></i>
+  //                 <em>Male</em>
+  //               </span>
+  //             </label>
+  //             <label>
+  //               <input
+  //                 type="radio"
+  //                 value="f"
+  //                 name="radio-group-gender"
+  //                 className="radio-group-gender"
+  //                 onChange={(e) => {
+  //                   this.handleGender(e.target.value);
+  //                 }}
+  //               ></input>
+  //               <span>
+  //                 <i className="gender icons-gender male female-icon"></i>
+  //                 <em>Female</em>
+  //               </span>
+  //             </label>
+  //           </div>
+  //         </div>
+  //       </div>
 
-        <div className="form-group home-fullname">
-          <div className="col-md-12">
-            <label>My name is</label>
-          </div>
+  //       <div className="form-group home-fullname">
+  //         <div className="col-md-12">
+  //           <label>My name is</label>
+  //         </div>
 
-          <div className="col-md-12">
-            <input
-              className="form-control"
-              placeholder="Full Name"
-              // required={true}
-              onChange={(e) => {
-                this.handleFullName(e.target.value);
-              }}
-              value={this.props.responses.full_name}
-            ></input>
-          </div>
-        </div>
-        <div className="form-group home-phonenum">
-          <div className="col-md-12">
-            <label>My number is</label>
-          </div>
+  //         <div className="col-md-12">
+  //           <input
+  //             className="form-control"
+  //             placeholder="Full Name"
+  //             // required={true}
+  //             onChange={(e) => {
+  //               this.handleFullName(e.target.value);
+  //             }}
+  //             value={this.props.responses.full_name}
+  //           ></input>
+  //         </div>
+  //       </div>
+  //       <div className="form-group home-phonenum">
+  //         <div className="col-md-12">
+  //           <label>My number is</label>
+  //         </div>
 
-          <div className="col-md-12">
-            <PhoneInput
-              className={
-                this.state.is_phone_valid
-                  ? "form-control"
-                  : "form-control invalid"
-              }
-              placeholder="11 - digit mobile number"
-              //required={true}
-              defaultCountry="NG"
-              onChange={
-                // (e) => {
-                this.handlePhone
-                //   (e.target.value);
-                // }
-              }
-              value={this.props.responses.phone_num}
-              type="phone"
-              maxLength="13"
-            />
-          </div>
-        </div>
-        <div className="form-group home-view-btn">
-          <div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={() => {
-                // if (this.props.responses.phone_num) {
-                //this.toggleModal();
-                // } else {
-                //   this.phoneNumError();
-                // }
-              }}
-            >
-              View Plans
-            </button>
-          </div>
-        </div>
-        <div className="form-group mobile-view-cont-btn">
-          <div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={this.toggleModal}
-            >
-              Continue
-            </button>
-          </div>
-        </div>
-      </form>
-    );
-  }
+  //         <div className="col-md-12">
+  //           <PhoneInput
+  //             className={
+  //               this.state.is_phone_valid
+  //                 ? "form-control"
+  //                 : "form-control invalid"
+  //             }
+  //             placeholder="11 - digit mobile number"
+  //             //required={true}
+  //             defaultCountry="NG"
+  //             onChange={
+  //               // (e) => {
+  //               this.handlePhone
+  //               //   (e.target.value);
+  //               // }
+  //             }
+  //             value={this.props.responses.phone_num}
+  //             type="phone"
+  //             maxLength="13"
+  //           />
+  //         </div>
+  //       </div>
+  //       <div className="form-group home-view-btn">
+  //         <div className="col-md-12">
+  //           <button
+  //             className="btn btn-primary btn-large view-plans btn-demo"
+  //             onClick={() => {
+  //               // if (this.props.responses.phone_num) {
+  //               //this.toggleModal();
+  //               // } else {
+  //               //   this.phoneNumError();
+  //               // }
+  //             }}
+  //           >
+  //             View Plans
+  //           </button>
+  //         </div>
+  //       </div>
+  //       <div className="form-group mobile-view-cont-btn">
+  //         <div className="col-md-12">
+  //           <button
+  //             className="btn btn-primary btn-large view-plans btn-demo"
+  //             onClick={this.toggleModal}
+  //           >
+  //             Continue
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </form>
+  //   );
+  // }
 
-  renderMobileQuizForm2() {
-    return (
-      <form
-        id="mobile-quiz-form2"
-        onSubmit={this.preventDefault}
-        className="form mobile"
-      >
-        <h3 className="no-med">
-          Compare HMO plans in Nigeria from the comfort of your home
-        </h3>
-        <h3 className="no-med">No medicals required</h3>
-        <div className="mobile-view-steps">
-          <div className="col-md-12">
-            <Steps current={0}>
-              {home_utils.mobile_steps.map((step, i) => {
-                return <Step key={i} />;
-              })}
-            </Steps>
-          </div>
-        </div>
-        <div className="mobile-view-phone form-group">
-          <div className="col-md-12">
-            <label>Tell us about you</label>
-            <PhoneInput
-              className={
-                this.state.is_phone_valid
-                  ? "form-control"
-                  : "form-control invalid"
-              }
-              placeholder="Enter phone number"
-              defaultCountry="NG"
-              // required={true}
-              onChange={
-                // (e) => {
-                this.handlePhone
-                //   (e.target.value);
-                // }
-              }
-              value={this.props.responses.phone_num}
-              type="phone"
-              maxLength="13"
-            />
-          </div>
-        </div>
-        <div className="form-group mobile-view-cont-btn">
-          <div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={() => {
-                this.mobileToggleModal();
-                this.handleDesktopView();
-              }}
-            >
-              Continue
-            </button>
-          </div>
-        </div>
-      </form>
-    );
-  }
+  // renderMobileQuizForm2() {
+  //   return (
+  //     <form
+  //       id="mobile-quiz-form2"
+  //       onSubmit={this.preventDefault}
+  //       className="form mobile"
+  //     >
+  //       <h3 className="no-med">
+  //         Compare HMO plans in Nigeria from the comfort of your home
+  //       </h3>
+  //       <h3 className="no-med">No medicals required</h3>
+  //       <div className="mobile-view-steps">
+  //         <div className="col-md-12">
+  //           <Steps current={0}>
+  //             {home_utils.mobile_steps.map((step, i) => {
+  //               return <Step key={i} />;
+  //             })}
+  //           </Steps>
+  //         </div>
+  //       </div>
+  //       <div className="mobile-view-phone form-group">
+  //         <div className="col-md-12">
+  //           <label>Tell us about you</label>
+  //           <PhoneInput
+  //             className={
+  //               this.state.is_phone_valid
+  //                 ? "form-control"
+  //                 : "form-control invalid"
+  //             }
+  //             placeholder="Enter phone number"
+  //             defaultCountry="NG"
+  //             // required={true}
+  //             onChange={
+  //               // (e) => {
+  //               this.handlePhone
+  //               //   (e.target.value);
+  //               // }
+  //             }
+  //             value={this.props.responses.phone_num}
+  //             type="phone"
+  //             maxLength="13"
+  //           />
+  //         </div>
+  //       </div>
+  //       <div className="form-group mobile-view-cont-btn">
+  //         <div className="col-md-12">
+  //           <button
+  //             className="btn btn-primary btn-large view-plans btn-demo"
+  //             onClick={() => {
+  //               this.mobileToggleModal();
+  //               this.handleDesktopView();
+  //             }}
+  //           >
+  //             Continue
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </form>
+  //   );
+  // }
 
-  renderDesktopQuizModal2() {
-    let current;
-    if (this.props.page != 0) {
-      current = this.props.page - 1;
-    } else {
-      current = 0;
-    }
-    return (
-      <Modal
-        id="desktop-quiz-modal-form2"
-        dialogClassName="custom-dialog"
-        className="desktop-modal right"
-        show={this.props.isOpen}
-        onHide={this.toggleModal}
-      >
-        <Modal.Body>
-          <form
-            name="modalForm"
-            onSubmit={this.preventDefault}
-            className="form steppers"
-          >
-            <div className="modal-head" id="modal-head">
-              <Button
-                id="prev"
-                type="default"
-                onClick={
-                  this.props.page < 3 ? this.toggleModal : this.handleNavigation
-                }
-              >
-                <FontAwesomeIcon className="" icon={faArrowLeft} />
-              </Button>
-              <div className="modal-title">
-                {this.props.isDesktopView ? (
-                  current >= 0 && current < 3 ? (
-                    <div>
-                      <p>{home_utils.steps[current].p}</p>
-                      <h3>{home_utils.steps[current].h3}</h3>
-                    </div>
-                  ) : current < 0 || current == 0 ? (
-                    //this.toggleModal()
-                    <div>
-                      <p>{home_utils.steps[0].p}</p>
-                      <h3>{home_utils.steps[0].h3}</h3>
-                    </div>
-                  ) : (
-                    console.log("current is > 0", current)
-                  )
-                ) : (
-                  console.log("!this.props.isDesktopView")
-                )}
+  // renderDesktopQuizModal2() {
+  //   let current;
+  //   if (this.props.page != 0) {
+  //     current = this.props.page - 1;
+  //   } else {
+  //     current = 0;
+  //   }
+  //   return (
+  //     <Modal
+  //       id="desktop-quiz-modal-form2"
+  //       dialogClassName="custom-dialog"
+  //       className="desktop-modal right"
+  //       show={this.props.isOpen}
+  //       onHide={this.toggleModal}
+  //     >
+  //       <Modal.Body>
+  //         <form
+  //           name="modalForm"
+  //           onSubmit={this.preventDefault}
+  //           className="form steppers"
+  //         >
+  //           <div className="modal-head" id="modal-head">
+  //             <Button
+  //               id="prev"
+  //               type="default"
+  //               onClick={
+  //                 this.props.page < 3 ? this.toggleModal : this.handleNavigation
+  //               }
+  //             >
+  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
+  //             </Button>
+  //             <div className="modal-title">
+  //               {this.props.isDesktopView ? (
+  //                 current >= 0 && current < 3 ? (
+  //                   <div>
+  //                     <p>{home_utils.steps[current].p}</p>
+  //                     <h3>{home_utils.steps[current].h3}</h3>
+  //                   </div>
+  //                 ) : current < 0 || current == 0 ? (
+  //                   //this.toggleModal()
+  //                   <div>
+  //                     <p>{home_utils.steps[0].p}</p>
+  //                     <h3>{home_utils.steps[0].h3}</h3>
+  //                   </div>
+  //                 ) : (
+  //                   console.log("current is > 0", current)
+  //                 )
+  //               ) : (
+  //                 console.log("!this.props.isDesktopView")
+  //               )}
 
-                <Steps current={current}>
-                  {home_utils.steps.map((step, i) => {
-                    return <Step key={i} />;
-                  })}
-                </Steps>
-              </div>
-            </div>
-            {this.renderQuizPages()}
-            <div className="nav-row row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                    onClick={this.handleNavigation}
-                    id="next"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </Modal.Body>
-      </Modal>
-    );
-  }
+  //               <Steps current={current}>
+  //                 {home_utils.steps.map((step, i) => {
+  //                   return <Step key={i} />;
+  //                 })}
+  //               </Steps>
+  //             </div>
+  //           </div>
+  //           {this.renderQuizPages()}
+  //           <div className="nav-row row">
+  //             <div className="col-md-12">
+  //               <div className="form-group">
+  //                 <button
+  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+  //                   onClick={this.handleNavigation}
+  //                   id="next"
+  //                 >
+  //                   Continue
+  //                 </button>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </form>
+  //       </Modal.Body>
+  //     </Modal>
+  //   );
+  // }
 
-  renderMobileQuizModal2() {
-    let current;
-    if (this.props.page != 0) {
-      current = this.props.page - 1;
-    } else {
-      current = 0;
-    }
-    return (
-      <Modal
-        id="mobile-quiz-modal-form2"
-        dialogClassName="custom-dialog"
-        className="mobile-modal right"
-        show={this.props.isMobileViewModalOpen}
-        onHide={this.mobileToggleModal}
-      >
-        <Modal.Body>
-          <form
-            name="modalForm"
-            onSubmit={this.preventDefault}
-            className="form steppers"
-          >
-            <div className="modal-head" id="modal-head">
-              {/*
-  {this.props.page != 1 ? (
-  */}
+  // renderMobileQuizModal2() {
+  //   let current;
+  //   if (this.props.page != 0) {
+  //     current = this.props.page - 1;
+  //   } else {
+  //     current = 0;
+  //   }
+  //   return (
+  //     <Modal
+  //       id="mobile-quiz-modal-form2"
+  //       dialogClassName="custom-dialog"
+  //       className="mobile-modal right"
+  //       show={this.props.isMobileViewModalOpen}
+  //       onHide={this.mobileToggleModal}
+  //     >
+  //       <Modal.Body>
+  //         <form
+  //           name="modalForm"
+  //           onSubmit={this.preventDefault}
+  //           className="form steppers"
+  //         >
+  //           <div className="modal-head" id="modal-head">
+  //             {/*
+  // {this.props.page != 1 ? (
+  // */}
 
-              <Button
-                id="prev"
-                type="default"
-                onClick={
-                  this.props.page < 3
-                    ? this.mobileToggleModal
-                    : this.handleNavigation
-                }
-              >
-                <FontAwesomeIcon className="" icon={faArrowLeft} />
-              </Button>
+  //             <Button
+  //               id="prev"
+  //               type="default"
+  //               onClick={
+  //                 this.props.page < 3
+  //                   ? this.mobileToggleModal
+  //                   : this.handleNavigation
+  //               }
+  //             >
+  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
+  //             </Button>
 
-              <div className="modal-title">
-                {current >= 0 ? (
-                  <div>
-                    <p>{home_utils.mobile_steps[current].p}</p>
-                    <h3>{home_utils.mobile_steps[current].h3}</h3>
-                  </div>
-                ) : current < 0 ? (
-                  <div>
-                    <p>{home_utils.mobile_steps[0].p}</p>
-                    <h3>{home_utils.mobile_steps[0].h3}</h3>
-                  </div>
-                ) : (
-                  ""
-                )}
+  //             <div className="modal-title">
+  //               {current >= 0 ? (
+  //                 <div>
+  //                   <p>{home_utils.mobile_steps[current].p}</p>
+  //                   <h3>{home_utils.mobile_steps[current].h3}</h3>
+  //                 </div>
+  //               ) : current < 0 ? (
+  //                 <div>
+  //                   <p>{home_utils.mobile_steps[0].p}</p>
+  //                   <h3>{home_utils.mobile_steps[0].h3}</h3>
+  //                 </div>
+  //               ) : (
+  //                 ""
+  //               )}
 
-                <Steps current={current}>
-                  {home_utils.mobile_steps.map((step, i) => {
-                    return <Step key={i} />;
-                  })}
-                </Steps>
-              </div>
-            </div>
-            {this.renderMobileViewQuizPages()}
-            <div className="nav-row row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                    onClick={this.handleNavigation}
-                    id="next"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/*here*/}
-          </form>
-        </Modal.Body>
-        {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
-      </Modal>
-    );
-  }
+  //               <Steps current={current}>
+  //                 {home_utils.mobile_steps.map((step, i) => {
+  //                   return <Step key={i} />;
+  //                 })}
+  //               </Steps>
+  //             </div>
+  //           </div>
+  //           {this.renderMobileViewQuizPages()}
+  //           <div className="nav-row row">
+  //             <div className="col-md-12">
+  //               <div className="form-group">
+  //                 <button
+  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+  //                   onClick={this.handleNavigation}
+  //                   id="next"
+  //                 >
+  //                   Continue
+  //                 </button>
+  //               </div>
+  //             </div>
+  //           </div>
+  //           {/*here*/}
+  //         </form>
+  //       </Modal.Body>
+  //       {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
+  //     </Modal>
+  //   );
+  // }
 
-  renderDesktopQuizForm3() {
-    return (
-      <form
-        id="desktop-quiz-form3"
-        onSubmit={this.preventDefault}
-        className="form desktop"
-      >
-        <h3 className="no-med">
-          Compare HMO plans in Nigeria from the comfort of your home
-        </h3>
-        <h3 className="no-med">No medicals required</h3>
-        <div className="mobile-view-steps">
-          <div className="col-md-12">
-            <Steps current={0}>
-              {home_utils.steps.map((step, i) => {
-                return <Step key={i} />;
-              })}
-            </Steps>
-          </div>
-        </div>
-        <div className="mobile-view-phone form-group">
-          <div className="col-md-12">
-            <label>Tell us about you</label>
-            <PhoneInput
-              className={
-                this.state.is_phone_valid
-                  ? "form-control"
-                  : "form-control invalid"
-              }
-              placeholder="Enter phone number"
-              type="phone"
-              maxLength="13"
-              defaultCountry="NG"
-              //required={true}
-              onChange={
-                // (e) => {
-                this.handlePhone
-                //   (e.target.value);
-                // }
-              }
-              value={this.props.responses.phone_num}
-            />
-          </div>
-        </div>
-        <div className="form-group home-gender">
-          <div className="col-md-12">
-            <label>I am a</label>
-            <div className="radios">
-              <label>
-                <input
-                  type="radio"
-                  value="m"
-                  name="radio-group-gender"
-                  defaultChecked={this.defaultGender()}
-                  onChange={(e) => {
-                    this.handleGender(e.target.value);
-                  }}
-                  className="radio-group-gender"
-                ></input>
-                <span>
-                  <i className="gender icons-gender male male-icon"></i>
-                  <em>Male</em>
-                </span>
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="f"
-                  name="radio-group-gender"
-                  className="radio-group-gender"
-                  onChange={(e) => {
-                    this.handleGender(e.target.value);
-                  }}
-                ></input>
-                <span>
-                  <i className="gender icons-gender male female-icon"></i>
-                  <em>Female</em>
-                </span>
-              </label>
-            </div>
-          </div>
-        </div>
+  // renderDesktopQuizForm3() {
+  //   return (
+  //     <form
+  //       id="desktop-quiz-form3"
+  //       onSubmit={this.preventDefault}
+  //       className="form desktop"
+  //     >
+  //       <h3 className="no-med">
+  //         Compare HMO plans in Nigeria from the comfort of your home
+  //       </h3>
+  //       <h3 className="no-med">No medicals required</h3>
+  //       <div className="mobile-view-steps">
+  //         <div className="col-md-12">
+  //           <Steps current={0}>
+  //             {home_utils.steps.map((step, i) => {
+  //               return <Step key={i} />;
+  //             })}
+  //           </Steps>
+  //         </div>
+  //       </div>
+  //       <div className="mobile-view-phone form-group">
+  //         <div className="col-md-12">
+  //           <label>Tell us about you</label>
+  //           <PhoneInput
+  //             className={
+  //               this.state.is_phone_valid
+  //                 ? "form-control"
+  //                 : "form-control invalid"
+  //             }
+  //             placeholder="Enter phone number"
+  //             type="phone"
+  //             maxLength="13"
+  //             defaultCountry="NG"
+  //             //required={true}
+  //             onChange={
+  //               // (e) => {
+  //               this.handlePhone
+  //               //   (e.target.value);
+  //               // }
+  //             }
+  //             value={this.props.responses.phone_num}
+  //           />
+  //         </div>
+  //       </div>
+  //       <div className="form-group home-gender">
+  //         <div className="col-md-12">
+  //           <label>I am a</label>
+  //           <div className="radios">
+  //             <label>
+  //               <input
+  //                 type="radio"
+  //                 value="m"
+  //                 name="radio-group-gender"
+  //                 defaultChecked={this.defaultGender()}
+  //                 onChange={(e) => {
+  //                   this.handleGender(e.target.value);
+  //                 }}
+  //                 className="radio-group-gender"
+  //               ></input>
+  //               <span>
+  //                 <i className="gender icons-gender male male-icon"></i>
+  //                 <em>Male</em>
+  //               </span>
+  //             </label>
+  //             <label>
+  //               <input
+  //                 type="radio"
+  //                 value="f"
+  //                 name="radio-group-gender"
+  //                 className="radio-group-gender"
+  //                 onChange={(e) => {
+  //                   this.handleGender(e.target.value);
+  //                 }}
+  //               ></input>
+  //               <span>
+  //                 <i className="gender icons-gender male female-icon"></i>
+  //                 <em>Female</em>
+  //               </span>
+  //             </label>
+  //           </div>
+  //         </div>
+  //       </div>
 
-        <div className="form-group home-fullname">
-          <div className="col-md-12">
-            <label>My name is</label>
-          </div>
+  //       <div className="form-group home-fullname">
+  //         <div className="col-md-12">
+  //           <label>My name is</label>
+  //         </div>
 
-          <div className="col-md-12">
-            <input
-              className="form-control"
-              placeholder="Full Name"
-              // required={true}
-              onChange={(e) => {
-                this.handleFullName(e.target.value);
-              }}
-              value={this.props.responses.full_name}
-            ></input>
-          </div>
-        </div>
-        <div className="form-group home-phonenum">
-          <div className="col-md-12">
-            <label>My number is</label>
-          </div>
+  //         <div className="col-md-12">
+  //           <input
+  //             className="form-control"
+  //             placeholder="Full Name"
+  //             // required={true}
+  //             onChange={(e) => {
+  //               this.handleFullName(e.target.value);
+  //             }}
+  //             value={this.props.responses.full_name}
+  //           ></input>
+  //         </div>
+  //       </div>
+  //       <div className="form-group home-phonenum">
+  //         <div className="col-md-12">
+  //           <label>My number is</label>
+  //         </div>
 
-          <div className="col-md-12">
-            <PhoneInput
-              className={
-                this.state.is_phone_valid
-                  ? "form-control"
-                  : "form-control invalid"
-              }
-              placeholder="11 - digit mobile number"
-              //required={true}
-              defaultCountry="NG"
-              onChange={
-                // (e) => {
-                this.handlePhone
-                //   (e.target.value);
-                // }
-              }
-              value={this.props.responses.phone_num}
-              type="phone"
-              maxLength="13"
-            />
-          </div>
-        </div>
-        <div className="form-group home-view-btn">
-          <div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={() => {
-                // if (this.props.responses.phone_num) {
-                this.toggleModal();
-                // } else {
-                //   this.phoneNumError();
-                // }
-              }}
-            >
-              View Plans
-            </button>
-          </div>
-        </div>
-        <div className="form-group mobile-view-cont-btn">
-          <div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={this.toggleModal}
-            >
-              Continue
-            </button>
-          </div>
-        </div>
-      </form>
-    );
-  }
+  //         <div className="col-md-12">
+  //           <PhoneInput
+  //             className={
+  //               this.state.is_phone_valid
+  //                 ? "form-control"
+  //                 : "form-control invalid"
+  //             }
+  //             placeholder="11 - digit mobile number"
+  //             //required={true}
+  //             defaultCountry="NG"
+  //             onChange={
+  //               // (e) => {
+  //               this.handlePhone
+  //               //   (e.target.value);
+  //               // }
+  //             }
+  //             value={this.props.responses.phone_num}
+  //             type="phone"
+  //             maxLength="13"
+  //           />
+  //         </div>
+  //       </div>
+  //       <div className="form-group home-view-btn">
+  //         <div className="col-md-12">
+  //           <button
+  //             className="btn btn-primary btn-large view-plans btn-demo"
+  //             onClick={() => {
+  //               // if (this.props.responses.phone_num) {
+  //               this.toggleModal();
+  //               // } else {
+  //               //   this.phoneNumError();
+  //               // }
+  //             }}
+  //           >
+  //             View Plans
+  //           </button>
+  //         </div>
+  //       </div>
+  //       <div className="form-group mobile-view-cont-btn">
+  //         <div className="col-md-12">
+  //           <button
+  //             className="btn btn-primary btn-large view-plans btn-demo"
+  //             onClick={this.toggleModal}
+  //           >
+  //             Continue
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </form>
+  //   );
+  // }
 
-  renderMobileQuizForm3() {
-    return (
-      <form
-        id="mobile-quiz-form3"
-        onSubmit={this.preventDefault}
-        className="form mobile"
-      >
-        <h3 className="no-med">
-          Compare HMO plans in Nigeria from the comfort of your home
-        </h3>
-        <h3 className="no-med">No medicals required</h3>
-        <div className="mobile-view-steps">
-          <div className="col-md-12">
-            <Steps current={0}>
-              {home_utils.mobile_steps.map((step, i) => {
-                return <Step key={i} />;
-              })}
-            </Steps>
-          </div>
-        </div>
-        <div className="mobile-view-phone form-group">
-          <div className="col-md-12">
-            <label>Tell us about you</label>
-            <PhoneInput
-              className={
-                this.state.is_phone_valid
-                  ? "form-control"
-                  : "form-control invalid"
-              }
-              placeholder="Enter phone number"
-              defaultCountry="NG"
-              // required={true}
-              onChange={
-                // (e) => {
-                this.handlePhone
-                //   (e.target.value);
-                // }
-              }
-              value={this.props.responses.phone_num}
-              type="phone"
-              maxLength="13"
-            />
-          </div>
-        </div>
-        <div className="form-group mobile-view-cont-btn">
-          <div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={() => {
-                this.mobileToggleModal();
-                this.handleDesktopView();
-              }}
-            >
-              Continue
-            </button>
-          </div>
-        </div>
-      </form>
-    );
-  }
+  // renderMobileQuizForm3() {
+  //   return (
+  //     <form
+  //       id="mobile-quiz-form3"
+  //       onSubmit={this.preventDefault}
+  //       className="form mobile"
+  //     >
+  //       <h3 className="no-med">
+  //         Compare HMO plans in Nigeria from the comfort of your home
+  //       </h3>
+  //       <h3 className="no-med">No medicals required</h3>
+  //       <div className="mobile-view-steps">
+  //         <div className="col-md-12">
+  //           <Steps current={0}>
+  //             {home_utils.mobile_steps.map((step, i) => {
+  //               return <Step key={i} />;
+  //             })}
+  //           </Steps>
+  //         </div>
+  //       </div>
+  //       <div className="mobile-view-phone form-group">
+  //         <div className="col-md-12">
+  //           <label>Tell us about you</label>
+  //           <PhoneInput
+  //             className={
+  //               this.state.is_phone_valid
+  //                 ? "form-control"
+  //                 : "form-control invalid"
+  //             }
+  //             placeholder="Enter phone number"
+  //             defaultCountry="NG"
+  //             // required={true}
+  //             onChange={
+  //               // (e) => {
+  //               this.handlePhone
+  //               //   (e.target.value);
+  //               // }
+  //             }
+  //             value={this.props.responses.phone_num}
+  //             type="phone"
+  //             maxLength="13"
+  //           />
+  //         </div>
+  //       </div>
+  //       <div className="form-group mobile-view-cont-btn">
+  //         <div className="col-md-12">
+  //           <button
+  //             className="btn btn-primary btn-large view-plans btn-demo"
+  //             onClick={() => {
+  //               this.mobileToggleModal();
+  //               this.handleDesktopView();
+  //             }}
+  //           >
+  //             Continue
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </form>
+  //   );
+  // }
 
-  renderDesktopQuizModal3() {
-    let current;
-    if (this.props.page != 0) {
-      current = this.props.page - 1;
-    } else {
-      current = 0;
-    }
-    return (
-      <Modal
-        id="desktop-quiz-modal3"
-        dialogClassName="custom-dialog"
-        className="desktop-modal right"
-        show={this.props.isOpen}
-        onHide={this.toggleModal}
-      >
-        <Modal.Body>
-          <form
-            name="modalForm"
-            onSubmit={this.preventDefault}
-            className="form steppers"
-          >
-            <div className="modal-head" id="modal-head">
-              <Button
-                id="prev"
-                type="default"
-                onClick={
-                  this.props.page < 3 ? this.toggleModal : this.handleNavigation
-                }
-              >
-                <FontAwesomeIcon className="" icon={faArrowLeft} />
-              </Button>
-              <div className="modal-title">
-                {this.props.isDesktopView ? (
-                  current >= 0 && current < 3 ? (
-                    <div>
-                      <p>{home_utils.steps[current].p}</p>
-                      <h3>{home_utils.steps[current].h3}</h3>
-                    </div>
-                  ) : current < 0 || current == 0 ? (
-                    //this.toggleModal()
-                    <div>
-                      <p>{home_utils.steps[0].p}</p>
-                      <h3>{home_utils.steps[0].h3}</h3>
-                    </div>
-                  ) : (
-                    console.log("current is > 0", current)
-                  )
-                ) : (
-                  console.log("!this.props.isDesktopView")
-                )}
+  // renderDesktopQuizModal3() {
+  //   let current;
+  //   if (this.props.page != 0) {
+  //     current = this.props.page - 1;
+  //   } else {
+  //     current = 0;
+  //   }
+  //   return (
+  //     <Modal
+  //       id="desktop-quiz-modal3"
+  //       dialogClassName="custom-dialog"
+  //       className="desktop-modal right"
+  //       show={this.props.isOpen}
+  //       onHide={this.toggleModal}
+  //     >
+  //       <Modal.Body>
+  //         <form
+  //           name="modalForm"
+  //           onSubmit={this.preventDefault}
+  //           className="form steppers"
+  //         >
+  //           <div className="modal-head" id="modal-head">
+  //             <Button
+  //               id="prev"
+  //               type="default"
+  //               onClick={
+  //                 this.props.page < 3 ? this.toggleModal : this.handleNavigation
+  //               }
+  //             >
+  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
+  //             </Button>
+  //             <div className="modal-title">
+  //               {this.props.isDesktopView ? (
+  //                 current >= 0 && current < 3 ? (
+  //                   <div>
+  //                     <p>{home_utils.steps[current].p}</p>
+  //                     <h3>{home_utils.steps[current].h3}</h3>
+  //                   </div>
+  //                 ) : current < 0 || current == 0 ? (
+  //                   //this.toggleModal()
+  //                   <div>
+  //                     <p>{home_utils.steps[0].p}</p>
+  //                     <h3>{home_utils.steps[0].h3}</h3>
+  //                   </div>
+  //                 ) : (
+  //                   console.log("current is > 0", current)
+  //                 )
+  //               ) : (
+  //                 console.log("!this.props.isDesktopView")
+  //               )}
 
-                <Steps current={current}>
-                  {home_utils.steps.map((step, i) => {
-                    return <Step key={i} />;
-                  })}
-                </Steps>
-              </div>
-            </div>
-            {this.renderQuizPages()}
-            <div className="nav-row row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                    onClick={this.handleNavigation}
-                    id="next"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </Modal.Body>
-      </Modal>
-    );
-  }
+  //               <Steps current={current}>
+  //                 {home_utils.steps.map((step, i) => {
+  //                   return <Step key={i} />;
+  //                 })}
+  //               </Steps>
+  //             </div>
+  //           </div>
+  //           {this.renderQuizPages()}
+  //           <div className="nav-row row">
+  //             <div className="col-md-12">
+  //               <div className="form-group">
+  //                 <button
+  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+  //                   onClick={this.handleNavigation}
+  //                   id="next"
+  //                 >
+  //                   Continue
+  //                 </button>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </form>
+  //       </Modal.Body>
+  //     </Modal>
+  //   );
+  // }
 
-  renderMobileQuizModal3() {
-    let current;
-    if (this.props.page != 0) {
-      current = this.props.page - 1;
-    } else {
-      current = 0;
-    }
-    return (
-      <Modal
-        id="mobile-quiz-modal3"
-        dialogClassName="custom-dialog"
-        className="mobile-modal right"
-        show={this.props.isMobileViewModalOpen}
-        onHide={this.mobileToggleModal}
-      >
-        <Modal.Body>
-          <form
-            name="modalForm"
-            onSubmit={this.preventDefault}
-            className="form steppers"
-          >
-            <div className="modal-head" id="modal-head">
-              {/*
-  {this.props.page != 1 ? (
-  */}
+  // renderMobileQuizModal3() {
+  //   let current;
+  //   if (this.props.page != 0) {
+  //     current = this.props.page - 1;
+  //   } else {
+  //     current = 0;
+  //   }
+  //   return (
+  //     <Modal
+  //       id="mobile-quiz-modal3"
+  //       dialogClassName="custom-dialog"
+  //       className="mobile-modal right"
+  //       show={this.props.isMobileViewModalOpen}
+  //       onHide={this.mobileToggleModal}
+  //     >
+  //       <Modal.Body>
+  //         <form
+  //           name="modalForm"
+  //           onSubmit={this.preventDefault}
+  //           className="form steppers"
+  //         >
+  //           <div className="modal-head" id="modal-head">
+  //             {/*
+  // {this.props.page != 1 ? (
+  // */}
 
-              <Button
-                id="prev"
-                type="default"
-                onClick={
-                  this.props.page < 3
-                    ? this.mobileToggleModal
-                    : this.handleNavigation
-                }
-              >
-                <FontAwesomeIcon className="" icon={faArrowLeft} />
-              </Button>
+  //             <Button
+  //               id="prev"
+  //               type="default"
+  //               onClick={
+  //                 this.props.page < 3
+  //                   ? this.mobileToggleModal
+  //                   : this.handleNavigation
+  //               }
+  //             >
+  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
+  //             </Button>
 
-              <div className="modal-title">
-                {current >= 0 ? (
-                  <div>
-                    <p>{home_utils.mobile_steps[current].p}</p>
-                    <h3>{home_utils.mobile_steps[current].h3}</h3>
-                  </div>
-                ) : current < 0 ? (
-                  <div>
-                    <p>{home_utils.mobile_steps[0].p}</p>
-                    <h3>{home_utils.mobile_steps[0].h3}</h3>
-                  </div>
-                ) : (
-                  ""
-                )}
+  //             <div className="modal-title">
+  //               {current >= 0 ? (
+  //                 <div>
+  //                   <p>{home_utils.mobile_steps[current].p}</p>
+  //                   <h3>{home_utils.mobile_steps[current].h3}</h3>
+  //                 </div>
+  //               ) : current < 0 ? (
+  //                 <div>
+  //                   <p>{home_utils.mobile_steps[0].p}</p>
+  //                   <h3>{home_utils.mobile_steps[0].h3}</h3>
+  //                 </div>
+  //               ) : (
+  //                 ""
+  //               )}
 
-                <Steps current={current}>
-                  {home_utils.mobile_steps.map((step, i) => {
-                    return <Step key={i} />;
-                  })}
-                </Steps>
-              </div>
-            </div>
-            {this.renderMobileViewQuizPages()}
-            <div className="nav-row row">
-              <div className="col-md-12">
-                <div className="form-group">
-                  <button
-                    className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                    onClick={this.handleNavigation}
-                    id="next"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/*here*/}
-          </form>
-        </Modal.Body>
-        {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
-      </Modal>
-    );
-  }
+  //               <Steps current={current}>
+  //                 {home_utils.mobile_steps.map((step, i) => {
+  //                   return <Step key={i} />;
+  //                 })}
+  //               </Steps>
+  //             </div>
+  //           </div>
+  //           {this.renderMobileViewQuizPages()}
+  //           <div className="nav-row row">
+  //             <div className="col-md-12">
+  //               <div className="form-group">
+  //                 <button
+  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
+  //                   onClick={this.handleNavigation}
+  //                   id="next"
+  //                 >
+  //                   Continue
+  //                 </button>
+  //               </div>
+  //             </div>
+  //           </div>
+  //           {/*here*/}
+  //         </form>
+  //       </Modal.Body>
+  //       {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
+  //     </Modal>
+  //   );
+  // }
 
   showDesktopOnLoadModal = () => {
     this.hideDesktopHomeFrm();
@@ -3963,6 +3965,8 @@ class NewContent extends React.Component<homeProps, homeState> {
         planID: val,
       },
     });
+
+    // this.props.setPlanID(this.state.filter_params.planID)
   }
 
   handleHSAChange() {
@@ -4161,6 +4165,27 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   }
 
+  handleChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // handlePlanID_HMOID_paramChange = () => {
+
+  // }
+
+  getRecommendedPlans = () => {
+    this.props.setPlanID(this.state.filter_params.planID);
+    this.props.setHMOID(this.state.filter_params.hmo_selected);
+    this.updateBugetWithFilterRange();
+    this.props.getRecommendedPlans();
+  };
+
+  resetServices() {
+    this.props.getServices();
+  }
+
   render() {
     // console.log(
     //   "this.state.filter_params.annual_range_min",
@@ -4224,13 +4249,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                       <div className="home-frm form-div">
                         {/* call desktop form 1 */ this.renderDesktopQuizForm()}
 
-                        {/* call mobile form 1 */ this.renderMobileQuizForm()}
-                        {
-                          /* call desktop quiz modal 1 */ this.renderDesktopQuizModal()
+                        {this.renderMobileQuizForm()}
+                        {/*{
+                           this.renderDesktopQuizModal()
                         }
                         {
-                          /* call mobile quiz modal 1 */ this.renderMobileQuizModal()
-                        }
+                           this.renderMobileQuizModal()
+                        } */}
                       </div>
                     </Col>
                   </Row>
@@ -4251,7 +4276,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <div className="home-frm form-div">
                     {/* call desktop form 2 */ this.renderDesktopQuizForm()}
 
-                    {/* call mobile form 2 */ this.renderMobileQuizForm()}
+                    {/* call mobile form 2*/ this.renderMobileQuizForm()}
                     {/* call desktop quiz modal 2 this.renderDesktopQuizModal()*/}
                     {/* call mobile quiz modal 2  this.renderMobileQuizModal()*/}
                   </div>
@@ -4274,7 +4299,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   >
                     {/* call desktop form 3 */ this.renderDesktopQuizForm()}
 
-                    {/* call mobile form 3 */ this.renderMobileQuizForm()}
+                    {/* call mobile form 3*/ this.renderMobileQuizForm()}
                     {/* {call the desktop modal } */ this.desktopOnLoadModal()}
                     {/* call desktop quiz modal 3  this.renderDesktopQuizModal()*/}
                     {/* call mobile quiz modal 3 this.renderMobileQuizModal()*/}
@@ -4341,7 +4366,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                         })}
                       </select>
                     </div>
-                    <div className="margin-left--1 display--inline-block rh-sort-by-div">
+                    <div
+                      className={`${
+                        window.screen.width >= 501 && "margin-left--1"
+                      } display--inline-block rh-sort-by-div`}
+                    >
                       <label className="c-label margin-top--0 rh-sort-by">
                         <span className="drop-ds-label">Plan range</span>
                       </label>
@@ -4386,8 +4415,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                 <span className="c-field__hint">
                                   Your annual premium range is
                                   {/* { annual_range_min ? annual_range_min : "" }  - {annual_range_min ? annual_range_max : ""} */}
-                                  ( {this.formatter(this.minbudgett)} -{" "}
-                                  {this.formatter(this.maxbudgett)})
+                                  {/* ( {this.formatter(this.minbudgett)} -{" "}
+                                  {this.formatter(this.maxbudgett)}) */}
                                   {/* ₦20,000 ₦50,000 */}
                                 </span>
                               </legend>
@@ -4403,13 +4432,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       pattern="[0-9.,-]*"
                                       type="text"
                                       name="premium-start"
-                                      value={this.props.responses.budget[0]}
+                                      // value={this.props.responses.budget[0]}
                                       onChange={(e) =>
                                         this.handleMinRangeChange(
                                           e.target.value
                                         )
                                       }
-                                      onKeyUp={this.updateBugetWithFilterRange}
+                                      // onKeyUp={this.updateBugetWithFilterRange}
                                     />
                                   </div>
                                 </div>
@@ -4431,25 +4460,26 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       pattern="[0-9.,-]*"
                                       type="text"
                                       name="premium-end"
-                                      value={this.props.responses.budget[1]}
+                                      // value={this.props.responses.budget[1]}
                                       onChange={(e) =>
                                         this.handleMaxRangeChange(
                                           e.target.value
                                         )
                                       }
-                                      onKeyUp={this.updateBugetWithFilterRange}
+                                      // onKeyUp={this.updateBugetWithFilterRange}
                                     />
                                   </div>
                                 </div>
                                 <button
                                   className="c-button c-button--secondary c-button--small c-range-field__button"
                                   disabled={
-                                    annual_range_min != undefined ||
+                                    annual_range_min != undefined &&
                                     annual_range_max != undefined
                                       ? false
                                       : true
                                   }
                                   type="button"
+                                  onClick={this.updateBugetWithFilterRange}
                                 >
                                   Apply range
                                 </button>
@@ -4470,7 +4500,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   {annual_deductible_min
                                     ? annual_deductible_min
                                     : ""}{" "}
-                                  -{" "}
+                                  {/* -{" "} */}
                                   {annual_deductible_max
                                     ? annual_deductible_max
                                     : ""}
@@ -5138,12 +5168,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                     <button
                       className="c-button c-button--secondary margin-right--2 text-transform--capitalize qa-clear-desktop"
                       type="button"
+                      onClick={() => this.resetServices()}
                     >
                       Clear filters
                     </button>
                     <button
                       className="c-button c-button--success qa-apply-desktop"
                       type="button"
+                      onClick={this.getRecommendedPlans}
                     >
                       Apply filters
                     </button>
@@ -5268,6 +5300,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         key={plan.id}
                                       >
                                         {plan.plan_id &&
+                                          plan.plan_id.category &&
                                           plan.plan_id.category.map(
                                             (cat, i) => {
                                               return (
@@ -5297,7 +5330,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-plan-title__info-item">
                                         Plan ID:
                                         <span className="font-weight--bold">
-                                          {plan.plan_id && plan.plan_id.plan_id}
+                                          {plan.plan_id && plan.plan_id.category
+                                            ? plan.plan_id.plan_id
+                                            : plan.plan_id}
                                         </span>
                                       </li>
                                     </ul>

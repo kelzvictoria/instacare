@@ -59,7 +59,9 @@ import {
     RESET_NUM_OF_PEOPLE,
     GET_NUM_OF_PEOPLE,
     SET_PLANS_TO_COMPARE_ON_DESKTOP,
-    SET_PLANS_TO_COMPARE_ON_MOBILE
+    SET_PLANS_TO_COMPARE_ON_MOBILE,
+    SET_PLAN_ID,
+    SET_HMO_ID
 } from "../actions/types";
 
 const initialState = {
@@ -84,8 +86,12 @@ const initialState = {
     tab_opened: "highlights",
     responses: {
         budget: [15000, 150000],
-        num_of_people: 1,
         type: "single",
+        price_range: "silver",
+        hmoID : "",
+        planID: "",
+
+        num_of_people: 1,       
         firstName: "",
         lastName: "",
         email: "",
@@ -114,7 +120,7 @@ const initialState = {
         child_7_age: 0,
         child_8_age: 0,
         plan_duration: "1",
-        price_range: "silver",
+        
     }
 }
 
@@ -157,8 +163,8 @@ export default function (state = initialState, action) {
 
         case UPDATE_TEXT_RESPONSE:
             console.log("action.payload", action.payload);
-            let key = action.payload.resObj.key;
-            let value = action.payload.resObj.value;
+            let key = action.payload.key;
+            let value = action.payload.value;
 
             if (key) {
                 return {
@@ -410,6 +416,24 @@ export default function (state = initialState, action) {
                     num_of_people: action.payload.value
                 }
             }
+
+        case SET_PLAN_ID:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    planID: action.payload
+                }
+            }
+
+        case SET_HMO_ID: 
+        return {
+            ...state,
+            responses: {
+                ...state.responses,
+                hmoID: action.payload
+            }
+        }
 
 
             default:

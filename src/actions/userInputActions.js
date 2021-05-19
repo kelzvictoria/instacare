@@ -56,6 +56,8 @@ import {
     GET_NUM_OF_PEOPLE,
     UPDATE_PRICE_RANGE,
     IS_FETCHING_SERVICES,
+    SET_PLAN_ID,
+    SET_HMO_ID
 } from "./types"
 
 
@@ -349,5 +351,19 @@ export const resetPlans = (plans) => (dispatch, getState) => {
     dispatch({
         type: RESET_PLANS,
         payload: plans
+    })
+}
+
+export const setPlanID = (planID) => (dispatch, getState) => {
+    dispatch({
+        type: SET_PLAN_ID,
+        payload: planID
+    })
+}
+
+export const setHMOID = (hmoID) => (dispatch, getState) => {
+    dispatch({
+        type: SET_HMO_ID,
+        payload: hmoID
     })
 }

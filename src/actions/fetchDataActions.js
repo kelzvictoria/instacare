@@ -24,7 +24,8 @@ import {
     IS_FILTERING_BY_PLAN_ID,
     FILTER_BY_BUDGET,
     FILTER_BY_HMO,
-    FILTER_BY_PLAN_ID
+    FILTER_BY_PLAN_ID,
+    FILTER_BY_PLAN_TYPE
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions";
@@ -71,11 +72,6 @@ export const getPlans = () => async (dispatch, getState) => {
                     type: GET_PLANS,
                     payload: plans
                 })
-
-                // dispatch({
-                //     type: IS_FILTERING_BY_BUDGET,
-                //     payload: false
-                // })
             }
 
         }).catch((err) => {
@@ -95,7 +91,6 @@ export const getPlansByID = (planID) => async (dispatch, getState) => {
     console.log("planID", planID);
     console.log("services", services);
     let plansByID = services.filter(plan => {
-        console.log("plan_id", plan.plan_id);
         return plan.plan_id == planID
     });
 
@@ -171,15 +166,15 @@ export const getServices = () => async (dispatch, getState) => {
                     // console.log("plans", plans);
 
                     let servicePlan = plans.filter(plan => plan.plan_id === planID);
-                    // console.log("planID", planID, "servicePlan", servicePlan);
+                    //console.log("planID", planID, "servicePlan", servicePlan);
 
                     let planHMO = hmos.filter(hmo => hmo.hmo_id === hmoID);
 
-                    if (planHMO) {
+                    if (planHMO.length > 0) {
                         services[i]["hmo_id"] = planHMO[0];
                     }
 
-                    if (servicePlan) {
+                    if (servicePlan.length > 0) {
                         services[i]["plan_id"] = servicePlan[0];
                     }
                 }
@@ -195,66 +190,45 @@ export const getServices = () => async (dispatch, getState) => {
         })
 }
 
-export const getRecommendedPlans = (num_of_people) => (dispatch, getState) => {
+export const getRecommendedPlans = () => (dispatch, getState) => {
     dispatch(setIsFetchingRecPlans())
 
-    let rec_plans = [];
-    let individual_plans = [];
-    let group_plans = [];
-    let family_plans = [];
-    let couple_plans = [];
-    let international_plans = [];
-    let senior_plans = [];
+    let hmoID = getState().quiz.responses.hmoID;
+    let planID = getState().quiz.responses.planID;
+    let budget = getState().quiz.responses.budget;
+    let planType = getState().quiz.responses.type;
 
-    let plans = getState().fetchData.plans;
+    let min = budget[0];
+    let max = budget[1];
 
-    if (plans.length > 0) {
-        for (let i = 0; i < plans.length; i++) {
-            let categoryArr = plans[i].category;
+    let services = getState().fetchData.services
 
-            let individualPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "individual").length > 0;
-            let groupPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "group").length > 0;
-            let familyPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "family").length > 0;
-            let couplePlans = categoryArr.filter(cat => cat.name.toLowerCase() == "couple").length > 0;
-            let internationalPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "international").length > 0;
-            let seniorCitizenPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "senior citizen").length > 0;
-
-            if (individualPlans) {
-                individual_plans.push(plans[i])
-            }
-
-            if (groupPlans) {
-                group_plans.push(plans[i])
-            }
-
-            if (familyPlans) {
-                family_plans.push(plans[i])
-            }
-
-            if (couplePlans) {
-                couple_plans.push(plans[i])
-            }
-
-            if (internationalPlans) {
-                international_plans.push(plans[i])
-            }
-
-            if (seniorCitizenPlans) {
-                senior_plans.push(plans[i])
-            }
-        }
-
-        dispatch({
-            type: GET_NUM_OF_PEOPLE,
-            payload: num_of_people
+    let plansByHMO = services.filter(plan => plan.hmo_id === hmoID);
+    let plansByPlanID = services.filter(plan => {
+        return plan.plan_id == planID
+    });
+    let plansByBudget = services
+        .filter(pckg => {
+            return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
         })
 
-        dispatch({
-            type: IS_FETCHING_RECOMMENDED_PLANS,
-            payload: false
-        })
+    let plansByPlanType = groupPlansByType(services, planType);
 
-    }
+    console.log("plansByPlanType", plansByPlanType);
+
+    let recommended_plans = [
+        ...plansByHMO,
+        ...plansByPlanID,
+        ...plansByBudget,
+        ...plansByPlanType
+    ]
+
+    console.log("recommended_plans", recommended_plans);
+    dispatch({
+        type: GET_RECOMMENDED_PLANS,
+        payload: recommended_plans
+    })
+
 }
 
 export const getPlansByHMO = (hmoId) => (dispatch, getState) => {
@@ -265,6 +239,8 @@ export const getPlansByHMO = (hmoId) => (dispatch, getState) => {
             type: IS_FETCHING_PLANS_BY_HMO,
             data: true
         })
+
+        plansByHMO = getState().fetchData.services.filter(plan => plan.hmo_id === hmoId)
 
         dispatch({
             type: GET_PLANS_BY_HMO,
@@ -310,8 +286,6 @@ export const filterByBudget = (budget) => (dispatch, getState) => {
 
     let filteredPackagesByBudget = packages
         .filter(pckg => {
-            // console.log("typeof pckg.price", typeof stripNonNumeric(pckg.price));
-            // console.log("pckg.price", stripNonNumeric(pckg.price));
             return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
         })
 
@@ -321,6 +295,21 @@ export const filterByBudget = (budget) => (dispatch, getState) => {
     })
 }
 
+export const filterByPlanType = (type) => (dispatch, getState) => {
+    dispatch({
+        type: IS_FILTERING_BY_PLAN_TYPE,
+        payload: true
+    })
+
+    let services = getState().fetchData.services;
+
+    let filteredPackagesByPlanType = groupPlansByType(services, type);
+
+    dispatch({
+        type: FILTER_BY_PLAN_TYPE,
+        payload: filteredPackagesByPlanType
+    })
+}
 
 export const setIsFetchingPlansByHMO = () => (dispatch, getState) => {
 
@@ -360,4 +349,115 @@ export const setIsFilteringByBudget = () => (dispatch, getState) => {
     return {
         type: IS_FILTERING_BY_BUDGET
     }
+}
+
+const groupPlansByType = (packages, type) => {
+
+    let rec_plans = [];
+    let individual_plans = [];
+    let group_plans = [];
+    let family_plans = [];
+    let couple_plans = [];
+    let international_plans = [];
+    let senior_plans = [];
+    let corporate_plans = [];
+
+    console.log("packages", packages);
+    if (packages.length > 0) {
+        for (let i = 0; i < packages.length; i++) {
+            let categoryArr = packages[i].plan_id.category;
+
+            let individualPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "individual" || cat.name.toLowerCase() == "individuals").length > 0;
+            let groupPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "group").length > 0;
+            let corporatePlans = categoryArr.filter(cat => cat.name.toLowerCase() == "corporate").length > 0;
+            let familyPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "family").length > 0;
+            let couplePlans = categoryArr.filter(cat => cat.name.toLowerCase() == "couple").length > 0;
+            let internationalPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "international").length > 0;
+            let seniorCitizenPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "senior citizen").length > 0;
+
+            if (individualPlans) {
+                individual_plans.push(packages[i])
+            }
+
+            if (groupPlans) {
+                group_plans.push(packages[i])
+            }
+
+            if (familyPlans) {
+                family_plans.push(packages[i])
+            }
+
+            if (couplePlans) {
+                couple_plans.push(packages[i])
+            }
+
+            if (internationalPlans) {
+                international_plans.push(packages[i])
+            }
+
+            if (seniorCitizenPlans) {
+                senior_plans.push(packages[i])
+            }
+
+            if (corporatePlans) {
+                corporate_plans.push(packages[i])
+            }
+        }
+
+        console.log("individual_plans", individual_plans);
+        console.log("group_plans", group_plans);
+        console.log("family_plans", family_plans);
+        console.log("couple_plans", couple_plans);
+        console.log("international_plans", international_plans);
+        console.log("senior_plans", senior_plans);
+        console.log("corporate_plans", corporate_plans);
+    }
+    console.log("type", type);
+
+    let filteredPackagesByPlanType;
+
+    switch (type) {
+        case "single":
+            filteredPackagesByPlanType = individual_plans
+            break
+
+        case "couple":
+            filteredPackagesByPlanType = couple_plans
+            break;;
+
+        case "parents":
+            filteredPackagesByPlanType = senior_plans
+            break;;
+
+
+        case "corporate":
+            filteredPackagesByPlanType = corporate_plans
+            break;
+
+
+        case "fam-of-4":
+            filteredPackagesByPlanType = [
+                ...couple_plans,
+                ...family_plans
+            ]
+            break;;
+
+        case "smes":
+            //console.log("smes oo");
+            filteredPackagesByPlanType = group_plans
+            break;
+
+        case "intl_coverage":
+            filteredPackagesByPlanType = international_plans
+            break;
+
+
+        default:
+            filteredPackagesByPlanType = []
+            break
+
+
+    }
+    console.log("filteredPackagesByPlanType", filteredPackagesByPlanType);
+    return filteredPackagesByPlanType;
 }

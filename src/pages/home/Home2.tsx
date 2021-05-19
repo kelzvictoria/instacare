@@ -31,6 +31,7 @@ import {
   setIsFetchingServices,
   filterByBudget,
   getPlansByID,
+  filterByPlanType,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -58,6 +59,8 @@ import {
   getClickedPlan,
   resetPlans,
   updatePriceRange,
+  setPlanID,
+  setHMOID,
 } from "../../actions/userInputActions";
 
 import {
@@ -193,11 +196,11 @@ class Home extends Component<QuizProps, {}> {
     let tmp;
 
     let arr = this.props.planServices;
-    console.log("arr", arr);
+    // console.log("arr", arr);
 
     for (let i = arr.length - 1; i >= 0; i--) {
       tmp = stripNonNumeric(arr[i]["price"]);
-      console.log("arr[i]['price']", stripNonNumeric(arr[i]["price"]));
+      // console.log("arr[i]['price']", stripNonNumeric(arr[i]["price"]));
 
       if (tmp > 1000) {
         if (tmp < lowest) lowest = tmp;
@@ -287,4 +290,7 @@ export default connect(mapProps, {
   updatePriceRange,
   filterByBudget,
   getPlansByID,
+  filterByPlanType,
+  setPlanID,
+  setHMOID,
 })(Home);
