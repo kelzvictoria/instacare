@@ -4285,7 +4285,7 @@ class NewContent extends React.Component<homeProps, homeState> {
           </div>
         </div>
 
-        {this.props.plans.length > 0 ? (
+        {this.props.planServices.length > 0 ? (
           <div className="home-plans-div container" id="plans">
             <div className="results-header margin-top--2">
               <div className={this.state.sticky_styles}>
@@ -5189,6 +5189,8 @@ class NewContent extends React.Component<homeProps, homeState> {
               <ul className="c-list--bare margin-top--2 home-plans-list">
                 {this.props.planServices &&
                   this.props.planServices.map((plan, i) => {
+                    //console.log("plan", plan);
+
                     return (
                       //plan.packages.length > 0 && (
                       <li className="margin-bottom--4">
@@ -5252,7 +5254,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   <header className="plan-card-title">
                                     <div className="plan-c-provider font-weight--bold">
                                       {/* Hygeia */}
-                                      {plan.hmo_id.name}
+                                      {plan.hmo_id && plan.hmo_id.name}
                                     </div>
                                     <h2 className="plan-c-name font-weight--normal margin-y--1">
                                       <a href="#">
@@ -5265,22 +5267,37 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         className="c-plan-title__info-item"
                                         key={plan.id}
                                       >
-                                        <span className="">
-                                          {plan.category}
-                                        </span>
+                                        {plan.plan_id &&
+                                          plan.plan_id.category.map(
+                                            (cat, i) => {
+                                              return (
+                                                <span className="">
+                                                  {" "}
+                                                  {cat.name}
+                                                  {plan.plan_id.category
+                                                    .length > 1 &&
+                                                    i <
+                                                      plan.plan_id.category
+                                                        .length -
+                                                        1 &&
+                                                    ", "}
+                                                </span>
+                                              );
+                                            }
+                                          )}
                                       </li>
                                       <li className="c-plan-title__info-item">
                                         <span className="">
                                           <span>
-                                            {plan.hmo_id.hmo_id}
-                                            {/* HMO */}
+                                            {/* {plan.hmo_id && plan.hmo_id.hmo_id} */}
+                                            {plan.category}
                                           </span>
                                         </span>
                                       </li>
                                       <li className="c-plan-title__info-item">
                                         Plan ID:
                                         <span className="font-weight--bold">
-                                          {plan.plan_id}
+                                          {plan.plan_id && plan.plan_id.plan_id}
                                         </span>
                                       </li>
                                     </ul>

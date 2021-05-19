@@ -1,3 +1,11 @@
+export function stripNonNumeric(x) {
+    x = x !== undefined ? x.toString() : "";
+    var n = parseFloat(
+        (x.charAt(0) == "-" ? "-" : "") + x.replace(/[^0-9]+/g, "")
+    );
+    return isNaN(n) ? 0 : n;
+}
+
 export const steps = [
     {
         h3: "No medicals required",

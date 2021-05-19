@@ -73,6 +73,8 @@ import {
   setPlansToCompareOnMobile,
 } from "../../actions/compareActions";
 
+import { stripNonNumeric } from "../../utils/homeUtils";
+
 const API_URL = "https://instacareconnect.pmglobaltechnology.com";
 
 interface QuizProps {
@@ -163,10 +165,11 @@ class Home extends Component<QuizProps, {}> {
 
   async UNSAFE_componentWillMount() {
     !localStorage["plans"] && (await this.props.getPlans());
+    !localStorage["services"] && (await this.props.getServices());
     const hmo = this.props.match.params ? this.props.match.params.id : "";
 
-    this.getCheapestPlan();
-    this.getCheapestPlanByHMO();
+    !localStorage["cheapest_plan"] && this.getCheapestPlan();
+    // this.getCheapestPlanByHMO();
   }
 
   getCheapestPlanByHMO() {
@@ -190,13 +193,18 @@ class Home extends Component<QuizProps, {}> {
     let tmp;
 
     let arr = this.props.planServices;
+    console.log("arr", arr);
 
     for (let i = arr.length - 1; i >= 0; i--) {
-      tmp = arr[i]["price"];
-      if (tmp < lowest) lowest = tmp;
-      if (tmp > highest) highest = tmp;
+      tmp = stripNonNumeric(arr[i]["price"]);
+      console.log("arr[i]['price']", stripNonNumeric(arr[i]["price"]));
+
+      if (tmp > 1000) {
+        if (tmp < lowest) lowest = tmp;
+        if (tmp > highest) highest = tmp;
+      }
     }
-    //console.log("most expensive plan", highest, "cheapest plan", lowest);
+    console.log("most expensive plan", highest, "cheapest plan", lowest);
 
     //return this.props.cheapest_plan;
     this.props.getCheapestPlan(lowest);

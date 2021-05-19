@@ -30,23 +30,17 @@ import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions";
 import { type } from "jquery";
 
-const API_URL = "https://instacareconnect.pmglobaltechnology.com";
+import { stripNonNumeric } from "../utils/homeUtils"
 
-function stripNonNumeric(x) {
-    x = x !== undefined ? x.toString() : "";
-    var n = parseFloat(
-        (x.charAt(0) == "-" ? "-" : "") + x.replace(/[^0-9]+/g, "")
-    );
-    return isNaN(n) ? 0 : n;
-}
+const API_URL = "https://instacareconnect.pmglobaltechnology.com";
 
 export const getPlans = () => async (dispatch, getState) => {
     dispatch(setIsFetchingPlans());
     await dispatch(getHMOs());
-    console.log("getState().fetchData.is_filtering_by_budget", getState().fetchData.is_filtering_by_budget);
-    if (getState().fetchData.is_filtering_by_budget == false) {
-        await dispatch(getServices());
-    }
+    //console.log("getState().fetchData.is_filtering_by_budget", getState().fetchData.is_filtering_by_budget);
+    // if (getState().fetchData.is_filtering_by_budget == false) {
+    //     await dispatch(getServices());
+    // }
     await axios
         .get(`${API_URL}/api/plans`
             //, tokenConfig(getState)
@@ -59,18 +53,18 @@ export const getPlans = () => async (dispatch, getState) => {
                 for (let i = 0; i < plans.length; i++) {
                     let hmoID = plans[i]["hmo_id"];
                     let hmos = getState().fetchData.hmos;
-                    let services = getState().fetchData.services;
+                    // let services = getState().fetchData.services;
 
                     let planHMO = hmos.filter(hmo => hmo.hmo_id === hmoID);
-                    let planServices = services.filter(service => service.plan_id === plans[i]["plan_id"])
+                    //let planServices = services.filter(service => service.plan_id === plans[i]["plan_id"])
 
                     if (planHMO) {
                         plans[i]["hmo_id"] = planHMO[0];
                     }
 
-                    if (planServices) {
-                        plans[i]["packages"] = planServices
-                    }
+                    // if (planServices) {
+                    //     plans[i]["packages"] = planServices
+                    // }
                 }
 
                 dispatch({
@@ -169,12 +163,24 @@ export const getServices = () => async (dispatch, getState) => {
                 services = res.data.map(obj => obj.data);
                 for (let i = 0; i < services.length; i++) {
                     let hmoID = services[i]["hmo_id"];
+                    let planID = services[i]["plan_id"];
+
                     let hmos = getState().fetchData.hmos;
+                    let plans = getState().fetchData.plans;
+
+                    // console.log("plans", plans);
+
+                    let servicePlan = plans.filter(plan => plan.plan_id === planID);
+                    // console.log("planID", planID, "servicePlan", servicePlan);
 
                     let planHMO = hmos.filter(hmo => hmo.hmo_id === hmoID);
 
                     if (planHMO) {
                         services[i]["hmo_id"] = planHMO[0];
+                    }
+
+                    if (servicePlan) {
+                        services[i]["plan_id"] = servicePlan[0];
                     }
                 }
             }
