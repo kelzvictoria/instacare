@@ -4295,7 +4295,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <div className="margin-bottom--1 md-margin-bottom--0 results-header-left">
                     <div className="font-size--lead font-weight--bold c-results_header_summary">
                       {/* {this.props.plans.length} plans available */}
-                      {this.props.planServices.length} plans available
+                      {this.props.planServices.length} plan
+                      {this.props.planServices.length > 1 && "s"} available
                     </div>
                     <div>
                       <button
