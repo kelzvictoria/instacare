@@ -1,3 +1,5 @@
+export const CAN_LOG = false;
+
 export function stripNonNumeric(x) {
     x = x !== undefined ? x.toString() : "";
     var n = parseFloat(
@@ -358,6 +360,11 @@ export const child_options = [
 
 export const plan_types = [
     {
+        id: "all",
+        name: "All",
+        max_num: 1000
+    },
+    {
         id: "single",
         name: "Individual",
         max_num: 1
@@ -398,28 +405,37 @@ export const plan_types = [
 
 export const plan_range = [
     {
+        id: "all",
+        name: "All",
+        //  price_range: [0, 49999]
+    },
+    {
         id: "bronze",
         name: "Bronze",
-        price_range: [0, 20000]
+        //   price_range: [50000, 149999]
     },
     {
         id: "silver",
         name: "Silver",
-        price_range: [20000, 50000]
+        //    price_range: [150000, 299999]
     },
     {
         id: "gold",
         name: "Gold",
-        price_range: [50000, 100000]
+        //   price_range: [300000, 599999]
+    },
+    {
+        id: "diamond",
+        name: "Diamond",
     },
     {
         id: "platinum",
         name: "Platinum",
-        price_range: [100000, 150000]
+        //price_range: [, 600000]
     },
     {
         id: "platinum_plus",
         name: "Platinum Plus",
-        price_range: [150000, 2000000]
+        //    price_range: [, ]
     }
 ]

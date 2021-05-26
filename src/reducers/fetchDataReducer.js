@@ -1,7 +1,3 @@
-import { createReducer, createAction } from "redux-starter-kit";
-
-//import { state } from "../store/state";
-
 import {
     GET_PLANS,
     GET_HMOS,
@@ -25,7 +21,7 @@ import {
     IS_FILTERING_BY_PLAN_ID,
     FILTER_BY_BUDGET,
     FILTER_BY_PLAN_ID,
-    FILTER_BY_PLAN_TYPE
+    FILTER_BY_PLAN_TYPE,
 } from "../actions/types";
 
 const initialState = {
@@ -47,6 +43,7 @@ const initialState = {
     is_fetching_services: false,
     is_fetching_providers: false,
     is_fetching_plans_by_hmo: false,
+    is_fetching_data: false,
     cheapest_plan_by_hmo: 0,
     cheapest_plan: localStorage["cheapest_plan"] ? localStorage.getItem("cheapest_plan") : 0,
     is_filtering_by_budget: false,
@@ -55,11 +52,8 @@ const initialState = {
 }
 
 export default function (state = initialState, action) {
-    // console.log("initialState", initialState);
-    // console.log("localStorage", localStorage);
     switch (action.type) {
         case GET_PLANS:
-            //state.plans = action.payload;
             localStorage["plans"] = JSON.stringify(action.payload)
             return {
                 ...state,
@@ -69,7 +63,6 @@ export default function (state = initialState, action) {
             }
 
         case GET_HMOS:
-            // state.hmos = action.payload;
             localStorage["hmos"] = JSON.stringify(action.payload)
             return {
                 ...state,
@@ -78,7 +71,6 @@ export default function (state = initialState, action) {
             }
 
         case GET_PROVIDERS:
-            //state.providers = action.payload;
             localStorage["providers"] = JSON.stringify(action.payload)
             return {
                 ...state,
@@ -87,19 +79,18 @@ export default function (state = initialState, action) {
             }
 
         case GET_SERVICES:
-            //state.services = action.payload;
             localStorage["services"] = JSON.stringify(action.payload)
             return {
                 ...state,
                 services: action.payload,
-                is_fetching_services: false
+                is_fetching_services: false,
+                is_fetching_data: false
             }
 
         case GET_RECOMMENDED_PLANS:
-            // state.recommended_plans = action.payload;
             return {
                 ...state,
-                recommended_plans: action.payload,
+                services: action.payload,
                 is_fetching_recommended_plans: false
             }
 
@@ -111,7 +102,6 @@ export default function (state = initialState, action) {
             }
 
         case GET_CHEAPEST_PLAN_BY_HMO:
-
             return {
                 ...state,
                 cheapest_plan_by_hmo: action.data
@@ -127,31 +117,31 @@ export default function (state = initialState, action) {
         case IS_FETCHING_PLANS_BY_HMO:
             return {
                 ...state,
-                is_fetching_plans_by_hmo: action.payload
+                is_fetching_plans_by_hmo: action.payload,
+
             }
 
         case IS_FETCHING_PLANS:
             return {
                 ...state,
-                is_fetching_plans: action.payload
+                is_fetching_plans: action.payload,
+                is_fetching_data: action.payload
             }
 
         case IS_FETCHING_HMOS:
-            // state.is_fetching_hmos = action.payload;
             return {
                 ...state,
-                is_fetching_hmos: action.payload
+                is_fetching_hmos: action.payload,
+                is_fetching_data: action.payload
             }
 
         case IS_FETCHING_SERVICES:
-            //state.fetching_services = action.payload;
             return {
                 ...state,
                 fetching_services: action.payload
             }
 
         case IS_FETCHING_PROVIDERS:
-            // state.is_fetching_providers = action.payload;
             return {
                 ...state,
                 is_fetching_providers: action.payload
@@ -193,125 +183,4 @@ export default function (state = initialState, action) {
             return state
 
     }
-
 }
-
-/*let state = {};
-
-export const fetchDataReducer = createReducer(state = initialState, {
-    GET_PLANS: (state = initialState, action) => {
-        //state.plans = action.payload;
-        return {
-            ...state,
-            plans: action.payload,
-            is_fetching_plans: false,
-
-        }
-    },
-
-    GET_HMOS: (state, action) => {
-        // state.hmos = action.payload;
-        return {
-            ...state,
-            hmos: action.payload,
-            is_fetching_hmos: false
-        }
-    },
-
-    GET_PROVIDERS: (state, action) => {
-        //state.providers = action.payload;
-        return {
-            ...state,
-            providers: action.payload,
-            is_fetching_providers: false
-        }
-    },
-
-    GET_SERVICES: (state, action) => {
-        //state.services = action.payload;
-        return {
-            ...state,
-            services: action.payload,
-            is_fetching_services: false
-        }
-    },
-
-    GET_RECOMMENDED_PLANS: (state, action) => {
-        // state.recommended_plans = action.payload;
-        return {
-            ...state,
-            recommended_plans: action.payload,
-            is_fetching_recommended_plans: false
-        }
-    },
-
-    GET_PLANS_BY_HMO: (state, action) => {
-        return {
-            ...state,
-            plansByHMO: action.payload
-        }
-    },
-
-    GET_CHEAPEST_PLAN_BY_HMO: (state, action) => {
-        state.cheapest_plan_by_hmo = action.payload;
-    },
-
-    GET_CHEAPEST_PLAN: (state, action) => {
-        state.cheapest_plan = action.payload;
-    },
-
-    IS_FETCHING_PLANS_BY_HMO: (state, action) => {
-        return {
-            ...state,
-            is_fetching_plans_by_hmo: action.payload
-        }
-
-    },
-
-    IS_FETCHING_PLANS: (state, action) => {
-        return {
-            ...state,
-            is_fetching_plans: action.payload
-        }
-    },
-
-    IS_FETCHING_HMOS: (state, action) => {
-        // state.is_fetching_hmos = action.payload;
-        return {
-            ...state,
-            is_fetching_hmos: action.payload
-        }
-    },
-
-    IS_FETCHING_SERVICES: (state, action) => {
-        //state.fetching_services = action.payload;
-        return {
-            ...state,
-            fetching_services: action.payload
-        }
-    },
-
-    IS_FETCHING_PROVIDERS: (state, action) => {
-        // state.is_fetching_providers = action.payload;
-        return {
-            ...state,
-            is_fetching_providers: action.payload
-        }
-    },
-})
-
-createAction(GET_PLANS);
-createAction(GET_HMOS);
-createAction(GET_SERVICES);
-createAction(GET_PROVIDERS);
-createAction(GET_RECOMMENDED_PLANS);
-createAction(GET_PLANS_BY_HMO);
-
-createAction(GET_CHEAPEST_PLAN_BY_HMO);
-createAction(GET_CHEAPEST_PLAN);
-createAction(IS_FETCHING_PLANS_BY_HMO);
-
-createAction(IS_FETCHING_PLANS);
-createAction(IS_FETCHING_HMOS);
-createAction(IS_FETCHING_SERVICES);
-createAction(IS_FETCHING_PROVIDERS);*/

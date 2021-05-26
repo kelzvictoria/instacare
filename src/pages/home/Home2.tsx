@@ -32,6 +32,8 @@ import {
   filterByBudget,
   getPlansByID,
   filterByPlanType,
+  filterByBudget_and_or_Type,
+  filterByPlanRange,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -61,6 +63,8 @@ import {
   updatePriceRange,
   setPlanID,
   setHMOID,
+  resetType,
+  resetRange,
 } from "../../actions/userInputActions";
 
 import {
@@ -240,6 +244,7 @@ const mapProps = (state: any) => ({
   daughterCount: state.quiz.daughterCount,
   isSonCheckboxChecked: state.quiz.isSonCheckboxChecked,
   isDaughterCheckboxChecked: state.quiz.isDaughterCheckboxChecked,
+  is_fetching_data: state.fetchData.is_fetching_data,
 });
 
 export default connect(mapProps, {
@@ -293,4 +298,8 @@ export default connect(mapProps, {
   filterByPlanType,
   setPlanID,
   setHMOID,
+  filterByBudget_and_or_Type,
+  resetType,
+  filterByPlanRange,
+  resetRange,
 })(Home);

@@ -8,3 +8,6 @@
     //         return plan.packages[i].price >= min && plan.packages[i].price <= max
     //     }
     // })
+
+
+      "redux-starter-kit": "^0.6.3",

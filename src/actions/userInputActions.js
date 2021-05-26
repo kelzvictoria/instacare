@@ -57,14 +57,33 @@ import {
     UPDATE_PRICE_RANGE,
     IS_FETCHING_SERVICES,
     SET_PLAN_ID,
-    SET_HMO_ID
+    SET_HMO_ID,
+    RESET_TYPE,
+    RESET_RANGE
 } from "./types"
-
+import { CAN_LOG } from "../utils/homeUtils"
 
 export const updatePriceRange = (range) => (dispatch, getState) => {
+    let ranges = [...getState().quiz.responses.price_range];
+
+
+    let isRangeChecked = ranges.indexOf(range);
+
+    if (range == "all") {
+        ranges = []
+    }
+
+    if (isRangeChecked > -1) {
+        ranges.splice(isRangeChecked, 1)
+    } else {
+        ranges.push(range)
+    }
+
+    CAN_LOG && console.log("ranges", ranges)
+
     dispatch({
         type: UPDATE_PRICE_RANGE,
-        payload: range
+        payload: ranges
     })
 }
 
@@ -147,10 +166,28 @@ export const updateGender = (payload) => (dispatch, getState) => {
 }
 
 export const updateType = (data) => (dispatch, getState) => {
+    // console.log("data", data);
+    let types = [...getState().quiz.responses.type];
+    // console.log("types", types);
+
+
+    let isTypeChecked = types.indexOf(data.value);
+
+    if (data.value == "all") {
+        types = []
+    }
+
+    if (isTypeChecked > -1) {
+        types.splice(isTypeChecked, 1)
+    } else {
+        types.push(data.value)
+    }
+
+    // CAN_LOG && console.log("types", types);
 
     dispatch({
         type: UPDATE_TYPE,
-        payload: data
+        payload: types//data
     })
 }
 
@@ -365,5 +402,19 @@ export const setHMOID = (hmoID) => (dispatch, getState) => {
     dispatch({
         type: SET_HMO_ID,
         payload: hmoID
+    })
+}
+
+export const resetType = () => (dispatch, getState) => {
+    dispatch({
+        type: RESET_TYPE,
+        payload: []
+    })
+}
+
+export const resetRange = () => (dispatch, getState) => {
+    dispatch({
+        type: RESET_RANGE,
+        payload: []
     })
 }

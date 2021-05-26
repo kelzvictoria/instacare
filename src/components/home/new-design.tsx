@@ -79,7 +79,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     show_desktop_on_load_modal: false,
     show_mobile_on_load_modal: false,
     show_desktop_home_frm: true,
-    range_selected: "silver",
+    //range_selected: "silver",
     show_filter: false,
     show_med_mgt_program_multiselect: false,
     plans_to_compare: [],
@@ -97,7 +97,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       plan_types_checked: [],
       plan_range_checked: [],
       planID: "",
-      hmo_selected: undefined,
+      hmo_selected: "", // undefined,
       mgt_program_selected: [],
       providers_selected: [],
       prescriptions_selected: [],
@@ -227,7 +227,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               <p className="tiny-descrptn">
                 Find HMO Plans Starting from{" "}
                 <span className={styles.headingSpan}>
-                  {this.props.cheapest_plan == 0 ? (
+                  {this.props.is_fetching_data ? (
                     <Spin className="cheapest-plan" />
                   ) : (
                     ` ₦${this.numberwithCommas(this.props.cheapest_plan)} /year`
@@ -336,48 +336,6 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   }
 
-  // handleNavigation = (e: any) => {
-  //   let currentPage = this.props.page;
-  //   const targetId = e.target.id;
-
-  //   if (targetId === "next") {
-  //     if (this.props.isMobileViewModalOpen) {
-  //       if (currentPage == 4) {
-  //         if (this.props.responses.state == "") {
-  //           message.error("Please provide a location");
-  //           return;
-  //         } else {
-  //           this.props.fetchRecommendedPlans();
-  //         }
-  //       }
-  //     }
-  //     if (currentPage == 3 && this.props.isDesktopView) {
-  //       if (this.props.responses.state == "") {
-  //         message.error("Please provide a location");
-  //         return;
-  //       } else {
-  //         this.fetchRecommendedPlans();
-  //       }
-  //     }
-
-  //     if (this.props.isDesktopView) {
-  //       currentPage = currentPage + 1;
-  //     }
-
-  //     if (currentPage >= this.props.maxPage) {
-  //       this.submitResponses();
-  //       return;
-  //     }
-
-  //     this.changePage("next");
-  //   } else if (targetId === "prev") {
-  //     if (currentPage <= this.props.minPage) {
-  //       return;
-  //     }
-  //     this.changePage("prev");
-  //   }
-  // };
-
   handleNumOfPeopleCount() {
     let data;
 
@@ -422,52 +380,31 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   }
 
-  // async fetchRecommendedPlans() {
-  //   this.handleNumOfPeopleCount();
-  //   let rec_plans: object[] = [];
-  //   let family_plans: object[] = [];
-  //   let individual_plans: object[] = [];
-
-  //   this.props.setIsFetchingRecPlans(true);
-
-  //   let res = await this.props.plans;
-
-  //   if (res) {
-  //     if (res.length !== 0) {
-  //       for (let i = 0; i < res.length; i++) {
-  //         if (res[i].category_id.id == "personal") {
-  //           individual_plans.push(res[i]);
-  //         }
-
-  //         if (res[i].category_id.id == "famiy") {
-  //           family_plans.push(res[i]);
-  //         }
-  //       }
-  //       let data = this.props.responses.num_of_people;
-  //       this.props.getNumOfPeople(data);
-
-  //       if (this.props.responses.type == "single") {
-  //         rec_plans = individual_plans;
-  //       } else if (this.props.responses.type !== "single") {
-  //         rec_plans = family_plans;
-  //       }
-
-  //       this.props.getRecommendedPlans(rec_plans);
-  //       this.props.setIsFetchingRecPlans(false);
-
-  //       return;
-  //     }
-  //   }
-  // }
-
   async handleType(val) {
+    this.props.responses.type.length > 0 && this.props.resetType();
     let data = {
       key: "type",
       value: val.target ? val.target.id : val,
     };
-    this.props.updateType(data);
-    await this.props.getServices();
-    this.props.filterByPlanType(data.value);
+    await this.props.updateType(data);
+    // await this.props.getServices();
+    // this.props.filterByPlanType(data.value);
+
+    this.filterByBudget_and_or_Type();
+  }
+
+  filterByBudget_and_or_Type() {
+    let budget =
+      this.props.responses.budget.length > 0 ? this.props.responses.budget : [];
+    let type =
+      this.props.responses.type.length > 0 ? this.props.responses.type[0] : [];
+
+    let params = {
+      budget,
+      type,
+    };
+
+    this.props.filterByBudget_and_or_Type(params);
   }
 
   handleAge(key, val) {
@@ -1382,8 +1319,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="single"
                   name="numOfPeople"
-                  className="radio-group-num"
-                  defaultChecked={this.props.responses.type === "single"}
+                  className="radio-group-num here"
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "single"
+                  // }
                   onClick={this.handleType}
                   id="single"
                 ></input>
@@ -1403,7 +1344,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.props.responses.type === "couple"}
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "couple"
+                  // }
                   onClick={this.handleType}
                 ></input>
                 <span className="num-div-inner">
@@ -1422,7 +1367,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.props.responses.type === "fam-of-3"}
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "fam-of-3"
+                  // }
                   onClick={this.handleType}
                   // onClick={(e) =>
                   //   this.handleType("fam-of-3")
@@ -1447,7 +1396,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="fam-of-4"
                   name="numOfPeople"
-                  defaultChecked={this.props.responses.type === "fam-of-4"}
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "fam-of-4"
+                  // }
                   onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
@@ -1466,7 +1419,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="parents"
                   name="numOfPeople"
-                  defaultChecked={this.props.responses.type === "parents"}
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "parents"
+                  // }
                   onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
@@ -1699,8 +1656,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="single"
                   name="numOfPeople"
-                  className="radio-group-num"
-                  defaultChecked={this.props.responses.type === "single"}
+                  className="radio-group-num two"
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "single"
+                  // }
                   onClick={this.handleType}
                   id="single"
                 ></input>
@@ -1720,7 +1681,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.props.responses.type === "couple"}
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "couple"
+                  // }
                   onClick={this.handleType}
                 ></input>
                 <span className="num-div-inner">
@@ -1739,7 +1704,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={this.props.responses.type === "fam-of-3"}
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "fam-of-3"
+                  // }
                   onClick={this.handleType}
                 ></input>
                 <span className="num-div-inner">
@@ -1761,7 +1730,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="fam-of-4"
                   name="numOfPeople"
-                  defaultChecked={this.props.responses.type === "fam-of-4"}
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "fam-of-4"
+                  // }
                   onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
@@ -1780,7 +1753,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="parents"
                   name="numOfPeople"
-                  defaultChecked={this.props.responses.type === "parents"}
+                  // defaultChecked={
+                  //   this.props.responses.type[
+                  //     this.props.responses.type.length - 1
+                  //   ] === "parents"
+                  // }
                   onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
@@ -1984,7 +1961,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     this.props.plansByHMO.length == 0 && this.props.getClickedPlan(data);
   };
-  //leave o
+
   renderDesktopQuizForm() {
     return (
       <form
@@ -2036,8 +2013,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="single"
                   name="numOfPeople"
                   className="radio-group-num"
-                  onChange={this.handleType}
-                  checked={this.props.responses.type === "single"}
+                  // onChange={this.handleType}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "single"
+                  }
                   onClick={this.handleType}
                   id="single"
                 ></input>
@@ -2064,9 +2045,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.props.responses.type === "couple"}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "couple"
+                  }
                   onClick={this.handleType}
-                  onChange={this.handleType}
+                  // onChange={this.handleType}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2090,9 +2075,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="fam-of-4"
                   name="numOfPeople"
-                  checked={this.props.responses.type === "fam-of-4"}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "fam-of-4"
+                  }
                   onClick={this.handleType}
-                  onChange={this.handleType}
+                  //onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2121,9 +2110,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="corporate"
                   name="numOfPeople"
-                  checked={this.props.responses.type === "corporate"}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "corporate"
+                  }
                   onClick={this.handleType}
-                  onChange={this.handleType}
+                  // onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2148,9 +2141,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="parents"
                   name="numOfPeople"
-                  checked={this.props.responses.type === "parents"}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "parents"
+                  }
                   onClick={this.handleType}
-                  onChange={this.handleType}
+                  // onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2220,89 +2217,6 @@ class NewContent extends React.Component<homeProps, homeState> {
           </div>
         </div>
 
-        {/* <div className="form-group home-gender">
-          <div className="col-md-12">
-            <label>I am a</label>
-            <div className="radios">
-              <label>
-                <input
-                  type="radio"
-                  value="m"
-                  name="radio-group-gender"
-                  defaultChecked={this.defaultGender()}
-                  onChange={(e) => {
-                    this.handleGender(e.target.value);
-                  }}
-                  className="radio-group-gender"
-                ></input>
-                <span>
-                  <i className="gender icons-gender male male-icon"></i>
-                  <em>Male</em>
-                </span>
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  value="f"
-                  name="radio-group-gender"
-                  className="radio-group-gender"
-                  onChange={(e) => {
-                    this.handleGender(e.target.value);
-                  }}
-                ></input>
-                <span>
-                  <i className="gender icons-gender male female-icon"></i>
-                  <em>Female</em>
-                </span>
-              </label>
-            </div>
-          </div>
-        </div> */}
-
-        {/* <div className="form-group home-fullname">
-          <div className="col-md-12">
-            <label>My name is</label>
-          </div>
-
-          <div className="col-md-12">
-            <input
-              className="form-control"
-              placeholder="Full Name"
-              // required={true}
-              onChange={(e) => {
-                this.handleFullName(e.target.value);
-              }}
-              value={this.props.responses.full_name}
-            ></input>
-          </div>
-        </div>
-        <div className="form-group home-phonenum">
-          <div className="col-md-12">
-            <label>My number is</label>
-          </div>
-
-          <div className="col-md-12">
-            <PhoneInput
-              className={
-                this.state.is_phone_valid
-                  ? "form-control"
-                  : "form-control invalid"
-              }
-              placeholder="11 - digit mobile number"
-              //required={true}
-              defaultCountry="NG"
-              onChange={
-                // (e) => {
-                this.handlePhone
-                //   (e.target.value);
-                // }
-              }
-              value={this.props.responses.phone_num}
-              type="phone"
-              maxLength="13"
-            />
-          </div>
-        </div> */}
         <div className="form-group home-view-btn">
           <div className="col-md-12">
             <button
@@ -2383,9 +2297,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="single"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.props.responses.type === "single"}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "single"
+                  }
                   onClick={this.handleType}
-                  onChange={this.handleType}
+                  //onChange={this.handleType}
                   id="single"
                 ></input>
                 <span className="num-div-inner">
@@ -2411,9 +2329,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.props.responses.type === "couple"}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "couple"
+                  }
                   onClick={this.handleType}
-                  onChange={this.handleType}
+                  // onChange={this.handleType}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2438,9 +2360,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={this.props.responses.type === "fam-of-3"}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "fam-of-3"
+                  }
                   onClick={this.handleType}
-                  onChange={this.handleType}
+                  //onChange={this.handleType}
                   // onClick={(e) =>
                   //   this.handleType("fam-of-3")
                   // }
@@ -2471,9 +2397,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="fam-of-4"
                   name="numOfPeople"
-                  checked={this.props.responses.type === "fam-of-4"}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "fam-of-4"
+                  }
                   onClick={this.handleType}
-                  onChange={this.handleType}
+                  // onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2498,9 +2428,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="parents"
                   name="numOfPeople"
-                  checked={this.props.responses.type === "parents"}
+                  checked={
+                    this.props.responses.type[
+                      this.props.responses.type.length - 1
+                    ] === "parents"
+                  }
                   onClick={this.handleType}
-                  onChange={this.handleType}
+                  // onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2569,39 +2503,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             </div>
           </div>
         </div>
-        {/* <div className="mobile-view-steps">
-          <div className="col-md-12">
-            <Steps current={0}>
-              {home_utils.mobile_steps.map((step, i) => {
-                return <Step key={i} />;
-              })}
-            </Steps>
-          </div>
-        </div>
-        <div className="mobile-view-phone form-group">
-          <div className="col-md-12">
-            <label>Tell us about you</label>
-            <PhoneInput
-              className={
-                this.state.is_phone_valid
-                  ? "form-control"
-                  : "form-control invalid"
-              }
-              placeholder="Enter phone number"
-              defaultCountry="NG"
-              // required={true}
-              onChange={
-                // (e) => {
-                this.handlePhone
-                //   (e.target.value);
-                // }
-              }
-              value={this.props.responses.phone_num}
-              type="phone"
-              maxLength="13"
-            />
-          </div>
-        </div> */}
+
         <div className="form-group mobile-view-cont-btn">
           <div className="col-md-12">
             <button
@@ -2618,922 +2520,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       </form>
     );
   }
-
-  // renderDesktopQuizModal() {
-  //   let current;
-  //   if (this.props.page != 0) {
-  //     current = this.props.page - 1;
-  //   } else {
-  //     current = 0;
-  //   }
-  //   return (
-  //     <Modal
-  //       id="desktop-quiz-modal-form1"
-  //       dialogClassName="custom-dialog"
-  //       className="desktop-modal right"
-  //       show={this.props.isOpen}
-  //       onHide={this.toggleModal}
-  //     >
-  //       <Modal.Body>
-  //         <form
-  //           name="modalForm"
-  //           onSubmit={this.preventDefault}
-  //           className="form steppers"
-  //         >
-  //           <div className="modal-head" id="modal-head">
-  //             <Button
-  //               id="prev"
-  //               type="default"
-  //               onClick={
-  //                 this.props.page < 3 ? this.toggleModal : this.handleNavigation
-  //               }
-  //             >
-  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
-  //             </Button>
-  //             <div className="modal-title">
-  //               {this.props.isDesktopView ? (
-  //                 current >= 0 && current < 3 ? (
-  //                   <div>
-  //                     <p>{home_utils.steps[current].p}</p>
-  //                     <h3>{home_utils.steps[current].h3}</h3>
-  //                   </div>
-  //                 ) : current < 0 || current == 0 ? (
-  //                   //this.toggleModal()
-  //                   <div>
-  //                     <p>{home_utils.steps[0].p}</p>
-  //                     <h3>{home_utils.steps[0].h3}</h3>
-  //                   </div>
-  //                 ) : (
-  //                   console.log("current is > 0", current)
-  //                 )
-  //               ) : (
-  //                 console.log("!this.props.isDesktopView")
-  //               )}
-
-  //               <Steps current={current}>
-  //                 {home_utils.steps.map((step, i) => {
-  //                   return <Step key={i} />;
-  //                 })}
-  //               </Steps>
-  //             </div>
-  //           </div>
-  //           {this.renderQuizPages()}
-  //           <div className="nav-row row">
-  //             <div className="col-md-12">
-  //               <div className="form-group">
-  //                 <button
-  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-  //                   onClick={this.handleNavigation}
-  //                   id="next"
-  //                 >
-  //                   Continue
-  //                 </button>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </form>
-  //       </Modal.Body>
-  //     </Modal>
-  //   );
-  // }
-
-  // renderMobileQuizModal() {
-  //   let current;
-  //   if (this.props.page != 0) {
-  //     current = this.props.page - 1;
-  //   } else {
-  //     current = 0;
-  //   }
-  //   return (
-  //     <Modal
-  //       id="mobile-quiz-modal-form1"
-  //       dialogClassName="custom-dialog"
-  //       className="mobile-modal right"
-  //       show={this.props.isMobileViewModalOpen}
-  //       onHide={this.mobileToggleModal}
-  //     >
-  //       <Modal.Body>
-  //         <form
-  //           name="modalForm"
-  //           onSubmit={this.preventDefault}
-  //           className="form steppers"
-  //         >
-  //           <div className="modal-head" id="modal-head">
-  //             {/*
-  //                   {this.props.page != 1 ? (
-  //                   */}
-
-  //             <Button
-  //               id="prev"
-  //               type="default"
-  //               onClick={
-  //                 this.props.page < 3
-  //                   ? this.mobileToggleModal
-  //                   : this.handleNavigation
-  //               }
-  //             >
-  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
-  //             </Button>
-
-  //             <div className="modal-title">
-  //               {current >= 0 ? (
-  //                 <div>
-  //                   <p>{home_utils.mobile_steps[current].p}</p>
-  //                   <h3>{home_utils.mobile_steps[current].h3}</h3>
-  //                 </div>
-  //               ) : current < 0 ? (
-  //                 <div>
-  //                   <p>{home_utils.mobile_steps[0].p}</p>
-  //                   <h3>{home_utils.mobile_steps[0].h3}</h3>
-  //                 </div>
-  //               ) : (
-  //                 ""
-  //               )}
-
-  //               <Steps current={current}>
-  //                 {home_utils.mobile_steps.map((step, i) => {
-  //                   return <Step key={i} />;
-  //                 })}
-  //               </Steps>
-  //             </div>
-  //           </div>
-  //           {this.renderMobileViewQuizPages()}
-  //           <div className="nav-row row">
-  //             <div className="col-md-12">
-  //               <div className="form-group">
-  //                 <button
-  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-  //                   onClick={this.handleNavigation}
-  //                   id="next"
-  //                 >
-  //                   Continue
-  //                 </button>
-  //               </div>
-  //             </div>
-  //           </div>
-  //           {/*here*/}
-  //         </form>
-  //       </Modal.Body>
-  //       {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
-  //     </Modal>
-  //   );
-  // }
-
-  // renderDesktopQuizForm2() {
-  //   return (
-  //     <form
-  //       id="desktop-quiz-form2"
-  //       onSubmit={this.preventDefault}
-  //       className="form desktop"
-  //     >
-  //       <h3 className="no-med">
-  //         Compare HMO plans in Nigeria from the comfort of your home
-  //       </h3>
-  //       <h3 className="no-med">No medicals required</h3>
-  //       <div className="mobile-view-steps">
-  //         <div className="col-md-12">
-  //           <Steps current={0}>
-  //             {home_utils.steps.map((step, i) => {
-  //               return <Step key={i} />;
-  //             })}
-  //           </Steps>
-  //         </div>
-  //       </div>
-  //       <div className="mobile-view-phone form-group">
-  //         <div className="col-md-12">
-  //           <label>Tell us about you</label>
-  //           <PhoneInput
-  //             className={
-  //               this.state.is_phone_valid
-  //                 ? "form-control"
-  //                 : "form-control invalid"
-  //             }
-  //             placeholder="Enter phone number"
-  //             type="phone"
-  //             maxLength="13"
-  //             defaultCountry="NG"
-  //             //required={true}
-  //             onChange={
-  //               // (e) => {
-  //               this.handlePhone
-  //               //   (e.target.value);
-  //               // }
-  //             }
-  //             value={this.props.responses.phone_num}
-  //           />
-  //         </div>
-  //       </div>
-  //       <div className="form-group home-gender">
-  //         <div className="col-md-12">
-  //           <label>I am a</label>
-  //           <div className="radios">
-  //             <label>
-  //               <input
-  //                 type="radio"
-  //                 value="m"
-  //                 name="radio-group-gender"
-  //                 defaultChecked={this.defaultGender()}
-  //                 onChange={(e) => {
-  //                   this.handleGender(e.target.value);
-  //                 }}
-  //                 className="radio-group-gender"
-  //               ></input>
-  //               <span>
-  //                 <i className="gender icons-gender male male-icon"></i>
-  //                 <em>Male</em>
-  //               </span>
-  //             </label>
-  //             <label>
-  //               <input
-  //                 type="radio"
-  //                 value="f"
-  //                 name="radio-group-gender"
-  //                 className="radio-group-gender"
-  //                 onChange={(e) => {
-  //                   this.handleGender(e.target.value);
-  //                 }}
-  //               ></input>
-  //               <span>
-  //                 <i className="gender icons-gender male female-icon"></i>
-  //                 <em>Female</em>
-  //               </span>
-  //             </label>
-  //           </div>
-  //         </div>
-  //       </div>
-
-  //       <div className="form-group home-fullname">
-  //         <div className="col-md-12">
-  //           <label>My name is</label>
-  //         </div>
-
-  //         <div className="col-md-12">
-  //           <input
-  //             className="form-control"
-  //             placeholder="Full Name"
-  //             // required={true}
-  //             onChange={(e) => {
-  //               this.handleFullName(e.target.value);
-  //             }}
-  //             value={this.props.responses.full_name}
-  //           ></input>
-  //         </div>
-  //       </div>
-  //       <div className="form-group home-phonenum">
-  //         <div className="col-md-12">
-  //           <label>My number is</label>
-  //         </div>
-
-  //         <div className="col-md-12">
-  //           <PhoneInput
-  //             className={
-  //               this.state.is_phone_valid
-  //                 ? "form-control"
-  //                 : "form-control invalid"
-  //             }
-  //             placeholder="11 - digit mobile number"
-  //             //required={true}
-  //             defaultCountry="NG"
-  //             onChange={
-  //               // (e) => {
-  //               this.handlePhone
-  //               //   (e.target.value);
-  //               // }
-  //             }
-  //             value={this.props.responses.phone_num}
-  //             type="phone"
-  //             maxLength="13"
-  //           />
-  //         </div>
-  //       </div>
-  //       <div className="form-group home-view-btn">
-  //         <div className="col-md-12">
-  //           <button
-  //             className="btn btn-primary btn-large view-plans btn-demo"
-  //             onClick={() => {
-  //               // if (this.props.responses.phone_num) {
-  //               //this.toggleModal();
-  //               // } else {
-  //               //   this.phoneNumError();
-  //               // }
-  //             }}
-  //           >
-  //             View Plans
-  //           </button>
-  //         </div>
-  //       </div>
-  //       <div className="form-group mobile-view-cont-btn">
-  //         <div className="col-md-12">
-  //           <button
-  //             className="btn btn-primary btn-large view-plans btn-demo"
-  //             onClick={this.toggleModal}
-  //           >
-  //             Continue
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </form>
-  //   );
-  // }
-
-  // renderMobileQuizForm2() {
-  //   return (
-  //     <form
-  //       id="mobile-quiz-form2"
-  //       onSubmit={this.preventDefault}
-  //       className="form mobile"
-  //     >
-  //       <h3 className="no-med">
-  //         Compare HMO plans in Nigeria from the comfort of your home
-  //       </h3>
-  //       <h3 className="no-med">No medicals required</h3>
-  //       <div className="mobile-view-steps">
-  //         <div className="col-md-12">
-  //           <Steps current={0}>
-  //             {home_utils.mobile_steps.map((step, i) => {
-  //               return <Step key={i} />;
-  //             })}
-  //           </Steps>
-  //         </div>
-  //       </div>
-  //       <div className="mobile-view-phone form-group">
-  //         <div className="col-md-12">
-  //           <label>Tell us about you</label>
-  //           <PhoneInput
-  //             className={
-  //               this.state.is_phone_valid
-  //                 ? "form-control"
-  //                 : "form-control invalid"
-  //             }
-  //             placeholder="Enter phone number"
-  //             defaultCountry="NG"
-  //             // required={true}
-  //             onChange={
-  //               // (e) => {
-  //               this.handlePhone
-  //               //   (e.target.value);
-  //               // }
-  //             }
-  //             value={this.props.responses.phone_num}
-  //             type="phone"
-  //             maxLength="13"
-  //           />
-  //         </div>
-  //       </div>
-  //       <div className="form-group mobile-view-cont-btn">
-  //         <div className="col-md-12">
-  //           <button
-  //             className="btn btn-primary btn-large view-plans btn-demo"
-  //             onClick={() => {
-  //               this.mobileToggleModal();
-  //               this.handleDesktopView();
-  //             }}
-  //           >
-  //             Continue
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </form>
-  //   );
-  // }
-
-  // renderDesktopQuizModal2() {
-  //   let current;
-  //   if (this.props.page != 0) {
-  //     current = this.props.page - 1;
-  //   } else {
-  //     current = 0;
-  //   }
-  //   return (
-  //     <Modal
-  //       id="desktop-quiz-modal-form2"
-  //       dialogClassName="custom-dialog"
-  //       className="desktop-modal right"
-  //       show={this.props.isOpen}
-  //       onHide={this.toggleModal}
-  //     >
-  //       <Modal.Body>
-  //         <form
-  //           name="modalForm"
-  //           onSubmit={this.preventDefault}
-  //           className="form steppers"
-  //         >
-  //           <div className="modal-head" id="modal-head">
-  //             <Button
-  //               id="prev"
-  //               type="default"
-  //               onClick={
-  //                 this.props.page < 3 ? this.toggleModal : this.handleNavigation
-  //               }
-  //             >
-  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
-  //             </Button>
-  //             <div className="modal-title">
-  //               {this.props.isDesktopView ? (
-  //                 current >= 0 && current < 3 ? (
-  //                   <div>
-  //                     <p>{home_utils.steps[current].p}</p>
-  //                     <h3>{home_utils.steps[current].h3}</h3>
-  //                   </div>
-  //                 ) : current < 0 || current == 0 ? (
-  //                   //this.toggleModal()
-  //                   <div>
-  //                     <p>{home_utils.steps[0].p}</p>
-  //                     <h3>{home_utils.steps[0].h3}</h3>
-  //                   </div>
-  //                 ) : (
-  //                   console.log("current is > 0", current)
-  //                 )
-  //               ) : (
-  //                 console.log("!this.props.isDesktopView")
-  //               )}
-
-  //               <Steps current={current}>
-  //                 {home_utils.steps.map((step, i) => {
-  //                   return <Step key={i} />;
-  //                 })}
-  //               </Steps>
-  //             </div>
-  //           </div>
-  //           {this.renderQuizPages()}
-  //           <div className="nav-row row">
-  //             <div className="col-md-12">
-  //               <div className="form-group">
-  //                 <button
-  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-  //                   onClick={this.handleNavigation}
-  //                   id="next"
-  //                 >
-  //                   Continue
-  //                 </button>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </form>
-  //       </Modal.Body>
-  //     </Modal>
-  //   );
-  // }
-
-  // renderMobileQuizModal2() {
-  //   let current;
-  //   if (this.props.page != 0) {
-  //     current = this.props.page - 1;
-  //   } else {
-  //     current = 0;
-  //   }
-  //   return (
-  //     <Modal
-  //       id="mobile-quiz-modal-form2"
-  //       dialogClassName="custom-dialog"
-  //       className="mobile-modal right"
-  //       show={this.props.isMobileViewModalOpen}
-  //       onHide={this.mobileToggleModal}
-  //     >
-  //       <Modal.Body>
-  //         <form
-  //           name="modalForm"
-  //           onSubmit={this.preventDefault}
-  //           className="form steppers"
-  //         >
-  //           <div className="modal-head" id="modal-head">
-  //             {/*
-  // {this.props.page != 1 ? (
-  // */}
-
-  //             <Button
-  //               id="prev"
-  //               type="default"
-  //               onClick={
-  //                 this.props.page < 3
-  //                   ? this.mobileToggleModal
-  //                   : this.handleNavigation
-  //               }
-  //             >
-  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
-  //             </Button>
-
-  //             <div className="modal-title">
-  //               {current >= 0 ? (
-  //                 <div>
-  //                   <p>{home_utils.mobile_steps[current].p}</p>
-  //                   <h3>{home_utils.mobile_steps[current].h3}</h3>
-  //                 </div>
-  //               ) : current < 0 ? (
-  //                 <div>
-  //                   <p>{home_utils.mobile_steps[0].p}</p>
-  //                   <h3>{home_utils.mobile_steps[0].h3}</h3>
-  //                 </div>
-  //               ) : (
-  //                 ""
-  //               )}
-
-  //               <Steps current={current}>
-  //                 {home_utils.mobile_steps.map((step, i) => {
-  //                   return <Step key={i} />;
-  //                 })}
-  //               </Steps>
-  //             </div>
-  //           </div>
-  //           {this.renderMobileViewQuizPages()}
-  //           <div className="nav-row row">
-  //             <div className="col-md-12">
-  //               <div className="form-group">
-  //                 <button
-  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-  //                   onClick={this.handleNavigation}
-  //                   id="next"
-  //                 >
-  //                   Continue
-  //                 </button>
-  //               </div>
-  //             </div>
-  //           </div>
-  //           {/*here*/}
-  //         </form>
-  //       </Modal.Body>
-  //       {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
-  //     </Modal>
-  //   );
-  // }
-
-  // renderDesktopQuizForm3() {
-  //   return (
-  //     <form
-  //       id="desktop-quiz-form3"
-  //       onSubmit={this.preventDefault}
-  //       className="form desktop"
-  //     >
-  //       <h3 className="no-med">
-  //         Compare HMO plans in Nigeria from the comfort of your home
-  //       </h3>
-  //       <h3 className="no-med">No medicals required</h3>
-  //       <div className="mobile-view-steps">
-  //         <div className="col-md-12">
-  //           <Steps current={0}>
-  //             {home_utils.steps.map((step, i) => {
-  //               return <Step key={i} />;
-  //             })}
-  //           </Steps>
-  //         </div>
-  //       </div>
-  //       <div className="mobile-view-phone form-group">
-  //         <div className="col-md-12">
-  //           <label>Tell us about you</label>
-  //           <PhoneInput
-  //             className={
-  //               this.state.is_phone_valid
-  //                 ? "form-control"
-  //                 : "form-control invalid"
-  //             }
-  //             placeholder="Enter phone number"
-  //             type="phone"
-  //             maxLength="13"
-  //             defaultCountry="NG"
-  //             //required={true}
-  //             onChange={
-  //               // (e) => {
-  //               this.handlePhone
-  //               //   (e.target.value);
-  //               // }
-  //             }
-  //             value={this.props.responses.phone_num}
-  //           />
-  //         </div>
-  //       </div>
-  //       <div className="form-group home-gender">
-  //         <div className="col-md-12">
-  //           <label>I am a</label>
-  //           <div className="radios">
-  //             <label>
-  //               <input
-  //                 type="radio"
-  //                 value="m"
-  //                 name="radio-group-gender"
-  //                 defaultChecked={this.defaultGender()}
-  //                 onChange={(e) => {
-  //                   this.handleGender(e.target.value);
-  //                 }}
-  //                 className="radio-group-gender"
-  //               ></input>
-  //               <span>
-  //                 <i className="gender icons-gender male male-icon"></i>
-  //                 <em>Male</em>
-  //               </span>
-  //             </label>
-  //             <label>
-  //               <input
-  //                 type="radio"
-  //                 value="f"
-  //                 name="radio-group-gender"
-  //                 className="radio-group-gender"
-  //                 onChange={(e) => {
-  //                   this.handleGender(e.target.value);
-  //                 }}
-  //               ></input>
-  //               <span>
-  //                 <i className="gender icons-gender male female-icon"></i>
-  //                 <em>Female</em>
-  //               </span>
-  //             </label>
-  //           </div>
-  //         </div>
-  //       </div>
-
-  //       <div className="form-group home-fullname">
-  //         <div className="col-md-12">
-  //           <label>My name is</label>
-  //         </div>
-
-  //         <div className="col-md-12">
-  //           <input
-  //             className="form-control"
-  //             placeholder="Full Name"
-  //             // required={true}
-  //             onChange={(e) => {
-  //               this.handleFullName(e.target.value);
-  //             }}
-  //             value={this.props.responses.full_name}
-  //           ></input>
-  //         </div>
-  //       </div>
-  //       <div className="form-group home-phonenum">
-  //         <div className="col-md-12">
-  //           <label>My number is</label>
-  //         </div>
-
-  //         <div className="col-md-12">
-  //           <PhoneInput
-  //             className={
-  //               this.state.is_phone_valid
-  //                 ? "form-control"
-  //                 : "form-control invalid"
-  //             }
-  //             placeholder="11 - digit mobile number"
-  //             //required={true}
-  //             defaultCountry="NG"
-  //             onChange={
-  //               // (e) => {
-  //               this.handlePhone
-  //               //   (e.target.value);
-  //               // }
-  //             }
-  //             value={this.props.responses.phone_num}
-  //             type="phone"
-  //             maxLength="13"
-  //           />
-  //         </div>
-  //       </div>
-  //       <div className="form-group home-view-btn">
-  //         <div className="col-md-12">
-  //           <button
-  //             className="btn btn-primary btn-large view-plans btn-demo"
-  //             onClick={() => {
-  //               // if (this.props.responses.phone_num) {
-  //               this.toggleModal();
-  //               // } else {
-  //               //   this.phoneNumError();
-  //               // }
-  //             }}
-  //           >
-  //             View Plans
-  //           </button>
-  //         </div>
-  //       </div>
-  //       <div className="form-group mobile-view-cont-btn">
-  //         <div className="col-md-12">
-  //           <button
-  //             className="btn btn-primary btn-large view-plans btn-demo"
-  //             onClick={this.toggleModal}
-  //           >
-  //             Continue
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </form>
-  //   );
-  // }
-
-  // renderMobileQuizForm3() {
-  //   return (
-  //     <form
-  //       id="mobile-quiz-form3"
-  //       onSubmit={this.preventDefault}
-  //       className="form mobile"
-  //     >
-  //       <h3 className="no-med">
-  //         Compare HMO plans in Nigeria from the comfort of your home
-  //       </h3>
-  //       <h3 className="no-med">No medicals required</h3>
-  //       <div className="mobile-view-steps">
-  //         <div className="col-md-12">
-  //           <Steps current={0}>
-  //             {home_utils.mobile_steps.map((step, i) => {
-  //               return <Step key={i} />;
-  //             })}
-  //           </Steps>
-  //         </div>
-  //       </div>
-  //       <div className="mobile-view-phone form-group">
-  //         <div className="col-md-12">
-  //           <label>Tell us about you</label>
-  //           <PhoneInput
-  //             className={
-  //               this.state.is_phone_valid
-  //                 ? "form-control"
-  //                 : "form-control invalid"
-  //             }
-  //             placeholder="Enter phone number"
-  //             defaultCountry="NG"
-  //             // required={true}
-  //             onChange={
-  //               // (e) => {
-  //               this.handlePhone
-  //               //   (e.target.value);
-  //               // }
-  //             }
-  //             value={this.props.responses.phone_num}
-  //             type="phone"
-  //             maxLength="13"
-  //           />
-  //         </div>
-  //       </div>
-  //       <div className="form-group mobile-view-cont-btn">
-  //         <div className="col-md-12">
-  //           <button
-  //             className="btn btn-primary btn-large view-plans btn-demo"
-  //             onClick={() => {
-  //               this.mobileToggleModal();
-  //               this.handleDesktopView();
-  //             }}
-  //           >
-  //             Continue
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </form>
-  //   );
-  // }
-
-  // renderDesktopQuizModal3() {
-  //   let current;
-  //   if (this.props.page != 0) {
-  //     current = this.props.page - 1;
-  //   } else {
-  //     current = 0;
-  //   }
-  //   return (
-  //     <Modal
-  //       id="desktop-quiz-modal3"
-  //       dialogClassName="custom-dialog"
-  //       className="desktop-modal right"
-  //       show={this.props.isOpen}
-  //       onHide={this.toggleModal}
-  //     >
-  //       <Modal.Body>
-  //         <form
-  //           name="modalForm"
-  //           onSubmit={this.preventDefault}
-  //           className="form steppers"
-  //         >
-  //           <div className="modal-head" id="modal-head">
-  //             <Button
-  //               id="prev"
-  //               type="default"
-  //               onClick={
-  //                 this.props.page < 3 ? this.toggleModal : this.handleNavigation
-  //               }
-  //             >
-  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
-  //             </Button>
-  //             <div className="modal-title">
-  //               {this.props.isDesktopView ? (
-  //                 current >= 0 && current < 3 ? (
-  //                   <div>
-  //                     <p>{home_utils.steps[current].p}</p>
-  //                     <h3>{home_utils.steps[current].h3}</h3>
-  //                   </div>
-  //                 ) : current < 0 || current == 0 ? (
-  //                   //this.toggleModal()
-  //                   <div>
-  //                     <p>{home_utils.steps[0].p}</p>
-  //                     <h3>{home_utils.steps[0].h3}</h3>
-  //                   </div>
-  //                 ) : (
-  //                   console.log("current is > 0", current)
-  //                 )
-  //               ) : (
-  //                 console.log("!this.props.isDesktopView")
-  //               )}
-
-  //               <Steps current={current}>
-  //                 {home_utils.steps.map((step, i) => {
-  //                   return <Step key={i} />;
-  //                 })}
-  //               </Steps>
-  //             </div>
-  //           </div>
-  //           {this.renderQuizPages()}
-  //           <div className="nav-row row">
-  //             <div className="col-md-12">
-  //               <div className="form-group">
-  //                 <button
-  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-  //                   onClick={this.handleNavigation}
-  //                   id="next"
-  //                 >
-  //                   Continue
-  //                 </button>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </form>
-  //       </Modal.Body>
-  //     </Modal>
-  //   );
-  // }
-
-  // renderMobileQuizModal3() {
-  //   let current;
-  //   if (this.props.page != 0) {
-  //     current = this.props.page - 1;
-  //   } else {
-  //     current = 0;
-  //   }
-  //   return (
-  //     <Modal
-  //       id="mobile-quiz-modal3"
-  //       dialogClassName="custom-dialog"
-  //       className="mobile-modal right"
-  //       show={this.props.isMobileViewModalOpen}
-  //       onHide={this.mobileToggleModal}
-  //     >
-  //       <Modal.Body>
-  //         <form
-  //           name="modalForm"
-  //           onSubmit={this.preventDefault}
-  //           className="form steppers"
-  //         >
-  //           <div className="modal-head" id="modal-head">
-  //             {/*
-  // {this.props.page != 1 ? (
-  // */}
-
-  //             <Button
-  //               id="prev"
-  //               type="default"
-  //               onClick={
-  //                 this.props.page < 3
-  //                   ? this.mobileToggleModal
-  //                   : this.handleNavigation
-  //               }
-  //             >
-  //               <FontAwesomeIcon className="" icon={faArrowLeft} />
-  //             </Button>
-
-  //             <div className="modal-title">
-  //               {current >= 0 ? (
-  //                 <div>
-  //                   <p>{home_utils.mobile_steps[current].p}</p>
-  //                   <h3>{home_utils.mobile_steps[current].h3}</h3>
-  //                 </div>
-  //               ) : current < 0 ? (
-  //                 <div>
-  //                   <p>{home_utils.mobile_steps[0].p}</p>
-  //                   <h3>{home_utils.mobile_steps[0].h3}</h3>
-  //                 </div>
-  //               ) : (
-  //                 ""
-  //               )}
-
-  //               <Steps current={current}>
-  //                 {home_utils.mobile_steps.map((step, i) => {
-  //                   return <Step key={i} />;
-  //                 })}
-  //               </Steps>
-  //             </div>
-  //           </div>
-  //           {this.renderMobileViewQuizPages()}
-  //           <div className="nav-row row">
-  //             <div className="col-md-12">
-  //               <div className="form-group">
-  //                 <button
-  //                   className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-  //                   onClick={this.handleNavigation}
-  //                   id="next"
-  //                 >
-  //                   Continue
-  //                 </button>
-  //               </div>
-  //             </div>
-  //           </div>
-  //           {/*here*/}
-  //         </form>
-  //       </Modal.Body>
-  //       {/* <Modal.Footer>Goodbye!</Modal.Footer> */}
-  //     </Modal>
-  //   );
-  // }
 
   showDesktopOnLoadModal = () => {
     this.hideDesktopHomeFrm();
@@ -3593,8 +2579,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   async UNSAFE_componentWillMount() {
-    this.handlePlanTypesCheck(this.props.responses.type);
-    this.handlePlanRangeCheck(this.props.responses.price_range);
+    //this.handlePlanTypesCheck(this.props.responses.type);
+    //this.handlePlanRangeCheck(this.props.responses.price_range);
   }
 
   componentDidMount() {
@@ -3659,10 +2645,12 @@ class NewContent extends React.Component<homeProps, homeState> {
 
       await this.props.resetPlans(data);
       await this.props.updateBudget(budget);
-      await this.props.getServices();
-      this.props.filterByBudget(budget);
+      //await this.props.getServices();
+      //this.props.filterByBudget(budget);
 
-      this.handlePriceRangeTitle();
+      //this.handlePriceRangeTitle();
+
+      this.filterByBudget_and_or_Type();
     },
   };
   formatter(value: number) {
@@ -3686,7 +2674,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   changeType(val) {
     // console.log("changeType val", val);
-    this.handlePlanTypesCheck(val);
+    // this.handlePlanTypesCheck(val);
     if (
       [
         "single",
@@ -3696,6 +2684,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         "fam-of-4",
         "smes",
         "intl_coverage",
+        "all",
       ].includes(val)
     ) {
       this.handleType(val);
@@ -3708,16 +2697,16 @@ class NewContent extends React.Component<homeProps, homeState> {
   // }
 
   handlePriceRangeTitle() {
-    console.log(
-      "hit handle",
-      "this.props.responses.budget[0]",
-      this.props.responses.budget[0],
-      "this.props.responses.budget[1]",
-      this.props.responses.budget[1],
+    // console.log(
+    //   "hit handle",
+    //   "this.props.responses.budget[0]",
+    //   this.props.responses.budget[0],
+    //   "this.props.responses.budget[1]",
+    //   this.props.responses.budget[1],
 
-      "this.props.responses.price_range",
-      this.props.responses.price_range
-    );
+    //   "this.props.responses.price_range",
+    //   this.props.responses.price_range
+    // );
 
     if (
       this.props.responses.budget[1] > 0 &&
@@ -3751,7 +2740,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
       this.props.updatePriceRange("platinum_plus");
     } else {
-      console.log("none");
+      console.log("all");
     }
     console.log(
       "this.props.responses.price_range",
@@ -3759,8 +2748,9 @@ class NewContent extends React.Component<homeProps, homeState> {
     );
   }
 
-  setPriceRangeBasedOnTitle = (e) => {
-    console.log("e.target", e.target);
+  setPriceRangeBasedOnTitle = async (e) => {
+    this.props.resetRange();
+    //console.log("e.target", e.target);
 
     this.setState({
       range_selected: e.target.value,
@@ -3771,53 +2761,44 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     switch (title) {
       case "bronze":
-        this.eventHandlers.changeBudget([0, 20000]);
-        this.props.updatePriceRange("bronze");
-        this.handlePlanRangeCheck("bronze");
+        //this.eventHandlers.changeBudget([0, 20000]);
+        await this.props.updatePriceRange("bronze");
+
         break;
 
       case "silver":
-        this.eventHandlers.changeBudget([20001, 49999]);
-        this.props.updatePriceRange("silver");
-        this.handlePlanRangeCheck("silver");
-        // this.handleMinRangeChange(20001);
-        // this.handleMinRangeChange(49999);
+        //this.eventHandlers.changeBudget([20001, 49999]);
+        await this.props.updatePriceRange("silver");
         break;
 
       case "gold":
-        this.eventHandlers.changeBudget([50000, 99999]);
-        this.props.updatePriceRange("gold");
-        this.handlePlanRangeCheck("gold");
-        // this.handleMinRangeChange(50000);
-        // this.handleMinRangeChange(99999);
+        // this.eventHandlers.changeBudget([50000, 99999]);
+        await this.props.updatePriceRange("gold");
+
+        break;
+
+      case "diamond":
+        await this.props.updatePriceRange("diamond");
         break;
 
       case "platinum":
-        this.eventHandlers.changeBudget([100000, 149000]);
-        this.props.updatePriceRange("platinum");
-        this.handlePlanRangeCheck("platinum");
-        // this.handleMinRangeChange(100000);
-        // this.handleMinRangeChange(149000);
+        // this.eventHandlers.changeBudget([100000, 149000]);
+        await this.props.updatePriceRange("platinum");
+
         break;
 
       case "platinum_plus":
-        this.eventHandlers.changeBudget([150000, 1000000]);
-        this.props.updatePriceRange("platinum_plus");
-        this.handlePlanRangeCheck("platinum_plus");
-        // this.handleMinRangeChange(150000);
-        // this.handleMinRangeChange(1000000);
+        //this.eventHandlers.changeBudget([150000, 1000000]);
+        await this.props.updatePriceRange("platinum_plus");
+
         break;
 
       default:
-        this.eventHandlers.changeBudget([
-          this.state.filter_params.annual_range_min,
-          this.state.filter_params.annual_range_max,
-        ]);
-        this.props.updatePriceRange(this.props.responses.price_range);
-
-      // this.handleMinRangeChange(this.state.filter_params.annual_range_min);
-      // this.handleMinRangeChange(this.state.filter_params.annual_range_max);
+        //this.eventHandlers.changeBudget([0, 2000000]);
+        await this.props.updatePriceRange("all");
+        break;
     }
+    this.props.filterByPlanRange();
   };
 
   toggleShowFilter = () => {
@@ -3871,13 +2852,9 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   handlePlanRangeCheck(id) {
-    //console.log"id", id);
-
     let arr: string[] = this.state.filter_params.plan_range_checked;
 
     let isPlanRangeChecked: number = arr.indexOf(id);
-
-    //console.log"isPlanRangeChecked", isPlanRangeChecked);
 
     if (isPlanRangeChecked > -1) {
       arr.splice(isPlanRangeChecked, 1);
@@ -3894,13 +2871,9 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   handlePlanTypesCheck(id) {
-    //console.log"id", id);
-
     let arr: string[] = this.state.filter_params.plan_types_checked;
 
     let isPlanChecked: number = arr.indexOf(id);
-
-    //console.log"isPlanChecked", isPlanChecked);
 
     if (isPlanChecked > -1) {
       arr.splice(isPlanChecked, 1);
@@ -3917,9 +2890,6 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   handleProviderSelected = (id) => {
-    //let arr: string[] = this.state.filter_params.providers_selected;
-    //arr.push(id);
-
     this.setState({
       filter_params: {
         ...this.state.filter_params,
@@ -3941,6 +2911,14 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   handleMinRangeChange(val) {
+    console.log(
+      "this.state.filter_params.annual_range_min",
+
+      this.state.filter_params.annual_range_min
+    );
+
+    console.log("val", val);
+
     this.setState({
       filter_params: {
         ...this.state.filter_params,
@@ -3979,7 +2957,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   }
 
-  updateBugetWithFilterRange = () => {
+  updateBudgetWithFilterRange = () => {
     this.eventHandlers.changeBudget([
       this.state.filter_params.annual_range_min
         ? this.state.filter_params.annual_range_min
@@ -4176,21 +3154,88 @@ class NewContent extends React.Component<homeProps, homeState> {
   // }
 
   getRecommendedPlans = () => {
+    // this.state.filter_params.plan_range_checked.map((range) =>
+    //   this.handlePlanRangeCheck(range)
+    // );
+
+    let filterBoxParams = {
+      range: this.state.filter_params.plan_range_checked,
+      type: this.state.filter_params.plan_types_checked,
+      budget:
+        this.state.filter_params.annual_range_min &&
+        this.state.filter_params.annual_range_max
+          ? [
+              this.state.filter_params.annual_range_min,
+              this.state.filter_params.annual_range_max,
+            ]
+          : [],
+      planID: this.state.filter_params.planID,
+      hmoID: this.state.filter_params.hmo_selected,
+    };
+    /* this.state.filter_params.plan_types_checked.map((type) =>
+      // this.handlePlanTypesCheck(type)
+      this.changeType(type)
+    );
+
     this.props.setPlanID(this.state.filter_params.planID);
     this.props.setHMOID(this.state.filter_params.hmo_selected);
-    this.updateBugetWithFilterRange();
-    this.props.getRecommendedPlans();
+    this.updateBudgetWithFilterRange();*/
+    this.props.getRecommendedPlans(filterBoxParams);
   };
 
   resetServices() {
     this.props.getServices();
   }
 
+  clearFilters = () => {
+    console.log("clear");
+
+    this.setState({
+      filter_params: {
+        ...this.state.filter_params,
+        annual_range_min: "",
+        annual_range_max: "",
+        annual_deductible_min: "",
+        annual_deductible_max: "",
+        plan_types_checked: [],
+        plan_range_checked: [],
+        planID: "",
+        hmo_selected: "", // undefined,
+        mgt_program_selected: [],
+        providers_selected: [],
+        prescriptions_selected: [],
+        healthSA_eligibility: false,
+      },
+    });
+  };
+
   render() {
-    // console.log(
-    //   "this.state.filter_params.annual_range_min",
-    //   this.state.filter_params.annual_range_min
-    // );
+    if (home_utils.CAN_LOG) {
+      // console.log(
+      //   "this.state.filter_params.plan_range_checked",
+      //   this.state.filter_params.plan_range_checked
+      // );
+      // console.log(
+      //   "this.state.filter_params.plan_types_checked",
+      //   this.state.filter_params.plan_types_checked
+      // );
+      // console.log(
+      //   "this.state.filter_params.annual_range_min",
+      //   this.state.filter_params.annual_range_min
+      // );
+      // console.log(
+      //   "this.state.filter_params.annual_range_max",
+      //   this.state.filter_params.annual_range_max
+      // );
+      // console.log(
+      //   "this.state.filter_params.planID",
+      //   this.state.filter_params.planID
+      // );
+      // console.log(
+      //   "this.state.filter_params.hmo_selected",
+      //   this.state.filter_params.hmo_selected
+      // );
+    }
 
     if (this.props.page != 0) {
     } else {
@@ -4309,8 +3354,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             )}
           </div>
         </div>
-
-        {this.props.planServices.length > 0 ? (
+        {!this.props.is_fetching_data ? (
           <div className="home-plans-div container" id="plans">
             <div className="results-header margin-top--2">
               <div className={this.state.sticky_styles}>
@@ -4325,11 +3369,28 @@ class NewContent extends React.Component<homeProps, homeState> {
                     </div>
                     <div>
                       <button
-                        className="c-button  c-button--primary margin-right--2 margin-bottom--1 lg-margin-bottom--0 c-filter-plans"
+                        className={`c-button  c-button--primary margin-right--2 margin-bottom--1 lg-margin-bottom--0 c-filter-plans ${
+                          this.state.show_filter && "display--none"
+                        }`}
                         type="button"
-                        onClick={this.toggleShowFilter}
+                        onClick={() => {
+                          this.toggleShowFilter();
+                          this.resetServices();
+                        }}
                       >
-                        {this.state.show_filter ? "Cancel" : "Filter Plans"}
+                        Filter Plans
+                      </button>
+
+                      <button
+                        className={`c-button  c-button--primary margin-right--2 margin-bottom--1 lg-margin-bottom--0 c-filter-plans ${
+                          !this.state.show_filter && "display--none"
+                        }`}
+                        type="button"
+                        onClick={() => {
+                          this.toggleShowFilter();
+                        }}
+                      >
+                        Cancel
                       </button>
 
                       <a
@@ -4355,8 +3416,19 @@ class NewContent extends React.Component<homeProps, homeState> {
                       <select
                         className="c-field rh-plan-type-select"
                         onChange={(e) => this.changeType(e.target.value)}
-                        value={this.props.responses.type}
+                        value={
+                          this.props.responses.type[
+                            this.props.responses.type.length - 1
+                          ]
+                        }
                       >
+                        {/* <option
+                          value="all"
+                          id="all"
+                          onClick={this.resetServices}
+                        >
+                          All
+                        </option> */}
                         {home_utils.plan_types.map((plan_type) => {
                           return (
                             <option value={plan_type.id} id={plan_type.id}>
@@ -4378,7 +3450,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                         className="c-field c-field--medium rh-sort-by-select"
                         onChange={(e) => this.setPriceRangeBasedOnTitle(e)}
                         value={
-                          this.props.responses.price_range //{this.state.range_selected}
+                          this.props.responses.price_range[
+                            this.props.responses.price_range.length - 1
+                          ] //{this.state.range_selected}
                         }
                       >
                         {home_utils.plan_range.map((plan_range) => {
@@ -4432,6 +3506,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       pattern="[0-9.,-]*"
                                       type="text"
                                       name="premium-start"
+                                      value={
+                                        this.state.filter_params
+                                          .annual_range_min
+                                      }
                                       // value={this.props.responses.budget[0]}
                                       onChange={(e) =>
                                         this.handleMinRangeChange(
@@ -4460,6 +3538,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       pattern="[0-9.,-]*"
                                       type="text"
                                       name="premium-end"
+                                      value={annual_range_max}
                                       // value={this.props.responses.budget[1]}
                                       onChange={(e) =>
                                         this.handleMaxRangeChange(
@@ -4479,7 +3558,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       : true
                                   }
                                   type="button"
-                                  onClick={this.updateBugetWithFilterRange}
+                                  onClick={() => {
+                                    this.updateBudgetWithFilterRange();
+                                    //this.getRecommendedPlans();
+                                  }}
                                 >
                                   Apply range
                                 </button>
@@ -4519,6 +3601,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       pattern="[0-9.,-]*"
                                       type="text"
                                       name="deductible-start"
+                                      value={annual_deductible_min}
                                       onChange={(e) =>
                                         this.handleMinDedChange(e.target.value)
                                       }
@@ -4542,6 +3625,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       pattern="[0-9.,-]*"
                                       type="text"
                                       name="deductible-end"
+                                      value={annual_deductible_max}
                                       onChange={(e) =>
                                         this.handleMaxDedChange(e.target.value)
                                       }
@@ -4852,6 +3936,31 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   className="c-choice c-choice--small"
                                   type="checkbox"
                                   name=""
+                                  value="diamond"
+                                  onChange={() =>
+                                    this.handlePlanRangeCheck("diamond")
+                                  }
+                                  checked={
+                                    plan_range_checked
+                                      ? plan_range_checked.includes("diamond")
+                                      : false
+                                  }
+                                />
+                                <label
+                                  className="c-label"
+                                  onClick={() =>
+                                    this.handlePlanRangeCheck("diamond")
+                                  }
+                                >
+                                  <span className="">Diamond</span>
+                                </label>
+                              </div>
+
+                              <div className="">
+                                <input
+                                  className="c-choice c-choice--small"
+                                  type="checkbox"
+                                  name=""
                                   value="platinum"
                                   onChange={() =>
                                     this.handlePlanRangeCheck("platinum")
@@ -4917,7 +4026,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                             name="plan-id"
                             type="text"
                             // maxLength={10}
-                            placeholder="Example: HYG0123456"
+                            placeholder="Example: HYGIND00001"
+                            value={planID}
                             onChange={(e) =>
                               this.handlePlanIDChange(e.target.value)
                             }
@@ -4927,7 +4037,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                             disabled={planID !== undefined ? false : true}
                             type="button"
                             onClick={() => {
-                              this.props.getServices();
+                              //this.props.getServices();
                               this.props.getPlansByID(planID);
                             }}
                           >
@@ -4942,7 +4052,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                             <label className="c-label">
                               <span className="font-weight--bold">HMOs</span>
                             </label>
-                            <select className="c-field" id="select_hmo_filter">
+                            <select
+                              className="c-field"
+                              id="select_hmo_filter"
+                              value={this.state.filter_params.hmo_selected}
+                              onChange={(e) =>
+                                this.handleHMOSelected(e.target.value)
+                              }
+                            >
                               <option value="">Select an HMO</option>
                               {this.props.hmos.map((hmo) => (
                                 <option value={hmo.hmo_id}>{hmo.name}</option>
@@ -5162,20 +4279,29 @@ class NewContent extends React.Component<homeProps, homeState> {
                     <button
                       className="c-button margin-right--2 qa-close-desktop"
                       type="button"
+                      onClick={() => {
+                        this.toggleShowFilter();
+                      }}
                     >
                       Cancel
                     </button>
                     <button
                       className="c-button c-button--secondary margin-right--2 text-transform--capitalize qa-clear-desktop"
                       type="button"
-                      onClick={() => this.resetServices()}
+                      onClick={() => {
+                        this.clearFilters();
+                        this.resetServices();
+                      }}
                     >
                       Clear filters
                     </button>
                     <button
                       className="c-button c-button--success qa-apply-desktop"
                       type="button"
-                      onClick={this.getRecommendedPlans}
+                      onClick={() => {
+                        // this.resetServices();
+                        this.getRecommendedPlans();
+                      }}
                     >
                       Apply filters
                     </button>
@@ -5208,6 +4334,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                       <button
                         className="c-button margin-y--2 qa-close-mobile"
                         type="button"
+                        onClick={() => {
+                          this.toggleShowFilter();
+                        }}
                       >
                         Cancel
                       </button>

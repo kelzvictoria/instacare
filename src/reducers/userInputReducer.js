@@ -1,8 +1,4 @@
-import { createReducer, createAction } from "redux-starter-kit";
-//import { state } from "../store/state";
-
 import {
-    // GET_RECOMMENDED_PLANS,
     GET_CLICKED_PLAN,
     IS_FETCHING_RECOMMENDED_PLANS,
     CHANGE_PAGE,
@@ -61,7 +57,9 @@ import {
     SET_PLANS_TO_COMPARE_ON_DESKTOP,
     SET_PLANS_TO_COMPARE_ON_MOBILE,
     SET_PLAN_ID,
-    SET_HMO_ID
+    SET_HMO_ID,
+    RESET_TYPE,
+    RESET_RANGE
 } from "../actions/types";
 
 const initialState = {
@@ -85,13 +83,15 @@ const initialState = {
     daughterCount: 1,
     tab_opened: "highlights",
     responses: {
-        budget: [15000, 150000],
-        type: "single",
-        price_range: "silver",
-        hmoID : "",
+        budget: [0, 300000],
+        // type: "single",
+        // price_range: "silver",
+        type: [],
+        price_range: [],
+        hmoID: "",
         planID: "",
 
-        num_of_people: 1,       
+        num_of_people: 1,
         firstName: "",
         lastName: "",
         email: "",
@@ -120,7 +120,7 @@ const initialState = {
         child_7_age: 0,
         child_8_age: 0,
         plan_duration: "1",
-        
+
     }
 }
 
@@ -146,8 +146,26 @@ export default function (state = initialState, action) {
 
             }
 
+        case RESET_TYPE:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    type: action.payload
+                }
+            }
+
+        case RESET_RANGE:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    price_range: action.payload
+                }
+            }
+
         case UPDATE_BUDGET:
-           // console.log("action.payload", action.payload);
+            // console.log("action.payload", action.payload);
             if (action.payload.length === 2) {
                 return {
                     ...state,
@@ -234,7 +252,7 @@ export default function (state = initialState, action) {
             }
 
         case TOGGLE_OTHERS_MODAL:
-           // console.log("action.payload", action.payload.value);
+            // console.log("action.payload", action.payload.value);
             return {
                 ...state,
                 isOthersInputOpen: action.payload.value
@@ -250,12 +268,11 @@ export default function (state = initialState, action) {
             }
 
         case UPDATE_TYPE:
-            console.log("action.payload.value", action.payload.value);
             return {
                 ...state,
                 responses: {
                     ...state.responses,
-                    type: action.payload.value
+                    type: action.payload
                 }
             }
 
@@ -400,13 +417,13 @@ export default function (state = initialState, action) {
                 }
             }
 
-           case RESET_PLANS: 
-           return {
-               ...state,
-               fetching_recommended_plans: action.payload
-           }
-             //   state.compare.fetching = actions.data;
-              
+        case RESET_PLANS:
+            return {
+                ...state,
+                fetching_recommended_plans: action.payload
+            }
+        //   state.compare.fetching = actions.data;
+
 
         case GET_NUM_OF_PEOPLE:
             return {
@@ -426,320 +443,18 @@ export default function (state = initialState, action) {
                 }
             }
 
-        case SET_HMO_ID: 
-        return {
-            ...state,
-            responses: {
-                ...state.responses,
-                hmoID: action.payload
+        case SET_HMO_ID:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    hmoID: action.payload
+                }
             }
-        }
 
 
-            default:
-                return state
+        default:
+            return state
 
     }
 }
-
-    /*let state = {};
-    
-    export const userInputReducer = createReducer(state = initialState, {
-    
-        UPDATE_PRICE_RANGE: (state, actions) => {
-            state.responses.price_range = actions.data;
-        },
-    
-        CHANGE_PLAN_TYPE: (state, action) => {
-            state.quiz.responses.type = action.payload.value;
-            return state;
-        },
-    
-        UPDATE_BUDGET: (state, action) => {
-            if (action.budget.length === 2) {
-                state.quiz.responses.budget = action.budget;
-            }
-            return state;
-        },
-    
-        UPDATE_TEXT_RESPONSE: (state, action) => {
-            if (action.payload.action.payload.key) {
-                state.quiz.responses[action.payload.action.payload.key] = action.payload.action.payload.value;
-            }
-            return state;
-        },
-    
-        RESET_RESPONSES: (state, action) => {
-            for (let key in action.payload.value) {
-                state.quiz.responses[key] = action.payload.value[key];
-            }
-        },
-    
-        GET_CLICKED_PLAN: (state, action) => {
-            //state.clicked_plan = action.payload;
-            return {
-                ...state,
-                clicked_plan: action.payload,
-            }
-        },
-    
-        IS_FETCHING_RECOMMENDED_PLANS: (state, action) => {
-            // state.fetching_recommended_plans = action.payload;
-            return {
-                ...state,
-                fetching_recommended_plans: action.payload
-            }
-        },
-    
-        CHANGE_PAGE: (state, action) => {
-            if (action.payload.value === "next") {
-                state.quiz.page++;
-            } else if (action.payload.value === "prev") {
-                state.quiz.page--;
-            }
-            return state;
-        },
-    
-        TOGGLE_DESKTOP_MODAL: (state, actions) => {
-            state.quiz.isOpen = actions.data.value;
-        },
-    
-        TOGGLE_MOBILE_MODAL: (state, actions) => {
-            state.quiz.isMobileViewModalOpen = actions.data.value;
-        },
-    
-        TOGGLE_OTHERS_MODAL: (state, actions) => {
-            state.quiz.isOthersInputOpen = actions.data.value;
-        },
-        UPDATE_GENDER: (state, actions) => {
-            state.quiz.responses.gender = actions.data.value;
-        },
-        UPDATE_TYPE: (state, actions) => {
-            state.quiz.responses.type = actions.data.value;
-        },
-        TOGGLE_DESKTOP_VIEW: (state, actions) => {
-            state.quiz.isDesktopView = actions.data.value;
-        },
-        UPDATE_PHONE: (state, actions) => {
-            state.quiz.responses.phone_num = actions.data.value;
-        },
-        UPDATE_FULL_NAME: (state, actions) => {
-            state.quiz.responses.full_name = actions.data.value;
-        },
-        UPDATE_INDIVIDUAL_AGE: (state, action) => {
-            if (action.payload.action.payload.key) {
-                state.quiz.responses[action.payload.action.payload.key] = action.payload.action.payload.value;
-            }
-            return state;
-        },
-        UPDATE_FATHER_AGE: (state, actions) => {
-            state.quiz.responses.father_age = actions.data.value;
-        },
-        UPDATE_MOTHER_AGE: (state, actions) => {
-            state.quiz.responses.mother_age = actions.data.value;
-        },
-        UPDATE_GRAND_FATHER_AGE: (state, actions) => {
-            state.quiz.responses.grand_father_age = actions.data.value;
-        },
-        UPDATE_GRAND_MOTHER_AGE: (state, actions) => {
-            state.quiz.responses.grand_mother_age = actions.data.value;
-        },
-        UPDATE_FATHER_IN_LAW_AGE: (state, actions) => {
-            state.quiz.responses.father_in_law_age = actions.data.value;
-        },
-        UPDATE_MOTHER_IN_LAW_AGE: (state, actions) => {
-            state.quiz.responses.mother_in_law_age = actions.data.value;
-        },
-        UPDATE_SPOUSE_AGE: (state, actions) => {
-            state.quiz.responses.spouse_age = actions.data.value;
-        },
-        UPDATE_CHILD_1_AGE: (state, actions) => {
-            state.quiz.responses.child_1_age = actions.data.value;
-        },
-        UPDATE_CHILD_2_AGE: (state, actions) => {
-            state.quiz.responses.child_2_age = actions.data.value;
-        },
-        UPDATE_CHILD_3_AGE: (state, actions) => {
-            state.quiz.responses.child_3_age = actions.data.value;
-        },
-        UPDATE_CHILD_4_AGE: (state, actions) => {
-            state.quiz.responses.child_4_age = actions.data.value;
-        },
-        UPDATE_CHILD_5_AGE: (state, actions) => {
-            state.quiz.responses.child_5_age = actions.data.value;
-        },
-        UPDATE_CHILD_6_AGE: (state, actions) => {
-            state.quiz.responses.child_6_age = actions.data.value;
-        },
-        UPDATE_CHILD_7_AGE: (state, actions) => {
-            state.quiz.responses.child_7_age = actions.data.value;
-        },
-        UPDATE_CHILD_8_AGE: (state, actions) => {
-            state.quiz.responses.child_8_age = actions.data.value;
-        },
-        UPDATE_SON_CHECKED: (state, actions) => {
-            state.quiz.isSonCheckboxChecked = actions.data.value;
-        },
-        UPDATE_DAUGHTER_CHECKED: (state, actions) => {
-            state.quiz.isDaughterCheckboxChecked = actions.data.value;
-        },
-        INCREMENT_SON_COUNT: (state, actions) => {
-            state.quiz.sonCount = actions.data.value;
-        },
-        DECREMENT_SON_COUNT: (state, actions) => {
-            state.quiz.sonCount = actions.data.value;
-        },
-        INCREMENT_DAUGHTER_COUNT: (state, actions) => {
-            state.quiz.daughterCount = actions.data.value;
-        },
-        DECREMENT_DAUGHTER_COUNT: (state, actions) => {
-            state.quiz.daughterCount = actions.data.value;
-        },
-        UPDATE_PLAN_DURATION: (state, actions) => {
-            state.quiz.responses.plan_duration = actions.data.value;
-        },
-        TOGGLE_FEATURES_MODAL: (state, actions) => {
-            state.quiz.isFeaturesModalOpen = actions.data.value;
-        },
-    
-        UPDATE_FEATURES_TAB_OPENED: (state, actions) => {
-            state.quiz.tab_opened = actions.data.value;
-        },
-        TOGGLE_FEATURE_POPUP: (state, actions) => {
-            state.quiz.isFeaturePopUpOpen = actions.data.value;
-        },
-    
-        UPDATE_NUM_OF_PEOPLE: (state, actions) => {
-            state.quiz.responses.num_of_people =
-                state.quiz.responses.num_of_people + actions.data;
-        },
-    
-        RESET_NUM_OF_PEOPLE: (state) => {
-            state.num_of_people = 0;
-        },
-    
-        GET_NUM_OF_PEOPLE: (state, actions) => {
-            state.num_of_people = actions.data;
-        },
-    */
-    /*UPDATE_PREFS: (state, action) => {
-     if (action.payload.action.payload.length > 0 && Array.isArray(action.payload.value)) {
-       state.quiz.responses.services = {};
-       action.payload.action.payload.forEach((item: string) => {
-         state.quiz.responses.services[item] = true;
-       });
-       state.quiz.checked = action.payload.value;
-     }
-     return state;
-   },
-   UPDATE_PLANS: (state, action) => {
-     if (action.payload.action.payload.length === 0) {
-       state.quiz.didRequestReturnEmptyResult = true;
-     } else if (action.payload.value) {
-       state.quiz.didRequestReturnEmptyResult = false;
-       state.compare.plans = action.payload.value;
-     }
-     return state;
-   },
-   UPDATE_SORT_ORDER: (state, action) => {
-     if (action.payload.value) {
-       state.compare.sort = { ...action.payload.value };
-     }
-     return state;
-   },
-    UPDATE_BEST_PLAN: (state, actions) => {
-     if (actions.data) {
-       state.compare.bestPlan = actions.data;
-     }
-     return state;
-   },
-   UPDATE_CHEAPEST_PLAN: (state, actions) => {
-     if (actions.data) {
-       state.compare.cheapestPlan = actions.data;
-     }
-     return state;
-   },
-   UPDATE_MOSTEXPENSIVE_PLAN: (state, actions) => {
-     if (actions.data) {
-       state.compare.mostExpensivePlan = actions.data;
-     }
-   },
-   TOGGLE_FAMILY_PLAN_SELECTED: (state, actions) => {
-     state.quiz.familyPlanSelected = actions.data.value;
-   },
-   UPDATE_COVERS: (state, actions) => {
-     state.quiz.covers = actions.data.value;
-   },
-   RESET_PLANS: (state, actions) => {
-     state.compare.fetching = actions.data;
-   },
-})*/
-
-
-/*createAction(CHANGE_PAGE);
-
-createAction(UPDATE_PREFS);
-
-
-createAction(UPDATE_PLANS);
-createAction(UPDATE_SORT_ORDER);
-
-createAction(UPDATE_BEST_PLAN);
-createAction(UPDATE_CHEAPEST_PLAN);
-createAction(UPDATE_MOSTEXPENSIVE_PLAN);
-
-createAction(TOGGLE_FAMILY_PLAN_SELECTED);
-createAction(UPDATE_COVERS);
-createAction(RESET_PLANS);
-
-createAction(TOGGLE_DESKTOP_MODAL);
-createAction(TOGGLE_MOBILE_MODAL);
-createAction(TOGGLE_OTHERS_MODAL);
-createAction(UPDATE_GENDER);
-createAction(UPDATE_TYPE);
-createAction(TOGGLE_DESKTOP_VIEW);
-createAction(UPDATE_PHONE);
-createAction(UPDATE_FULL_NAME);
-createAction(UPDATE_INDIVIDUAL_AGE);
-createAction(UPDATE_FATHER_AGE);
-createAction(UPDATE_MOTHER_AGE);
-createAction(UPDATE_GRAND_FATHER_AGE);
-createAction(UPDATE_GRAND_MOTHER_AGE);
-createAction(UPDATE_FATHER_IN_LAW_AGE);
-createAction(UPDATE_MOTHER_IN_LAW_AGE);
-createAction(UPDATE_SPOUSE_AGE);
-createAction(UPDATE_CHILD_1_AGE);
-createAction(UPDATE_CHILD_2_AGE);
-createAction(UPDATE_CHILD_3_AGE);
-createAction(UPDATE_CHILD_4_AGE);
-createAction(UPDATE_CHILD_5_AGE);
-createAction(UPDATE_CHILD_6_AGE);
-createAction(UPDATE_CHILD_7_AGE);
-createAction(UPDATE_CHILD_8_AGE);
-createAction(UPDATE_SON_CHECKED);
-createAction(UPDATE_DAUGHTER_CHECKED);
-createAction(INCREMENT_SON_COUNT);
-createAction(DECREMENT_SON_COUNT);
-createAction(INCREMENT_DAUGHTER_COUNT);
-createAction(DECREMENT_DAUGHTER_COUNT);
-createAction(UPDATE_PLAN_DURATION);
-createAction(TOGGLE_FEATURES_MODAL);
-createAction(UPDATE_FEATURES_TAB_OPENED);
-createAction(TOGGLE_FEATURE_POPUP);
-
-createAction(UPDATE_NUM_OF_PEOPLE);
-createAction(RESET_NUM_OF_PEOPLE);
-createAction(GET_NUM_OF_PEOPLE);
-
-createAction(GET_CLICKED_PLAN);
-
-createAction(IS_FETCHING_RECOMMENDED_PLANS);
-
-createAction(CHANGE_PLAN_TYPE);
-createAction(UPDATE_BUDGET);
-createAction(UPDATE_TEXT_RESPONSE);
-createAction(RESET_RESPONSES);
-
-createAction(UPDATE_PRICE_RANGE);
-
-*/

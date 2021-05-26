@@ -29,19 +29,16 @@ import {
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions";
-import { type } from "jquery";
 
-import { stripNonNumeric } from "../utils/homeUtils"
+import { stripNonNumeric, CAN_LOG } from "../utils/homeUtils"
+import { get } from "jquery";
 
 const API_URL = "https://instacareconnect.pmglobaltechnology.com";
 
 export const getPlans = () => async (dispatch, getState) => {
     dispatch(setIsFetchingPlans());
     await dispatch(getHMOs());
-    //console.log("getState().fetchData.is_filtering_by_budget", getState().fetchData.is_filtering_by_budget);
-    // if (getState().fetchData.is_filtering_by_budget == false) {
-    //     await dispatch(getServices());
-    // }
+
     await axios
         .get(`${API_URL}/api/plans`
             //, tokenConfig(getState)
@@ -54,18 +51,13 @@ export const getPlans = () => async (dispatch, getState) => {
                 for (let i = 0; i < plans.length; i++) {
                     let hmoID = plans[i]["hmo_id"];
                     let hmos = getState().fetchData.hmos;
-                    // let services = getState().fetchData.services;
 
                     let planHMO = hmos.filter(hmo => hmo.hmo_id === hmoID);
-                    //let planServices = services.filter(service => service.plan_id === plans[i]["plan_id"])
 
                     if (planHMO) {
                         plans[i]["hmo_id"] = planHMO[0];
                     }
 
-                    // if (planServices) {
-                    //     plans[i]["packages"] = planServices
-                    // }
                 }
 
                 dispatch({
@@ -82,19 +74,19 @@ export const getPlans = () => async (dispatch, getState) => {
 }
 
 export const getPlansByID = (planID) => async (dispatch, getState) => {
+    await dispatch(getServices());
     dispatch({
         type: IS_FILTERING_BY_PLAN_ID,
         payload: true
     });
 
     let services = getState().fetchData.services;
-    console.log("planID", planID);
-    console.log("services", services);
+    CAN_LOG && console.log("planID", planID);
     let plansByID = services.filter(plan => {
-        return plan.plan_id == planID
+        return plan.plan_id.plan_id == planID
     });
 
-    console.log("plansByID", plansByID);
+    CAN_LOG && console.log("plansByID", plansByID);
 
     dispatch({
         type: FILTER_BY_PLAN_ID,
@@ -103,7 +95,10 @@ export const getPlansByID = (planID) => async (dispatch, getState) => {
 }
 
 export const getHMOs = () => async (dispatch, getState) => {
-    dispatch(setIsFetchingHMOs());
+    dispatch({
+        type: IS_FETCHING_HMOS,
+        payload: true
+    })
     await axios
         .get(`${API_URL}/api/hmos`
             //, tokenConfig(getState)
@@ -163,10 +158,7 @@ export const getServices = () => async (dispatch, getState) => {
                     let hmos = getState().fetchData.hmos;
                     let plans = getState().fetchData.plans;
 
-                    // console.log("plans", plans);
-
                     let servicePlan = plans.filter(plan => plan.plan_id === planID);
-                    //console.log("planID", planID, "servicePlan", servicePlan);
 
                     let planHMO = hmos.filter(hmo => hmo.hmo_id === hmoID);
 
@@ -190,40 +182,68 @@ export const getServices = () => async (dispatch, getState) => {
         })
 }
 
-export const getRecommendedPlans = () => (dispatch, getState) => {
+export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     dispatch(setIsFetchingRecPlans())
 
-    let hmoID = getState().quiz.responses.hmoID;
-    let planID = getState().quiz.responses.planID;
-    let budget = getState().quiz.responses.budget;
-    let planType = getState().quiz.responses.type;
+    await dispatch(getServices());
 
-    let min = budget[0];
-    let max = budget[1];
+    let hmoID = params.hmoID ? params.hmoID : ""
+    //let planID = getState().quiz.responses.planID;
+    let budget = params.budget ? params.budget : []
+    let planType = params.type ? params.type : []
+
+    let planRange = params.range ? params.range : [];
+
+    let min = stripNonNumeric(budget[0]);
+    let max = stripNonNumeric(budget[1]);
+
+    CAN_LOG && console.log("min", min, "max", max);
 
     let services = getState().fetchData.services
 
-    let plansByHMO = services.filter(plan => plan.hmo_id === hmoID);
-    let plansByPlanID = services.filter(plan => {
-        return plan.plan_id == planID
-    });
-    let plansByBudget = services
-        .filter(pckg => {
-            return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
-        })
-
     let plansByPlanType = groupPlansByType(services, planType);
 
-    console.log("plansByPlanType", plansByPlanType);
+    CAN_LOG && console.log("plansByPlanType", plansByPlanType);
 
-    let recommended_plans = [
-        ...plansByHMO,
-        ...plansByPlanID,
-        ...plansByBudget,
-        ...plansByPlanType
-    ]
+    let recommended_plans;
+    let packages = planType.length > 0 ? plansByPlanType : services;
 
-    console.log("recommended_plans", recommended_plans);
+    if (hmoID && budget.length == 0) {
+        CAN_LOG && console.log("hmoID && budget.length == 0");
+        recommended_plans = packages.filter(pckage => {
+            return pckage.hmo_id.hmo_id === hmoID
+        })
+    }
+
+    if (!hmoID && budget.length > 0) {
+        CAN_LOG && console.log("!hmoID && budget.length > 0");
+        recommended_plans = packages.filter(pckage => {
+            return (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
+        })
+    }
+
+    if (hmoID && budget.length > 0) {
+        CAN_LOG && console.log("hmoID && budget.length > 0");
+        recommended_plans = packages.filter(pckage => {
+            return pckage.hmo_id.hmo_id === hmoID && (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
+        });
+    }
+
+    if (planType.length > 0 && !hmoID && budget.length == 0) {
+        CAN_LOG && console.log("planType.length > 0 && !hmoID && budget.length == 0");
+        recommended_plans = plansByPlanType
+    }
+
+    console.log("planRange", planRange);
+
+    if (planRange.length > 0) {
+        console.log("recommended_plans", recommended_plans);
+        recommended_plans = groupPlansByRange(
+            recommended_plans ? recommended_plans : packages, planRange);
+    }
+
+    CAN_LOG && console.log("packages", packages);
+    CAN_LOG && console.log("recommended_plans", recommended_plans);
     dispatch({
         type: GET_RECOMMENDED_PLANS,
         payload: recommended_plans
@@ -279,9 +299,6 @@ export const filterByBudget = (budget) => (dispatch, getState) => {
     let min = budget[0];
     let max = budget[1];
 
-    //console.log("min", min, "max", max);
-    //console.log("typeof min", typeof min, "typeof max", typeof max);
-
     let packages = getState().fetchData.services;
 
     let filteredPackagesByBudget = packages
@@ -311,49 +328,97 @@ export const filterByPlanType = (type) => (dispatch, getState) => {
     })
 }
 
+export const filterByBudget_and_or_Type = (params) => async (dispatch, getState) => {
+    CAN_LOG && console.log("params", params);
+    dispatch(setIsFetchingRecPlans())
+    await dispatch(getServices());
+    let budget = params.budget;
+    let type = params.type;
+
+    let min = budget[0];
+    let max = budget[1];
+
+    let services = getState().fetchData.services
+
+    let plansByPlanType = groupPlansByType(services, type);
+
+    let packages = type.length > 0 ? plansByPlanType : services;
+
+    let recommended_plans = budget.length > 0 ? packages.filter(pckg => {
+        return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
+    }) : plansByPlanType;
+
+    CAN_LOG && console.log("packages", packages);
+    CAN_LOG && console.log("recommended_plans", recommended_plans);
+
+    dispatch({
+        type: GET_RECOMMENDED_PLANS,
+        payload: recommended_plans
+    })
+}
+
+export const filterByPlanRange = () => async (dispatch, getState) => {
+    await dispatch(getServices());
+    let services = getState().fetchData.services;
+    let range = getState().quiz.responses.price_range
+
+    let plansByRange = groupPlansByRange(services, range);
+
+    console.log("plansByRange", plansByRange);
+    dispatch({
+        type: GET_RECOMMENDED_PLANS,
+        payload: plansByRange
+    })
+}
+
 export const setIsFetchingPlansByHMO = () => (dispatch, getState) => {
 
 }
 
 export const setIsFetchingPlans = () => (dispatch, getState) => {
+    console.log("in here");
     return {
-        type: IS_FETCHING_PLANS
+        type: IS_FETCHING_PLANS,
+        payload: true
     }
 }
 
 export const setIsFetchingHMOs = () => (dispatch, getState) => {
     return {
-        type: IS_FETCHING_HMOS
+        type: IS_FETCHING_HMOS,
+        payload: true
     }
 }
 
 export const setIsFetchingServices = () => (dispatch, getState) => {
     return {
-        type: IS_FETCHING_SERVICES
+        type: IS_FETCHING_SERVICES,
+        payload: true
     }
 }
 
 export const setIsFetchingProviders = () => (dispatch, getState) => {
     return {
-        type: IS_FETCHING_PROVIDERS
+        type: IS_FETCHING_PROVIDERS,
+        payload: true
     }
 }
 
 export const setIsFetchingRecPlans = () => (dispatch, getState) => {
     return {
-        type: IS_FETCHING_RECOMMENDED_PLANS
+        type: IS_FETCHING_RECOMMENDED_PLANS,
+        payload: true
     }
 }
 
 export const setIsFilteringByBudget = () => (dispatch, getState) => {
     return {
-        type: IS_FILTERING_BY_BUDGET
+        type: IS_FILTERING_BY_BUDGET,
+        payload: true
     }
 }
 
 const groupPlansByType = (packages, type) => {
-
-    let rec_plans = [];
     let individual_plans = [];
     let group_plans = [];
     let family_plans = [];
@@ -362,7 +427,7 @@ const groupPlansByType = (packages, type) => {
     let senior_plans = [];
     let corporate_plans = [];
 
-    console.log("packages", packages);
+    CAN_LOG && console.log("packages", packages);
     if (packages.length > 0) {
         for (let i = 0; i < packages.length; i++) {
             let categoryArr = packages[i].plan_id.category;
@@ -404,60 +469,179 @@ const groupPlansByType = (packages, type) => {
             }
         }
 
-        console.log("individual_plans", individual_plans);
-        console.log("group_plans", group_plans);
-        console.log("family_plans", family_plans);
-        console.log("couple_plans", couple_plans);
-        console.log("international_plans", international_plans);
-        console.log("senior_plans", senior_plans);
-        console.log("corporate_plans", corporate_plans);
-    }
-    console.log("type", type);
-
-    let filteredPackagesByPlanType;
-
-    switch (type) {
-        case "single":
-            filteredPackagesByPlanType = individual_plans
-            break
-
-        case "couple":
-            filteredPackagesByPlanType = couple_plans
-            break;;
-
-        case "parents":
-            filteredPackagesByPlanType = senior_plans
-            break;;
-
-
-        case "corporate":
-            filteredPackagesByPlanType = corporate_plans
-            break;
-
-
-        case "fam-of-4":
-            filteredPackagesByPlanType = [
-                ...couple_plans,
-                ...family_plans
-            ]
-            break;;
-
-        case "smes":
-            //console.log("smes oo");
-            filteredPackagesByPlanType = group_plans
-            break;
-
-        case "intl_coverage":
-            filteredPackagesByPlanType = international_plans
-            break;
-
-
-        default:
-            filteredPackagesByPlanType = []
-            break
-
+        if (CAN_LOG) {
+            console.log("individual_plans", individual_plans);
+            console.log("group_plans", group_plans);
+            console.log("family_plans", family_plans);
+            console.log("couple_plans", couple_plans);
+            console.log("international_plans", international_plans);
+            console.log("senior_plans", senior_plans);
+            console.log("corporate_plans", corporate_plans);
+        }
 
     }
-    console.log("filteredPackagesByPlanType", filteredPackagesByPlanType);
+    CAN_LOG && console.log("type", type, typeof type);
+
+    let filteredPackagesByPlanType = [];
+
+    if (typeof type == "object") {
+        for (let i = 0; i < type.length; i++) {
+            CAN_LOG && console.log("type[i]", type[i]);
+            switch (type[i]) {
+                case "single":
+                    filteredPackagesByPlanType = [
+                        ...filteredPackagesByPlanType,
+                        ...individual_plans
+                    ]
+                    break
+
+                case "couple":
+                    filteredPackagesByPlanType = [
+                        ...filteredPackagesByPlanType,
+                        ...couple_plans]
+                    break;;
+
+                case "parents":
+                    filteredPackagesByPlanType = [
+                        ...filteredPackagesByPlanType, ...senior_plans]
+                    break;;
+
+
+                case "corporate":
+                    filteredPackagesByPlanType = [
+                        ...filteredPackagesByPlanType, ...corporate_plans]
+                    break;
+
+
+                case "fam-of-4":
+                    filteredPackagesByPlanType = [
+                        ...filteredPackagesByPlanType,
+                        ...couple_plans,
+                        ...family_plans
+                    ]
+                    break;;
+
+                case "smes":
+                    filteredPackagesByPlanType = [
+                        ...filteredPackagesByPlanType,
+                        ...group_plans]
+                    break;
+
+                case "intl_coverage":
+                    filteredPackagesByPlanType = [
+                        ...filteredPackagesByPlanType,
+                        ...international_plans]
+                    break;
+
+
+                default:
+                    CAN_LOG && console.log("default", packages);
+                    filteredPackagesByPlanType = packages
+                    break
+
+
+            }
+        }
+
+    } else {
+        switch (type) {
+            case "single":
+                filteredPackagesByPlanType = [
+                    ...filteredPackagesByPlanType,
+                    ...individual_plans
+                ]
+                break
+
+            case "couple":
+                filteredPackagesByPlanType = [
+                    ...filteredPackagesByPlanType,
+                    ...couple_plans]
+                break;;
+
+            case "parents":
+                filteredPackagesByPlanType = [
+                    ...filteredPackagesByPlanType, ...senior_plans]
+                break;;
+
+
+            case "corporate":
+                filteredPackagesByPlanType = [
+                    ...filteredPackagesByPlanType, ...corporate_plans]
+                break;
+
+
+            case "fam-of-4":
+                filteredPackagesByPlanType = [
+                    ...filteredPackagesByPlanType,
+                    ...couple_plans,
+                    ...family_plans
+                ]
+                break;;
+
+            case "smes":
+                filteredPackagesByPlanType = [
+                    ...filteredPackagesByPlanType,
+                    ...group_plans]
+                break;
+
+            case "intl_coverage":
+                filteredPackagesByPlanType = [
+                    ...filteredPackagesByPlanType,
+                    ...international_plans]
+                break;
+
+
+            default:
+                CAN_LOG && console.log("default", packages);
+                filteredPackagesByPlanType = packages
+                break
+
+
+        }
+    }
     return filteredPackagesByPlanType;
+}
+
+
+const groupPlansByRange = (packages, range) => {
+    CAN_LOG && console.log("range", range);
+    let filteredPlansByRange = [];
+    let filt;
+    for (let i = 0; i < range.length; i++) {
+        CAN_LOG && console.log("range[i]", range[i]);
+        switch (range[i].toLowerCase()) {
+            case "bronze":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "bronze");
+                filteredPlansByRange.push(...filt);
+                break;
+            case "silver":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "silver");
+                filteredPlansByRange.push(...filt);
+                break;
+            case "gold":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "gold");
+                filteredPlansByRange.push(...filt)
+                break;
+            case "diamond":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "diamond");
+                filteredPlansByRange.push(...filt)
+                break;
+            case "platinum":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "platinum");
+                filteredPlansByRange.push(...filt)
+                break;
+            case "platinum_plus":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "platinum plans");
+                filteredPlansByRange.push(...filt)
+                break;
+            default:
+                filteredPlansByRange = packages
+                console.log("default", filteredPlansByRange);
+                break;
+        }
+
+
+    }
+    CAN_LOG && console.log("filteredPlansByRange", filteredPlansByRange);
+    return filteredPlansByRange;
 }
