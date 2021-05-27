@@ -1047,7 +1047,7 @@ class ComparePlans extends Component<ComparisonProps> {
                           {first.hmo_id.name}
                         </div>
                         <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                          <a href={`/details/${first.service_id}`}>
+                          <a href={`/details/id/${first.service_id}`}>
                             {first.name}
                           </a>
                         </h2>
@@ -1082,7 +1082,7 @@ class ComparePlans extends Component<ComparisonProps> {
                           {second.hmo_id.name}
                         </div>
                         <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                          <a href={`/details/${second.service_id}`}>
+                          <a href={`/details/id/${second.service_id}`}>
                             {second.name}
                           </a>
                         </h2>
@@ -1118,7 +1118,7 @@ class ComparePlans extends Component<ComparisonProps> {
                             {third.hmo_id.name}
                           </div>
                           <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                            <a href={`/details/${third.service_id}`}>
+                            <a href={`/details/id/${third.service_id}`}>
                               {third.name}
                             </a>
                           </h2>

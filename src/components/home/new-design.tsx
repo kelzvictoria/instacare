@@ -4426,7 +4426,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       {plan.hmo_id && plan.hmo_id.name}
                                     </div>
                                     <h2 className="plan-c-name font-weight--normal margin-y--1">
-                                      <a href="#">
+                                      <a
+                                        onClick={() => {
+                                          //this.goToDetails();
+                                          this.getClickedPlan(i);
+                                        }}
+                                      >
                                         {/* HyBasic */}
                                         {plan.name}
                                       </a>
