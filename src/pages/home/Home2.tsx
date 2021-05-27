@@ -34,6 +34,8 @@ import {
   filterByPlanType,
   filterByBudget_and_or_Type,
   filterByPlanRange,
+  getPlan,
+  getSimilarPlans,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -232,6 +234,7 @@ class Home extends Component<QuizProps, {}> {
 
 const mapProps = (state: any) => ({
   plans: state.fetchData.plans,
+  //plan: state.fetchData.plan,
   planServices: state.fetchData.services,
   hmos: state.fetchData.hmos,
   responses: state.quiz.responses,
@@ -302,4 +305,6 @@ export default connect(mapProps, {
   resetType,
   filterByPlanRange,
   resetRange,
+  getPlan,
+  getSimilarPlans,
 })(Home);

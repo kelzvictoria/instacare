@@ -1950,16 +1950,24 @@ class NewContent extends React.Component<homeProps, homeState> {
     return <p>Not enough responses collected!</p>;
   }
 
-  goToDetails() {
-    this.props.history.push({ pathname: "/details" });
+  goToDetails(serviceID) {
+    this.props.history.push({ pathname: `/details/id/${serviceID}` });
   }
 
   getClickedPlan = (index) => {
     let propsData = this.props.plansByHMO[index];
-    let data = this.props.plans[index];
-    this.props.plansByHMO.length > 0 && this.props.getClickedPlan(propsData);
+    let data = this.props.planServices[index];
+    console.log("data", data);
 
-    this.props.plansByHMO.length == 0 && this.props.getClickedPlan(data);
+    let serviceID = data.service_id;
+    this.goToDetails(serviceID);
+
+    this.props.getPlan(data);
+    this.props.getSimilarPlans(data);
+
+    // this.props.plansByHMO.length > 0 && this.props.getClickedPlan(propsData);
+
+    // this.props.plansByHMO.length == 0 && this.props.getClickedPlan(data);
   };
 
   renderDesktopQuizForm() {
@@ -4557,7 +4565,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         className="c-button c-button--secondary c-plan-card__action-button plan-c-card_action-button"
                                         // href=""
                                         onClick={() => {
-                                          this.goToDetails();
+                                          //this.goToDetails();
                                           this.getClickedPlan(i);
                                         }}
                                         role="button"
@@ -4761,7 +4769,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-status-list__item font-size--small">
                                         <img
                                           src={
-                                            plan.intermediate_surgeries !== "No"
+                                            plan.intermediate_surgeries !==
+                                              "No" &&
+                                            plan.intermediate_surgeries !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4774,7 +4784,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-status-list__item font-size--small">
                                         <img
                                           src={
-                                            plan.major_surgeries !== "No"
+                                            plan.major_surgeries !== "No" &&
+                                            plan.major_surgeries !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4787,7 +4798,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-status-list__item font-size--small">
                                         <img
                                           src={
-                                            plan.hospital_admissions !== "No"
+                                            plan.hospital_admissions !== "No" &&
+                                            plan.hospital_admissions !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4801,7 +4813,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-status-list__item font-size--small">
                                         <img
                                           src={
-                                            plan.optical_care !== "No"
+                                            plan.optical_care !== "No" &&
+                                            plan.optical_care !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4814,7 +4827,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-status-list__item font-size--small">
                                         <img
                                           src={
-                                            plan.lab_investigations !== "No"
+                                            plan.lab_investigations !== "No" &&
+                                            plan.lab_investigations !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4827,7 +4841,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-status-list__item font-size--small">
                                         <img
                                           src={
-                                            plan.accidents_emergencies !== "No"
+                                            plan.accidents_emergencies !==
+                                              "No" &&
+                                            plan.accidents_emergencies !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4840,7 +4856,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-status-list__item font-size--small">
                                         <img
                                           src={
-                                            plan.cancer_care !== "No"
+                                            plan.cancer_care !== "No" &&
+                                            plan.cancer_care !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4853,7 +4870,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-status-list__item font-size--small">
                                         <img
                                           src={
-                                            plan.covid_19_treatment !== "No"
+                                            plan.covid_19_treatment !== "No" &&
+                                            plan.covid_19_treatment !== ""
                                               ? check
                                               : uncheck
                                           }

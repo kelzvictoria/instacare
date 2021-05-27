@@ -4,60 +4,19 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions/types";
 
-import bottom_filter from "../../imgs/bottom_filter.svg";
-import bottom_shortlist from "../../imgs/bottom_shortlist.svg";
-import bottom_compare from "../../imgs/bottom_compare.svg";
-
-import { Link } from "react-router-dom";
-import { PAYSTACK_PUBLIC_KEY } from "../../utils/index";
-import { UPDATE_PRICE, TOGGLE_BUYING_PLAN } from "../../actions/types";
-import { UPDATE_NOTGETTINGPROVIDERS } from "../../actions/types";
-import PaystackButton from "react-paystack";
-
-import AppFooter from "../../components/app-footer/AppFooter";
-
 import shortlist from "../../imgs/shortlist-yellow.svg";
 
-import {
-  Card,
-  Col,
-  Row,
-  Icon,
-  Checkbox,
-  Radio,
-  Slider,
-  Spin,
-  Skeleton,
-  Button,
-  Divider,
-  Typography,
-  Empty,
-  InputNumber,
-  Collapse,
-  message,
-  Tabs,
-  Table,
-} from "antd";
-import { formatAsCurrency, NAIRA_SIGN } from "../../utils";
-import { Plan } from "../../interfaces/Plan";
+import { Card, Button, Typography, Collapse, Tabs } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBalanceScale,
-  faArrowLeft,
-  faFilter,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 import * as home_utils from "../../utils/homeUtils";
 
 import Modal from "react-bootstrap/Modal";
 
+import { getPlanDetail } from "../../actions/fetchDataActions";
+
 import { state } from "../../components/home/state";
-
-const { Title } = Typography;
-
-let responses: any;
-const API_URL = "https://dev-hmo-compare-api.herokuapp.com";
 
 interface DetailsProps {
   email: string;
@@ -66,16 +25,6 @@ interface DetailsProps {
   notgettingproviders: boolean;
   buyingPlan: boolean;
 }
-
-interface FilterProps {
-  [x: string]: any;
-}
-
-let notGettingProviders = true;
-let predetails: any;
-const { Panel } = Collapse;
-const { Meta } = Card;
-const { TabPane } = Tabs;
 
 class PlanDetails extends Component<DetailsProps> {
   constructor(props) {
@@ -281,7 +230,7 @@ class PlanDetails extends Component<DetailsProps> {
     });
   }
 
-  handleSonBoxChecked(val) {
+  handleSonBoxChecked() {
     console.log(this);
     this.props.dispatch({
       type: actions.UPDATE_SON_CHECKED,
@@ -292,7 +241,7 @@ class PlanDetails extends Component<DetailsProps> {
     });
   }
 
-  handleDaughterBoxChecked(val) {
+  handleDaughterBoxChecked() {
     this.props.dispatch({
       type: actions.UPDATE_DAUGHTER_CHECKED,
       data: {
@@ -470,7 +419,7 @@ class PlanDetails extends Component<DetailsProps> {
                   className="chkMembers"
                   defaultChecked={false}
                   onChange={(e) => {
-                    this.handleSonBoxChecked(e.target.value);
+                    this.handleSonBoxChecked();
                   }}
                   id="son"
                 ></input>
@@ -641,7 +590,7 @@ class PlanDetails extends Component<DetailsProps> {
                   className="chkMembers"
                   defaultChecked={false}
                   onChange={(e) => {
-                    this.handleDaughterBoxChecked(e.target.value);
+                    this.handleDaughterBoxChecked();
                   }}
                   id="daughter"
                 ></input>
@@ -1052,14 +1001,53 @@ class PlanDetails extends Component<DetailsProps> {
     return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
   };
 
+  individual_plans = [];
+  group_plans = [];
+  family_plans = [];
+  couple_plans = [];
+  international_plans = [];
+  senior_plans = [];
+  corporate_plans = [];
+
   componentDidMount() {
-    if (!this.props.quiz.clicked_plan.name) {
-      this.goToHome();
+    // if (!this.props.plan.name) {
+    //   //this.goToHome();
+    // }
+  }
+
+  params: any[] = [];
+  parsedParams: any[] = [];
+
+  parseParams = () => {
+    let paramsArr: any[] = [];
+    let params = this.props.match.params[0].split("/");
+
+    let p: object;
+    for (let i = 0; i < params.length; i += 2) {
+      p = {
+        name: params[i],
+        value: params[i + 1],
+      };
+      paramsArr.push(p);
+    }
+    this.params = paramsArr;
+  };
+
+  async UNSAFE_componentWillMount() {
+    if (Object.keys(this.props.match.params).length) {
+      this.parseParams();
+      let idParamsObj = this.params.filter((param) => param.name == "id");
+
+      if (idParamsObj.length > 0) {
+        let id = idParamsObj[0].value;
+        console.log("id", id);
+        await this.props.getPlanDetail(id);
+      }
     }
   }
 
   render() {
-    const plan = this.props.quiz.clicked_plan;
+    const plan = this.props.plan;
     console.log("plan details props", this.props);
     return (
       <div className="details">
@@ -1150,6 +1138,7 @@ class PlanDetails extends Component<DetailsProps> {
                         </div>
                       </div>
                     </div>
+                    {/* <p>{plan.plan_id.desc}</p> */}
                   </div>
                   <div className="duration">
                     <h6>Plan Duration</h6>
@@ -1159,9 +1148,9 @@ class PlanDetails extends Component<DetailsProps> {
                 </p> */}
                     <div
                       className={
-                        this.props.responses.plan_duration === "1"
-                          ? "hmo_period_inner selected_term"
-                          : "hmo_period_inner"
+                        //this.props.responses.plan_duration === "1"?
+                        "hmo_period_inner selected_term"
+                        // : "hmo_period_inner"
                       }
                     >
                       <div>
@@ -1173,7 +1162,8 @@ class PlanDetails extends Component<DetailsProps> {
                               className="input-radio"
                               value="1"
                               defaultChecked={
-                                this.props.responses.plan_duration === "1"
+                                true
+                                //this.props.responses.plan_duration === "1"
                               }
                               onClick={this.handlePlanDuration}
                             />{" "}
@@ -1183,9 +1173,14 @@ class PlanDetails extends Component<DetailsProps> {
                       </div>
                       <div className="text_right">
                         <span className="mr-2">Premium</span>₦
-                        {this.props.responses.type == "single"
-                          ? this.numberwithCommas(plan.individual_annual_price)
-                          : this.numberwithCommas(plan.family_annual_price)}
+                        {
+                          // this.props.responses.type == "single"
+                          //   ? this.numberwithCommas(plan.individual_annual_price)
+                          //   : this.numberwithCommas(plan.family_annual_price)
+                          this.numberwithCommas(
+                            home_utils.stripNonNumeric(plan.price)
+                          )
+                        }
                       </div>
                     </div>
                     {/* <div
@@ -1251,10 +1246,23 @@ class PlanDetails extends Component<DetailsProps> {
                     <h6>Members Covered</h6>
                     <div className="row">
                       <p>
-                        {this.props.quiz.quiz.responses.full_name}(
-                        {this.props.quiz.quiz.responses.individual_age} years)
+                        {plan.plan_id &&
+                          plan.plan_id.category &&
+                          plan.plan_id.category.map((cat, i) => {
+                            return (
+                              <span className="">
+                                {" "}
+                                {cat.name}
+                                {plan.plan_id.category.length > 1 &&
+                                  i < plan.plan_id.category.length - 1 &&
+                                  ", "}
+                              </span>
+                            );
+                          })}
+                        {/* {this.props.quiz.quiz.responses.full_name}(
+                        {this.props.quiz.quiz.responses.individual_age} years) */}
                       </p>
-                      <a
+                      {/* <a
                         className="edit-members-modal"
                         onClick={this.toggleOthersInput}
                         href="#"
@@ -1263,7 +1271,7 @@ class PlanDetails extends Component<DetailsProps> {
                           className="members-chev"
                           icon={faChevronRight}
                         />
-                      </a>
+                      </a> */}
                     </div>
                   </div>
                   <div className="similar-plans">
@@ -1274,24 +1282,22 @@ class PlanDetails extends Component<DetailsProps> {
                       <div className="similar_plan_feature">
                         <div className="box-slider">
                           <div className="slider-plans">
-                            {state.plans.map((similar_plan) => {
-                              return similar_plan.name !== plan.name ? (
-                                <div className="box">
-                                  <ul className="similar-plan-ul">
-                                    <li>
-                                      <div className="box_block">
-                                        <div className="img-box-logo-similar">
-                                          <img src={similar_plan.hmo_id.logo} />
-                                        </div>
-                                        <span className="greyed-text">
-                                          {similar_plan.name}
-                                        </span>
+                            {this.props.similar_plans.map((similar_plan) => (
+                              <div className="box">
+                                <ul className="similar-plan-ul">
+                                  <li>
+                                    <div className="box_block">
+                                      <div className="img-box-logo-similar">
+                                        <img src={similar_plan.hmo_id.logo} />
                                       </div>
-                                      <ul>
-                                        <li>
-                                          <span>
-                                            Covers{" "}
-                                            <b>
+                                      <span className="greyed-text">
+                                        {similar_plan.name}
+                                      </span>
+                                    </div>
+                                    <ul>
+                                      <li>
+                                        <span>
+                                          {/* <b>
                                               {
                                                 this.props.quiz.quiz.responses
                                                   .num_of_people
@@ -1300,42 +1306,62 @@ class PlanDetails extends Component<DetailsProps> {
                                                 .num_of_people > 1
                                                 ? " people"
                                                 : " person"}
-                                            </b>
-                                          </span>
-                                        </li>
-                                        <li>
-                                          <span>
-                                            Premium{" "}
-                                            <b>
-                                              ₦
-                                              {this.props.responses.type ==
+                                            </b> */}
+                                          {similar_plan.plan_id &&
+                                            similar_plan.plan_id.category &&
+                                            similar_plan.plan_id.category.map(
+                                              (cat, i) => {
+                                                return (
+                                                  <b className="">
+                                                    {" "}
+                                                    {cat.name}
+                                                    {plan.plan_id.category
+                                                      .length > 1 &&
+                                                      i <
+                                                        plan.plan_id.category
+                                                          .length -
+                                                          1 &&
+                                                      ", "}
+                                                  </b>
+                                                );
+                                              }
+                                            )}
+                                        </span>
+                                      </li>
+                                      <li>
+                                        <span>
+                                          <b>
+                                            ₦
+                                            {/* {this.props.responses.type ==
                                               "single"
                                                 ? this.numberwithCommas(
                                                     similar_plan.individual_annual_price
                                                   )
                                                 : this.numberwithCommas(
                                                     similar_plan.family_annual_price
-                                                  )}
-                                              / year
-                                            </b>
-                                          </span>
-                                        </li>
-                                      </ul>
-                                      <div className="similar-plans-btm">
-                                        <button
-                                          className="btn"
-                                          onClick={this.goToPlans}
-                                        >
-                                          COMPARE NOW
-                                        </button>
-                                      </div>
-                                    </li>
-                                  </ul>
-                                </div>
-                              ) : (
-                                ""
-                              );
-                            })}
+                                                  )} */}
+                                            {this.numberwithCommas(
+                                              home_utils.stripNonNumeric(
+                                                similar_plan.price
+                                              )
+                                            )}
+                                            / year
+                                          </b>
+                                        </span>
+                                      </li>
+                                    </ul>
+                                    <div className="similar-plans-btm">
+                                      <button
+                                        className="btn"
+                                        onClick={this.goToPlans}
+                                      >
+                                        COMPARE NOW
+                                      </button>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -1357,18 +1383,26 @@ class PlanDetails extends Component<DetailsProps> {
                         <div>
                           <span>
                             ₦
-                            {this.props.responses.type == "single"
-                              ? this.numberwithCommas(
-                                  plan.individual_annual_price
-                                )
-                              : this.numberwithCommas(plan.family_annual_price)}
+                            {
+                              // this.props.responses.type == "single"
+                              //   ? this.numberwithCommas(
+                              //       plan.individual_annual_price
+                              //     )
+                              //   : this.numberwithCommas(plan.family_annual_price)
+                              this.numberwithCommas(
+                                home_utils.stripNonNumeric(plan.price)
+                              )
+                            }
                           </span>
                         </div>
                       </div>
                       <div className="flexRow section_right">
                         <div>Policy Period</div>
                         <div>
-                          <span>{plan.duration}</span>
+                          <span>
+                            1 year
+                            {/* {plan.duration} */}
+                          </span>
                         </div>
                       </div>
                       <div className="premium_right">
@@ -1377,13 +1411,18 @@ class PlanDetails extends Component<DetailsProps> {
                           <div>
                             <span>
                               ₦
-                              {this.props.responses.type == "single"
-                                ? this.numberwithCommas(
-                                    plan.individual_annual_price
-                                  )
-                                : this.numberwithCommas(
-                                    plan.family_monthly_price
-                                  )}
+                              {
+                                // this.props.responses.type == "single"
+                                //   ? this.numberwithCommas(
+                                //       plan.individual_annual_price
+                                //     )
+                                //   : this.numberwithCommas(
+                                //       plan.family_monthly_price
+                                //     )
+                                this.numberwithCommas(
+                                  home_utils.stripNonNumeric(plan.price)
+                                )
+                              }
                             </span>
                           </div>
                         </div>
@@ -1399,9 +1438,14 @@ class PlanDetails extends Component<DetailsProps> {
                   <p>Total Premium</p>
                   <p>
                     ₦
-                    {this.props.responses.type == "single"
-                      ? this.numberwithCommas(plan.individual_annual_price)
-                      : this.numberwithCommas(plan.family_annual_price)}
+                    {
+                      // this.props.responses.type == "single"
+                      //   ? this.numberwithCommas(plan.individual_annual_price)
+                      //   : this.numberwithCommas(plan.family_annual_price)
+                      this.numberwithCommas(
+                        home_utils.stripNonNumeric(plan.price)
+                      )
+                    }
                   </p>
                 </div>
                 <div className="col-md-8">
@@ -1440,23 +1484,38 @@ class PlanDetails extends Component<DetailsProps> {
                           <div className="col-md-3">
                             <p className="greyed-text">Covers</p>
                             <h6>
-                              {this.props.quiz.quiz.responses.num_of_people}
+                              {plan.plan_id &&
+                                plan.plan_id.category &&
+                                plan.plan_id.category.map((cat, i) => {
+                                  return (
+                                    <span className="">
+                                      {" "}
+                                      {cat.name}
+                                      {plan.plan_id.category.length > 1 &&
+                                        i < plan.plan_id.category.length - 1 &&
+                                        ", "}
+                                    </span>
+                                  );
+                                })}
                             </h6>
                           </div>
                           <div className="col-md-7">
                             <p className="greyed-text">Premium</p>
                             <h6>
                               ₦
-                              {this.props.responses.type == "single"
+                              {/* {this.props.responses.type == "single"
                                 ? this.numberwithCommas(
                                     plan.individual_annual_price
                                   )
                                 : this.numberwithCommas(
                                     plan.family_annual_price
-                                  )}
+                                  )} */}
+                              {this.numberwithCommas(
+                                home_utils.stripNonNumeric(plan.price)
+                              )}
                               / year
                             </h6>
-                            {plan.individual_monthly_price ? (
+                            {/* {plan.individual_monthly_price ? (
                               <p className="greyed-text">
                                 ₦
                                 {this.numberwithCommas(
@@ -1466,7 +1525,7 @@ class PlanDetails extends Component<DetailsProps> {
                               </p>
                             ) : (
                               ""
-                            )}
+                            )} */}
                           </div>
                           <div className="col-md-2 shortlist-div">
                             <img className="shortlist-yellow" src={shortlist} />
@@ -1562,7 +1621,11 @@ class PlanDetails extends Component<DetailsProps> {
                               <div className="div_features_covered_border">
                                 <h2 className="span_feature_popup_heading">
                                   Out-patient Limit: ₦
-                                  {this.numberwithCommas(plan.outpatient_limit)}
+                                  {this.numberwithCommas(
+                                    home_utils.stripNonNumeric(
+                                      plan.out_patient_limit
+                                    )
+                                  )}
                                 </h2>
                                 {/* <FontAwesomeIcon
                           className="chev"
@@ -1586,7 +1649,11 @@ class PlanDetails extends Component<DetailsProps> {
                               <div className="div_features_covered_border">
                                 <h2 className="span_feature_popup_heading">
                                   In-patient Limit: ₦
-                                  {this.numberwithCommas(plan.inpatient_limit)}
+                                  {this.numberwithCommas(
+                                    home_utils.stripNonNumeric(
+                                      plan.in_patient_limit
+                                    )
+                                  )}
                                 </h2>
                                 {/* <FontAwesomeIcon
                           className="chev"
@@ -1607,9 +1674,7 @@ class PlanDetails extends Component<DetailsProps> {
                               <div className="div_features_covered_border">
                                 <h2 className="span_feature_popup_heading">
                                   Cover Region:{" "}
-                                  {plan.cover_region_id
-                                    ? plan.cover_region_id.name
-                                    : ""}
+                                  {plan.cover_region ? plan.cover_region : ""}
                                 </h2>
                                 {/* <FontAwesomeIcon
                           className="chev"
@@ -1622,7 +1687,7 @@ class PlanDetails extends Component<DetailsProps> {
                           <div className="features-content">
                             <p className="coveredHead">What's covered</p>
                             <div className="">
-                              {plan.service_id
+                              {/* {plan.service_id
                                 ? plan.service_id.map((service) => {
                                     return (
                                       <div className="div_features_covered_main">
@@ -1640,15 +1705,13 @@ class PlanDetails extends Component<DetailsProps> {
                                             <h2 className="span_feature_popup_heading">
                                               {service}
                                             </h2>
-                                            {/* <span className="span_feature_popup_sub_heading">
-                            Single Private A/C Room
-                          </span> */}
+                                     
                                           </div>
                                         </div>
                                       </div>
                                     );
                                   })
-                                : ""}
+                                : ""} */}
                             </div>
                           </div>
                         ) : this.props.tab_opened == "claim" ? (
@@ -1686,13 +1749,13 @@ class PlanDetails extends Component<DetailsProps> {
                               Top Hospitals
                             </div>
                             <ul className="features_hosp_list">
-                              {plan.hmo_id.provider_id
+                              {/* {plan.hmo_id.provider_id
                                 ? JSON.parse(plan.hmo_id.provider_id).map(
                                     (provider) => {
                                       return <li>{provider}</li>;
                                     }
                                   )
-                                : ""}
+                                : ""} */}
                             </ul>
                             {/* <div className="features_hospital_catHead">
                         Other Hospitals
@@ -1712,11 +1775,14 @@ class PlanDetails extends Component<DetailsProps> {
                           <p>Total Premium</p>
                           <p>
                             ₦{" "}
-                            {this.props.responses.type == "single"
+                            {/* {this.props.responses.type == "single"
                               ? this.numberwithCommas(
                                   plan.individual_annual_price
                                 )
-                              : this.numberwithCommas(plan.family_annual_price)}
+                              : this.numberwithCommas(plan.family_annual_price)} */}
+                            {this.numberwithCommas(
+                              home_utils.stripNonNumeric(plan.price)
+                            )}
                           </p>
                         </div>
                         <div className="col-md-8">
@@ -1790,7 +1856,8 @@ class PlanDetails extends Component<DetailsProps> {
               </Modal>
             </div>
           ) : (
-            this.goToHome()
+            ""
+            //this.goToHome()
           )}
         </div>
         {/* <AppFooter /> */}
@@ -1802,10 +1869,13 @@ class PlanDetails extends Component<DetailsProps> {
 /*export default Compare;*/
 const mapProps = (state: any) => {
   return {
-    ...state.quiz.quiz,
-    ...state.quiz.compare,
-    ...state,
+    plans: state.fetchData.services,
+    plan: state.fetchData.plan,
+    similar_plans: state.fetchData.similar_plans,
+    responses: state.quiz.responses,
   };
 };
 
-export default connect(mapProps)(PlanDetails);
+export default connect(mapProps, {
+  getPlanDetail,
+})(PlanDetails);

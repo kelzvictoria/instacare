@@ -21,3 +21,9 @@ h2.border-bottom--1.border--dark.padding-bottom--2 {
 h2.c-plan-title__name.font-weight--normal.margin-y--1 {
   font-size: 1.5rem;
 }
+
+button.ds-h2:focus,
+button.ds-h2:active {
+  outline-color: #046791 !important;
+  padding: 2px !important;
+}

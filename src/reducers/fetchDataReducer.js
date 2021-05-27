@@ -22,6 +22,8 @@ import {
     FILTER_BY_BUDGET,
     FILTER_BY_PLAN_ID,
     FILTER_BY_PLAN_TYPE,
+    GET_PLAN,
+    GET_SIMILAR_PLANS
 } from "../actions/types";
 
 const initialState = {
@@ -38,7 +40,11 @@ const initialState = {
         localStorage["providers"] ? JSON.parse(localStorage["providers"]) :
             [],
     plansByHMO: [],
+    plan: [],
+    similar_plans: [],
+    hmo: [],
     fetching_plans: false,
+    is_fetching_plan: false,
     is_fetching_hmos: false,
     is_fetching_services: false,
     is_fetching_providers: false,
@@ -60,6 +66,12 @@ export default function (state = initialState, action) {
                 plans: action.payload,
                 is_fetching_plans: false,
 
+            }
+        case GET_PLAN:
+            return {
+                ...state,
+                plan: action.payload,
+                is_fetching_plan: false,
             }
 
         case GET_HMOS:
@@ -112,6 +124,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 cheapest_plan: action.data
+            }
+
+        case GET_SIMILAR_PLANS:
+            return {
+                ...state,
+                similar_plans: action.payload
             }
 
         case IS_FETCHING_PLANS_BY_HMO:

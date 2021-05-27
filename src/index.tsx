@@ -53,7 +53,8 @@ export class App extends React.Component {
               <Route path="/compare-old" component={Compare} />
               <Route path="/plans" component={Plans} />
               <Route path="/details-old" component={Details} />
-              <Route path="/details" component={PlanDetails} />
+              <Route exact path="/details" component={PlanDetails} />
+              <Route exact path="/details/*" component={PlanDetails} />
               <Route exact path="/compare" component={SideBySideComparison} />
               <Route path="/compare-plans/plans/*" component={ComparePlans} />
               <Route path="/new-design" component={Home2} />

@@ -25,7 +25,9 @@ import {
     FILTER_BY_BUDGET,
     FILTER_BY_HMO,
     FILTER_BY_PLAN_ID,
-    FILTER_BY_PLAN_TYPE
+    FILTER_BY_PLAN_TYPE,
+    GET_PLAN,
+    GET_SIMILAR_PLANS
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions";
@@ -71,6 +73,49 @@ export const getPlans = () => async (dispatch, getState) => {
 
             err.response && dispatch(returnErrors(err.response.data, err.response.status))
         })
+}
+
+export const getPlan = (plan) => (dispatch, getState) => {
+    dispatch({
+        type: GET_PLAN,
+        payload: plan
+    })
+}
+
+export const getPlanDetail = (serviceID) => async (dispatch, getState) => {
+    await dispatch(getServices())
+
+
+    let services = getState().fetchData.services;
+
+    let service = services.filter(service => service.service_id === serviceID)[0];
+    dispatch(getSimilarPlans(service));
+    dispatch({
+        type: GET_PLAN,
+        payload: service
+    })
+}
+
+export const getSimilarPlans = (plan) => async (dispatch, getState) => {
+    await dispatch(getServices())
+    let type = plan.plan_id.category;
+    let planID = plan.plan_id.plan_id;
+
+    console.log("type", type, "planID", planID);
+
+    let packages = getState().fetchData.services;
+
+    let res = groupPlansByType(packages, type);
+
+    let similar_plans = res.filter(plan => plan.plan_id.plan_id !== planID)
+
+    console.log("similar_plans", similar_plans);
+
+    dispatch({
+        type: GET_SIMILAR_PLANS,
+        payload: similar_plans
+    })
+
 }
 
 export const getPlansByID = (planID) => async (dispatch, getState) => {
