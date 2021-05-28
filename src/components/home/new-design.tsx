@@ -4427,6 +4427,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </div>
                                     <h2 className="plan-c-name font-weight--normal margin-y--1">
                                       <a
+                                        href="#"
                                         onClick={() => {
                                           //this.goToDetails();
                                           this.getClickedPlan(i);

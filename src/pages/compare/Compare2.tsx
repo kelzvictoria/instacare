@@ -31,6 +31,12 @@ import { stripNonNumeric } from "../../utils/homeUtils";
 import check from "../../svgs/check.svg";
 import uncheck from "../../svgs/uncheck.svg";
 
+import {
+  setCheckedPlans,
+  setPlansToCompareOnDesktop,
+  setPlansToCompareOnMobile,
+} from "../../actions/compareActions";
+
 interface ComparisonProps {
   [x: string]: any;
   dispatch(args: any): any;
@@ -122,6 +128,7 @@ class ComparePlans extends Component<ComparisonProps> {
     console.log("this.props.match.params[0]", this.props.match.params[0]);
     let params = this.props.match.params[0];
     let paramsArr = params.split("/");
+    paramsArr = paramsArr.map((p) => parseInt(p));
     console.log("paramsArr", paramsArr);
 
     this.setState({
@@ -154,13 +161,7 @@ class ComparePlans extends Component<ComparisonProps> {
   };
 
   handleCheckedPlanToCompareOnDesktop(index) {
-    // console.log("index", index);
-
     let value = index;
-
-    //this.checkChecked(index);
-
-    //  console.log(checked);
 
     let indexes: string[] = [];
     let checked_values: boolean[] = [];
@@ -174,43 +175,42 @@ class ComparePlans extends Component<ComparisonProps> {
 
     console.log("i", i, "j", j, "indexes.length", indexes.length);
 
-    // if (i == 1 && indexes.length == 2) {
-    //   // console.log("yes babe");
-    //   this.toggleShowDesktopCompareCheckbox();
-    // }
-
     if (
       indexes.length < this.state.limit_plans_to_compare_on_desktop &&
       i == 1 &&
       checked_values.length < this.state.limit_plans_to_compare_on_desktop
     ) {
-      //  console.log("here");
-      //this.toggleShowCompareWidget();
+      // this.props.dispatch({
+      //   type: "SET_PLANS_TO_COMPARE_ON_DESKTOP",
+      //   data: [...this.state.plans_to_compare, value],
+      // });
 
-      this.props.dispatch({
-        type: "SET_PLANS_TO_COMPARE_ON_DESKTOP",
-        data: [...this.state.plans_to_compare, value],
-      });
+      this.props.setPlansToCompareOnDesktop([
+        ...this.state.plans_to_compare,
+        value,
+      ]);
 
-      this.props.dispatch({
-        type: "SET_CHECKED_PLANS",
-        data: [...this.props.checked_plans_list, checked],
-      });
+      this.props.setCheckedPlans([...this.props.checked_plans_list, checked]);
+
+      // this.props.dispatch({
+      //   type: "SET_CHECKED_PLANS",
+      //   data: [...this.props.checked_plans_list, checked],
+      // });
     } else if (i > 1 && j > 1) {
-      // console.log(
-      //   "there",
-      //   this.state.this.state.plans_to_compare.splice(i, 1)
-      // );
+      this.props.setPlansToCompareOnDesktop(
+        this.state.plans_to_compare.splice(i, 1)
+      );
 
-      this.props.dispatch({
-        type: "SET_PLANS_TO_COMPARE_ON_DESKTOP",
-        data: this.state.plans_to_compare.splice(i, 1),
-      });
+      // this.props.dispatch({
+      //   type: "SET_PLANS_TO_COMPARE_ON_DESKTOP",
+      //   data: this.state.plans_to_compare.splice(i, 1),
+      // });
 
-      this.props.dispatch({
-        type: "SET_CHECKED_PLANS",
-        data: this.props.checked_plans_list.splice(j, 1),
-      });
+      this.props.setCheckedPlans(this.props.checked_plans_list.splice(j, 1));
+      // this.props.dispatch({
+      //   type: "SET_CHECKED_PLANS",
+      //   data: this.props.checked_plans_list.splice(j, 1),
+      // });
     }
     if (indexes.length == this.state.limit_plans_to_compare_on_desktop) {
       // this.toggleShowDesktopCompareCheckbox();
@@ -441,14 +441,64 @@ class ComparePlans extends Component<ComparisonProps> {
     });
   };
 
+  async handleCheckedPlanToCompare(index) {
+    let indexes: string[] = [...this.state.plans_to_compare]; //[...this.props.compare_plans_desktop_indexes];
+
+    let isPlanChecked = indexes.indexOf(index);
+
+    if (isPlanChecked == -1 && indexes.length > 0) {
+      // this.showCompareButton();
+    }
+    console.log("isPlanChecked", isPlanChecked);
+
+    if (isPlanChecked > -1) {
+      if (indexes.length == 1) {
+        console.log("in?");
+
+        message.error("Add more plans to compare");
+      } else {
+        indexes.splice(isPlanChecked, 1);
+      }
+    } else {
+      if (indexes.length <= 2) {
+        indexes.push(index);
+      } else {
+        message.error("You can only compare a maximum of 3 plans at a time");
+      }
+    }
+    console.log("indexes", indexes);
+
+    await this.props.setPlansToCompareOnDesktop(indexes);
+    //this.props.setCheckedPlans(indexes);
+
+    this.setState({
+      plans_to_compare: indexes,
+    });
+
+    console.log(
+      "this.props.compare_plans_desktop_indexes",
+      this.props.compare_plans_desktop_indexes,
+      "this.state.plans_to_compare",
+      this.state.plans_to_compare,
+      "indexes.length",
+      indexes.length,
+      "index",
+      index,
+      "typeof index",
+      typeof index
+    );
+  }
+
   render() {
     console.log("this.state.current_page - 1", this.state.current_page - 1);
-    let plans_to_compare: string[] = this.state.plans_to_compare;
+    let plans_to_compare: number[] = this.state.plans_to_compare;
     let plans = this.props.plans;
 
     let first = plans[this.state.plans_to_compare[0]];
     let second = plans[this.state.plans_to_compare[1]];
     let third = plans[this.state.plans_to_compare[2]];
+
+    console.log("plans_to_compare", plans_to_compare);
 
     console.log("first", first, "second", second, "third", third);
 
@@ -460,7 +510,7 @@ class ComparePlans extends Component<ComparisonProps> {
               <div>
                 <a
                   className="c-button c-button--transparent c-plan-nav-bar__back-link padding--0 text-decoration--underline"
-                  href="#/plan/results/"
+                  href="/#plans"
                   target="_self"
                   role="button"
                 >
@@ -665,7 +715,7 @@ class ComparePlans extends Component<ComparisonProps> {
                         {/* Blue FocusCare Bronze℠ 209 */}
                       </a>
                     </h2>
-                    <ul className="c-plan-title__info c-list--bare font-size--small">
+                    {/* <ul className="c-plan-title__info c-list--bare font-size--small">
                       <li className="c-plan-title__info-item">
                         <span className="visibility--screen-reader">
                           Metal Level: <span>Bronze</span>
@@ -688,7 +738,7 @@ class ComparePlans extends Component<ComparisonProps> {
                           36096IL1000009
                         </span>
                       </li>
-                    </ul>
+                    </ul> */}
                   </header>
                   <button
                     className="c-button c-button--primary c-button--small margin-top--2 qa-mobile-visible-plan"
@@ -703,13 +753,12 @@ class ComparePlans extends Component<ComparisonProps> {
                     <div>
                       <table className="c-details-table">
                         <tbody className="valign--top">
-                          {" "}
                           <tr>
                             <th scope="row">Plan metal level</th>
                             <td>
                               <span>Bronze</span>
                             </td>
-                          </tr>{" "}
+                          </tr>
                           <tr>
                             <th scope="row">Plan ID</th>
                             <td>
@@ -1064,6 +1113,12 @@ class ComparePlans extends Component<ComparisonProps> {
                         <button
                           className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
                           type="button"
+                          onClick={() => {
+                            this.handleCheckedPlanToCompare(
+                              parseInt(this.state.plans_to_compare[0])
+                            );
+                            // this.handleCheckedPlanToCompareOnDesktop("0");
+                          }}
                         >
                           <FontAwesomeIcon
                             className="fas  fa-lg color--primary"
@@ -1076,42 +1131,50 @@ class ComparePlans extends Component<ComparisonProps> {
                         </button>
                       </div>
                     </div>
-                    <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
-                      <div className="c-compare-title__info padding--1">
-                        <div className="font-size--small font-weight--bold">
-                          {second.hmo_id.name}
+                    {this.state.plans_to_compare[1] !== undefined && (
+                      <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
+                        <div className="c-compare-title__info padding--1">
+                          <div className="font-size--small font-weight--bold">
+                            {second.hmo_id.name}
+                          </div>
+                          <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
+                            <a href={`/details/id/${second.service_id}`}>
+                              {second.name}
+                            </a>
+                          </h2>
+                          <div className="margin-top--auto print-display--none">
+                            <button
+                              className="c-button c-button--primary c-button--small qa-details"
+                              type="button"
+                            >
+                              Like This Plan
+                            </button>
+                          </div>
                         </div>
-                        <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                          <a href={`/details/id/${second.service_id}`}>
-                            {second.name}
-                          </a>
-                        </h2>
-                        <div className="margin-top--auto print-display--none">
+                        <div className="fill--gray-lightest print-display--none">
                           <button
-                            className="c-button c-button--primary c-button--small qa-details"
+                            className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
                             type="button"
+                            onClick={() => {
+                              this.handleCheckedPlanToCompare(
+                                parseInt(this.state.plans_to_compare[1])
+                              );
+                              //this.handleCheckedPlanToCompareOnDesktop("1");
+                            }}
                           >
-                            Like This Plan
+                            <FontAwesomeIcon
+                              className="fas  fa-lg color--primary"
+                              icon={faTimes}
+                            />
+                            <span className="visibility--screen-reader">
+                              Remove
+                            </span>
                           </button>
                         </div>
                       </div>
-                      <div className="fill--gray-lightest print-display--none">
-                        <button
-                          className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
-                          type="button"
-                        >
-                          <FontAwesomeIcon
-                            className="fas  fa-lg color--primary"
-                            icon={faTimes}
-                          />
-                          <span className="visibility--screen-reader">
-                            Remove
-                          </span>
-                        </button>
-                      </div>
-                    </div>
+                    )}
 
-                    {this.state.plans_to_compare[2] && (
+                    {this.state.plans_to_compare[2] !== undefined && (
                       <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
                         <div className="c-compare-title__info padding--1">
                           <div className="font-size--small font-weight--bold">
@@ -1135,6 +1198,12 @@ class ComparePlans extends Component<ComparisonProps> {
                           <button
                             className="c-button c-button--transparent c-button--small fill--transparent qa-remove"
                             type="button"
+                            onClick={() => {
+                              this.handleCheckedPlanToCompare(
+                                parseInt(this.state.plans_to_compare[2])
+                              );
+                              // this.handleCheckedPlanToCompareOnDesktop("2");
+                            }}
                           >
                             <FontAwesomeIcon
                               className="fas  fa-lg color--primary"
@@ -1160,10 +1229,12 @@ class ComparePlans extends Component<ComparisonProps> {
                             <td>
                               <span>{first.price}</span>
                             </td>
-                            <td>
-                              <span>{second.price}</span>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <span>{second.price}</span>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <span>{third.price}</span>
                               </td>
@@ -1174,10 +1245,12 @@ class ComparePlans extends Component<ComparisonProps> {
                             <td>
                               <span>{first.category}</span>
                             </td>
-                            <td>
-                              <span>{second.category}</span>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <span>{second.category}</span>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <span>{third.category}</span>
                               </td>
@@ -1203,26 +1276,28 @@ class ComparePlans extends Component<ComparisonProps> {
                                   })}
                               </span>
                             </td>
-                            <td>
-                              <span>
-                                {second.plan_id &&
-                                  second.plan_id.category &&
-                                  second.plan_id.category.map((cat, i) => {
-                                    return (
-                                      <b className="">
-                                        {" "}
-                                        {cat.name}
-                                        {second.plan_id.category.length > 1 &&
-                                          i <
-                                            second.plan_id.category.length -
-                                              1 &&
-                                          ", "}
-                                      </b>
-                                    );
-                                  })}
-                              </span>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <span>
+                                  {second.plan_id &&
+                                    second.plan_id.category &&
+                                    second.plan_id.category.map((cat, i) => {
+                                      return (
+                                        <b className="">
+                                          {" "}
+                                          {cat.name}
+                                          {second.plan_id.category.length > 1 &&
+                                            i <
+                                              second.plan_id.category.length -
+                                                1 &&
+                                            ", "}
+                                        </b>
+                                      );
+                                    })}
+                                </span>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <span>
                                   {third.plan_id &&
@@ -1249,10 +1324,12 @@ class ComparePlans extends Component<ComparisonProps> {
                             <td>
                               <span>{first.plan_id.plan_id}</span>
                             </td>
-                            <td>
-                              <span>{second.plan_id.plan_id}</span>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <span>{second.plan_id.plan_id}</span>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <span>{third.plan_id.plan_id}</span>
                               </td>
@@ -1269,16 +1346,18 @@ class ComparePlans extends Component<ComparisonProps> {
                                 Add medical providers
                               </a>
                             </td>
-                            <td>
-                              <a
-                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                href="/find-provider"
-                                role="button"
-                              >
-                                Add medical providers
-                              </a>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <a
+                                  className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                  href="/find-provider"
+                                  role="button"
+                                >
+                                  Add medical providers
+                                </a>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <a
                                   className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
@@ -1301,16 +1380,18 @@ class ComparePlans extends Component<ComparisonProps> {
                                 Add prescription drugs
                               </a>
                             </td>
-                            <td>
-                              <a
-                                className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                href="/find-drugs"
-                                role="button"
-                              >
-                                Add prescription drugs
-                              </a>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <a
+                                  className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                  href="/find-drugs"
+                                  role="button"
+                                >
+                                  Add prescription drugs
+                                </a>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <a
                                   className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
@@ -1372,21 +1453,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.accidents_emergencies !== "No" &&
-                                    second.accidents_emergencies !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.accidents_emergencies !== "No" &&
+                                      second.accidents_emergencies !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1423,21 +1506,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.additional_ammunization !== "No" &&
-                                    second.additional_ammunization !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.additional_ammunization !== "No" &&
+                                      second.additional_ammunization !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1474,21 +1559,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.admission_feeding !== "No" &&
-                                    second.admission_feeding !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.admission_feeding !== "No" &&
+                                      second.admission_feeding !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1525,21 +1612,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.admissions_per_annum !== "No" &&
-                                    second.admissions_per_annum !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.admissions_per_annum !== "No" &&
+                                      second.admissions_per_annum !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1577,21 +1666,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.antenatal_care_delivery !== "No" &&
-                                    second.antenatal_care_delivery !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.antenatal_care_delivery !== "No" &&
+                                      second.antenatal_care_delivery !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1629,21 +1720,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.cancer_care !== "No" &&
-                                    second.cancer_care !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.cancer_care !== "No" &&
+                                      second.cancer_care !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1680,21 +1773,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.covid_19_treatment !== "No" &&
-                                    second.covid_19_treatment !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.covid_19_treatment !== "No" &&
+                                      second.covid_19_treatment !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1732,21 +1827,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.dental_care !== "No" &&
-                                    second.dental_care !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.dental_care !== "No" &&
+                                      second.dental_care !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1784,21 +1881,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.drugs_infusions !== "No" &&
-                                    second.drugs_infusions !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.drugs_infusions !== "No" &&
+                                      second.drugs_infusions !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1834,21 +1933,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.ent_care !== "No" &&
-                                    second.ent_care !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.ent_care !== "No" &&
+                                      second.ent_care !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1886,21 +1987,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.evacuations !== "No" &&
-                                    second.evacuations !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.evacuations !== "No" &&
+                                      second.evacuations !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1938,21 +2041,24 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.family_planning_services !== "No" &&
-                                    second.family_planning_services !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.family_planning_services !==
+                                        "No" &&
+                                      second.family_planning_services !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -1990,21 +2096,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.fertility_services !== "No" &&
-                                    second.fertility_services !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.fertility_services !== "No" &&
+                                      second.fertility_services !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2042,21 +2150,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.general_consultation !== "No" &&
-                                    second.general_consultation !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.general_consultation !== "No" &&
+                                      second.general_consultation !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2094,21 +2204,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.hiv_aids_treatment !== "No" &&
-                                    second.hiv_aids_treatment !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.hiv_aids_treatment !== "No" &&
+                                      second.hiv_aids_treatment !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2146,21 +2258,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.hospital_admissions !== "No" &&
-                                    second.hospital_admissions !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.hospital_admissions !== "No" &&
+                                      second.hospital_admissions !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2189,12 +2303,16 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.hospital_category[0].name}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.hospital_category[0].name}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>
+                                    {second.hospital_category[0].name}
+                                  </span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.hospital_category[0].name}</span>
@@ -2214,12 +2332,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.in_patient_limit}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.in_patient_limit}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.in_patient_limit}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.in_patient_limit}</span>
@@ -2248,21 +2368,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.intensive_care !== "No" &&
-                                    second.intensive_care !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.intensive_care !== "No" &&
+                                      second.intensive_care !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2300,21 +2422,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.intermediate_surgeries !== "No" &&
-                                    second.intermediate_surgeries !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.intermediate_surgeries !== "No" &&
+                                      second.intermediate_surgeries !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2352,21 +2476,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.lab_investigations !== "No" &&
-                                    second.lab_investigations !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.lab_investigations !== "No" &&
+                                      second.lab_investigations !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2404,21 +2530,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.major_surgeries !== "No" &&
-                                    second.major_surgeries !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.major_surgeries !== "No" &&
+                                      second.major_surgeries !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2456,21 +2584,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.mental_health_services !== "No" &&
-                                    second.mental_health_services !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.mental_health_services !== "No" &&
+                                      second.mental_health_services !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2508,21 +2638,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.minor_surgeries !== "No" &&
-                                    second.minor_surgeries !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.minor_surgeries !== "No" &&
+                                      second.minor_surgeries !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2560,21 +2692,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.neonatal_care !== "No" &&
-                                    second.neonatal_care !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.neonatal_care !== "No" &&
+                                      second.neonatal_care !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2612,21 +2746,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.optical_care !== "No" &&
-                                    second.optical_care !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.optical_care !== "No" &&
+                                      second.optical_care !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2655,12 +2791,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.out_patient_limit}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.out_patient_limit}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.out_patient_limit}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.out_patient_limit}</span>
@@ -2689,21 +2827,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.physiotherapy !== "No" &&
-                                    second.physiotherapy !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.physiotherapy !== "No" &&
+                                      second.physiotherapy !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2741,21 +2881,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.plain_contrast_xrays !== "No" &&
-                                    second.plain_contrast_xrays !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.plain_contrast_xrays !== "No" &&
+                                      second.plain_contrast_xrays !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2793,21 +2935,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.postnatal_care !== "No" &&
-                                    second.postnatal_care !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.postnatal_care !== "No" &&
+                                      second.postnatal_care !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2845,21 +2989,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.prescribed_drugs !== "No" &&
-                                    second.prescribed_drugs !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.prescribed_drugs !== "No" &&
+                                      second.prescribed_drugs !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2897,21 +3043,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.renal_dialysis !== "No" &&
-                                    second.renal_dialysis !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.renal_dialysis !== "No" &&
+                                      second.renal_dialysis !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -2940,12 +3088,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.routine_immunization}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.routine_immunization}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.routine_immunization}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.routine_immunization}</span>
@@ -2974,21 +3124,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.specialist_consultation !== "No" &&
-                                    second.specialist_consultation !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.specialist_consultation !== "No" &&
+                                      second.specialist_consultation !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -3026,21 +3178,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 />
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <img
-                                  src={
-                                    second.ultrasound_scans !== "No" &&
-                                    second.ultrasound_scans !== ""
-                                      ? check
-                                      : uncheck
-                                  }
-                                  className=""
-                                  alt=""
-                                />
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <img
+                                    src={
+                                      second.ultrasound_scans !== "No" &&
+                                      second.ultrasound_scans !== ""
+                                        ? check
+                                        : uncheck
+                                    }
+                                    className=""
+                                    alt=""
+                                  />
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <img
@@ -3099,12 +3253,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.accidents_emergencies}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.accidents_emergencies}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.accidents_emergencies}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.accidents_emergencies}</span>
@@ -3123,12 +3279,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.additional_ammunization}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.additional_ammunization}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.additional_ammunization}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.additional_ammunization}</span>
@@ -3147,12 +3305,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.admission_feeding}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.admission_feeding}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.admission_feeding}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.admission_feeding}</span>
@@ -3171,12 +3331,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.admissions_per_annum}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.admissions_per_annum}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.admissions_per_annum}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.admissions_per_annum}</span>
@@ -3196,12 +3358,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.antenatal_care_delivery}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.antenatal_care_delivery}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.antenatal_care_delivery}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.antenatal_care_delivery}</span>
@@ -3221,12 +3385,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.cancer_care}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.cancer_care}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.cancer_care}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.cancer_care}</span>
@@ -3245,12 +3411,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.covid_19_treatment}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.covid_19_treatment}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.covid_19_treatment}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.covid_19_treatment}</span>
@@ -3270,12 +3438,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.dental_care}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.dental_care}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.dental_care}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.dental_care}</span>
@@ -3295,12 +3465,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.drugs_infusions}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.drugs_infusions}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.drugs_infusions}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.drugs_infusions}</span>
@@ -3318,12 +3490,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.ent_care}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.ent_care}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.ent_care}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.ent_care}</span>
@@ -3343,12 +3517,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.evacuations}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.evacuations}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.evacuations}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.evacuations}</span>
@@ -3368,12 +3544,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.family_planning_services}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.family_planning_services}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.family_planning_services}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.family_planning_services}</span>
@@ -3393,12 +3571,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.fertility_services}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.fertility_services}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.fertility_services}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.fertility_services}</span>
@@ -3418,12 +3598,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.general_consultation}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.general_consultation}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.general_consultation}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.general_consultation}</span>
@@ -3443,12 +3625,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.hiv_aids_treatment}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.hiv_aids_treatment}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.hiv_aids_treatment}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.hiv_aids_treatment}</span>
@@ -3468,12 +3652,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.hospital_addmissions}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.hospital_addmissions}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.hospital_addmissions}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.hospital_admissions}</span>
@@ -3493,12 +3679,16 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.hospital_category[0].name}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.hospital_category[0].name}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>
+                                    {second.hospital_category[0].name}
+                                  </span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.hospital_category[0].name}</span>
@@ -3518,12 +3708,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.in_patient_limit}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.in_patient_limit}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.in_patient_limit}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.in_patient_limit}</span>
@@ -3543,12 +3735,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.intensive_care}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.intensive_care}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.intensive_care}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.intensive_care}</span>
@@ -3568,12 +3762,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.intermediate_surgeries}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.intermediate_surgeries}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.intermediate_surgeries}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.intermediate_surgeries}</span>
@@ -3593,12 +3789,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.lab_investigations}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.lab_investigations}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.lab_investigations}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.lab_investigations}</span>
@@ -3618,12 +3816,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.major_surgeries}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.major_surgeries}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.major_surgeries}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.major_surgeries}</span>
@@ -3643,12 +3843,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.mental_health_services}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.mental_health_services}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.mental_health_services}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.mental_health_services}</span>
@@ -3668,12 +3870,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.minor_surgeries}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.minor_surgeries}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.minor_surgeries}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.minor_surgeries}</span>
@@ -3693,12 +3897,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.neonatal_care}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.neonatal_care}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.neonatal_care}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.neonatal_care}</span>
@@ -3718,12 +3924,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.optical_care}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.optical_care}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.optical_care}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.optical_care}</span>
@@ -3743,12 +3951,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.out_patient_limit}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.out_patient_limit}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.out_patient_limit}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.out_patient_limit}</span>
@@ -3768,12 +3978,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.physiotherapy}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.physiotherapy}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.physiotherapy}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.physiotherapy}</span>
@@ -3793,12 +4005,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.plain_contrast_xrays}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.plain_contrast_xrays}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.plain_contrast_xrays}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.plain_contrast_xrays}</span>
@@ -3818,12 +4032,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.postnatal_care}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.postnatal_care}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.postnatal_care}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.postnatal_care}</span>
@@ -3843,12 +4059,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.prescribed_drugs}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{first.prescribed_drugs}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{first.prescribed_drugs}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.prescribed_drugs}</span>
@@ -3868,12 +4086,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.renal_dialysis}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.renal_dialysis}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.renal_dialysis}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.renal_dialysis}</span>
@@ -3893,12 +4113,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.routine_immunization}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.routine_immunization}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.routine_immunization}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.routine_immunization}</span>
@@ -3918,12 +4140,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.specialist_consultation}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.specialist_consultation}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.specialist_consultation}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.specialist_consultation}</span>
@@ -3943,12 +4167,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <span>{first.ultrasound_scans}</span>
                               </div>
                             </td>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{second.ultrasound_scans}</span>
-                              </div>
-                            </td>
-                            {this.state.plans_to_compare[2] && (
+                            {this.state.plans_to_compare[1] !== undefined && (
+                              <td>
+                                <div className="c-star-rating">
+                                  <span>{second.ultrasound_scans}</span>
+                                </div>
+                              </td>
+                            )}
+                            {this.state.plans_to_compare[2] !== undefined && (
                               <td>
                                 <div className="c-star-rating">
                                   <span>{third.ultrasound_scans}</span>
@@ -3978,9 +4204,11 @@ class ComparePlans extends Component<ComparisonProps> {
                   <div className="box-mob-slider">
                     <div className="slider-new ">
                       {plans_to_compare.length > 0 &&
-                        plans.map((similar_plan, i: number) => {
-                          return plans_to_compare.includes(i.toString()) ==
-                            false ? (
+                        plans.map((similar_plan, i) => {
+                          return plans_to_compare.includes(
+                            i
+                            // .toString()
+                          ) == false ? (
                             <div className="box-new">
                               <ul className="similar_plan_ul">
                                 <li>
@@ -4043,9 +4271,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                         : true
                                     }
                                     onClick={() => {
-                                      this.handleCheckedPlanToCompareOnDesktop(
-                                        i.toString()
-                                      );
+                                      // this.handleCheckedPlanToCompareOnDesktop(
+                                      //   i.toString()
+                                      // );
+                                      this.handleCheckedPlanToCompare(i);
                                     }}
                                   >
                                     <i className="fas fa-plus"></i>+ Add to
@@ -4075,7 +4304,13 @@ class ComparePlans extends Component<ComparisonProps> {
 const mapProps = (state: any) => {
   return {
     plans: state.fetchData.services,
+    checked_plans_list: state.compare.checked_plans_list,
+    compare_plans_desktop_indexes: state.compare.compare_plans_desktop_indexes,
   };
 };
 
-export default connect(mapProps)(ComparePlans);
+export default connect(mapProps, {
+  setCheckedPlans,
+  setPlansToCompareOnDesktop,
+  setPlansToCompareOnMobile,
+})(ComparePlans);

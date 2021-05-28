@@ -48,7 +48,8 @@ export class App extends React.Component {
           <div className="main">
             <AppHeader />
             <Switch>
-              <Route exact path="/" component={Home} />
+              {/* <Route exact path="/" component={Home} /> */}
+              <Route exact path="/" component={Home2} />
               <Route path="/quiz" component={Quiz} />
               <Route path="/compare-old" component={Compare} />
               <Route path="/plans" component={Plans} />

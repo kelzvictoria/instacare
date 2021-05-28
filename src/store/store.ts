@@ -1,6 +1,6 @@
 import filterReducer from "../reducers/filterReducer";
 import { detailsAndPaymentReducer } from "../reducers/detailsAndPaymentReducer";
-import { compareReducer } from "../reducers/compareReducer";
+import compareReducer from "../reducers/compareReducer";
 import fetchDataReducer from "../reducers/fetchDataReducer";
 import userInputReducer from "../reducers/userInputReducer";
 import { authReducer } from "../reducers/authReducer";
