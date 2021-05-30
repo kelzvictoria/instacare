@@ -98,16 +98,27 @@ export const getPlanDetail = (serviceID) => async (dispatch, getState) => {
 
 export const getSimilarPlans = (plan) => async (dispatch, getState) => {
     await dispatch(getServices())
-    let type = plan.plan_id.category;
-    let planID = plan.plan_id.plan_id;
+    let type = plan.plan_id.category.map(cat => cat.name.toLowerCase());
+    let planID = plan.service_id;
 
-    console.log("type", type, "planID", planID);
+    // console.log("type", type, "planID", planID);
 
     let packages = getState().fetchData.services;
 
     let res = groupPlansByType(packages, type);
+    console.log("res", res);
 
-    let similar_plans = res.filter(plan => plan.plan_id.plan_id !== planID)
+    let similar_plans = res.filter(plan => {
+        // console.log("plan.service_id", plan.service_id);
+        // console.log("planID", planID);
+        return plan.service_id !== planID
+    })
+
+    similar_plans = similar_plans.filter((plan, index, self) =>
+        index === self.findIndex((p) => (
+            p.place === plan.place && p.name === plan.name
+        ))
+    )
 
     console.log("similar_plans", similar_plans);
 
@@ -236,6 +247,8 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     //let planID = getState().quiz.responses.planID;
     let budget = params.budget ? params.budget : []
     let planType = params.type ? params.type : []
+
+    console.log("planType", planType);
 
     let planRange = params.range ? params.range : [];
 
@@ -525,62 +538,62 @@ const groupPlansByType = (packages, type) => {
         }
 
     }
-    CAN_LOG && console.log("type", type, typeof type);
+    // CAN_LOG && 
+    console.log("type", type, typeof type);
 
     let filteredPackagesByPlanType = [];
 
     if (typeof type == "object") {
         for (let i = 0; i < type.length; i++) {
-            CAN_LOG && console.log("type[i]", type[i]);
+            // CAN_LOG &&
+            console.log("type[i]", type[i]);
             switch (type[i]) {
                 case "single":
-                    filteredPackagesByPlanType = [
-                        ...filteredPackagesByPlanType,
-                        ...individual_plans
-                    ]
+                case "individual":
+                case "individuals":
+                    console.log("single");
+                    filteredPackagesByPlanType.push(...individual_plans)
                     break
 
                 case "couple":
-                    filteredPackagesByPlanType = [
-                        ...filteredPackagesByPlanType,
-                        ...couple_plans]
+                    console.log("couple");
+                    filteredPackagesByPlanType.push(...couple_plans)
                     break;;
 
                 case "parents":
-                    filteredPackagesByPlanType = [
-                        ...filteredPackagesByPlanType, ...senior_plans]
+                case "senior citizen":
+                    console.log("senior");
+                    filteredPackagesByPlanType.push(...senior_plans)
                     break;;
 
-
                 case "corporate":
-                    filteredPackagesByPlanType = [
-                        ...filteredPackagesByPlanType, ...corporate_plans]
+                    console.log("corporate");
+                    filteredPackagesByPlanType.push(...corporate_plans)
                     break;
 
 
                 case "fam-of-4":
-                    filteredPackagesByPlanType = [
-                        ...filteredPackagesByPlanType,
-                        ...couple_plans,
-                        ...family_plans
-                    ]
-                    break;;
+                case "family":
+                    console.log("family");
+                    filteredPackagesByPlanType.push(...couple_plans,
+                        ...family_plans)
+                    break;
 
                 case "smes":
-                    filteredPackagesByPlanType = [
-                        ...filteredPackagesByPlanType,
-                        ...group_plans]
+                case "group":
+                    console.log("group");
+                    filteredPackagesByPlanType.push(...group_plans)
                     break;
 
                 case "intl_coverage":
-                    filteredPackagesByPlanType = [
-                        ...filteredPackagesByPlanType,
-                        ...international_plans]
+                    console.log("intl");
+                    filteredPackagesByPlanType.push(...international_plans)
                     break;
 
 
                 default:
-                    CAN_LOG && console.log("default", packages);
+                    // CAN_LOG && 
+                    console.log("default", packages);
                     filteredPackagesByPlanType = packages
                     break
 
@@ -591,62 +604,57 @@ const groupPlansByType = (packages, type) => {
     } else {
         switch (type) {
             case "single":
-                filteredPackagesByPlanType = [
-                    ...filteredPackagesByPlanType,
-                    ...individual_plans
-                ]
-                break
+
+                filteredPackagesByPlanType.push(...individual_plans)
+                break;
 
             case "couple":
-                filteredPackagesByPlanType = [
-                    ...filteredPackagesByPlanType,
-                    ...couple_plans]
-                break;;
+
+                filteredPackagesByPlanType.push(...couple_plans)
+                break;
 
             case "parents":
-                filteredPackagesByPlanType = [
-                    ...filteredPackagesByPlanType, ...senior_plans]
-                break;;
+
+                filteredPackagesByPlanType.push(...senior_plans)
+                break;
 
 
             case "corporate":
-                filteredPackagesByPlanType = [
-                    ...filteredPackagesByPlanType, ...corporate_plans]
+
+                filteredPackagesByPlanType.push(...corporate_plans)
                 break;
 
 
             case "fam-of-4":
-                filteredPackagesByPlanType = [
-                    ...filteredPackagesByPlanType,
-                    ...couple_plans,
-                    ...family_plans
-                ]
-                break;;
+
+                filteredPackagesByPlanType.push(...couple_plans,
+                    ...family_plans)
+                break;
 
             case "smes":
-                filteredPackagesByPlanType = [
-                    ...filteredPackagesByPlanType,
-                    ...group_plans]
+            case "group":
+
+                filteredPackagesByPlanType.push(...group_plans)
                 break;
 
             case "intl_coverage":
-                filteredPackagesByPlanType = [
-                    ...filteredPackagesByPlanType,
-                    ...international_plans]
+
+                filteredPackagesByPlanType.push(...international_plans)
                 break;
 
 
             default:
-                CAN_LOG && console.log("default", packages);
+                //  CAN_LOG && 
+                console.log("default", packages);
                 filteredPackagesByPlanType = packages
                 break
 
 
         }
     }
+    console.log("filteredPackagesByPlanType", filteredPackagesByPlanType);
     return filteredPackagesByPlanType;
 }
-
 
 const groupPlansByRange = (packages, range) => {
     CAN_LOG && console.log("range", range);

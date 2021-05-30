@@ -15,7 +15,7 @@ export default function (state = initialState, action) {
             }
 
         case SET_PLANS_TO_COMPARE_ON_DESKTOP:
-            console.log("action.payload", action.payload);
+            // console.log("action.payload", action.payload);
             return {
                 ...state,
                 compare_plans_desktop_indexes: action.payload

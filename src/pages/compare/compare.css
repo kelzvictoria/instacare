@@ -27,3 +27,48 @@ button.ds-h2:active {
   outline-color: #046791 !important;
   padding: 2px !important;
 }
+
+.filt_comp_btns a.c-button {
+  padding-top: 8px !important;
+  margin-left: 8px;
+}
+
+@media (max-width: 600px) {
+  .rh-plan-type-div {
+    max-width: 50% !important;
+  }
+
+  .results-header-right {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .filt_comp_btns {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .filt_comp_btns .c-button {
+    width: 50% !important;
+
+    height: 40px !important;
+  }
+
+  .filt_comp_btns .margin-right--2 {
+    margin-right: 0px !important;
+  }
+
+  .filt_comp_btns .c-button,
+  .filt_comp_btns .c-button:visited {
+    padding: 0px !important;
+  }
+
+  .results-header-left {
+    width: 100% !important;
+  }
+
+  section.sp-top-main {
+    padding-top: 0px;
+    padding-bottom: 0px !important;
+  }
+}

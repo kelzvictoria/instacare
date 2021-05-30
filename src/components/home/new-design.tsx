@@ -3052,7 +3052,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       query_string += "/" + this.state.plans_to_compare[i];
     }
 
-    console.log("query_string", query_string);
+    // console.log("query_string", query_string);
     return query_string;
   };
 
@@ -3375,7 +3375,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       {this.props.planServices.length} plan
                       {this.props.planServices.length > 1 && "s"} available
                     </div>
-                    <div>
+                    <div className="filt_comp_btns">
                       <button
                         className={`c-button  c-button--primary margin-right--2 margin-bottom--1 lg-margin-bottom--0 c-filter-plans ${
                           this.state.show_filter && "display--none"
@@ -4926,14 +4926,31 @@ class NewContent extends React.Component<homeProps, homeState> {
                               </div>
                               <div className="lg-display--none margin-top--2">
                                 <button
-                                  className="c-button c-check-button"
-                                  aria-pressed="false"
-                                  type="button"
+                                  className={`c-button c-check-button ${
+                                    plans_to_compare &&
+                                    plans_to_compare.includes(i)
+                                      ? //plans_to_compare.includes(i.toString())
+                                        "c-check-button--checked c-button--secondary"
+                                      : ""
+                                  } `}
+                                  onClick={() => {
+                                    this.handleCheckedPlanToCompare(i);
+                                  }}
                                 >
                                   <span
                                     className="c-check-button__checkbox"
                                     aria-hidden="true"
-                                  ></span>
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 216 146"
+                                      className="check-plan display--none"
+                                    >
+                                      <path d="M168.86 37.966l-11.08-11.08c-1.52-1.52-3.367-2.28-5.54-2.28-2.172 0-4.02.76-5.54 2.28L93.254 80.414 69.3 56.38c-1.52-1.522-3.367-2.282-5.54-2.282-2.172 0-4.02.76-5.54 2.28L47.14 67.46c-1.52 1.522-2.28 3.37-2.28 5.542 0 2.172.76 4.02 2.28 5.54l29.493 29.493 11.08 11.08c1.52 1.52 3.368 2.28 5.54 2.28 2.173 0 4.02-.76 5.54-2.28l11.082-11.08L168.86 49.05c1.52-1.52 2.283-3.37 2.283-5.54 0-2.174-.76-4.02-2.28-5.54z"></path>
+                                    </svg>
+                                  </span>
                                   Compare
                                 </button>
                                 <div className="c-plan-card__mobile-action-buttons">
