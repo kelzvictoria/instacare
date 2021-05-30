@@ -13,6 +13,11 @@ import "../../components/home/new-design.css";
 import "../providers/providers.css";
 import "./prescriptions.css";
 
+import {
+  updateTextResponse,
+  filterPrescriptions,
+} from "../../actions/userInputActions";
+
 export interface PrescriptionsProps {
   [x: string]: any;
   dispatch(args: any): any;
@@ -37,20 +42,23 @@ class Prescriptions extends Component<PrescriptionsProps> {
       }
     });
     if (tempPrescriptions.length > 0) {
-      this.props.dispatch({
-        type: actions.FILTER_PROVIDERS,
-        data: tempPrescriptions,
-      });
+      // this.props.dispatch({
+      //   type: actions.FILTER_PROVIDERS,
+      //   data: tempPrescriptions,
+      // });
+      this.props.filterPrescriptions(tempPrescriptions);
     }
   };
 
   onSelectChange = (value: any) => {
     this.getPrescriptionInfo(value);
 
-    this.props.dispatch({
-      type: actions.UPDATE_TEXT_RESPONSE,
-      data: { key: "prescription", value },
-    });
+    // this.props.dispatch({
+    //   type: actions.UPDATE_TEXT_RESPONSE,
+    //   data: { key: "prescription", value },
+    // });
+    this.props.updateTextResponse({ key: "prescription", value });
+
     console.log(this.props.responses.state);
   };
 
@@ -360,7 +368,7 @@ class Prescriptions extends Component<PrescriptionsProps> {
               <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 providers-search-selection-controls">
                 <a
                   className="c-button c-button--primary qa-continue"
-                  href="#/plan/results"
+                  href="/new-design/#plans"
                   role="button"
                 >
                   Continue to plans
@@ -376,9 +384,14 @@ class Prescriptions extends Component<PrescriptionsProps> {
 
 const mapProps = (state: any) => {
   return {
-    ...state.quiz,
-    ...state.quiz.quiz,
+    // ...state.quiz,
+    // ...state.quiz.quiz,
+    responses: state.quiz.responses,
+    dataSource: state.quiz.dataSource,
   };
 };
 
-export default connect(mapProps)(Prescriptions);
+export default connect(mapProps, {
+  updateTextResponse,
+  filterPrescriptions,
+})(Prescriptions);

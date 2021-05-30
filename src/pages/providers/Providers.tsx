@@ -12,6 +12,11 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import "../../components/home/new-design.css";
 import "./providers.css";
 
+import {
+  updateTextResponse,
+  filterProviders,
+} from "../../actions/userInputActions";
+
 export interface ProvidersProps {
   [x: string]: any;
   dispatch(args: any): any;
@@ -35,21 +40,26 @@ class Providers extends Component<ProvidersProps> {
         tempProviders.push(item);
       }
     });
+
     if (tempProviders.length > 0) {
-      this.props.dispatch({
-        type: actions.FILTER_PROVIDERS,
-        data: tempProviders,
-      });
+      // this.props.dispatch({
+      //   type: actions.FILTER_PROVIDERS,
+      //   data: tempProviders,
+      // });
+      this.props.filterProviders(tempProviders);
     }
   };
 
   onSelectChange = (value: any) => {
     this.getProviderInfo(value);
 
-    this.props.dispatch({
-      type: actions.UPDATE_TEXT_RESPONSE,
-      data: { key: "provider", value },
-    });
+    // this.props.dispatch({
+    //   type: actions.UPDATE_TEXT_RESPONSE,
+    //   data: { key: "provider", value },
+    // });
+
+    this.props.updateTextResponse({ key: "provider", value });
+
     console.log(this.props.responses.state);
   };
 
@@ -141,6 +151,7 @@ class Providers extends Component<ProvidersProps> {
                         onChange={this.onSelectChange}
                         placeholder="Example: Westcare Hospital"
                         value={this.props.responses.provider}
+                        //value={this.state.search_arg}
                         className="ic-auto-complete margin-bottom--0"
                       />
                     </div>
@@ -239,7 +250,7 @@ class Providers extends Component<ProvidersProps> {
 
                     <a
                       className="c-button c-button--primary margin-left--1 qa-continue"
-                      href="#/plan/results"
+                      href="/new-design/#plans"
                       role="button"
                     >
                       Continue
@@ -380,9 +391,14 @@ class Providers extends Component<ProvidersProps> {
 
 const mapProps = (state: any) => {
   return {
-    ...state.quiz,
-    ...state.quiz.quiz,
+    // ...state.quiz,
+    // ...state.quiz.quiz,
+    responses: state.quiz.responses,
+    dataSource: state.quiz.dataSource,
   };
 };
 
-export default connect(mapProps)(Providers);
+export default connect(mapProps, {
+  updateTextResponse,
+  filterProviders,
+})(Providers);

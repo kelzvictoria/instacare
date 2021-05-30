@@ -28,55 +28,7 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
 
-    case FORMAT_PRICES:
-      return action.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    case GET_PROVIDER_INFO:
-      return {
-        ...state,
-        provider_info: action.data
-      }
-
-    case FILTER_PROVIDERS:
-
-      if (action.data) {
-        let data_source = [];
-        data_source.push(...action.data);
-        return {
-          ...state,
-          dataSource: data_source
-        }
-      }
-
-
-    case FILTER_PRESCRIPTIONS:
-
-      if (action.data) {
-        let data_source = [];
-        data_source.push(...action.data);
-        return {
-          ...state,
-          dataSource: data_source
-        }
-      }
-
-    case UPDATE_SELECTED_PROVIDERS:
-      return {
-        ...state,
-        selected_providers: action.data
-      }
-
-    case FILTER_LOCATIONS:
-
-      if (action.data) {
-        let data_source = [];
-        data_source.push(...action.data);
-        return {
-          ...state,
-          dataSource: data_source
-        }
-
-      }
 
     default:
       return state

@@ -1,3 +1,5 @@
+import { providers, providersInfo } from "../utils/homeUtils";
+
 import {
     GET_CLICKED_PLAN,
     IS_FETCHING_RECOMMENDED_PLANS,
@@ -59,7 +61,16 @@ import {
     SET_PLAN_ID,
     SET_HMO_ID,
     RESET_TYPE,
-    RESET_RANGE
+    RESET_RANGE,
+    FORMAT_PRICES,
+
+    GET_PROVIDER_INFO,
+
+    FILTER_PROVIDERS,
+    FILTER_PRESCRIPTIONS,
+    UPDATE_SELECTED_PROVIDERS,
+
+    FILTER_LOCATIONS,
 } from "../actions/types";
 
 const initialState = {
@@ -97,6 +108,7 @@ const initialState = {
         email: "",
         state: "",
         provider: "",
+        prescription: "",
         adult: 1,
         children: 0,
         infants: 0,
@@ -121,7 +133,8 @@ const initialState = {
         child_8_age: 0,
         plan_duration: "1",
 
-    }
+    },
+    dataSource: [] //providersInfo,
 }
 
 export default function (state = initialState, action) {
@@ -189,7 +202,7 @@ export default function (state = initialState, action) {
                     ...state,
                     responses: {
                         ...state.responses,
-                        key: value
+                        [key]: value
                     }
                 }
             }
@@ -242,13 +255,13 @@ export default function (state = initialState, action) {
         case TOGGLE_DESKTOP_MODAL:
             return {
                 ...state,
-                isOpen: action.payload.action.payload.value
+                isOpen: action.payload.value
             }
 
         case TOGGLE_MOBILE_MODAL:
             return {
                 ...state,
-                isMobileViewModalOpen: action.payload.action.payload.value
+                isMobileViewModalOpen: action.payload.value
             }
 
         case TOGGLE_OTHERS_MODAL:
@@ -451,7 +464,54 @@ export default function (state = initialState, action) {
                     hmoID: action.payload
                 }
             }
+        case FORMAT_PRICES:
+            return action.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+        case GET_PROVIDER_INFO:
+            return {
+                ...state,
+                provider_info: action.data
+            }
+
+        case FILTER_PROVIDERS:
+            if (action.payload) {
+                let data_source = [];
+                data_source.push(...action.payload);
+                return {
+                    ...state,
+                    dataSource: data_source
+                }
+            }
+
+
+        case FILTER_PRESCRIPTIONS:
+
+            if (action.payload) {
+                let data_source = [];
+                data_source.push(...action.payload);
+                return {
+                    ...state,
+                    dataSource: data_source
+                }
+            }
+
+        case UPDATE_SELECTED_PROVIDERS:
+            return {
+                ...state,
+                selected_providers: action.data
+            }
+
+        case FILTER_LOCATIONS:
+
+            if (action.data) {
+                let data_source = [];
+                data_source.push(...action.data);
+                return {
+                    ...state,
+                    dataSource: data_source
+                }
+
+            }
 
         default:
             return state

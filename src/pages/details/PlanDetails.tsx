@@ -8,7 +8,18 @@ import shortlist from "../../imgs/shortlist-yellow.svg";
 
 import { Card, Button, Typography, Collapse, Tabs } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faChevronRight,
+  faChevronDown,
+  faChevronUp,
+  faChevronLeft,
+  faPrint,
+  faEnvelope,
+  faLink,
+  faTimes,
+  faCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 import * as home_utils from "../../utils/homeUtils";
 
@@ -29,18 +40,27 @@ interface DetailsProps {
 class PlanDetails extends Component<DetailsProps> {
   constructor(props) {
     super(props);
-    this.handlePlanDuration = this.handlePlanDuration.bind(this);
     this.goToPlans = this.goToPlans.bind(this);
-    this.decrementSonCount = this.decrementSonCount.bind(this);
-    this.incrementSonCount = this.incrementSonCount.bind(this);
-    this.decrementDaughterCount = this.decrementDaughterCount.bind(this);
-    this.incrementDaughterCount = this.incrementDaughterCount.bind(this);
-    this.handleTabChange = this.handleTabChange.bind(this);
-    this.toggleFeaturePopUp = this.toggleFeaturePopUp.bind(this);
   }
   state = {
     searchText: "",
     open: false,
+    collapse_accidents_n_emerg: true,
+    collapse_immunizations: true,
+    collapse_admissions: true,
+    collapse_maternity: true,
+    collapse_chronic_conds: true,
+    collapse_prescriptions: true,
+    collapse_investigations: true,
+    collapse_consultations: true,
+    collapse_ent: true,
+    collapse_others: true,
+  };
+
+  toggleCollapsible = (prop: string) => {
+    this.setState({
+      [prop]: !this.state[prop],
+    });
   };
 
   goToPlans() {
@@ -50,952 +70,6 @@ class PlanDetails extends Component<DetailsProps> {
   goToHome = () => {
     this.props.history.push({ pathname: "/new-design" });
   };
-
-  handlePlanDuration(val) {
-    this.props.dispatch({
-      type: actions.UPDATE_PLAN_DURATION,
-      data: { key: "plan_duration", value: val.target.value },
-    });
-  }
-
-  handleIndividualAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_INDIVIDUAL_AGE,
-      data: { key: "individual_age", value: val },
-    });
-  }
-
-  handleFatherAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_FATHER_AGE,
-      data: { key: "father_age", value: val },
-    });
-  }
-
-  handleMotherAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_MOTHER_AGE,
-      data: { key: "mother_age", value: val },
-    });
-  }
-
-  handleGrandFatherAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_GRAND_FATHER_AGE,
-      data: { key: "phone_num", value: val },
-    });
-  }
-
-  handleGrandMotherAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_GRAND_MOTHER_AGE,
-      data: { key: "grand_mother_age", value: val },
-    });
-  }
-
-  handleFatherInLawAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_FATHER_IN_LAW_AGE,
-      data: { key: "father_in_law_age", value: val },
-    });
-  }
-
-  handleMotherInLawAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_MOTHER_IN_LAW_AGE,
-      data: { key: "mother_in_law_age", value: val },
-    });
-  }
-
-  handleSpouseAge(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_SPOUSE_AGE,
-      data: { key: "spouse_age", value: val },
-    });
-  }
-
-  handleChild1Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_1_AGE,
-      data: { key: "child_1_age", value: val },
-    });
-  }
-
-  handleChild2Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_2_AGE,
-      data: { key: "child_2_age", value: val },
-    });
-  }
-
-  handleChild3Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_3_AGE,
-      data: { key: "child_3_age", value: val },
-    });
-  }
-
-  handleChild4Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_4_AGE,
-      data: { key: "child_4_age", value: val },
-    });
-  }
-
-  handleChild5Age(val) {
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_5_AGE,
-      data: { key: "child_5_age", value: val },
-    });
-  }
-
-  handleChild6Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_6_AGE,
-      data: { key: "child_6_age", value: val },
-    });
-  }
-
-  handleChild7Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_7_AGE,
-      data: { key: "child_7_age", value: val },
-    });
-  }
-
-  handleChild8Age(val) {
-    if (this.props.responses.type != "others") {
-      //this.resetAges();
-    }
-
-    this.props.dispatch({
-      type: actions.UPDATE_CHILD_8_AGE,
-      data: { key: "child_8_age", value: val },
-    });
-  }
-
-  handleSonBoxChecked() {
-    console.log(this);
-    this.props.dispatch({
-      type: actions.UPDATE_SON_CHECKED,
-      data: {
-        key: "isSonCheckboxChecked",
-        value: !this.props.isSonCheckboxChecked,
-      },
-    });
-  }
-
-  handleDaughterBoxChecked() {
-    this.props.dispatch({
-      type: actions.UPDATE_DAUGHTER_CHECKED,
-      data: {
-        key: "isDaughterCheckboxChecked",
-        value: !this.props.isDaughterCheckboxChecked,
-      },
-    });
-  }
-
-  incrementSonCount() {
-    if (this.props.sonCount < 4 && this.props.sonCount > 0) {
-      this.props.dispatch({
-        type: actions.INCREMENT_SON_COUNT,
-        data: { key: "sonCount", value: this.props.sonCount + 1 },
-      });
-    }
-  }
-
-  decrementSonCount() {
-    if (this.props.sonCount > 1) {
-      this.props.dispatch({
-        type: actions.DECREMENT_SON_COUNT,
-        data: { key: "sonCount", value: this.props.sonCount - 1 },
-      });
-    }
-
-    console.log("this.props.sonCount", this.props.sonCount);
-  }
-
-  incrementDaughterCount() {
-    if (this.props.daughterCount < 4 && this.props.daughterCount > 0) {
-      this.props.dispatch({
-        type: actions.INCREMENT_DAUGHTER_COUNT,
-        data: { key: "daughterCount", value: this.props.daughterCount + 1 },
-      });
-    }
-  }
-
-  decrementDaughterCount() {
-    if (this.props.daughterCount > 1) {
-      this.props.dispatch({
-        type: actions.DECREMENT_DAUGHTER_COUNT,
-        data: { key: "daughterCount", value: this.props.daughterCount - 1 },
-      });
-    }
-  }
-
-  handleChildrenCheckboxes(e) {
-    let val = e.target.checked;
-    console.log(val);
-    // const node = this.sonCheck.current;
-    // if (node) {
-    //   node.focus();
-    // if (val == true) {
-    //   console.log('this.sonCheck',this.sonCheck)
-    // }
-    // }
-  }
-
-  resetAges() {
-    this.props.dispatch({
-      type: actions.RESET_RESPONSES,
-      data: {
-        individual_age: 0,
-        father_age: 0,
-        mother_age: 0,
-        grand_father_age: 0,
-        grand_mother_age: 0,
-        father_in_law_age: 0,
-        mother_in_law_age: 0,
-        spouse_age: 0,
-        child_1_age: 0,
-        child_2_age: 0,
-        child_3_age: 0,
-        child_4_age: 0,
-        child_5_age: 0,
-        child_6_age: 0,
-        child_7_age: 0,
-        child_8_age: 0,
-      },
-    });
-  }
-
-  toggleOthersInput = () => {
-    // this.setState({
-    //   isOthersInputOpen: !this.props.isOthersInputOpen,
-    // });
-    this.props.dispatch({
-      type: actions.TOGGLE_OTHERS_MODAL,
-      data: { key: "isOthersInputOpen", value: !this.props.isOthersInputOpen },
-    });
-  };
-
-  showOthersInput() {
-    const othersInput = (
-      <div id="others-controls">
-        <div className="col-md-12 row self">
-          <div className="col-md-6 chkContainer">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="self"
-                  className="chkMembers"
-                  defaultChecked={true}
-                  // onClick={}
-                  id="self"
-                ></input>
-
-                <span>Self</span>
-              </label>
-            </div>
-          </div>
-
-          <div className="col-md-6">
-            <select
-              name="individual_age"
-              className="form-control"
-              onChange={(e) => {
-                this.handleIndividualAge(e.target.value);
-              }}
-              value={this.props.responses.individual_age}
-              placeholder="Select Age"
-            >
-              {home_utils.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="col-md-12 row spouse">
-          <div className="col-md-6 chkContainer">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="spouse"
-                  className="chkMembers"
-                  defaultChecked={false}
-                  // onClick={}
-                  id="spouse"
-                ></input>
-
-                <span>Spouse</span>
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <select
-              name="spouse_age"
-              className="form-control"
-              onChange={(e) => {
-                this.handleSpouseAge(e.target.value);
-              }}
-              value={this.props.responses.spouse_age}
-              placeholder="Select Age"
-            >
-              {home_utils.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="col-md-12 son">
-          <div className="col-md-12 chkContainer">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="son"
-                  className="chkMembers"
-                  defaultChecked={false}
-                  onChange={(e) => {
-                    this.handleSonBoxChecked();
-                  }}
-                  id="son"
-                ></input>
-
-                <span className="controls">
-                  Son
-                  <div
-                    className={
-                      this.props.isSonCheckboxChecked
-                        ? "show-controls counter-controls"
-                        : "hide-controls"
-                    }
-                  >
-                    <button
-                      className="minus"
-                      id="dec-son"
-                      onClick={this.decrementSonCount}
-                    >
-                      {" "}
-                      -
-                    </button>
-                    <span className="count"> {this.props.sonCount} </span>
-                    <button className="plus" onClick={this.incrementSonCount}>
-                      {" "}
-                      +{" "}
-                    </button>
-                  </div>
-                </span>
-              </label>
-            </div>
-          </div>
-          <div
-            className={
-              this.props.isSonCheckboxChecked
-                ? "col-md-12 row children"
-                : "hide-controls"
-            }
-          >
-            <div className="col-md-6 chkContainer">
-              <div className="checkbox  children-check">
-                <label className="children-label">
-                  <span>Son 1</span>
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <select
-                name="child_1_age"
-                className="form-control"
-                onChange={(e) => {
-                  this.handleChild1Age(e.target.value);
-                }}
-                value={this.props.responses.child_1_age}
-                placeholder="Select Age"
-              >
-                {home_utils.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div
-            className={
-              this.props.sonCount > 1
-                ? "col-md-12 row children"
-                : "hide-controls"
-            }
-          >
-            <div className="col-md-6 chkContainer">
-              <div className="checkbox children-check">
-                <label className="children-label">
-                  <span>Son 2</span>
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <select
-                name="child_2_age"
-                className="form-control"
-                onChange={(e) => {
-                  this.handleChild2Age(e.target.value);
-                }}
-                value={this.props.responses.child_2_age}
-                placeholder="Select Age"
-              >
-                {home_utils.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div
-            className={
-              this.props.sonCount > 2
-                ? "col-md-12 row children"
-                : "hide-controls"
-            }
-          >
-            <div className="col-md-6 chkContainer">
-              <div className="checkbox children-check">
-                <label className="children-label">
-                  <span>Son 3</span>
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <select
-                name="child_3_age"
-                className="form-control"
-                onChange={(e) => {
-                  this.handleChild3Age(e.target.value);
-                }}
-                value={this.props.responses.child_3_age}
-                placeholder="Select Age"
-              >
-                {home_utils.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div
-            className={
-              this.props.sonCount > 3
-                ? "col-md-12 row children"
-                : "hide-controls"
-            }
-          >
-            <div className="col-md-6 chkContainer">
-              <div className="checkbox children-check">
-                <label className="children-label">
-                  <span>Son 4</span>
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <select
-                name="child_4_age"
-                className="form-control"
-                onChange={(e) => {
-                  this.handleChild4Age(e.target.value);
-                }}
-                value={this.props.responses.child_4_age}
-                placeholder="Select Age"
-              >
-                {home_utils.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-12 daughter">
-          <div className="col-md-12 chkContainer">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="daughter"
-                  className="chkMembers"
-                  defaultChecked={false}
-                  onChange={(e) => {
-                    this.handleDaughterBoxChecked();
-                  }}
-                  id="daughter"
-                ></input>
-
-                <span className="controls">
-                  Daughter
-                  <div
-                    className={
-                      this.props.isDaughterCheckboxChecked
-                        ? "show-controls counter-controls"
-                        : "hide-controls"
-                    }
-                  >
-                    <button
-                      className="minus"
-                      onClick={this.decrementDaughterCount}
-                    >
-                      {" "}
-                      -{" "}
-                    </button>
-                    <span className="count"> {this.props.daughterCount} </span>
-                    <button
-                      className="plus"
-                      onClick={this.incrementDaughterCount}
-                    >
-                      {" "}
-                      +{" "}
-                    </button>
-                  </div>
-                </span>
-              </label>
-            </div>
-          </div>
-          <div
-            className={
-              this.props.isDaughterCheckboxChecked
-                ? "col-md-12 row children"
-                : "hide-controls"
-            }
-          >
-            <div className="col-md-6 chkContainer">
-              <div className="checkbox children-check">
-                <label className="children-label">
-                  <span>Daughter 1</span>
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <select
-                name="child_5_age"
-                className="form-control"
-                onChange={(e) => {
-                  this.handleChild5Age(e.target.value);
-                }}
-                value={this.props.responses.child_5_age}
-                placeholder="Select Age"
-              >
-                {home_utils.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div
-            className={
-              this.props.daughterCount > 1
-                ? "col-md-12 row children"
-                : "hide-controls"
-            }
-          >
-            <div className="col-md-6 chkContainer">
-              <div className="checkbox children-check">
-                <label className="children-label">
-                  <span>Daughter 2</span>
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <select
-                name="child_6_age"
-                className="form-control"
-                onChange={(e) => {
-                  this.handleChild6Age(e.target.value);
-                }}
-                value={this.props.responses.child_6_age}
-                placeholder="Select Age"
-              >
-                {home_utils.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div
-            className={
-              this.props.daughterCount > 2
-                ? "col-md-12 row children"
-                : "hide-controls"
-            }
-          >
-            <div className="col-md-6 chkContainer">
-              <div className="checkbox children-check">
-                <label className="children-label">
-                  <span>Daughter 3</span>
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <select
-                name="child_7_age"
-                className="form-control"
-                onChange={(e) => {
-                  this.handleChild7Age(e.target.value);
-                }}
-                value={this.props.responses.child_7_age}
-                placeholder="Select Age"
-              >
-                {home_utils.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div
-            className={
-              this.props.daughterCount > 3
-                ? "col-md-12 row children"
-                : "hide-controls"
-            }
-          >
-            <div className="col-md-6 chkContainer">
-              <div className="checkbox children-check">
-                <label className="children-label">
-                  <span>Daughter 4</span>
-                </label>
-              </div>
-            </div>
-            <div className="col-md-6">
-              <select
-                name="child_8_age"
-                className="form-control"
-                onChange={(e) => {
-                  this.handleChild8Age(e.target.value);
-                }}
-                value={this.props.responses.child_8_age}
-                placeholder="Select Age"
-              >
-                {home_utils.options.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-12 row father">
-          <div className="col-md-6 chkContainer">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="father"
-                  className="chkMembers"
-                  defaultChecked={false}
-                  // onClick={}
-                  id="father"
-                ></input>
-
-                <span>Father</span>
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <select
-              name="father_age"
-              className="form-control"
-              onChange={(e) => {
-                this.handleFatherAge(e.target.value);
-              }}
-              value={this.props.responses.father_age}
-              placeholder="Select Age"
-            >
-              {home_utils.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="col-md-12 row mother">
-          <div className="col-md-6 chkContainer">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="mother"
-                  className="chkMembers"
-                  defaultChecked={false}
-                  // onClick={}
-                  id="mother"
-                ></input>
-
-                <span>Mother</span>
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <select
-              name="mother_age"
-              className="form-control"
-              onChange={(e) => {
-                this.handleMotherAge(e.target.value);
-              }}
-              value={this.props.responses.mother_age}
-              placeholder="Select Age"
-            >
-              {home_utils.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="col-md-12 row grandfather">
-          <div className="col-md-6 chkContainer">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="grandfather"
-                  className="chkMembers"
-                  defaultChecked={false}
-                  // onClick={}
-                  id="grandfather"
-                ></input>
-
-                <span>Grandfather</span>
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <select
-              name="grand_father_age"
-              className="form-control"
-              onChange={(e) => {
-                this.handleGrandFatherAge(e.target.value);
-              }}
-              value={this.props.responses.grand_father_age}
-              placeholder="Select Age"
-            >
-              {home_utils.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="col-md-12 row grandmother">
-          <div className="col-md-6 chkContainer">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="grandmother"
-                  className="chkMembers"
-                  defaultChecked={false}
-                  // onClick={}
-                  id="grandmother"
-                ></input>
-
-                <span>Grandmother</span>
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <select
-              name="grand_mother_age"
-              className="form-control"
-              onChange={(e) => {
-                this.handleGrandMotherAge(e.target.value);
-              }}
-              value={this.props.responses.grand_mother_age}
-              placeholder="Select Age"
-            >
-              {home_utils.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="col-md-12 row father-in-law">
-          <div className="col-md-6 chkContainer in-law">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="father-in-law"
-                  className="chkMembers"
-                  defaultChecked={false}
-                  // onClick={}
-                  id="father-in-law"
-                ></input>
-
-                <span>Father-in-law</span>
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <select
-              name="father_in_law_age"
-              className="form-control"
-              onChange={(e) => {
-                this.handleFatherInLawAge(e.target.value);
-              }}
-              value={this.props.responses.father_in_law_age}
-              placeholder="Select Age"
-            >
-              {home_utils.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className="col-md-12 row mother-in-law">
-          <div className="col-md-6 chkContainer in-law">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  value="mother-in-law"
-                  className="chkMembers"
-                  defaultChecked={false}
-                  // onClick={}
-                  id="mother-in-law"
-                ></input>
-
-                <span>Mother-in-law</span>
-              </label>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <select
-              name="mother_in_law_age"
-              className="form-control"
-              onChange={(e) => {
-                this.handleMotherInLawAge(e.target.value);
-              }}
-              value={this.props.responses.mother_in_law_age}
-              placeholder="Select Age"
-            >
-              {home_utils.options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div>
-    );
-    return othersInput;
-  }
-
-  toggleFeaturesModal = () => {
-    this.props.dispatch({
-      type: actions.TOGGLE_FEATURES_MODAL,
-      data: {
-        key: "isFeaturesModalOpen",
-        value: !this.props.isFeaturesModalOpen,
-      },
-    });
-  };
-
-  handleTabChange(val) {
-    //let id = document.getElementById(val.target.id) as HTMLInputElement;
-    this.props.dispatch({
-      type: actions.UPDATE_FEATURES_TAB_OPENED,
-      data: { key: "tab_opened", value: val.target.id },
-    });
-    //console.log("this.props.tab_opened", this.props.tab_opened);
-  }
-
-  toggleFeaturePopUp() {
-    this.props.dispatch({
-      type: actions.TOGGLE_FEATURE_POPUP,
-      data: {
-        key: "isFeaturePopUpOpen",
-        value: !this.props.quiz.isFeaturePopUpOpen,
-      },
-    });
-  }
 
   numberwithCommas = (value) => {
     return value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
@@ -1048,361 +122,266 @@ class PlanDetails extends Component<DetailsProps> {
 
   render() {
     const plan = this.props.plan;
-    console.log("plan details props", this.props);
+    console.log("this.props", this.props);
+    console.log("this.state", this.state);
+
     return (
       <div className="details">
-        {/*<Row>*/}
-        <div className="mobile-view">
-          {/* <div className="row pl-3rem compare-plans-header">
-            <div className="row nav-info details-mobile-header">
-              <Button
-                className="nav-btn"
-                id="prev"
-                type="default"
-                onClick={this.goToPlans}
-              >
-                <FontAwesomeIcon className="nav-btn" icon={faArrowLeft} />
-              </Button>
-
-              <div className="select-plan-options-h6">
-                <h6 className="plan-type">Select plan options</h6>
-              </div>
-            </div>
-            <Col
-              className="row nav-info  details-desktop-header"
-              xs={24}
-              md={8}
-            >
-              <Link to="/">
-                <img
-                  src="images/logo2.png"
-                  alt="Logo"
-                  className="details-ic-logo"
-                />
-               
-              </Link>
-            </Col>
-          </div> */}
-
-          <div className=" pl-3rem tiny-go-back">
-            <div className="row nav-info">
-              <Button
-                className="nav-btn"
-                id="prev"
-                type="default"
-                onClick={this.goToPlans}
-              >
-                <FontAwesomeIcon className="nav-btn" icon={faArrowLeft} />
-              </Button>
-
-              <div>
-                <h6 className="plan-type">Go back to Plans</h6>
-              </div>
-            </div>
-          </div>
-          {plan.name ? (
-            <div>
-              <div className="row  pl-3rem ">
-                <div className="col-md-8 two-third">
-                  <div className="row details-header-row">
-                    <div className="col-md-12 details-header">
-                      <div className="">
-                        <div className="compare-first-row row">
-                          <div className="col-md-4 p-logo">
-                            <img
-                              className="provider-logo"
-                              src={plan.hmo_id.logo}
-                              //"https://www.hygeiahmo.com/wp-content/uploads/2018/11/Hygeia-Final-No-Left-Padding@1x.svg"
-                            />
-                          </div>
-                          <div className="col-md-8 middle-col">
-                            <h6>{plan.name}</h6>
-                            <a
-                              href="#"
-                              className="details-features"
-                              onClick={this.toggleFeaturesModal}
-                            >
-                              SEE ALL FEATURES
-                              <FontAwesomeIcon
-                                className=""
-                                icon={faChevronRight}
-                              />
-                            </a>
-                            <a href="#" className="details-cashless-hosp">
-                              {plan.hmo_id.provider_id
-                                ? JSON.parse(plan.hmo_id.provider_id).length
-                                : 0}{" "}
-                              Hospital Network
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {/* <p>{plan.plan_id.desc}</p> */}
-                  </div>
-                  <div className="duration">
-                    <h6>Plan Duration</h6>
-                    {/* <p>
-                  Choosing a multi-year gets you a discount and saves you the
-                  trouble of renewing your HMO Plan yearly
-                </p> */}
-                    <div
-                      className={
-                        //this.props.responses.plan_duration === "1"?
-                        "hmo_period_inner selected_term"
-                        // : "hmo_period_inner"
-                      }
-                    >
-                      <div>
-                        <div className="label-term-radiobox">
-                          <label>
-                            <input
-                              type="radio"
-                              name="term"
-                              className="input-radio"
-                              value="1"
-                              defaultChecked={
-                                true
-                                //this.props.responses.plan_duration === "1"
-                              }
-                              onClick={this.handlePlanDuration}
-                            />{" "}
-                            1 Year
-                          </label>
-                        </div>
-                      </div>
-                      <div className="text_right">
-                        <span className="mr-2">Premium</span>₦
-                        {
-                          // this.props.responses.type == "single"
-                          //   ? this.numberwithCommas(plan.individual_annual_price)
-                          //   : this.numberwithCommas(plan.family_annual_price)
-                          this.numberwithCommas(
-                            home_utils.stripNonNumeric(plan.price)
-                          )
-                        }
-                      </div>
-                    </div>
-                    {/* <div
-                  className={
-                    this.props.responses.plan_duration === "2"
-                      ? "hmo_period_inner selected_term"
-                      : "hmo_period_inner"
-                  }
-                >
-                  <div>
-                    <div className="label-term-radiobox">
-                      <label>
-                        <input
-                          type="radio"
-                          name="term"
-                          className="input-radio"
-                          value="2"
-                          defaultChecked={
-                            this.props.responses.plan_duration === "2"
-                          }
-                          onClick={this.handlePlanDuration}
-                        />{" "}
-                        2 Years
-                      </label>
-                    </div>
-                  </div>
-                  <div className="text_right">
-                    <span className="mr-2">Premium</span>
-                    ₦8000
-                  </div>
+        <div className="">
+          <div className="c-plan-details-page__header">
+            <header className="c-plan-nav-bar">
+              <div className="container padding-y--2 display--flex justify-content--between align-items--center">
+                <div>
+                  <a
+                    className="c-button c-button--transparent c-plan-nav-bar__back-link padding--0 text-decoration--underline"
+                    href="/#plans"
+                    target="_self"
+                    role="button"
+                  >
+                    <FontAwesomeIcon
+                      className="margin-right--1"
+                      icon={faArrowLeft}
+                    />
+                    <span>Back to plans</span>
+                  </a>
                 </div>
-                <div
-                  className={
-                    this.props.responses.plan_duration === "3"
-                      ? "hmo_period_inner selected_term"
-                      : "hmo_period_inner"
-                  }
-                >
-                  <div>
-                    <div className="label-term-radiobox">
-                      <label>
-                        <input
-                          type="radio"
-                          name="term"
-                          className="input-radio"
-                          value="3"
-                          defaultChecked={
-                            this.props.responses.plan_duration === "3"
-                          }
-                          onClick={this.handlePlanDuration}
-                        />{" "}
-                        3 Years
-                      </label>
-                    </div>
-                  </div>
-                  <div className="text_right">
-                    <span className="mr-2">Premium</span>
-                    ₦12000
-                  </div>
-                </div> */}
-                  </div>
-                  <div className="members-covered">
-                    <h6>Members Covered</h6>
-                    <div className="row">
-                      <p>
-                        {plan.plan_id &&
-                          plan.plan_id.category &&
-                          plan.plan_id.category.map((cat, i) => {
-                            return (
-                              <span className="">
-                                {" "}
-                                {cat.name}
-                                {plan.plan_id.category.length > 1 &&
-                                  i < plan.plan_id.category.length - 1 &&
-                                  ", "}
-                              </span>
-                            );
-                          })}
-                        {/* {this.props.quiz.quiz.responses.full_name}(
-                        {this.props.quiz.quiz.responses.individual_age} years) */}
-                      </p>
-                      {/* <a
-                        className="edit-members-modal"
-                        onClick={this.toggleOthersInput}
-                        href="#"
+                <div className="c-plan-nav-bar__share">
+                  <div className="c-share-buttons text-align--right">
+                    <div className="display--block md-display--inline-block">
+                      <button
+                        className="c-button c-button--small qa-print-button margin-left--1 margin-bottom--1 sm-padding-x--2"
+                        title="Print"
+                        type="button"
                       >
                         <FontAwesomeIcon
-                          className="members-chev"
-                          icon={faChevronRight}
+                          className="fas md-margin-right--1"
+                          icon={faPrint}
                         />
-                      </a> */}
+
+                        <span className="display--none md-display--inline-block">
+                          Print
+                        </span>
+                      </button>
+                      <button
+                        className="c-button c-button--small qa-email-button margin-left--1 margin-bottom--1 sm-padding-x--2"
+                        title="Email"
+                        type="button"
+                      >
+                        <FontAwesomeIcon
+                          className="fas md-margin-right--1"
+                          icon={faEnvelope}
+                        />
+
+                        <span className="display--none md-display--inline-block">
+                          Email
+                        </span>
+                      </button>
+                      <button
+                        className="c-button c-button--small qa-share-link-button margin-left--1 margin-bottom--1 sm-padding-x--2"
+                        title="Link"
+                        type="button"
+                      >
+                        <FontAwesomeIcon
+                          className="fas md-margin-right--1"
+                          icon={faLink}
+                        />
+
+                        <span className="display--none md-display--inline-block">
+                          Link
+                        </span>
+                      </button>
                     </div>
-                  </div>
-                  <div className="similar-plans">
-                    <div className="similar-plans-inner">
-                      <div className="heading_section">
-                        <h6>Compare with similar plans</h6>
-                      </div>
-                      <div className="similar_plan_feature">
-                        <div className="box-slider">
-                          <div className="slider-plans">
-                            {this.props.similar_plans.map((similar_plan) => (
-                              <div className="box">
-                                <ul className="similar-plan-ul">
-                                  <li>
-                                    <div className="box_block">
-                                      <div className="img-box-logo-similar">
-                                        <img src={similar_plan.hmo_id.logo} />
-                                      </div>
-                                      <span className="greyed-text">
-                                        {similar_plan.name}
-                                      </span>
-                                    </div>
-                                    <ul>
-                                      <li>
-                                        <span>
-                                          {/* <b>
-                                              {
-                                                this.props.quiz.quiz.responses
-                                                  .num_of_people
-                                              }{" "}
-                                              {this.props.quiz.quiz.responses
-                                                .num_of_people > 1
-                                                ? " people"
-                                                : " person"}
-                                            </b> */}
-                                          {similar_plan.plan_id &&
-                                            similar_plan.plan_id.category &&
-                                            similar_plan.plan_id.category.map(
-                                              (cat, i) => {
-                                                return (
-                                                  <b className="">
-                                                    {" "}
-                                                    {cat.name}
-                                                    {plan.plan_id.category
-                                                      .length > 1 &&
-                                                      i <
-                                                        plan.plan_id.category
-                                                          .length -
-                                                          1 &&
-                                                      ", "}
-                                                  </b>
-                                                );
-                                              }
-                                            )}
-                                        </span>
-                                      </li>
-                                      <li>
-                                        <span>
-                                          <b>
-                                            ₦
-                                            {/* {this.props.responses.type ==
-                                              "single"
-                                                ? this.numberwithCommas(
-                                                    similar_plan.individual_annual_price
-                                                  )
-                                                : this.numberwithCommas(
-                                                    similar_plan.family_annual_price
-                                                  )} */}
-                                            {this.numberwithCommas(
-                                              home_utils.stripNonNumeric(
-                                                similar_plan.price
-                                              )
-                                            )}
-                                            / year
-                                          </b>
-                                        </span>
-                                      </li>
-                                    </ul>
-                                    <div className="similar-plans-btm">
-                                      <button
-                                        className="btn"
-                                        onClick={this.goToPlans}
-                                      >
-                                        COMPARE NOW
-                                      </button>
-                                    </div>
-                                  </li>
-                                </ul>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+                    <div>
+                      <button
+                        type="button"
+                        aria-label="Tooltip: "
+                        className="tooltip-trigger padding-right--0"
+                      >
+                        <span className="c-base text-decoration--underline color--primary">
+                          Sharing your information
+                        </span>
+                        <span className="tooltip-icon-container tooltip-icon-container--has-trigger-content trigger-inverse">
+                          <svg
+                            className="tooltip-icon"
+                            width="16px"
+                            height="16px"
+                            viewBox="0 0 16 16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g
+                              stroke="none"
+                              stroke-width="1"
+                              fill="none"
+                              fill-rule="evenodd"
+                            >
+                              <g
+                                className="tooltip-icon-fill"
+                                fill-rule="nonzero"
+                              >
+                                <g>
+                                  <path d="M8,16 C3.581722,16 0,12.418278 0,8 C0,3.581722 3.581722,0 8,0 C12.418278,0 16,3.581722 16,8 C16,12.418278 12.418278,16 8,16 Z M9,12.2760417 L9,6.375 L7,6.375 L7,12.2760417 L9,12.2760417 Z M7,4.90625 C7,5.50347521 7.33172745,5.80208333 7.99519231,5.80208333 C8.66506745,5.80208333 9,5.50347521 9,4.90625 C9,4.6076374 8.9198726,4.38194521 8.75961539,4.22916667 C8.59935818,4.07638813 8.34455303,4 7.99519231,4 C7.64583158,4 7.39262899,4.07465203 7.23557692,4.22395833 C7.07852485,4.37326464 7,4.60069292 7,4.90625 Z"></path>
+                                </g>
+                              </g>
+                            </g>
+                          </svg>
+                        </span>
+                      </button>
                     </div>
                   </div>
                 </div>
+              </div>
+            </header>
+          </div>
+          {plan.name ? (
+            <div className="c-plan-details-page__body">
+              <div className="fill--white">
+                <div className="container">
+                  <div className="margin-y--1">
+                    <header className="md-display--flex justify--content-between align-items--center border-bottom--1 padding-bottom--2 c-plan-title">
+                      <div className="c-plan-title__issuer font-weight--bold">
+                        {plan.hmo_id.name}
+                      </div>
+                      <h2 className="c-plan-title__name font-weight--normal margin-y--1 font-size--h1">
+                        {/* <a href={`details/${plan.service_id}`} target="_self"> */}
+                        {plan.name}
+                        {/* </a> */}
+                      </h2>
+
+                      <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
+                        <li className="c-plan-title__info-item" key={plan.id}>
+                          {plan.plan_id &&
+                            plan.plan_id.category &&
+                            plan.plan_id.category.map((cat, i) => {
+                              return (
+                                <span className="">
+                                  {" "}
+                                  {cat.name}
+                                  {plan.plan_id.category.length > 1 &&
+                                    i < plan.plan_id.category.length - 1 &&
+                                    ", "}
+                                </span>
+                              );
+                            })}
+                        </li>
+                        <li className="c-plan-title__info-item">
+                          <span className="">
+                            <span>
+                              {/* {plan.hmo_id && plan.hmo_id.hmo_id} */}
+                              {plan.category}
+                            </span>
+                          </span>
+                        </li>
+                        <li className="c-plan-title__info-item">
+                          Plan ID:
+                          <span className="font-weight--bold">
+                            {plan.plan_id && plan.plan_id.category
+                              ? plan.plan_id.plan_id
+                              : plan.plan_id}
+                          </span>
+                        </li>
+                      </ul>
+                    </header>
+
+                    <section className="c-detail-section margin-bottom--4">
+                      <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                        Highlights
+                      </h2>
+                      <div>
+                        <table className="c-details-table">
+                          <tbody className="valign--top">
+                            <tr>
+                              <th scope="row">Price</th>
+                              <td>
+                                <span>{plan.price}</span>
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <th scope="row">HMO</th>
+                              <td>
+                                <span>{plan.hmo_id.name}</span>
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <th scope="row">Plan metal level</th>
+                              <td>
+                                <span>{plan.category}</span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Plan type</th>
+                              <td>
+                                <span>
+                                  {plan.plan_id &&
+                                    plan.plan_id.category &&
+                                    plan.plan_id.category.map((cat, i) => {
+                                      return (
+                                        <b className="">
+                                          {" "}
+                                          {cat.name}
+                                          {plan.plan_id.category.length > 1 &&
+                                            i <
+                                              plan.plan_id.category.length -
+                                                1 &&
+                                            ", "}
+                                        </b>
+                                      );
+                                    })}
+                                </span>
+                              </td>
+                            </tr>
+
+                            <tr className="print-display--none">
+                              <th scope="row">Medical providers in-network</th>
+                              <td>
+                                <a
+                                  className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                  href="/find-provider"
+                                  role="button"
+                                >
+                                  Add
+                                </a>
+                              </td>
+                            </tr>
+                            <tr className="print-display--none">
+                              <th scope="row">Drugs covered/not covered</th>
+                              <td>
+                                <a
+                                  className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
+                                  href="/find-drugs"
+                                  role="button"
+                                >
+                                  Add
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+
+                  {/*                 
                 <div className="col-md-4 wrapper_right_product">
                   <div className="inner_right_section">
                     <h3>Summary</h3>
                     <div className="scroll_space">
-                      {/* <div className="flexRow section_right">
-                    <div className="">Base Plan</div>
-                    <div>
-                      <span>₦5000</span>
-                    </div>
-                  </div> */}
                       <div className="flexRow section_right">
                         <div>Cover Amount</div>
                         <div>
                           <span>
                             ₦
-                            {
-                              // this.props.responses.type == "single"
-                              //   ? this.numberwithCommas(
-                              //       plan.individual_annual_price
-                              //     )
-                              //   : this.numberwithCommas(plan.family_annual_price)
-                              this.numberwithCommas(
-                                home_utils.stripNonNumeric(plan.price)
-                              )
-                            }
+                            {this.numberwithCommas(
+                              home_utils.stripNonNumeric(plan.price)
+                            )}
                           </span>
                         </div>
                       </div>
                       <div className="flexRow section_right">
                         <div>Policy Period</div>
                         <div>
-                          <span>
-                            1 year
-                            {/* {plan.duration} */}
-                          </span>
+                          <span>1 year</span>
                         </div>
                       </div>
                       <div className="premium_right">
@@ -1411,18 +390,9 @@ class PlanDetails extends Component<DetailsProps> {
                           <div>
                             <span>
                               ₦
-                              {
-                                // this.props.responses.type == "single"
-                                //   ? this.numberwithCommas(
-                                //       plan.individual_annual_price
-                                //     )
-                                //   : this.numberwithCommas(
-                                //       plan.family_monthly_price
-                                //     )
-                                this.numberwithCommas(
-                                  home_utils.stripNonNumeric(plan.price)
-                                )
-                              }
+                              {this.numberwithCommas(
+                                home_utils.stripNonNumeric(plan.price)
+                              )}
                             </span>
                           </div>
                         </div>
@@ -1431,21 +401,764 @@ class PlanDetails extends Component<DetailsProps> {
                     </div>
                   </div>
                 </div>
-              </div>
+               */}
 
-              <div className="bottom-menu details-bottom-menu row">
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_accidents_n_emerg")
+                        }
+                      >
+                        Accidents & Emergencies
+                        {this.state.collapse_accidents_n_emerg ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div
+                      hidden={
+                        this.state.collapse_accidents_n_emerg ? true : false
+                      }
+                    >
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Accidents & Emergencies
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.accidents_emergencies}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">Evacuation</span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.evacuations}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() => this.toggleCollapsible("collapse_ent")}
+                      >
+                        E.N.T
+                        {this.state.collapse_ent ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div hidden={this.state.collapse_ent ? true : false}>
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Dental Care
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.dental_care}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Optical Care
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.optical_care}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_immunizations")
+                        }
+                      >
+                        Immunizations
+                        {this.state.collapse_immunizations ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div
+                      hidden={this.state.collapse_immunizations ? true : false}
+                    >
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Additional Immunizations
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.additional_ammunization}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_admissions")
+                        }
+                      >
+                        Admissions
+                        {this.state.collapse_admissions ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div hidden={this.state.collapse_admissions ? true : false}>
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Admission Feeding
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.admission_feeding}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Hospital Admission
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.hospital_addmissions}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Admission per Annum
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.admissions_per_annum}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_maternity")
+                        }
+                      >
+                        Maternity
+                        {this.state.collapse_maternity ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div hidden={this.state.collapse_maternity ? true : false}>
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Antenatal Care
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.antenatal_care_delivery}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Fertility Services
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.fertility_services}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Family Planning
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.family_planning_services}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Neonatal Care
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.neonatal_care}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Postnatal Care
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.postnatal_care}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_chronic_conds")
+                        }
+                      >
+                        Chronic Conditions Mgt
+                        {this.state.collapse_chronic_conds ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div
+                      hidden={this.state.collapse_chronic_conds ? true : false}
+                    >
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Cancer Care
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.cancer_care}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_prescriptions")
+                        }
+                      >
+                        Prescribed Drugs
+                        {this.state.collapse_prescriptions ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div
+                      hidden={this.state.collapse_prescriptions ? true : false}
+                    >
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Prescribed Drugs
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.prescribed_drugs}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Drugs Infusions
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.drugs_infusions}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_investigations")
+                        }
+                      >
+                        Investigations
+                        {this.state.collapse_investigations ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div
+                      hidden={this.state.collapse_investigations ? true : false}
+                    >
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Lab Investigations
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.lab_investigations}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Renal Dialysis
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.renal_dialysis}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Ultrasound Scans
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.ultrasound_plans}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Plain Contrast X-rays
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.plain_contrast_xrays}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_consultations")
+                        }
+                      >
+                        Consultations
+                        {this.state.collapse_consultations ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div
+                      hidden={this.state.collapse_consultations ? true : false}
+                    >
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                General Consultations
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.general_consultation}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Specialist Consultation
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.specialist_consultation}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section className="c-detail-section margin-bottom--4">
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_others")
+                        }
+                      >
+                        Others
+                        {this.state.collapse_others ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div hidden={this.state.collapse_others ? true : false}>
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Physiotherapy
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.physiotherapy}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                HIV/ AIDS Treatment
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.hiv_aids_treatment}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Intensive Care
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.intensive_care}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Covid 19 Treatment
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.covid_19_treatment}</span>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+                </div>{" "}
+              </div>
+              <section className="section container hero compare_parent sp-top-main">
+                <div className="">
+                  <section className="section content_section mt-top">
+                    <div>
+                      <section className="section grey_background similar_plans">
+                        <h3 className="font-weight--bold">Similar Plans</h3>
+                        <div className="similar-plans">
+                          <div className="similar-plans-inner">
+                            <div className="similar_plan_feature">
+                              <div className="box-slider">
+                                <div className="slider-plans">
+                                  {this.props.similar_plans.map(
+                                    (similar_plan) => (
+                                      <div className="box">
+                                        <ul className="similar-plan-ul">
+                                          <li>
+                                            <div className="box_block">
+                                              <div className="img-box-logo-similar">
+                                                <img
+                                                  src={similar_plan.hmo_id.logo}
+                                                />
+                                              </div>
+                                              <span className="greyed-text">
+                                                {similar_plan.name}
+                                              </span>
+                                            </div>
+                                            <ul>
+                                              <li>
+                                                <span>
+                                                  {similar_plan.plan_id &&
+                                                    similar_plan.plan_id
+                                                      .category &&
+                                                    similar_plan.plan_id.category.map(
+                                                      (cat, i) => {
+                                                        return (
+                                                          <b className="">
+                                                            {" "}
+                                                            {cat.name}
+                                                            {plan.plan_id
+                                                              .category.length >
+                                                              1 &&
+                                                              i <
+                                                                plan.plan_id
+                                                                  .category
+                                                                  .length -
+                                                                  1 &&
+                                                              ", "}
+                                                          </b>
+                                                        );
+                                                      }
+                                                    )}
+                                                </span>
+                                              </li>
+                                              <li>
+                                                <span>
+                                                  <b>
+                                                    ₦
+                                                    {/* {this.props.responses.type ==
+                                              "single"
+                                                ? this.numberwithCommas(
+                                                    similar_plan.individual_annual_price
+                                                  )
+                                                : this.numberwithCommas(
+                                                    similar_plan.family_annual_price
+                                                  )} */}
+                                                    {this.numberwithCommas(
+                                                      home_utils.stripNonNumeric(
+                                                        similar_plan.price
+                                                      )
+                                                    )}
+                                                    / year
+                                                  </b>
+                                                </span>
+                                              </li>
+                                            </ul>
+                                            <div className="similar-plans-btm">
+                                              <button
+                                                className="btn"
+                                                onClick={this.goToPlans}
+                                              >
+                                                COMPARE NOW
+                                              </button>
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    )
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+                  </section>
+                </div>
+              </section>
+
+              {/* <div className="bottom-menu details-bottom-menu row">
                 <div className="col-md-4">
                   <p>Total Premium</p>
                   <p>
                     ₦
-                    {
-                      // this.props.responses.type == "single"
-                      //   ? this.numberwithCommas(plan.individual_annual_price)
-                      //   : this.numberwithCommas(plan.family_annual_price)
-                      this.numberwithCommas(
-                        home_utils.stripNonNumeric(plan.price)
-                      )
-                    }
+                    {this.numberwithCommas(
+                      home_utils.stripNonNumeric(plan.price)
+                    )}
                   </p>
                 </div>
                 <div className="col-md-8">
@@ -1453,420 +1166,17 @@ class PlanDetails extends Component<DetailsProps> {
                     PROCEED TO CHECKOUT
                   </button>
                 </div>
-              </div>
-              <Modal
-                dialogClassName="custom-dialog"
-                className="features-modal"
-                show={this.props.isFeaturesModalOpen}
-                onHide={this.toggleFeaturesModal}
-              >
-                <Modal.Header
-                  className="features-modal-header"
-                  translate="true"
-                  closeButton
-                >
-                  <div className="">
-                    <div className="features-header row">
-                      <div className="col-md-3">
-                        <div className="box-logo">
-                          <img
-                            src={
-                              plan.hmo_id
-                                ? plan.hmo_id.logo
-                                : console.log("plan.hmo_id", plan.hmo_id)
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div className="col-md-9">
-                        <h6>{plan.name}</h6>
-                        <div className="row features-header-inner">
-                          <div className="col-md-3">
-                            <p className="greyed-text">Covers</p>
-                            <h6>
-                              {plan.plan_id &&
-                                plan.plan_id.category &&
-                                plan.plan_id.category.map((cat, i) => {
-                                  return (
-                                    <span className="">
-                                      {" "}
-                                      {cat.name}
-                                      {plan.plan_id.category.length > 1 &&
-                                        i < plan.plan_id.category.length - 1 &&
-                                        ", "}
-                                    </span>
-                                  );
-                                })}
-                            </h6>
-                          </div>
-                          <div className="col-md-7">
-                            <p className="greyed-text">Premium</p>
-                            <h6>
-                              ₦
-                              {/* {this.props.responses.type == "single"
-                                ? this.numberwithCommas(
-                                    plan.individual_annual_price
-                                  )
-                                : this.numberwithCommas(
-                                    plan.family_annual_price
-                                  )} */}
-                              {this.numberwithCommas(
-                                home_utils.stripNonNumeric(plan.price)
-                              )}
-                              / year
-                            </h6>
-                            {/* {plan.individual_monthly_price ? (
-                              <p className="greyed-text">
-                                ₦
-                                {this.numberwithCommas(
-                                  plan.individual_monthly_price
-                                )}{" "}
-                                paid monthly
-                              </p>
-                            ) : (
-                              ""
-                            )} */}
-                          </div>
-                          <div className="col-md-2 shortlist-div">
-                            <img className="shortlist-yellow" src={shortlist} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Modal.Header>
-                <Modal.Body className="features-modal-body">
-                  <div className="features-modal">
-                    <div className="feature_card">
-                      <div className="tabs tabs-feature" id="tabs-feature">
-                        <ul>
-                          <li
-                            className={
-                              this.props.tab_opened == "highlights"
-                                ? "features_tab is-active"
-                                : "features_tab"
-                            }
-                            id="li_plansHigh"
-                          >
-                            <a onClick={this.handleTabChange} id="highlights">
-                              Highlights
-                            </a>
-                          </li>
-                          <li
-                            className={
-                              this.props.tab_opened == "features"
-                                ? "features_tab is-active"
-                                : "features_tab"
-                            }
-                            id="li_plansFeat"
-                          >
-                            <a onClick={this.handleTabChange} id="features">
-                              Features
-                            </a>
-                          </li>
-                          <li
-                            className={
-                              this.props.tab_opened == "claim"
-                                ? "features_tab is-active"
-                                : "features_tab"
-                            }
-                            id="li_plansClaim"
-                          >
-                            <a onClick={this.handleTabChange} id="claim">
-                              Claim Process
-                            </a>
-                          </li>
-                          <li
-                            className={
-                              this.props.tab_opened == "hospitals"
-                                ? "features_tab is-active"
-                                : "features_tab"
-                            }
-                            id="li_plansHosp"
-                          >
-                            <a
-                              onClick={this.handleTabChange}
-                              id="hospitals"
-                              href="#"
-                            >
-                              Network Hospitals
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div
-                        className={
-                          this.props.tab_opened == "claim"
-                            ? "features_popup_table1 claim_process"
-                            : this.props.tab_opened == "hospitals"
-                            ? "features_popup_table1 hospitalSearchWrapper"
-                            : "features_popup_table1"
-                        }
-                      >
-                        {this.props.tab_opened == "highlights" ? (
-                          <div className="highlights-content">
-                            <div
-                              className="div_features_covered_main"
-                              //onClick={this.toggleFeaturePopUp}
-                            >
-                              <div className="features_icons">
-                                <div className="feature-icon1">
-                                  <img
-                                    alt=""
-                                    className=""
-                                    src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
-                                  />
-                                </div>
-                              </div>
-                              <div className="div_features_covered_border">
-                                <h2 className="span_feature_popup_heading">
-                                  Out-patient Limit: ₦
-                                  {this.numberwithCommas(
-                                    home_utils.stripNonNumeric(
-                                      plan.out_patient_limit
-                                    )
-                                  )}
-                                </h2>
-                                {/* <FontAwesomeIcon
-                          className="chev"
-                          icon={faChevronRight}
-                        /> */}
-                              </div>
-                            </div>
-                            <div
-                              className="div_features_covered_main"
-                              //onClick={this.toggleFeaturePopUp}
-                            >
-                              <div className="features_icons">
-                                <div className="feature-icon1">
-                                  <img
-                                    alt=""
-                                    className=""
-                                    src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
-                                  />
-                                </div>
-                              </div>
-                              <div className="div_features_covered_border">
-                                <h2 className="span_feature_popup_heading">
-                                  In-patient Limit: ₦
-                                  {this.numberwithCommas(
-                                    home_utils.stripNonNumeric(
-                                      plan.in_patient_limit
-                                    )
-                                  )}
-                                </h2>
-                                {/* <FontAwesomeIcon
-                          className="chev"
-                          icon={faChevronRight}
-                        /> */}
-                              </div>
-                            </div>
-                            <div className="div_features_covered_main">
-                              <div className="features_icons">
-                                <div className="feature-icon1">
-                                  <img
-                                    alt=""
-                                    className=""
-                                    src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5Star44.png"
-                                  />
-                                </div>
-                              </div>
-                              <div className="div_features_covered_border">
-                                <h2 className="span_feature_popup_heading">
-                                  Cover Region:{" "}
-                                  {plan.cover_region ? plan.cover_region : ""}
-                                </h2>
-                                {/* <FontAwesomeIcon
-                          className="chev"
-                          icon={faChevronRight}
-                        /> */}
-                              </div>
-                            </div>
-                          </div>
-                        ) : this.props.tab_opened == "features" ? (
-                          <div className="features-content">
-                            <p className="coveredHead">What's covered</p>
-                            <div className="">
-                              {/* {plan.service_id
-                                ? plan.service_id.map((service) => {
-                                    return (
-                                      <div className="div_features_covered_main">
-                                        <div className="div_features_covered_inside">
-                                          <div className="features_icons">
-                                            <div className="feature-icon1">
-                                              <img
-                                                alt="feature"
-                                                className="feature_icon_img"
-                                                src="https://health.policybazaar.com/insurer-logo/quotes-logos/feature5.svg"
-                                              />
-                                            </div>
-                                          </div>
-                                          <div className="div_features_covered_border">
-                                            <h2 className="span_feature_popup_heading">
-                                              {service}
-                                            </h2>
-                                     
-                                          </div>
-                                        </div>
-                                      </div>
-                                    );
-                                  })
-                                : ""} */}
-                            </div>
-                          </div>
-                        ) : this.props.tab_opened == "claim" ? (
-                          <div className="claim-content">
-                            <h3>HMO directly pays network hospital</h3>
-                            <div className="claim_process_text">
-                              {/* <h4>Inform Hygeia HMO</h4> */}
-                              <ul>
-                                <li></li>
-                                <li>
-                                  The Provider may ask for:
-                                  <ul>
-                                    <li>Name of Insured</li>
-                                    {/* <li>Name of Insured</li>
-                              <li>Name of Insured</li>
-                              <li>Name of Insured</li>
-                              <li>Name of Insured</li> */}
-                                  </ul>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="cashless-hosp-content">
-                            <div className="features_search_hosp">
-                              <input
-                                type="text"
-                                placeholder="Search Hospitals"
-                                id="input_hospital"
-                                // disabled
-                              />
-                              <p className="searchIcon"></p>
-                            </div>
-                            <div className="features_hospital_catHead">
-                              Top Hospitals
-                            </div>
-                            <ul className="features_hosp_list">
-                              {/* {plan.hmo_id.provider_id
-                                ? JSON.parse(plan.hmo_id.provider_id).map(
-                                    (provider) => {
-                                      return <li>{provider}</li>;
-                                    }
-                                  )
-                                : ""} */}
-                            </ul>
-                            {/* <div className="features_hospital_catHead">
-                        Other Hospitals
-                      </div>
-                      <ul className="features_hosp_list">
-                        <li>Kupa Medical Centre</li>
-                        <li>Kupa Medical Centre</li>
-                        <li>Kupa Medical Centre</li>
-                        <li>Kupa Medical Centre</li>
-                        <li>Kupa Medical Centre</li>
-                      </ul> */}
-                          </div>
-                        )}
-                      </div>
-                      <div className="bottom-menu details-bottom-menu row">
-                        <div className="col-md-4">
-                          <p>Total Premium</p>
-                          <p>
-                            ₦{" "}
-                            {/* {this.props.responses.type == "single"
-                              ? this.numberwithCommas(
-                                  plan.individual_annual_price
-                                )
-                              : this.numberwithCommas(plan.family_annual_price)} */}
-                            {this.numberwithCommas(
-                              home_utils.stripNonNumeric(plan.price)
-                            )}
-                          </p>
-                        </div>
-                        <div className="col-md-8">
-                          <button className="btn btn-danger checkout">
-                            PROCEED TO CHECKOUT
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Modal.Body>
-                <div className="claim_popup_main">
-                  <div className="claim_popup_black"></div>
-                  <Modal
-                    dialogClassName="custom-dialog"
-                    className="claim_popup_white"
-                    show={this.props.isFeaturePopUpOpen}
-                    onHide={this.toggleFeaturePopUp}
-                  >
-                    <Modal.Header
-                      className="div_claim_popup_heading"
-                      translate="true"
-                      closeButton
-                    >
-                      <span className="claim_popup_heading">
-                        Value for money
-                      </span>
-                    </Modal.Header>
-                    <Modal.Body className="">
-                      <div className="div_feature_explain">
-                        <span>
-                          You get 1 year health cover at a very affordable
-                          price. No catch and complete peace of mind.
-                        </span>
-                      </div>
-                      <div className="div_feature_what">
-                        <p>Why it is Important</p>
-                        <span>
-                          Opting for 1 year cover means you are insured against
-                          all possible illnesses, be it cancer, heart problems
-                          or an accident. This guarantees complete peace of ming
-                          at a very reasonable price.
-                        </span>
-                      </div>
-                    </Modal.Body>
-                  </Modal>
-                </div>
-              </Modal>
-              <Modal
-                dialogClassName="custom-dialog"
-                className="right edit-members-popup"
-                show={this.props.isOthersInputOpen}
-                onHide={this.toggleOthersInput}
-              >
-                <Modal.Header translate="true" closeButton>
-                  <div className="others-mtitle edit-members-header">
-                    <h3>Edit Members</h3>
-                  </div>
-                </Modal.Header>
-                <Modal.Body>{this.showOthersInput()}</Modal.Body>
-                <div className="bottom-menu details-bottom-menu row">
-                  <div className="col-md-12">
-                    <button
-                      className="btn btn-danger checkout update-members-btn"
-                      onClick={this.toggleOthersInput}
-                    >
-                      UPDATE MEMBERS
-                    </button>
-                  </div>
-                </div>
-              </Modal>
+              </div> */}
             </div>
           ) : (
             ""
-            //this.goToHome()
           )}
         </div>
-        {/* <AppFooter /> */}
       </div>
     );
   }
 }
 
-/*export default Compare;*/
 const mapProps = (state: any) => {
   return {
     plans: state.fetchData.services,

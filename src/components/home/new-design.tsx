@@ -3051,8 +3051,6 @@ class NewContent extends React.Component<homeProps, homeState> {
     for (let i = 1; i < this.state.plans_to_compare.length; i++) {
       query_string += "/" + this.state.plans_to_compare[i];
     }
-
-    // console.log("query_string", query_string);
     return query_string;
   };
 
