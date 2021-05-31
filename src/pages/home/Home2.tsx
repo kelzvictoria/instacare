@@ -34,7 +34,7 @@ import {
   filterByPlanType,
   filterByBudget_and_or_Type,
   filterByPlanRange,
-  getPlan,
+  // getPlan,
   getSimilarPlans,
 } from "../../actions/fetchDataActions";
 
@@ -104,15 +104,21 @@ class Home extends Component<QuizProps, {}> {
     plansByHMO: [],
   };
 
+  componentDidUpdate() {
+    if (this.props.planServices.length > 0) {
+      !localStorage["cheapest_plan"] && this.getCheapestPlan();
+    }
+  }
+
   componentDidMount() {
     let hmoArr;
     let hmoId = this.props.match.params.id;
 
     hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == hmoId);
 
-    document.title = hmoId
-      ? `Instacare - ${hmoArr[0].title}`
-      : "Instacare - Home";
+    // document.title = hmoId
+    //   ? `Instacare - ${hmoArr[0].title}`
+    //   : "Instacare - Home";
 
     //this.props.getProviderInfo(hmoArr[0]);
   }
@@ -173,12 +179,11 @@ class Home extends Component<QuizProps, {}> {
   }
 
   async UNSAFE_componentWillMount() {
-    !localStorage["plans"] && (await this.props.getPlans());
-    !localStorage["services"] && (await this.props.getServices());
-    const hmo = this.props.match.params ? this.props.match.params.id : "";
-
-    !localStorage["cheapest_plan"] && this.getCheapestPlan();
-    // this.getCheapestPlanByHMO();
+    //   !localStorage["providers"] && (await this.props.getProviders());
+    //   !localStorage["plans"] && (await this.props.getPlans());
+    //   !localStorage["services"] && (await this.props.getServices());
+    //   // this.getCheapestPlanByHMO();
+    //   const hmo = this.props.match.params ? this.props.match.params.id : "";
   }
 
   getCheapestPlanByHMO() {
@@ -197,30 +202,7 @@ class Home extends Component<QuizProps, {}> {
   }
 
   getCheapestPlan() {
-    let lowest = Number.POSITIVE_INFINITY;
-    let highest = Number.NEGATIVE_INFINITY;
-    let tmp;
-
-    let arr = this.props.planServices;
-    // console.log("arr", arr);
-
-    for (let i = arr.length - 1; i >= 0; i--) {
-      tmp = stripNonNumeric(arr[i]["price"]);
-      // console.log("arr[i]['price']", stripNonNumeric(arr[i]["price"]));
-
-      if (tmp > 1000) {
-        if (tmp < lowest) lowest = tmp;
-        if (tmp > highest) highest = tmp;
-      }
-    }
-    console.log("most expensive plan", highest, "cheapest plan", lowest);
-
-    //return this.props.cheapest_plan;
-    this.props.getCheapestPlan(lowest);
-    // this.props.dispatch({
-    //   type: "GET_CHEAPEST_PLAN",
-    //   data: lowest,
-    // });
+    //this.props.getCheapestPlan();
   }
 
   render() {
@@ -305,6 +287,6 @@ export default connect(mapProps, {
   resetType,
   filterByPlanRange,
   resetRange,
-  getPlan,
+  // getPlan,
   getSimilarPlans,
 })(Home);

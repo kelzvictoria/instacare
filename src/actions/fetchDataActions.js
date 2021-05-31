@@ -83,7 +83,8 @@ export const getPlan = (plan) => (dispatch, getState) => {
 }
 
 export const getPlanDetail = (serviceID) => async (dispatch, getState) => {
-    await dispatch(getServices())
+
+    //  await dispatch(getServices())
 
 
     let services = getState().fetchData.services;
@@ -98,34 +99,37 @@ export const getPlanDetail = (serviceID) => async (dispatch, getState) => {
 
 export const getSimilarPlans = (plan) => async (dispatch, getState) => {
     await dispatch(getServices())
-    let type = plan.plan_id.category.map(cat => cat.name.toLowerCase());
-    let planID = plan.service_id;
+    if (plan.plan_id.category) {
+        let type = plan.plan_id.category.map(cat => cat.name.toLowerCase());
 
-    // console.log("type", type, "planID", planID);
+        let planID = plan.service_id;
 
-    let packages = getState().fetchData.services;
+        // console.log("type", type, "planID", planID);
 
-    let res = groupPlansByType(packages, type);
-    console.log("res", res);
+        let packages = getState().fetchData.services;
 
-    let similar_plans = res.filter(plan => {
-        // console.log("plan.service_id", plan.service_id);
-        // console.log("planID", planID);
-        return plan.service_id !== planID
-    })
+        let res = groupPlansByType(packages, type);
+        console.log("res", res);
 
-    similar_plans = similar_plans.filter((plan, index, self) =>
-        index === self.findIndex((p) => (
-            p.place === plan.place && p.name === plan.name
-        ))
-    )
+        let similar_plans = res.filter(plan => {
+            // console.log("plan.service_id", plan.service_id);
+            // console.log("planID", planID);
+            return plan.service_id !== planID
+        })
 
-    console.log("similar_plans", similar_plans);
+        similar_plans = similar_plans.filter((plan, index, self) =>
+            index === self.findIndex((p) => (
+                p.place === plan.place && p.name === plan.name
+            ))
+        )
 
-    dispatch({
-        type: GET_SIMILAR_PLANS,
-        payload: similar_plans
-    })
+        console.log("similar_plans", similar_plans);
+
+        dispatch({
+            type: GET_SIMILAR_PLANS,
+            payload: similar_plans
+        })
+    }
 
 }
 
@@ -151,6 +155,7 @@ export const getPlansByID = (planID) => async (dispatch, getState) => {
 }
 
 export const getHMOs = () => async (dispatch, getState) => {
+    //  await dispatch(getProviders());
     dispatch({
         type: IS_FETCHING_HMOS,
         payload: true
@@ -161,14 +166,25 @@ export const getHMOs = () => async (dispatch, getState) => {
         )
         .then((res) => {
             let hmos = [];
-            //console.log("res at 74", res);
+            let providers = getState().fetchData.providers;
+            console.log("providers", providers);
             if (res.data.length > 0) {
-                hmos = res.data.map(obj => {
-                    return {
-                        ...obj.data
+                hmos = res.data.map(obj => obj.data);
+
+                if (providers.length > 0) {
+                    for (let i = 0; i < hmos.length; i++) {
+                        let hmoID = hmos[i]["hmo_id"]
+                        console.log("hmoID", hmoID);
+                        console.log("providers", providers);
+
+                        let hmoProviders = providers.filter(provider => provider.hmo_id === hmoID);
+                        console.log("hmoProviders", hmoProviders);
+                        if (hmoProviders.length > 0) {
+                            hmos[i]["providers"] = hmoProviders;
+                        }
                     }
-                })
-                //}
+                }
+                console.log("hmos", hmos);
                 dispatch({
                     type: GET_HMOS,
                     payload: hmos
@@ -176,6 +192,7 @@ export const getHMOs = () => async (dispatch, getState) => {
             }
 
         }).catch((err) => {
+            console.log("err", err);
             err.response && dispatch(returnErrors(err.response.data, err.response.status))
         })
 }
@@ -185,9 +202,16 @@ export const getProviders = () => (dispatch, getState) => {
     axios
         .get(`${API_URL}/api/providers`)
         .then((res) => {
+            let providers = [];
+            //console.log("res", res);
+            if (res.data.length > 0) {
+                providers = res.data.map(obj => obj.data)
+                //  console.log("providers", providers);
+            }
+
             dispatch({
                 type: GET_PROVIDERS,
-                payload: res
+                payload: providers
             })
         }).catch((err) => {
             console.log("err", err);
@@ -334,7 +358,27 @@ export const getProviderInfo = (provider) => (dispatch, getState) => {
     })
 }
 
-export const getCheapestPlan = (lowest) => (dispatch, getState) => {
+export const getCheapestPlan = () => (dispatch, getState) => {
+    let lowest = Number.POSITIVE_INFINITY;
+    let highest = Number.NEGATIVE_INFINITY;
+    let tmp;
+
+    let arr = getState().fetchData.services;//this.props.planServices;
+    // console.log("arr", arr);
+
+    for (let i = arr.length - 1; i >= 0; i--) {
+        tmp = stripNonNumeric(arr[i]["price"]);
+        // console.log("arr[i]['price']", stripNonNumeric(arr[i]["price"]));
+
+        if (tmp > 1000) {
+            if (tmp < lowest) lowest = tmp;
+            if (tmp > highest) highest = tmp;
+        }
+    }
+    console.log("most expensive plan", highest, "cheapest plan", lowest);
+
+
+
     dispatch({
         type: GET_CHEAPEST_PLAN,
         data: lowest

@@ -29,6 +29,12 @@ import Providers from "./pages/providers/Providers";
 import Prescriptions from "./pages/prescriptions/Prescriptions";
 
 import { getToken } from "../src/actions/authActions";
+import {
+  getProviders,
+  getPlans,
+  getServices,
+  getCheapestPlan,
+} from "../src/actions/fetchDataActions";
 
 //import HMO from "./pages/home/HMO";
 
@@ -37,8 +43,17 @@ export class App extends React.Component {
     authCredLoaded: false,
   };
 
-  UNSAFE_componentWillMount() {
-    // store.dispatch(getToken());
+  // UNSAFE_componentWillMount() {
+  //   // store.dispatch(getToken());
+  // }
+
+  async UNSAFE_componentWillMount() {
+    !localStorage["providers"] && (await store.dispatch(getProviders()));
+    !localStorage["plans"] && (await store.dispatch(getPlans()));
+    !localStorage["services"] && (await store.dispatch(getServices()));
+
+    !localStorage["cheapest_plan"] && (await store.dispatch(getCheapestPlan()));
+    // this.getCheapestPlanByHMO();
   }
 
   render() {

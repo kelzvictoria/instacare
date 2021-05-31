@@ -4597,7 +4597,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                               display--flex aligh-items--center
                               "
                                   >
-                                    Total Benefit Limit
+                                    In-patient Limit
                                     <button
                                       type="button"
                                       aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
@@ -4614,16 +4614,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   <div className="display--flex flex-wrap--wrap plan-flex-wrap">
                                     <div className="cost-display__amount">
                                       <div className="font-size--h2">
-                                        {plan.out_patient_limit == "N/A" ||
-                                        plan.in_patient_limit == "N/A"
+                                        {plan.in_patient_limit == "N/A"
                                           ? "N/A"
                                           : `₦${this.numberwithCommas(
-                                              this.handleTotalBenefitLimit(
-                                                plan.out_patient_limit,
+                                              this.stripNonNumeric(
                                                 plan.in_patient_limit
                                               )
                                             )}`}
-                                        {/* ₦2,000 */}
                                       </div>
                                       <div className="font-size--small">
                                         Individual total
@@ -4637,7 +4634,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     className="font-size--small font-weight--bold
                               display--flex aligh-items--center"
                                   >
-                                    Out-of-pocket maximum
+                                    Out-patient Limiit
                                     <button
                                       type="button"
                                       aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
@@ -4655,7 +4652,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   <div className="display--flex flex-wrap--wrap plan-flex-wrap">
                                     <div className="cost-display__amount">
                                       <div className="font-size--h2">
-                                        Not yet in Collection
+                                        {plan.out_patient_limit == "N/A"
+                                          ? "N/A"
+                                          : `₦${this.numberwithCommas(
+                                              this.stripNonNumeric(
+                                                plan.out_patient_limit
+                                              )
+                                            )}`}
                                       </div>
                                       <div className="font-size--small">
                                         Individual total
@@ -4663,13 +4666,15 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </div>
                                   </div>
                                 </div>
+
                                 <div className="plan-card__cost-display-yearly-cost display--flex">
-                                  <div className="plan-card-cost-display--info-needed fill--gray-lightest">
+                                  <div className="plan-card-cost-display--info-needed">
+                                    {/* fill--gray-lightest */}
                                     <div
                                       className="font-size--small font-weight--bold
                               display--flex align-items--center"
                                     >
-                                      Estimated total yearly costs
+                                      Total Benefit Limit
                                       <button
                                         type="button"
                                         aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
@@ -4683,17 +4688,22 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         </span>
                                       </button>
                                     </div>
-                                    <a
-                                      className="c-button c-button--small padding-x--2 margin-y--1"
-                                      onClick={this.toggleShowFilter}
-                                      role="button"
-                                    >
-                                      Add yearly costs
-                                    </a>
+                                    <div className="font-size--h2">
+                                      {plan.out_patient_limit == "N/A" ||
+                                      plan.in_patient_limit == "N/A"
+                                        ? "N/A"
+                                        : `₦${this.numberwithCommas(
+                                            this.handleTotalBenefitLimit(
+                                              plan.out_patient_limit,
+                                              plan.in_patient_limit
+                                            )
+                                          )}`}
+                                      {/* ₦2,000 */}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-
+                              {/* 
                               <div
                                 className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap
                           display--none sm-display--block
@@ -4762,7 +4772,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </div>
                                 </div>
                               </div>
-
+    */}
                               <div className="plan-card__detail-section border--0 c-clearfix display--flex flex-wrap--wrap">
                                 <div className="plan-card__plan-features-container">
                                   <div>
@@ -4888,36 +4898,63 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </ul>
                                   </div>
                                 </div>
+
                                 <div className="c-plan-card__coverables-container">
-                                  <div className="c-plan-card-cost-display--info-needed fill--gray-lightest">
+                                  <div className="c-plan-card-cost-display--info-needed ">
+                                    {/* fill--gray-lightest */}
                                     <div className="justify-content--center display--flex">
+                                      <div
+                                        className="font-size--small font-weight--bold
+                              display--flex aligh-items--center
+                              "
+                                      >
+                                        Medical providers
+                                      </div>
+                                    </div>
+                                    <div className="font-size--h2">
                                       <a
-                                        className="c-button c-button--small padding-x--2 margin-bottom--1"
+                                        className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
                                         href="/find-provider"
                                       >
-                                        Add medical providers
+                                        View Providers (
+                                        {plan.hmo_id.providers.length})
                                       </a>
-                                    </div>
-                                    <div className="font-size--small">
-                                      Add your medical providers and we'll show
-                                      you which plans cover them
+
+                                      {/* Add your medical providers and we'll show
+                                      you which plans cover them */}
                                     </div>
                                   </div>
                                 </div>
 
                                 <div className="c-plan-card__coverables-container">
-                                  <div className="c-plan-card-cost-display--info-needed fill--gray-lightest">
-                                    <div className="justify-content--center display--flex">
-                                      <a
-                                        className="c-button c-button--small padding-x--2 margin-bottom--1"
-                                        href="/find-drugs"
+                                  <div className="c-plan-card-cost-display--info-needed">
+                                    {/* fill--gray-lightest */}
+                                    <div
+                                      className="font-size--small font-weight--bold
+                              display--flex aligh-items--center
+                              "
+                                    >
+                                      Hospital Category
+                                      <button
+                                        type="button"
+                                        aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
+                                        className="tooltip-trigger padding--0"
                                       >
-                                        Add prescription drugs
-                                      </a>
+                                        <span className="tooltip-icon-container">
+                                          <FontAwesomeIcon
+                                            className="mt---2"
+                                            icon={faInfoCircle}
+                                          />
+                                        </span>
+                                      </button>
                                     </div>
-                                    <div className="font-size--small">
-                                      Add your prescription drugs and we'll show
-                                      you which plans cover them
+
+                                    <div className="font-size--h2">
+                                      {plan.hospital_category[0].name
+                                        ? plan.hospital_category[0].name
+                                        : "N/A"}
+                                      {/* Add your prescription drugs and we'll show
+                                      you which plans cover them */}
                                     </div>
                                   </div>
                                 </div>

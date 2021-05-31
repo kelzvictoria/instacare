@@ -244,10 +244,7 @@ class AppFooter extends Component<FooterProps, {}> {
                         </a>
                       </li>
                       <li>
-                        <a
-                          href="https://www.policybazaar.com/health-insurance/companies/"
-                          className={styles.viewplan}
-                        >
+                        <a href="#" className={styles.viewplan}>
                           View All
                         </a>
                       </li>

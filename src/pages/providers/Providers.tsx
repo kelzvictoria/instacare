@@ -64,9 +64,7 @@ class Providers extends Component<ProvidersProps> {
   };
 
   getProviderInfo = (name) => {
-    let info = home_utils.providersInfo.filter(
-      (provider) => provider.name == name
-    );
+    let info = this.props.providers.filter((provider) => provider.name == name); //home_utils.providersInfo
 
     this.setState({
       search_arg: info[0],
@@ -395,6 +393,7 @@ const mapProps = (state: any) => {
     // ...state.quiz.quiz,
     responses: state.quiz.responses,
     dataSource: state.quiz.dataSource,
+    providers: state.fetchData.providers,
   };
 };
 

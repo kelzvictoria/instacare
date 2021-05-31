@@ -25,9 +25,16 @@ import * as home_utils from "../../utils/homeUtils";
 
 import Modal from "react-bootstrap/Modal";
 
-import { getPlanDetail } from "../../actions/fetchDataActions";
+import {
+  getPlanDetail,
+  getProviders,
+  getPlans,
+  getServices,
+  getCheapestPlan,
+} from "../../actions/fetchDataActions";
 
 import { state } from "../../components/home/state";
+import { stripNonNumeric } from "../../utils/homeUtils";
 
 interface DetailsProps {
   email: string;
@@ -115,7 +122,11 @@ class PlanDetails extends Component<DetailsProps> {
       if (idParamsObj.length > 0) {
         let id = idParamsObj[0].value;
         console.log("id", id);
+        await this.props.getProviders();
+        await this.props.getPlans();
+        await this.props.getServices();
         await this.props.getPlanDetail(id);
+        this.props.getCheapestPlan();
       }
     }
   }
@@ -1058,6 +1069,7 @@ class PlanDetails extends Component<DetailsProps> {
                     <div>
                       <section className="section grey_background similar_plans">
                         <h3 className="font-weight--bold">Similar Plans</h3>
+                        {/* 
                         <div className="similar-plans">
                           <div className="similar-plans-inner">
                             <div className="similar_plan_feature">
@@ -1109,14 +1121,7 @@ class PlanDetails extends Component<DetailsProps> {
                                                 <span>
                                                   <b>
                                                     ₦
-                                                    {/* {this.props.responses.type ==
-                                              "single"
-                                                ? this.numberwithCommas(
-                                                    similar_plan.individual_annual_price
-                                                  )
-                                                : this.numberwithCommas(
-                                                    similar_plan.family_annual_price
-                                                  )} */}
+                                                   
                                                     {this.numberwithCommas(
                                                       home_utils.stripNonNumeric(
                                                         similar_plan.price
@@ -1143,6 +1148,90 @@ class PlanDetails extends Component<DetailsProps> {
                                 </div>
                               </div>
                             </div>
+                          </div>
+                        </div>
+                      */}
+
+                        <h4>
+                          Users who viewed this plan also viewed the below{" "}
+                        </h4>
+                        <div className="box-mob-slider">
+                          <div className="slider-new ">
+                            {this.props.similar_plans.map((similar_plan, i) => {
+                              return (
+                                <div className="box-new">
+                                  <ul className="similar_plan_ul">
+                                    <li>
+                                      <div className="box_block">
+                                        <div className="plan-c-provider font-weight--bold">
+                                          {similar_plan.hmo_id.name["text"]}
+                                        </div>
+                                        <h2 className="plan-c-name font-weight--normal margin-y--1">
+                                          <a
+                                            href={`/details/id/${similar_plan.service_id}`}
+                                          >
+                                            {similar_plan.name}
+                                          </a>
+                                        </h2>
+                                      </div>
+                                      <p className="is-hidden-mobile">
+                                        ₦
+                                        {this.numberwithCommas(
+                                          stripNonNumeric(similar_plan.price)
+                                        )}
+                                        / year
+                                      </p>
+                                      <ul>
+                                        <li>
+                                          {similar_plan.hmo_id.name}
+                                          {/* {similar_plan.plan_id &&
+                                        similar_plan.plan_id.category &&
+                                        similar_plan.plan_id.category.map(
+                                          (cat, i) => {
+                                            return (
+                                              <b className="">
+                                                {" "}
+                                                {cat.name}
+                                                {similar_plan.plan_id.category
+                                                  .length > 1 &&
+                                                  i <
+                                                    similar_plan.plan_id
+                                                      .category.length -
+                                                      1 &&
+                                                  ", "}
+                                              </b>
+                                            );
+                                          }
+                                        )}
+                                       <span>Sum Insured</span>  */}
+                                        </li>
+                                        <li>
+                                          {similar_plan.hmo_id.providers
+                                            ? similar_plan.hmo_id.providers
+                                                .length
+                                            : 0}{" "}
+                                          <span>Hospitals</span>
+                                        </li>
+                                      </ul>
+                                      {/* <div className="like-covers">
+                                  <div className="usp_image"></div>1 Cr in less
+                                  premium
+                                </div> */}
+                                      <button
+                                        className="button "
+                                        onClick={() => {
+                                          this.goToPlans();
+                                          //this.handleCheckedPlanToCompare(i);
+                                        }}
+                                      >
+                                        <i className="fas fa-plus"></i>
+                                        Compare
+                                      </button>
+                                    </li>
+                                  </ul>
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       </section>
@@ -1188,4 +1277,8 @@ const mapProps = (state: any) => {
 
 export default connect(mapProps, {
   getPlanDetail,
+  getProviders,
+  getPlans,
+  getServices,
+  getCheapestPlan,
 })(PlanDetails);
