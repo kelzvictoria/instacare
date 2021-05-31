@@ -34,7 +34,7 @@ import {
   filterByPlanType,
   filterByBudget_and_or_Type,
   filterByPlanRange,
-  // getPlan,
+  getPlan,
   getSimilarPlans,
 } from "../../actions/fetchDataActions";
 
@@ -287,6 +287,6 @@ export default connect(mapProps, {
   resetType,
   filterByPlanRange,
   resetRange,
-  // getPlan,
+  getPlan,
   getSimilarPlans,
 })(Home);

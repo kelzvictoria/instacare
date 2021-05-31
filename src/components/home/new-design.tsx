@@ -4471,9 +4471,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <li className="c-plan-title__info-item">
                                         Plan ID:
                                         <span className="font-weight--bold">
-                                          {plan.plan_id && plan.plan_id.category
-                                            ? plan.plan_id.plan_id
-                                            : plan.plan_id}
+                                          {
+                                            plan.service_id
+                                            // plan.plan_id && plan.plan_id.category
+                                            //   ? plan.plan_id.plan_id
+                                            //   : plan.plan_id
+                                          }
                                         </span>
                                       </li>
                                     </ul>
@@ -4914,7 +4917,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     <div className="font-size--h2">
                                       <a
                                         className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                                        href="/find-provider"
+                                        href={`/details/id/${plan.service_id}/#providers`}
                                       >
                                         View Providers (
                                         {plan.hmo_id.providers.length})

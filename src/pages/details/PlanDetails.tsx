@@ -62,6 +62,7 @@ class PlanDetails extends Component<DetailsProps> {
     collapse_consultations: true,
     collapse_ent: true,
     collapse_others: true,
+    collapse_providers: true,
   };
 
   toggleCollapsible = (prop: string) => {
@@ -285,9 +286,12 @@ class PlanDetails extends Component<DetailsProps> {
                         <li className="c-plan-title__info-item">
                           Plan ID:
                           <span className="font-weight--bold">
-                            {plan.plan_id && plan.plan_id.category
-                              ? plan.plan_id.plan_id
-                              : plan.plan_id}
+                            {
+                              // plan.plan_id && plan.plan_id.category
+                              //   ? plan.plan_id.plan_id
+                              //   : plan.plan_id
+                              plan.service_id
+                            }
                           </span>
                         </li>
                       </ul>
@@ -342,7 +346,7 @@ class PlanDetails extends Component<DetailsProps> {
                                 </span>
                               </td>
                             </tr>
-
+                            {/* 
                             <tr className="print-display--none">
                               <th scope="row">Medical providers in-network</th>
                               <td>
@@ -367,6 +371,8 @@ class PlanDetails extends Component<DetailsProps> {
                                 </a>
                               </td>
                             </tr>
+                         
+                          */}
                           </tbody>
                         </table>
                       </div>
@@ -1057,6 +1063,61 @@ class PlanDetails extends Component<DetailsProps> {
                               </div>
                             </td>
                           </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </section>
+
+                  <section
+                    className="c-detail-section margin-bottom--4"
+                    id="providers"
+                  >
+                    <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                      <button
+                        className="ds-h2 text-align--left sans fill--transparent"
+                        aria-expanded="false"
+                        onClick={() =>
+                          this.toggleCollapsible("collapse_providers")
+                        }
+                      >
+                        Medical Providers
+                        {this.state.collapse_providers ? (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronDown}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="fas md-margin-right--1"
+                            icon={faChevronUp}
+                          />
+                        )}
+                      </button>
+                    </h2>
+                    <div hidden={this.state.collapse_providers ? true : false}>
+                      <table className="c-details-table">
+                        <tbody className="valign--top">
+                          {plan.hmo_id.providers.map((provider) => {
+                            return (
+                              <tr className="border-bottom--2">
+                                <th scope="row">
+                                  <span className="display--block">
+                                    {provider.provider_name}
+                                  </span>
+                                </th>
+                                {/* <td>
+                              <div className="c-star-rating">
+                                <span>{provider.hospital_rating}</span>
+                              </div>
+                            </td> */}
+                                <td>
+                                  <div className="c-star-rating">
+                                    <span>{provider.address}</span>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>

@@ -32,8 +32,11 @@ class Providers extends Component<ProvidersProps> {
 
   onSearch = (searchText: string) => {
     let tempProviders: any[] = [];
-    home_utils.providers.forEach((item: string) => {
-      // console.log("item['name']", item["name"]);
+    let providers = this.props.providers.map(
+      (provider) => provider.provider_name
+    );
+    providers.forEach((item: string) => {
+      console.log("item", item);
       // const _item = item["name"].toLowerCase();
       const _item = item.toLowerCase();
       if (_item.startsWith(searchText.toLowerCase())) {
@@ -64,7 +67,9 @@ class Providers extends Component<ProvidersProps> {
   };
 
   getProviderInfo = (name) => {
-    let info = this.props.providers.filter((provider) => provider.name == name); //home_utils.providersInfo
+    let info = this.props.providers.filter(
+      (provider) => provider.provider_name == name
+    ); //home_utils.providersInfo
 
     this.setState({
       search_arg: info[0],
@@ -181,7 +186,7 @@ class Providers extends Component<ProvidersProps> {
                       {/* c-coverable-result--selected */}
                       <div className="display--flex justify-content--between align-items--start">
                         <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                          {this.state.search_arg["name"]}
+                          {this.state.search_arg["provider_name"]}
                         </h5>
 
                         <div>
@@ -190,13 +195,13 @@ class Providers extends Component<ProvidersProps> {
                             type="button"
                             onClick={() =>
                               this.addProviderToSelectedList(
-                                this.state.search_arg["name"]
+                                this.state.search_arg["provider_name"]
                               )
                             }
                           >
                             {" "}
                             {providers_arr.indexOf(
-                              this.state.search_arg["name"]
+                              this.state.search_arg["provider_name"]
                             ) > -1
                               ? "Remove"
                               : "Add"}
@@ -206,7 +211,7 @@ class Providers extends Component<ProvidersProps> {
                       </div>
                       <div>
                         <div className="provider-search__result__taxonomy">
-                          {this.state.search_arg["specialty"]}
+                          {this.state.search_arg["coverage_type"]}
                         </div>
 
                         {/* <div className="provider-search__result__specialties">
@@ -312,7 +317,7 @@ class Providers extends Component<ProvidersProps> {
                             {/* c-coverable-result--selected */}
                             <div className="display--flex justify-content--between align-items--start">
                               <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                                {selected_provider["name"]}
+                                {selected_provider["provider_name"]}
                               </h5>
 
                               <div>
@@ -321,13 +326,13 @@ class Providers extends Component<ProvidersProps> {
                                   type="button"
                                   onClick={() =>
                                     this.addProviderToSelectedList(
-                                      selected_provider["name"]
+                                      selected_provider["provider_name"]
                                     )
                                   }
                                 >
                                   {" "}
                                   {providers_arr.indexOf(
-                                    selected_provider["name"]
+                                    selected_provider["provider_name"]
                                   ) > -1
                                     ? "Remove"
                                     : "Add"}
@@ -337,7 +342,7 @@ class Providers extends Component<ProvidersProps> {
                             </div>
                             <div>
                               <div className="provider-search__result__taxonomy">
-                                {selected_provider["specialty"]}
+                                {selected_provider["coverage_type"]}
                               </div>
 
                               {/* <div className="provider-search__result__specialties">
