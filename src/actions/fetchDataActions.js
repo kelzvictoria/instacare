@@ -27,7 +27,8 @@ import {
     FILTER_BY_PLAN_ID,
     FILTER_BY_PLAN_TYPE,
     GET_PLAN,
-    GET_SIMILAR_PLANS
+    GET_SIMILAR_PLANS,
+    GET_HMO
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions";
@@ -333,21 +334,31 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
 
 }
 
-export const getPlansByHMO = (hmoId) => (dispatch, getState) => {
+export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
     let plansByHMO;
 
     if (hmoId) {
         dispatch({
             type: IS_FETCHING_PLANS_BY_HMO,
             data: true
+        });
+        let HMO = getState().fetchData.hmos.filter(hmo => hmo.hmo_id == hmoId)
+        console.log("plansByHMO", plansByHMO);
+
+
+        await dispatch({
+            type: GET_HMO,
+            payload: HMO
         })
 
-        plansByHMO = getState().fetchData.services.filter(plan => plan.hmo_id === hmoId)
+        plansByHMO = getState().fetchData.services.filter(plan => plan.hmo_id.hmo_id === hmoId)
 
         dispatch({
             type: GET_PLANS_BY_HMO,
             payload: plansByHMO
         })
+
+
     }
 }
 

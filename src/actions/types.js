@@ -127,4 +127,6 @@ export const SET_HMO_ID = "SET_HMO_ID";
 export const SET_IS_LOADING_ON = "SET_IS_LOADING_ON";
 export const SET_IS_LOADING_OFF = "SET_IS_LOADING_OFF";
 
+export const GET_HMO = "GET_HMO";
+
 //export const IS_FILTERING_BY_HMO = "IS_FILTERING_BY_HMO";

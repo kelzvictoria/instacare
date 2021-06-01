@@ -140,11 +140,11 @@ class NewContent extends React.Component<homeProps, homeState> {
   hmoBannerDiv(hmoId) {
     let hmoArr;
 
-    if (hmoId !== "hygeia") {
-      hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == hmoId);
-    } else {
-      hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == "1");
-    }
+    // if (hmoId !== "hygeia") {
+    //   hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == hmoId);
+    // } else {
+    //   hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == "1");
+    // }
 
     let data;
     if (hmoId) {
@@ -218,6 +218,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   homeBannerDiv() {
+    console.log("this.props.hmo", this.props.hmo);
+
     return (
       <Col xs={24} md={14} className="banner-container  left-side-info">
         <div className="view2-svg-and-text svg-and-text">
@@ -225,14 +227,36 @@ class NewContent extends React.Component<homeProps, homeState> {
             <div className="svg-img home-svg-img">
               <img src={searching}></img>
               <p className="tiny-descrptn">
-                Find HMO Plans Starting from{" "}
-                <span className={styles.headingSpan}>
-                  {this.props.is_fetching_data ? (
-                    <Spin className="cheapest-plan" />
-                  ) : (
-                    ` ₦${this.numberwithCommas(this.props.cheapest_plan)} /year`
-                  )}
-                </span>
+                {
+                  //this.props.plansByHMO.length > 0
+                  this.props.hmo.length > 0 &&
+                  this.props.plansByHMO.length > 0 &&
+                  this.props.match.path === "/hmos/*"
+                    ? `${this.props.hmo[0].name} plans starting from `
+                    : this.props.hmo.length > 0 &&
+                      this.props.plansByHMO.length === 0 &&
+                      this.props.match.path === "/hmos/*"
+                    ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
+                    : `Find HMO Plans Starting from`
+                }
+                {this.props.plansByHMO.length === 0 &&
+                this.props.match.path === "/hmos/*" ? (
+                  ""
+                ) : (
+                  <span className={styles.headingSpan}>
+                    {this.props.is_fetching_data ? (
+                      <Spin className="cheapest-plan" />
+                    ) : (
+                      ` ₦${this.numberwithCommas(
+                        // this.props.plansByHMO.length > 0
+                        this.props.hmo.length > 0 &&
+                          this.props.match.path === "/hmos/*"
+                          ? this.props.cheapest_plan_by_hmo
+                          : this.props.cheapest_plan
+                      )} /year`
+                    )}
+                  </span>
+                )}
               </p>
             </div>
           </Col>
@@ -2681,8 +2705,6 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   changeType(val) {
-    // console.log("changeType val", val);
-    // this.handlePlanTypesCheck(val);
     if (
       [
         "single",
@@ -3224,10 +3246,19 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   render() {
+    let plansByHMO = this.props.plansByHMO;
+    let allPlans = this.props.planServices;
+    let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+
+    console.log("this.props.match", this.props.match);
+
     console.log(
       "this.props.responses.providers",
       this.props.responses.providers
     );
+
+    console.log("this.props.match.params.id", this.props.match.params.id);
+
     if (home_utils.CAN_LOG) {
       // console.log(
       //   "this.state.filter_params.plan_range_checked",
@@ -3305,7 +3336,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             {
               //this.state.filter_PLANS_BY_HMO &&
               this.props.match.params.id &&
-                this.props.plans.length > 0 &&
+                //this.props.plans.length > 0 &&
                 this.props.plansByHMO.length > 0 && (
                   <Row className="banner-content">
                     {this.hmoBannerDiv(this.props.match.params.id)}
@@ -3384,8 +3415,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <div className="margin-bottom--1 md-margin-bottom--0 results-header-left">
                     <div className="font-size--lead font-weight--bold c-results_header_summary">
                       {/* {this.props.plans.length} plans available */}
-                      {this.props.planServices.length} plan
-                      {this.props.planServices.length > 1 && "s"} available
+                      {apiData.length} plan
+                      {apiData.length > 1 && "s"} available
                     </div>
                     <div className="filt_comp_btns">
                       <button
@@ -4410,8 +4441,8 @@ class NewContent extends React.Component<homeProps, homeState> {
 
             <div className="" id="plans-section">
               <ul className="c-list--bare margin-top--2 home-plans-list">
-                {this.props.planServices &&
-                  this.props.planServices.map((plan, i) => {
+                {apiData &&
+                  apiData.map((plan, i) => {
                     console.log("plan", plan);
 
                     return (

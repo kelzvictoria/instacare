@@ -82,8 +82,9 @@ export class App extends React.Component {
               <Route exact path="/details/*" component={PlanDetails} />
               <Route exact path="/compare" component={SideBySideComparison} />
               <Route path="/compare-plans/plans/*" component={ComparePlans} />
+
               <Route path="/new-design" component={Home2} />
-              <Route exact path="/hmos/:id" component={Home2} />
+              <Route exact path="/hmos/*" component={Home2} />
               <Route exact path="/find-provider" component={Providers} />
               <Route exact path="/find-drugs" component={Prescriptions} />
               {/* <Route path= {`/${hmo}`} component = {HMO} /> */}

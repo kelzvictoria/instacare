@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 
 import { Row, Col, Typography, Icon } from "antd";
 
@@ -12,9 +13,16 @@ import {
   faLinkedin,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import { resetType, updateType } from "../../actions/userInputActions";
+
+import {
+  getHMOs,
+  filterByBudget_and_or_Type,
+} from "../../actions/fetchDataActions";
 
 import { connect } from "react-redux";
 import * as actions from "../../actions/types";
+import { faRoad } from "@fortawesome/free-solid-svg-icons";
 
 const { Title } = Typography;
 
@@ -111,8 +119,58 @@ class AppFooter extends Component<FooterProps, {}> {
   };
   filterPlansByHMO = (hmo) => {};
 
+  changeType(val) {
+    if (
+      [
+        "single",
+        "couple",
+        "parents",
+        "corporate",
+        "fam-of-4",
+        "smes",
+        "intl_coverage",
+        "all",
+      ].includes(val)
+    ) {
+      this.handleType(val);
+    }
+  }
+
+  async handleType(val) {
+    this.props.responses.type.length > 0 && this.props.resetType();
+    let data = {
+      key: "type",
+      value: val.target ? val.target.id : val,
+    };
+    await this.props.updateType(data);
+    // await this.props.getServices();
+    // this.props.filterByPlanType(data.value);
+
+    this.filterByBudget_and_or_Type();
+  }
+
+  filterByBudget_and_or_Type() {
+    let budget =
+      this.props.responses.budget.length > 0 ? this.props.responses.budget : [];
+    let type =
+      this.props.responses.type.length > 0 ? this.props.responses.type[0] : [];
+
+    let params = {
+      budget,
+      type,
+    };
+
+    this.props.filterByBudget_and_or_Type(params);
+  }
+
+  goToHome = () => {
+    this.props.history.push({
+      pathname: "/",
+    });
+  };
+
   render() {
-    // console.log("this.props in footer", this.props);
+    console.log("this.props in footer", this.props);
     return (
       <div className="app_footer" style={{ position: "relative" }}>
         <footer className={styles.appFooter}>
@@ -203,9 +261,14 @@ class AppFooter extends Component<FooterProps, {}> {
                       className={styles.allInsurance}
                       style={{ padding: 0, margin: 0 }}
                     >
-                      <li>
-                        <a href="/hmos/hygeia">Hygeia HMO</a>
-                      </li>
+                      {this.props.hmos.map((hmo) => (
+                        <li>
+                          <a href={`/hmos/id/${hmo.hmo_id}`}>{hmo.name}</a>
+                        </li>
+                      ))}
+
+                      {/* 
+
                       <li>
                         <a href="/hmos/metro-health">MetroHealth HMO</a>
                       </li>
@@ -248,6 +311,7 @@ class AppFooter extends Component<FooterProps, {}> {
                           View All
                         </a>
                       </li>
+                   */}
                     </ul>
                   </div>
                   <div className={styles.boxleft}>
@@ -262,29 +326,72 @@ class AppFooter extends Component<FooterProps, {}> {
                         <a href="/">Health Insurance Plans</a>
                       </li>
                       <li>
-                        <a href="https://www.policybazaar.com/health-insurance/family-health-insurance-plan/">
+                        <a
+                          href="#"
+                          onClick={() => {
+                            this.changeType("single");
+                            // this.goToHome();
+                          }}
+                        >
+                          Health Insurance for Indidivuals
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          onClick={() => {
+                            this.changeType("fam-of-4");
+                            // this.goToHome();
+                          }}
+                        >
                           Health Insurance for Family
                         </a>
                       </li>
-                      <li>
-                        <a href="https://www.policybazaar.com/health-insurance/senior-citizen-health-insurance/">
-                          Health Insurance for Senior Citizen
-                        </a>
-                      </li>
+
                       {/* <li><a href="https://www.policybazaar.com/health-insurance/mediclaim-insurance/">Mediclaim</a></li> */}
                       <li>
-                        <a href="https://www.policybazaar.com/health-insurance/critical-illness-insurance/">
-                          Critical Illness Insurance
+                        <a
+                          href="#"
+                          onClick={() => {
+                            this.changeType("couple");
+                            // this.goToHome();
+                          }}
+                        >
+                          Health Insurance for Couples
+                        </a>
+                      </li>
+
+                      <li>
+                        <a
+                          href="#"
+                          onClick={() => {
+                            this.changeType("parents");
+                            // this.goToHome();
+                          }}
+                        >
+                          Health Insurance for Senior Citizens
                         </a>
                       </li>
                       <li>
-                        <a href="https://www.policybazaar.com/health-insurance/health-insurance-premium-calculator/">
-                          Health Insurance Premium Calculator
+                        <a
+                          href="#"
+                          onClick={() => {
+                            this.changeType("smes");
+                            // this.goToHome();
+                          }}
+                        >
+                          Health Insurance for S.M.E.s
                         </a>
                       </li>
                       <li>
-                        <a href="https://www.policybazaar.com/commercial-insurance/group-health-insurance/">
-                          Group Health Insurance
+                        <a
+                          href="#"
+                          onClick={() => {
+                            this.changeType("corporate");
+                            // this.goToHome();
+                          }}
+                        >
+                          Health Insurance for Corporate and Large Groups
                         </a>
                       </li>
                     </ul>
@@ -442,9 +549,15 @@ class AppFooter extends Component<FooterProps, {}> {
 
 const mapProps = (state: any) => {
   return {
-    ...state.quiz.quiz,
-    ...state.quiz,
+    // ...state.quiz.quiz,
+    // ...state.quiz,
+    hmos: state.fetchData.hmos,
+    responses: state.quiz.responses,
   };
 };
 
-export default connect(mapProps)(AppFooter);
+export default connect(mapProps, {
+  resetType,
+  updateType,
+  filterByBudget_and_or_Type,
+})(AppFooter);

@@ -179,12 +179,43 @@ class Home extends Component<QuizProps, {}> {
     this.props.getPlansByHMO(hmoId);
   }
 
+  params: any[] = [];
+  parsedParams: any[] = [];
+
+  parseParams = () => {
+    let paramsArr: any[] = [];
+    let params = this.props.match.params[0].split("/");
+
+    let p: object;
+    for (let i = 0; i < params.length; i += 2) {
+      p = {
+        name: params[i],
+        value: params[i + 1],
+      };
+      paramsArr.push(p);
+    }
+    this.params = paramsArr;
+  };
+
   async UNSAFE_componentWillMount() {
     //   !localStorage["providers"] && (await this.props.getProviders());
     //   !localStorage["plans"] && (await this.props.getPlans());
     //   !localStorage["services"] && (await this.props.getServices());
     //   // this.getCheapestPlanByHMO();
     //   const hmo = this.props.match.params ? this.props.match.params.id : "";
+
+    if (Object.keys(this.props.match.params).length) {
+      this.parseParams();
+      let idParamsObj = this.params.filter((param) => param.name == "id");
+
+      if (idParamsObj.length > 0) {
+        let id = idParamsObj[0].value;
+        console.log("id", id);
+
+        await this.props.getPlansByHMO(id);
+        this.getCheapestPlanByHMO();
+      }
+    }
   }
 
   getCheapestPlanByHMO() {
@@ -195,9 +226,11 @@ class Home extends Component<QuizProps, {}> {
     let arr = this.props.plansByHMO;
     //console.log("arr", arr);
     for (let i = arr.length - 1; i >= 0; i--) {
-      tmp = arr[i]["individual_annual_price"];
-      if (tmp < lowest) lowest = tmp;
-      if (tmp > highest) highest = tmp;
+      tmp = stripNonNumeric(arr[i]["price"]);
+      if (tmp > 1000) {
+        if (tmp < lowest) lowest = tmp;
+        if (tmp > highest) highest = tmp;
+      }
     }
     this.props.getCheapestPlanByHMO(lowest);
   }
@@ -220,6 +253,7 @@ const mapProps = (state: any) => ({
   //plan: state.fetchData.plan,
   planServices: state.fetchData.services,
   hmos: state.fetchData.hmos,
+  hmo: state.fetchData.hmo,
   responses: state.quiz.responses,
   plansByHMO: state.fetchData.plansByHMO,
   cheapest_plan_by_hmo: state.fetchData.cheapest_plan_by_hmo,

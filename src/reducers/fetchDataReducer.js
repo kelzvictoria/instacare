@@ -23,7 +23,8 @@ import {
     FILTER_BY_PLAN_ID,
     FILTER_BY_PLAN_TYPE,
     GET_PLAN,
-    GET_SIMILAR_PLANS
+    GET_SIMILAR_PLANS,
+    GET_HMO
 } from "../actions/types";
 
 const initialState = {
@@ -39,6 +40,7 @@ const initialState = {
     providers:
         localStorage["providers"] ? JSON.parse(localStorage["providers"]) :
             [],
+
     plansByHMO: [],
     plan: [],
     similar_plans: [],
@@ -81,6 +83,12 @@ export default function (state = initialState, action) {
                 ...state,
                 hmos: action.payload,
                 is_fetching_hmos: false
+            }
+
+        case GET_HMO:
+            return {
+                ...state,
+                hmo: action.payload
             }
 
         case GET_PROVIDERS:
