@@ -1829,6 +1829,10 @@ span.plan-desc {
   outline: none !important;
 }
 
+.form-group.home-view-btn {
+  display: none;
+}
+
 /* *,
 :after,
 :before {

@@ -15,6 +15,7 @@ import "./providers.css";
 import {
   updateTextResponse,
   filterProviders,
+  setProviders,
 } from "../../actions/userInputActions";
 
 export interface ProvidersProps {
@@ -105,6 +106,14 @@ class Providers extends Component<ProvidersProps> {
     this.setState({
       show_providers_listing_div: !this.state.show_providers_listing_div,
     });
+  };
+
+  componentDidUpdate(prevProps) {}
+
+  setProviders = async () => {
+    //;
+    await this.props.setProviders(this.state.selected_providers_data);
+    this.props.history.push({ pathname: "/" });
   };
 
   //   updateLocation = (provider: any) => {
@@ -253,7 +262,8 @@ class Providers extends Component<ProvidersProps> {
 
                     <a
                       className="c-button c-button--primary margin-left--1 qa-continue"
-                      href="/new-design/#plans"
+                      href="#"
+                      onClick={this.setProviders}
                       role="button"
                     >
                       Continue
@@ -262,14 +272,15 @@ class Providers extends Component<ProvidersProps> {
                 )}
               </div>
             </div>
-            <a href="/new-design/#plans">
-              <button
-                className="c-button c-button--secondary margin-top--2"
-                type="button"
-              >
-                Back to Plans
-              </button>
-            </a>
+            {/* <a href="/#plans"> */}
+            <button
+              className="c-button c-button--secondary margin-top--2"
+              type="button"
+              onClick={this.setProviders}
+            >
+              Back to Plans
+            </button>
+            {/* </a> */}
           </div>
 
           <div
@@ -405,4 +416,5 @@ const mapProps = (state: any) => {
 export default connect(mapProps, {
   updateTextResponse,
   filterProviders,
+  setProviders,
 })(Providers);

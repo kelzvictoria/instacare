@@ -155,7 +155,7 @@ class ComparePlans extends Component<ComparisonProps> {
   }
 
   goToPlans = () => {
-    this.props.history.push({ pathname: "/new-design/#plans" });
+    this.props.history.push({ pathname: "/#plans" });
   };
 
   numberwithCommas = (value) => {

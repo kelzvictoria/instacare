@@ -54,7 +54,8 @@ const initialState = {
     cheapest_plan: localStorage["cheapest_plan"] ? localStorage.getItem("cheapest_plan") : 0,
     is_filtering_by_budget: false,
     is_filtering_by_plan_id: false,
-    is_filtering_by_plan_type: false
+    is_filtering_by_plan_type: false,
+
 }
 
 export default function (state = initialState, action) {

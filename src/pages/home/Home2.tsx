@@ -67,6 +67,7 @@ import {
   setHMOID,
   resetType,
   resetRange,
+  resetSelectedProviders,
 } from "../../actions/userInputActions";
 
 import {
@@ -289,4 +290,5 @@ export default connect(mapProps, {
   resetRange,
   getPlan,
   getSimilarPlans,
+  resetSelectedProviders,
 })(Home);

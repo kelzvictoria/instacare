@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
 
+import LoadingOverlay from "react-loading-overlay";
+import { Spin } from "antd";
+
 import "./index.scss";
 import "./custom.css";
 import "bootstrap/dist/css/bootstrap.css";
@@ -60,6 +63,12 @@ export class App extends React.Component {
     return (
       <Provider store={store}>
         <Router>
+          {/* <LoadingOverlay
+            active={true}
+            spinner
+            //={<Spin />}
+            text="Please wait..."
+          > */}
           <div className="main">
             <AppHeader />
             <Switch>
@@ -82,6 +91,7 @@ export class App extends React.Component {
             </Switch>
             <AppFooter />
           </div>
+          {/* </LoadingOverlay> */}
         </Router>
       </Provider>
     );

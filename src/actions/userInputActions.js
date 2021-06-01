@@ -67,9 +67,24 @@ import {
 
     IS_FILTERING_BY_PLAN_TYPE,
     IS_FILTERING_BY_PLAN_RANGE,
-    IS_FILTERING_BY_PLAN_ID
+    IS_FILTERING_BY_PLAN_ID,
+    SET_PROVIDERS,
+    RESET_SELECTED_PROVIDERS
 } from "./types"
-import { CAN_LOG } from "../utils/homeUtils"
+import { CAN_LOG } from "../utils/homeUtils";
+
+export const setProviders = (data) => (dispatch, getState) => {
+    dispatch({
+        type: SET_PROVIDERS,
+        payload: data
+    })
+}
+
+export const resetSelectedProviders = () => (dispatch, getState) => {
+    dispatch({
+        type: RESET_SELECTED_PROVIDERS
+    })
+}
 
 export const updatePriceRange = (range) => (dispatch, getState) => {
     let ranges = [...getState().quiz.responses.price_range];

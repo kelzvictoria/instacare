@@ -256,7 +256,7 @@ class Prescriptions extends Component<PrescriptionsProps> {
                 )}
               </div>
             </div>
-            <a href="/new-design/#plans">
+            <a href="/#plans">
               <button
                 className="c-button c-button--secondary margin-top--2"
                 type="button"
@@ -368,7 +368,7 @@ class Prescriptions extends Component<PrescriptionsProps> {
               <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 providers-search-selection-controls">
                 <a
                   className="c-button c-button--primary qa-continue"
-                  href="/new-design/#plans"
+                  href="/#plans"
                   role="button"
                 >
                   Continue to plans

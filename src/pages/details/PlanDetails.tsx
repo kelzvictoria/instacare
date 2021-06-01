@@ -72,11 +72,11 @@ class PlanDetails extends Component<DetailsProps> {
   };
 
   goToPlans() {
-    this.props.history.push({ pathname: "/new-design/#plans" });
+    this.props.history.push({ pathname: "/#plans" });
   }
 
   goToHome = () => {
-    this.props.history.push({ pathname: "/new-design" });
+    this.props.history.push({ pathname: "/" });
   };
 
   numberwithCommas = (value) => {
@@ -146,7 +146,8 @@ class PlanDetails extends Component<DetailsProps> {
                 <div>
                   <a
                     className="c-button c-button--transparent c-plan-nav-bar__back-link padding--0 text-decoration--underline"
-                    href="/#plans"
+                    href="#"
+                    onClick={this.goToPlans}
                     target="_self"
                     role="button"
                   >

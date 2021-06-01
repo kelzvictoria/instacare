@@ -71,6 +71,11 @@ import {
     UPDATE_SELECTED_PROVIDERS,
 
     FILTER_LOCATIONS,
+    SET_PROVIDERS,
+
+    RESET_SELECTED_PROVIDERS,
+    SET_IS_LOADING_ON,
+    SET_IS_LOADING_OFF
 } from "../actions/types";
 
 const initialState = {
@@ -132,9 +137,10 @@ const initialState = {
         child_7_age: 0,
         child_8_age: 0,
         plan_duration: "1",
-
+        providers: []
     },
-    dataSource: [] //providersInfo,
+    dataSource: [], //providersInfo,
+    is_loading: false
 }
 
 export default function (state = initialState, action) {
@@ -473,6 +479,16 @@ export default function (state = initialState, action) {
                 provider_info: action.data
             }
 
+
+        case SET_PROVIDERS:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    providers: action.payload
+                }
+
+            }
         case FILTER_PROVIDERS:
             if (action.payload) {
                 let data_source = [];
@@ -511,6 +527,26 @@ export default function (state = initialState, action) {
                     dataSource: data_source
                 }
 
+            }
+
+        case RESET_SELECTED_PROVIDERS:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    providers: []
+                }
+            }
+
+        case SET_IS_LOADING_ON:
+            return {
+                ...state,
+                is_loading: true
+            }
+        case SET_IS_LOADING_OFF:
+            return {
+                ...state,
+                is_loading: false
             }
 
         default:
