@@ -513,9 +513,6 @@ button.tooltip-trigger {
 .color--gray:not(:focus) {
   color: #5b616b !important;
 }
-.plan-card__plan-features-container {
-  display: none;
-}
 
 @media (min-width: 768px) {
   .plan-card__plan-features-container {
@@ -1830,6 +1827,14 @@ span.plan-desc {
 }
 
 .form-group.home-view-btn {
+  display: none;
+}
+
+.plan-card__plan-features-container {
+  /* display: none; */
+}
+
+.view-plans.btn-demo {
   display: none;
 }
 

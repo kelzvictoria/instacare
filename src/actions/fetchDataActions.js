@@ -124,7 +124,7 @@ export const getSimilarPlans = (plan) => async (dispatch, getState) => {
             ))
         )
 
-        console.log("similar_plans", similar_plans);
+        //  console.log("similar_plans", similar_plans);
 
         dispatch({
             type: GET_SIMILAR_PLANS,
@@ -168,24 +168,24 @@ export const getHMOs = () => async (dispatch, getState) => {
         .then((res) => {
             let hmos = [];
             let providers = getState().fetchData.providers;
-            console.log("providers", providers);
+            //  console.log("providers", providers);
             if (res.data.length > 0) {
                 hmos = res.data.map(obj => obj.data);
 
                 if (providers.length > 0) {
                     for (let i = 0; i < hmos.length; i++) {
                         let hmoID = hmos[i]["hmo_id"]
-                        console.log("hmoID", hmoID);
-                        console.log("providers", providers);
+                        // console.log("hmoID", hmoID);
+                        // console.log("providers", providers);
 
                         let hmoProviders = providers.filter(provider => provider.hmo_id === hmoID);
-                        console.log("hmoProviders", hmoProviders);
+                        // console.log("hmoProviders", hmoProviders);
                         if (hmoProviders.length > 0) {
                             hmos[i]["providers"] = hmoProviders;
                         }
                     }
                 }
-                console.log("hmos", hmos);
+                //  console.log("hmos", hmos);
                 dispatch({
                     type: GET_HMOS,
                     payload: hmos
@@ -343,8 +343,7 @@ export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
             data: true
         });
         let HMO = getState().fetchData.hmos.filter(hmo => hmo.hmo_id == hmoId)
-        console.log("plansByHMO", plansByHMO);
-
+        // console.log("plansByHMO", plansByHMO);
 
         await dispatch({
             type: GET_HMO,
@@ -594,14 +593,14 @@ const groupPlansByType = (packages, type) => {
 
     }
     // CAN_LOG && 
-    console.log("type", type, typeof type);
+    // console.log("type", type, typeof type);
 
     let filteredPackagesByPlanType = [];
 
     if (typeof type == "object") {
         for (let i = 0; i < type.length; i++) {
             // CAN_LOG &&
-            console.log("type[i]", type[i]);
+            //  console.log("type[i]", type[i]);
             switch (type[i]) {
                 case "single":
                 case "individual":
@@ -707,7 +706,7 @@ const groupPlansByType = (packages, type) => {
 
         }
     }
-    console.log("filteredPackagesByPlanType", filteredPackagesByPlanType);
+    //  console.log("filteredPackagesByPlanType", filteredPackagesByPlanType);
     return filteredPackagesByPlanType;
 }
 

@@ -210,7 +210,7 @@ class Home extends Component<QuizProps, {}> {
 
       if (idParamsObj.length > 0) {
         let id = idParamsObj[0].value;
-        console.log("id", id);
+        // console.log("id", id);
 
         await this.props.getPlansByHMO(id);
         this.getCheapestPlanByHMO();

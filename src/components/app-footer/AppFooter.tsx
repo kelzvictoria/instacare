@@ -170,7 +170,7 @@ class AppFooter extends Component<FooterProps, {}> {
   };
 
   render() {
-    console.log("this.props in footer", this.props);
+    // console.log("this.props in footer", this.props);
     return (
       <div className="app_footer" style={{ position: "relative" }}>
         <footer className={styles.appFooter}>

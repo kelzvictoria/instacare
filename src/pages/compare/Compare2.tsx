@@ -125,8 +125,10 @@ class ComparePlans extends Component<ComparisonProps> {
 
   setPlansToCompare = async () => {
     let params = this.props.match.params[0];
+    console.log("params", params);
+
     let paramsArr = params.split("/");
-    paramsArr = paramsArr.map((p) => parseInt(p));
+    paramsArr = paramsArr.map((p) => p);
 
     this.setState({
       plans_to_compare: paramsArr,
@@ -137,7 +139,15 @@ class ComparePlans extends Component<ComparisonProps> {
     await this.props.getPlans();
     await this.props.getServices();
 
-    await this.props.getSimilarPlans(this.props.plans[paramsArr[0]]);
+    let firstPlanID = paramsArr[0];
+    // console.log("firstPlanID", firstPlanID);
+
+    let firstPlan = this.props.plans.filter(
+      (plan) => plan.service_id === firstPlanID
+    )[0];
+    //  console.log("firstPlan", firstPlan);
+
+    await this.props.getSimilarPlans(firstPlan);
     this.props.getCheapestPlan();
   };
 
@@ -192,7 +202,7 @@ class ComparePlans extends Component<ComparisonProps> {
 
     if (isPlanChecked > -1) {
       if (indexes.length == 1) {
-        console.log("in?");
+        // console.log("in?");
 
         message.error("Add more plans to compare");
       } else {
@@ -240,12 +250,23 @@ class ComparePlans extends Component<ComparisonProps> {
     let plans_to_compare: number[] = this.state.plans_to_compare;
     let plans = this.props.plans;
 
-    let first = plans[this.state.plans_to_compare[0]];
-    let second = plans[this.state.plans_to_compare[1]];
-    let third = plans[this.state.plans_to_compare[2]];
+    let planOneID = this.state.plans_to_compare[0];
+    let planTwoID = this.state.plans_to_compare[1];
+    let planThreeID = this.state.plans_to_compare[2];
 
-    console.log("first", first);
-    console.log("second", second);
+    let first = plans.filter((plan) => plan.service_id === planOneID)[0];
+    let second = plans.filter((plan) => plan.service_id === planTwoID)[0];
+    let third = plans.filter((plan) => plan.service_id === planThreeID)[0];
+
+    console.log(
+      "this.state.current_page",
+      this.state.current_page,
+      "this.state.num_of_pages",
+      this.state.num_of_pages
+    );
+
+    //console.log("first", first);
+    // console.log("second", second);
     console.log("third", third);
 
     return (
@@ -2534,7 +2555,9 @@ class ComparePlans extends Component<ComparisonProps> {
                               type="button"
                               onClick={() => {
                                 this.handleCheckedPlanToCompare(
-                                  parseInt(this.state.plans_to_compare[0])
+                                  // parseInt(
+                                  this.state.plans_to_compare[0]
+                                  // )
                                 );
                                 // this.handleCheckedPlanToCompareOnDesktop("0");
                               }}
@@ -2576,7 +2599,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                 type="button"
                                 onClick={() => {
                                   this.handleCheckedPlanToCompare(
-                                    parseInt(this.state.plans_to_compare[1])
+                                    // parseInt(
+                                    this.state.plans_to_compare[1]
+                                    //)
                                   );
                                   //this.handleCheckedPlanToCompareOnDesktop("1");
                                 }}
@@ -2619,7 +2644,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                 type="button"
                                 onClick={() => {
                                   this.handleCheckedPlanToCompare(
-                                    parseInt(this.state.plans_to_compare[2])
+                                    // parseInt(
+                                    this.state.plans_to_compare[2]
+                                    // )
                                   );
                                   // this.handleCheckedPlanToCompareOnDesktop("2");
                                 }}
@@ -5943,7 +5970,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                           // this.handleCheckedPlanToCompareOnDesktop(
                                           //   i.toString()
                                           // );
-                                          this.handleCheckedPlanToCompare(i);
+                                          this.handleCheckedPlanToCompare(
+                                            similar_plan.service_id
+                                          );
                                         }}
                                       >
                                         <i className="fas fa-plus"></i>+ Add to
@@ -5965,7 +5994,6 @@ class ComparePlans extends Component<ComparisonProps> {
             </section>
           </div>
         )}
-        {/* <AppFooter /> */}
       </div>
     );
   }

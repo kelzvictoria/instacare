@@ -43,8 +43,6 @@ import HMOInfoSkeleton from "../../components/skeletons/SkeletonHMOInfo";
 
 import * as home_utils from "../../utils/homeUtils";
 
-//import { state } from "./state";
-
 import "./new-design.css";
 
 import searching from "../../imgs/searching.svg";
@@ -79,25 +77,21 @@ class NewContent extends React.Component<homeProps, homeState> {
     show_desktop_on_load_modal: false,
     show_mobile_on_load_modal: false,
     show_desktop_home_frm: true,
-    //range_selected: "silver",
     show_filter: false,
     show_med_mgt_program_multiselect: false,
     plans_to_compare: [],
     show_compare_button: false,
     sticky_styles: "results-sticky c-sticky c-sticky--top",
     sticky_inner_optional_style: "",
-
     filter_params: {
-      //this.props.responses.budget[0],
       annual_range_min: undefined,
-      //this.props.responses.budget[1],
       annual_range_max: undefined,
       annual_deductible_min: undefined,
       annual_deductible_max: undefined,
       plan_types_checked: [],
       plan_range_checked: [],
       planID: "",
-      hmo_selected: "", // undefined,
+      hmo_selected: "",
       mgt_program_selected: [],
       providers_selected: [],
       prescriptions_selected: [],
@@ -137,88 +131,82 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.changePage(data);
   };
 
-  hmoBannerDiv(hmoId) {
-    let hmoArr;
+  // hmoBannerDiv(hmoId) {
+  //   let hmoArr;
 
-    // if (hmoId !== "hygeia") {
-    //   hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == hmoId);
-    // } else {
-    //   hmoArr = home_utils.hmos.filter((hmo) => hmo["id"] == "1");
-    // }
+  //   let data;
+  //   if (hmoId) {
+  //     if (hmoId !== "hygeia") {
+  //       data = this.props.hmos.filter((hmo) => hmo.name.id == hmoArr[0].name);
+  //     } else {
+  //       data = this.props.hmos.filter((hmo) => hmo.name.id == "1");
+  //     }
 
-    let data;
-    if (hmoId) {
-      if (hmoId !== "hygeia") {
-        data = this.props.hmos.filter((hmo) => hmo.name.id == hmoArr[0].name);
-      } else {
-        data = this.props.hmos.filter((hmo) => hmo.name.id == "1");
-      }
+  //     return (
+  //       <Col
+  //         xs={24}
+  //         md={14}
+  //         className=" left-side-info banner-container provider-banner"
+  //       >
+  //         <div className="svg-and-text provider-data">
+  //           <div className="hmo-svg-img svg-img">
+  //             <img src={data[0].logo}></img>
+  //           </div>
 
-      return (
-        <Col
-          xs={24}
-          md={14}
-          className=" left-side-info banner-container provider-banner"
-        >
-          <div className="svg-and-text provider-data">
-            <div className="hmo-svg-img svg-img">
-              <img src={data[0].logo}></img>
-            </div>
+  //           <div className={styles.bannerContent} id="bannertext">
+  //             <p className={styles.textHeading}>
+  //               {this.props.provider_info["title"]}
+  //             </p>
+  //           </div>
+  //         </div>
 
-            <div className={styles.bannerContent} id="bannertext">
-              <p className={styles.textHeading}>
-                {this.props.provider_info["title"]}
-              </p>
-            </div>
-          </div>
+  //         <div className="banner-bottom">
+  //           <div className="row col-md-12">
+  //             <div className="col-md-4 card mr-3">
+  //               <img src={hospitalsvg} className="banner-icon" />
+  //               <div className="card-text">
+  //                 <p>Hospital Network</p>
+  //                 <h5>
+  //                   {data[0].provider_id
+  //                     ? JSON.parse(data[0].provider_id).length
+  //                     : ""}
+  //                 </h5>
+  //               </div>
+  //             </div>
+  //             <div className="col-md-4 card mr-3">
+  //               <span className="naira banner-icon">₦</span>
+  //               <div className="card-text">
+  //                 <p>Plans Starting from</p>
+  //                 <h5>
+  //                   {this.numberwithCommas(this.props.cheapest_plan_by_hmo)}
+  //                 </h5>
+  //               </div>
+  //             </div>
+  //             <div className="col-md-4 card">
+  //               <img src={ratiosvg} className="banner-icon" />
+  //               <div className="card-text">
+  //                 <p>Claim Ratio</p>
+  //                 {/* <h5>{`${
+  //                   (this.props.plansByHMO.length /
+  //                     this.props.plans.length) *
+  //                   100
+  //                 }%`}</h5> */}
 
-          <div className="banner-bottom">
-            <div className="row col-md-12">
-              <div className="col-md-4 card mr-3">
-                <img src={hospitalsvg} className="banner-icon" />
-                <div className="card-text">
-                  <p>Hospital Network</p>
-                  <h5>
-                    {data[0].provider_id
-                      ? JSON.parse(data[0].provider_id).length
-                      : ""}
-                  </h5>
-                </div>
-              </div>
-              <div className="col-md-4 card mr-3">
-                <span className="naira banner-icon">₦</span>
-                <div className="card-text">
-                  <p>Plans Starting from</p>
-                  <h5>
-                    {this.numberwithCommas(this.props.cheapest_plan_by_hmo)}
-                  </h5>
-                </div>
-              </div>
-              <div className="col-md-4 card">
-                <img src={ratiosvg} className="banner-icon" />
-                <div className="card-text">
-                  <p>Claim Ratio</p>
-                  {/* <h5>{`${
-                    (this.props.plansByHMO.length /
-                      this.props.plans.length) *
-                    100
-                  }%`}</h5> */}
-
-                  <h5>{`${
-                    (this.props.plansByHMO.length / this.props.plans.length) *
-                    100
-                  }%`}</h5>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Col>
-      );
-    }
-  }
+  //                 <h5>{`${
+  //                   (this.props.plansByHMO.length / this.props.plans.length) *
+  //                   100
+  //                 }%`}</h5>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </Col>
+  //     );
+  //   }
+  // }
 
   homeBannerDiv() {
-    console.log("this.props.hmo", this.props.hmo);
+    // console.log("this.props.hmo", this.props.hmo);
 
     return (
       <Col xs={24} md={14} className="banner-container  left-side-info">
@@ -3200,14 +3188,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       planID: this.state.filter_params.planID,
       hmoID: this.state.filter_params.hmo_selected,
     };
-    /* this.state.filter_params.plan_types_checked.map((type) =>
-      // this.handlePlanTypesCheck(type)
-      this.changeType(type)
-    );
 
-    this.props.setPlanID(this.state.filter_params.planID);
-    this.props.setHMOID(this.state.filter_params.hmo_selected);
-    this.updateBudgetWithFilterRange();*/
     this.props.getRecommendedPlans(filterBoxParams);
   };
 
@@ -3250,14 +3231,14 @@ class NewContent extends React.Component<homeProps, homeState> {
     let allPlans = this.props.planServices;
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
-    console.log("this.props.match", this.props.match);
+    // console.log("this.props.match", this.props.match);
 
-    console.log(
-      "this.props.responses.providers",
-      this.props.responses.providers
-    );
+    // console.log(
+    //   "this.props.responses.providers",
+    //   this.props.responses.providers
+    // );
 
-    console.log("this.props.match.params.id", this.props.match.params.id);
+    // console.log("this.props.match.params.id", this.props.match.params.id);
 
     if (home_utils.CAN_LOG) {
       // console.log(
@@ -3330,33 +3311,25 @@ class NewContent extends React.Component<homeProps, homeState> {
     return (
       <div className="home">
         <div className="banner-div">
-          {/* <AppHeader /> */}
           <div className="container home-c">
             {/* if the path is /hmo and data has been fetched*/}
-            {
-              //this.state.filter_PLANS_BY_HMO &&
+            {/* {
               this.props.match.params.id &&
-                //this.props.plans.length > 0 &&
                 this.props.plansByHMO.length > 0 && (
                   <Row className="banner-content">
                     {this.hmoBannerDiv(this.props.match.params.id)}
 
                     <Col md={10} className="quiz">
                       <div className="home-frm form-div">
-                        {/* call desktop form 1 */ this.renderDesktopQuizForm()}
+                        { this.renderDesktopQuizForm()}
 
                         {this.renderMobileQuizForm()}
-                        {/*{
-                           this.renderDesktopQuizModal()
-                        }
-                        {
-                           this.renderMobileQuizModal()
-                        } */}
+                        
                       </div>
                     </Col>
                   </Row>
                 )
-            }
+            } */}
 
             {/* if the path is /hmo and data is being fetched*/}
             {this.props.match.params.id && this.props.plans.length == 0 && (
@@ -3370,11 +3343,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                 </Col>
                 <Col md={10} className="quiz">
                   <div className="home-frm form-div">
-                    {/* call desktop form 2 */ this.renderDesktopQuizForm()}
+                    {this.renderDesktopQuizForm()}
 
-                    {/* call mobile form 2*/ this.renderMobileQuizForm()}
-                    {/* call desktop quiz modal 2 this.renderDesktopQuizModal()*/}
-                    {/* call mobile quiz modal 2  this.renderMobileQuizModal()*/}
+                    {this.renderMobileQuizForm()}
                   </div>
                 </Col>
               </Row>
@@ -4443,7 +4414,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               <ul className="c-list--bare margin-top--2 home-plans-list">
                 {apiData &&
                   apiData.map((plan, i) => {
-                    console.log("plan", plan);
+                    // console.log("plan", plan);
 
                     return (
                       //plan.packages.length > 0 && (
@@ -4614,13 +4585,18 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       id="desktop"
                                       className={`c-button c-check-button ${
                                         plans_to_compare &&
-                                        plans_to_compare.includes(i)
-                                          ? //plans_to_compare.includes(i.toString())
-                                            "c-check-button--checked c-button--secondary"
+                                        // plans_to_compare.includes(i)
+                                        plans_to_compare.includes(
+                                          plan.service_id
+                                        )
+                                          ? "c-check-button--checked c-button--secondary"
                                           : ""
                                       } `}
                                       onClick={() => {
-                                        this.handleCheckedPlanToCompare(i);
+                                        //this.handleCheckedPlanToCompare(i);
+                                        this.handleCheckedPlanToCompare(
+                                          plan.service_id
+                                        );
                                       }}
                                     >
                                       <span className="c-check-button__checkbox">
@@ -4989,8 +4965,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </div>
                                 </div>
 
-                                <div className="c-plan-card__coverables-container">
-                                  <div className="c-plan-card-cost-display--info-needed ">
+                                <div className="plan-card-cost-display--info-needed margin-y--1">
+                                  <div className="">
                                     {/* fill--gray-lightest */}
                                     <div className="justify-content--center display--flex">
                                       <div
@@ -5081,8 +5057,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </div>
                                 </div>
 
-                                <div className="c-plan-card__coverables-container">
-                                  <div className="c-plan-card-cost-display--info-needed">
+                                <div className="plan-card-cost-display--info-needed">
+                                  <div className="">
                                     {/* fill--gray-lightest */}
                                     <div
                                       className="font-size--small font-weight--bold
@@ -5118,13 +5094,16 @@ class NewContent extends React.Component<homeProps, homeState> {
                                 <button
                                   className={`c-button c-check-button ${
                                     plans_to_compare &&
-                                    plans_to_compare.includes(i)
-                                      ? //plans_to_compare.includes(i.toString())
-                                        "c-check-button--checked c-button--secondary"
+                                    // plans_to_compare.includes(i)
+                                    plans_to_compare.includes(plan.service_id)
+                                      ? "c-check-button--checked c-button--secondary"
                                       : ""
                                   } `}
                                   onClick={() => {
-                                    this.handleCheckedPlanToCompare(i);
+                                    // this.handleCheckedPlanToCompare(i);
+                                    this.handleCheckedPlanToCompare(
+                                      plan.service_id
+                                    );
                                   }}
                                 >
                                   <span

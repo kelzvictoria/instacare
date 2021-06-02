@@ -430,7 +430,7 @@ class Compare extends Component<QuizProps> {
           data = this.sortPlansByPrice(data.data);
           this.popularIndex =
             this.popularIndex < data.length ? this.popularIndex : 0;
-          console.log("this.popularIndex", this.popularIndex);
+          //console.log("this.popularIndex", this.popularIndex);
           this.props.dispatch({ type: actions.UPDATE_PLANS, data });
           this.getBestPlan();
           this.props.dispatch({
