@@ -2604,7 +2604,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   componentDidMount() {
-    if (window.screen.width >= 501) {
+    if (window.screen.width >= 600) {
       //console.log("window.screen.width >= 501", window.screen.width >= 501);
       setTimeout(() => {
         this.showDesktopOnLoadModal();
@@ -4964,109 +4964,121 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </ul>
                                   </div>
                                 </div>
+                                <div className="prov-cat">
+                                  <div className="margin-right--1 prov-num">
+                                    <div
+                                      className={`${
+                                        window.screen.width > 500
+                                          ? "plan-card-cost-display--info-needed"
+                                          : "col--12  margin-y--1"
+                                      }`}
+                                    >
+                                      {/* fill--gray-lightest */}
+                                      <div className="justify-content--center display--flex">
+                                        <div
+                                          className="font-size--small font-weight--bold
+                              display--flex aligh-items--center
+                              "
+                                        >
+                                          Medical providers
+                                        </div>
+                                      </div>
+                                      <div className="font-size--h2">
+                                        <a
+                                          onClick={() =>
+                                            this.goToDetails(plan.service_id)
+                                          }
+                                          className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
+                                          //href={`/details/id/${plan.service_id}/#providers`}
+                                          href="#"
+                                        >
+                                          {this.props.responses.providers
+                                            .length > 0
+                                            ? `View All ${
+                                                plan.hmo_id.providers
+                                                  ? plan.hmo_id.providers.length
+                                                  : ""
+                                              } Providers`
+                                            : `View Providers (${
+                                                plan.hmo_id.providers
+                                                  ? plan.hmo_id.providers.length
+                                                  : ""
+                                              })`}
+                                        </a>
 
-                                <div className="plan-card-cost-display--info-needed margin-y--1">
-                                  <div className="">
-                                    {/* fill--gray-lightest */}
-                                    <div className="justify-content--center display--flex">
+                                        {/* Add your medical providers and we'll show
+                                      you which plans cover them */}
+                                      </div>
+                                      {this.props.responses.providers.length >
+                                        0 && (
+                                        <ul className="c-status-list c-list--bare">
+                                          {
+                                            // this.props.responses.providers
+                                            //   .filter((prov) => {
+                                            //     let namesArr = plan.hmo_id.providers.map(
+                                            //       (prvdr) => prvdr.provider_name
+                                            //     );
+
+                                            //     return namesArr.includes(
+                                            //       prov.provider_name
+                                            //     );
+                                            //   });
+
+                                            this.props.responses.providers.map(
+                                              (provider) => {
+                                                providersArr = plan.hmo_id.providers.map(
+                                                  (prvdr) => prvdr.provider_name
+                                                );
+                                                console.log(
+                                                  "provider.provider_name",
+                                                  provider.provider_name
+                                                );
+                                                console.log(
+                                                  "providersArr",
+                                                  providersArr
+                                                );
+
+                                                return (
+                                                  <li className="c-status-list__item font-size--small">
+                                                    <img
+                                                      src={
+                                                        providersArr.includes(
+                                                          provider.provider_name
+                                                        )
+                                                          ? check
+                                                          : uncheck
+                                                      }
+                                                      className="c-status-list__item__icon"
+                                                    />
+                                                    <span className="text-transform--capitalize">
+                                                      {provider.provider_name}
+                                                    </span>
+                                                  </li>
+                                                );
+                                              }
+                                            )
+                                          }
+                                        </ul>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  <div className="prov-category">
+                                    <div
+                                      className={`${
+                                        window.screen.width > 500
+                                          ? "plan-card-cost-display--info-needed"
+                                          : "col--12"
+                                      }`}
+                                    >
+                                      {/* fill--gray-lightest */}
                                       <div
                                         className="font-size--small font-weight--bold
                               display--flex aligh-items--center
                               "
                                       >
-                                        Medical providers
-                                      </div>
-                                    </div>
-                                    <div className="font-size--h2">
-                                      <a
-                                        onClick={() =>
-                                          this.goToDetails(plan.service_id)
-                                        }
-                                        className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                                        //href={`/details/id/${plan.service_id}/#providers`}
-                                        href="#"
-                                      >
-                                        {this.props.responses.providers.length >
-                                        0
-                                          ? `View All ${
-                                              plan.hmo_id.providers
-                                                ? plan.hmo_id.providers.length
-                                                : ""
-                                            } Providers`
-                                          : `View Providers (${
-                                              plan.hmo_id.providers
-                                                ? plan.hmo_id.providers.length
-                                                : ""
-                                            })`}
-                                      </a>
-
-                                      {/* Add your medical providers and we'll show
-                                      you which plans cover them */}
-                                    </div>
-                                    {this.props.responses.providers.length >
-                                      0 && (
-                                      <ul className="c-status-list c-list--bare">
-                                        {
-                                          // this.props.responses.providers
-                                          //   .filter((prov) => {
-                                          //     let namesArr = plan.hmo_id.providers.map(
-                                          //       (prvdr) => prvdr.provider_name
-                                          //     );
-
-                                          //     return namesArr.includes(
-                                          //       prov.provider_name
-                                          //     );
-                                          //   });
-
-                                          this.props.responses.providers.map(
-                                            (provider) => {
-                                              providersArr = plan.hmo_id.providers.map(
-                                                (prvdr) => prvdr.provider_name
-                                              );
-                                              console.log(
-                                                "provider.provider_name",
-                                                provider.provider_name
-                                              );
-                                              console.log(
-                                                "providersArr",
-                                                providersArr
-                                              );
-
-                                              return (
-                                                <li className="c-status-list__item font-size--small">
-                                                  <img
-                                                    src={
-                                                      providersArr.includes(
-                                                        provider.provider_name
-                                                      )
-                                                        ? check
-                                                        : uncheck
-                                                    }
-                                                    className="c-status-list__item__icon"
-                                                  />
-                                                  <span className="text-transform--capitalize">
-                                                    {provider.provider_name}
-                                                  </span>
-                                                </li>
-                                              );
-                                            }
-                                          )
-                                        }
-                                      </ul>
-                                    )}
-                                  </div>
-                                </div>
-
-                                <div className="plan-card-cost-display--info-needed">
-                                  <div className="">
-                                    {/* fill--gray-lightest */}
-                                    <div
-                                      className="font-size--small font-weight--bold
-                              display--flex aligh-items--center
-                              "
-                                    >
-                                      Hospital Category
-                                      <button
+                                        Hospital Category
+                                        {/* <button
                                         type="button"
                                         aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
                                         className="tooltip-trigger padding--0"
@@ -5077,15 +5089,16 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             icon={faInfoCircle}
                                           />
                                         </span>
-                                      </button>
-                                    </div>
+                                      </button> */}
+                                      </div>
 
-                                    <div className="font-size--h2">
-                                      {plan.hospital_category[0].name
-                                        ? plan.hospital_category[0].name
-                                        : "N/A"}
-                                      {/* Add your prescription drugs and we'll show
+                                      <div className="font-size--h2">
+                                        {plan.hospital_category[0].name
+                                          ? plan.hospital_category[0].name
+                                          : "N/A"}
+                                        {/* Add your prescription drugs and we'll show
                                       you which plans cover them */}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>

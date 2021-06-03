@@ -1838,6 +1838,42 @@ span.plan-desc {
   display: none;
 }
 
+.col--12 {
+  width: 100% !important;
+}
+
+.prov-cat {
+}
+
+@media (max-width: 500px) {
+  .fade.desktop-modal.center.modal.show {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .prov-cat {
+    float: right !important;
+    width: 74%;
+    justify-content: flex-end;
+    display: flex;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 767px) {
+  .prov-cat {
+    width: 100% !important;
+    float: left !important;
+    display: flex;
+  }
+
+  .prov-num,
+  .prov-category {
+    width: 50% !important;
+    max-width: 50% !important;
+  }
+}
+
 /* *,
 :after,
 :before {
