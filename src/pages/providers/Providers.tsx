@@ -31,9 +31,9 @@ class Providers extends Component<ProvidersProps> {
     show_providers_listing_div: false,
   };
 
-  onSearch = (searchText: string) => {
+  onSearch = async (searchText: string) => {
     let tempProviders: any[] = [];
-    let providers = this.props.providers.map(
+    let providers = await this.props.providers.map(
       (provider) => provider.provider_name
     );
     providers.forEach((item: string) => {
@@ -161,7 +161,7 @@ class Providers extends Component<ProvidersProps> {
                         dataSource={this.props.dataSource}
                         onSearch={this.onSearch}
                         onChange={this.onSelectChange}
-                        placeholder="Example: Westcare Hospital"
+                        placeholder="Example: Maitama District Hospital"
                         value={this.props.responses.provider}
                         //value={this.state.search_arg}
                         className="ic-auto-complete margin-bottom--0"

@@ -6,7 +6,7 @@ import * as actions from "../../actions/types";
 
 import shortlist from "../../imgs/shortlist-yellow.svg";
 
-import { Card, Button, Typography, Collapse, Tabs } from "antd";
+import { Card, Button, Typography, Collapse, Tabs, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -72,7 +72,7 @@ class PlanDetails extends Component<DetailsProps> {
   };
 
   goToPlans() {
-    this.props.history.push({ pathname: "/#plans" });
+    this.props.history.push({ pathname: "/" });
   }
 
   goToHome = () => {
@@ -165,6 +165,7 @@ class PlanDetails extends Component<DetailsProps> {
                         className="c-button c-button--small qa-print-button margin-left--1 margin-bottom--1 sm-padding-x--2"
                         title="Print"
                         type="button"
+                        onClick={() => window.print()}
                       >
                         <FontAwesomeIcon
                           className="fas md-margin-right--1"
@@ -179,6 +180,10 @@ class PlanDetails extends Component<DetailsProps> {
                         className="c-button c-button--small qa-email-button margin-left--1 margin-bottom--1 sm-padding-x--2"
                         title="Email"
                         type="button"
+                        onClick={(e) => {
+                          window.location.href = "mailto:no-reply@example.com";
+                          e.preventDefault();
+                        }}
                       >
                         <FontAwesomeIcon
                           className="fas md-margin-right--1"
@@ -193,6 +198,10 @@ class PlanDetails extends Component<DetailsProps> {
                         className="c-button c-button--small qa-share-link-button margin-left--1 margin-bottom--1 sm-padding-x--2"
                         title="Link"
                         type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(window.location.href);
+                          message.success("Link has been copied!");
+                        }}
                       >
                         <FontAwesomeIcon
                           className="fas md-margin-right--1"

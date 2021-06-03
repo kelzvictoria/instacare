@@ -846,6 +846,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </td>
                                 )}
                               </tr>
+                              {/* 
                               <tr className="print-display--none">
                                 <th scope="row">Drugs covered/not covered</th>
                                 <td
@@ -900,6 +901,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </td>
                                 )}
                               </tr>
+                             */}
                             </tbody>
                           </table>
                         </div>
@@ -2927,10 +2929,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <td>
                                   <a
                                     className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                    href="/find-provider"
+                                    href={`/details/id/${first.service_id}`}
                                     role="button"
                                   >
-                                    Add medical providers
+                                    View medical providers
                                   </a>
                                 </td>
                                 {this.state.plans_to_compare[1] !==
@@ -2938,10 +2940,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <td>
                                     <a
                                       className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                      href="/find-provider"
+                                      href={`/details/id/${second.service_id}`}
                                       role="button"
                                     >
-                                      Add medical providers
+                                      View medical providers
                                     </a>
                                   </td>
                                 )}
@@ -2950,7 +2952,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <td>
                                     <a
                                       className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                      href="/find-provider"
+                                      href={`/details/id/${third.service_id}`}
                                       role="button"
                                     >
                                       Add medical providers
@@ -2958,6 +2960,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </td>
                                 )}
                               </tr>
+                              {/* 
                               <tr className="print-display--none">
                                 <th scope="row">Drugs covered/not covered</th>
                                 <td>
@@ -2994,6 +2997,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </td>
                                 )}
                               </tr>
+                            */}
                             </tbody>
                           </table>
                         </div>

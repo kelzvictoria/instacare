@@ -3043,6 +3043,11 @@ class NewContent extends React.Component<homeProps, homeState> {
         message.error("You can only compare a maximum of 3 plans at a time");
       }
     }
+
+    if (indexes.length === 1 && !this.state.show_compare_button) {
+      message.success("Plan selected. Select more plans to compare...");
+    }
+
     this.setState({
       plans_to_compare: indexes,
     });
@@ -3422,7 +3427,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                             : "display--none"
                         }
                         // href="#"
-                        onClick={this.goToComparison}
+                        onClick={() => {
+                          this.goToComparison();
+                        }}
                         role="button"
                       >
                         Compare {plans_to_compare.length}{" "}

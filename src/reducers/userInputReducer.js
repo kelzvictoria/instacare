@@ -143,7 +143,12 @@ const initialState = {
         providers: [],
         compare_plan_id_param: []
     },
-    dataSource: [], //providersInfo,
+    dataSource:
+        //localStorage["providers"] ? 
+        // JSON.parse(localStorage["providers"]).map(
+        //    (provider) => provider.provider_name
+        // ),
+        [],
     is_loading: false
 }
 
