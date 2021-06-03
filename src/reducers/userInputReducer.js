@@ -75,7 +75,10 @@ import {
 
     RESET_SELECTED_PROVIDERS,
     SET_IS_LOADING_ON,
-    SET_IS_LOADING_OFF
+    SET_IS_LOADING_OFF,
+
+    ADD_COMPARE_URL_PARAM,
+    REMOVE_COMPARE_URL_PARAM
 } from "../actions/types";
 
 const initialState = {
@@ -137,7 +140,8 @@ const initialState = {
         child_7_age: 0,
         child_8_age: 0,
         plan_duration: "1",
-        providers: []
+        providers: [],
+        compare_plan_id_param: []
     },
     dataSource: [], //providersInfo,
     is_loading: false
@@ -547,6 +551,29 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 is_loading: false
+            }
+
+        case ADD_COMPARE_URL_PARAM:
+            console.log("action", action);
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    compare_plan_id_param: [
+                        ...state.responses.compare_plan_id_param,
+                        action.payload
+                    ]
+                }
+            }
+        case REMOVE_COMPARE_URL_PARAM:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    compare_plan_id_param: state.responses.compare_plan_id_param.filter(
+                        param => param !== action.payload
+                    )
+                }
             }
 
         default:

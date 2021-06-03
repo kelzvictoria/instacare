@@ -69,9 +69,12 @@ import {
     IS_FILTERING_BY_PLAN_RANGE,
     IS_FILTERING_BY_PLAN_ID,
     SET_PROVIDERS,
-    RESET_SELECTED_PROVIDERS
+    RESET_SELECTED_PROVIDERS,
+    ADD_COMPARE_URL_PARAM,
+    REMOVE_COMPARE_URL_PARAM
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
+import { loadavg } from "os";
 
 export const setProviders = (data) => (dispatch, getState) => {
     dispatch({
@@ -484,22 +487,36 @@ export const filterLocations = (locations) => (dispatch) => {
     })
 }
 
-
-
 export const setIsFilteringByPlanType = () => (dispatch, getState) => {
-    return {
+    dispatch({
         type: IS_FILTERING_BY_PLAN_TYPE
-    }
+    })
 }
 
 export const setIsFilteringByPlanRange = () => (dispatch, getState) => {
-    return {
+    dispatch({
         type: IS_FILTERING_BY_PLAN_RANGE
-    }
+    })
 }
 
 export const setIsFilteringByPlanID = () => (dispatch, getState) => {
-    return {
+    dispatch({
         type: IS_FILTERING_BY_PLAN_ID
-    }
+    })
+}
+
+export const addCompareURLParam = (param) => (dispatch, getState) => {
+    // console.log("param", param);
+    dispatch({
+        type: ADD_COMPARE_URL_PARAM,
+        payload: param
+    })
+}
+
+export const removeCompareURLParam = (param) => (dispatch, getState) => {
+    console.log("param", param);
+    dispatch({
+        type: REMOVE_COMPARE_URL_PARAM,
+        payload: param
+    })
 }

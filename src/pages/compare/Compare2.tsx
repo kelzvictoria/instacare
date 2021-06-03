@@ -46,6 +46,11 @@ import {
   getCheapestPlan,
 } from "../../actions/fetchDataActions";
 
+import {
+  addCompareURLParam,
+  removeCompareURLParam,
+} from "../../actions/userInputActions";
+
 interface ComparisonProps {
   [x: string]: any;
   dispatch(args: any): any;
@@ -125,11 +130,18 @@ class ComparePlans extends Component<ComparisonProps> {
 
   setPlansToCompare = async () => {
     let params = this.props.match.params[0];
-    console.log("params", params);
+
+    //console.log("params", params);
 
     let paramsArr = params.split("/");
     paramsArr = paramsArr.map((p) => p);
+    this.propsParams = paramsArr;
+    console.log("");
 
+    // for (let i = 0; i < paramsArr.length; i++) {
+    //   this.props.addCompareURLParam(paramsArr[i])
+    //   //this.updateUrlParams("add", paramsArr[i]);
+    // }
     this.setState({
       plans_to_compare: paramsArr,
       num_of_pages: paramsArr.length,
@@ -140,12 +152,12 @@ class ComparePlans extends Component<ComparisonProps> {
     await this.props.getServices();
 
     let firstPlanID = paramsArr[0];
-    // console.log("firstPlanID", firstPlanID);
+    console.log("firstPlanID", firstPlanID);
 
     let firstPlan = this.props.plans.filter(
       (plan) => plan.service_id === firstPlanID
     )[0];
-    //  console.log("firstPlan", firstPlan);
+    console.log("firstPlan", firstPlan);
 
     await this.props.getSimilarPlans(firstPlan);
     this.props.getCheapestPlan();
@@ -153,6 +165,7 @@ class ComparePlans extends Component<ComparisonProps> {
 
   async UNSAFE_componentWillMount() {
     this.setPlansToCompare();
+
     if (window.screen.width >= 501) {
       this.setState({
         device: "desktop",
@@ -246,6 +259,80 @@ class ComparePlans extends Component<ComparisonProps> {
     // body.scrollTo(0, 0);
   }
 
+  updateURL() {
+    let path = "/compare-plans/plans";
+
+    if (
+      this.props.compare_plan_id_param.length > 0 ||
+      this.propsParams.length > 0
+    ) {
+      let params = this.buildQueryParams();
+      path = path + params;
+
+      this.props.history.push({
+        pathname: path,
+      });
+    }
+  }
+
+  propsParams = this.props.params;
+
+  buildQueryParams = () => {
+    let query_string = "";
+    console.log(
+      "this.props.compare_plan_id_param",
+      this.props.compare_plan_id_param,
+      "this.state.plans_to_compare",
+      this.state.plans_to_compare
+    );
+
+    if (this.state.plans_to_compare.length > 0) {
+      for (let i = this.state.plans_to_compare.length; i > 0; i--) {
+        query_string += "/" + this.state.plans_to_compare[i - 1];
+      }
+    } else if (this.propsParams.length > 0) {
+      query_string += "/";
+    }
+    return query_string;
+  };
+
+  updateUrlParams = async (type, planID) => {
+    console.log("type", type, "planID", planID);
+
+    let is_planID_present = this.props.compare_plan_id_param.filter(
+      (id) => id === planID
+    );
+
+    console.log("is_planID_present", is_planID_present);
+
+    switch (type) {
+      case "add":
+        console.log("add");
+
+        if (is_planID_present.length === 0) {
+          await this.props.addCompareURLParam(planID);
+        }
+        break;
+
+      case "remove":
+        await this.props.removeCompareURLParam(planID);
+        break;
+
+      default:
+        break;
+    }
+    this.updateURL();
+    let firstPlan = await this.props.plans.filter(
+      (plan) => plan.service_id === this.state.plans_to_compare[0]
+    )[0];
+    console.log("firstPlan", firstPlan);
+    this.setState({
+      num_of_pages: this.state.plans_to_compare.length,
+    });
+
+    this.props.getSimilarPlans(firstPlan);
+  };
+
   render() {
     let plans_to_compare: number[] = this.state.plans_to_compare;
     let plans = this.props.plans;
@@ -267,7 +354,7 @@ class ComparePlans extends Component<ComparisonProps> {
 
     //console.log("first", first);
     // console.log("second", second);
-    console.log("third", third);
+    // console.log("third", third);
 
     return (
       <div className="side-by-side_comparison c-plan-details-page">
@@ -2559,6 +2646,12 @@ class ComparePlans extends Component<ComparisonProps> {
                                   this.state.plans_to_compare[0]
                                   // )
                                 );
+
+                                this.updateUrlParams(
+                                  "remove",
+                                  this.state.plans_to_compare[0]
+                                );
+
                                 // this.handleCheckedPlanToCompareOnDesktop("0");
                               }}
                             >
@@ -2602,6 +2695,11 @@ class ComparePlans extends Component<ComparisonProps> {
                                     // parseInt(
                                     this.state.plans_to_compare[1]
                                     //)
+                                  );
+
+                                  this.updateUrlParams(
+                                    "remove",
+                                    this.state.plans_to_compare[1]
                                   );
                                   //this.handleCheckedPlanToCompareOnDesktop("1");
                                 }}
@@ -2647,6 +2745,11 @@ class ComparePlans extends Component<ComparisonProps> {
                                     // parseInt(
                                     this.state.plans_to_compare[2]
                                     // )
+                                  );
+
+                                  this.updateUrlParams(
+                                    "remove",
+                                    this.state.plans_to_compare[2]
                                   );
                                   // this.handleCheckedPlanToCompareOnDesktop("2");
                                 }}
@@ -5898,7 +6001,8 @@ class ComparePlans extends Component<ComparisonProps> {
                           {plans_to_compare.length > 0 &&
                             this.props.similar_plans.map((similar_plan, i) => {
                               return plans_to_compare.includes(
-                                i
+                                similar_plan.service_id
+                                //i
                                 // .toString()
                               ) == false ? (
                                 <div className="box-new">
@@ -5973,6 +6077,11 @@ class ComparePlans extends Component<ComparisonProps> {
                                           this.handleCheckedPlanToCompare(
                                             similar_plan.service_id
                                           );
+
+                                          this.updateUrlParams(
+                                            "add",
+                                            similar_plan.service_id
+                                          );
                                         }}
                                       >
                                         <i className="fas fa-plus"></i>+ Add to
@@ -6005,6 +6114,7 @@ const mapProps = (state: any) => {
     checked_plans_list: state.compare.checked_plans_list,
     compare_plans_desktop_indexes: state.compare.compare_plans_desktop_indexes,
     similar_plans: state.fetchData.similar_plans,
+    compare_plan_id_param: state.quiz.responses.compare_plan_id_param,
   };
 };
 
@@ -6018,4 +6128,6 @@ export default connect(mapProps, {
   getPlans,
   getServices,
   getCheapestPlan,
+  addCompareURLParam,
+  removeCompareURLParam,
 })(ComparePlans);

@@ -105,12 +105,12 @@ export const getSimilarPlans = (plan) => async (dispatch, getState) => {
 
         let planID = plan.service_id;
 
-        // console.log("type", type, "planID", planID);
+        console.log("type", type, "planID", planID);
 
         let packages = getState().fetchData.services;
 
         let res = groupPlansByType(packages, type);
-        console.log("res", res);
+        //console.log("res", res);
 
         let similar_plans = res.filter(plan => {
             // console.log("plan.service_id", plan.service_id);
@@ -124,7 +124,7 @@ export const getSimilarPlans = (plan) => async (dispatch, getState) => {
             ))
         )
 
-        //  console.log("similar_plans", similar_plans);
+        console.log("similar_plans", similar_plans);
 
         dispatch({
             type: GET_SIMILAR_PLANS,
