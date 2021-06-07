@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Button,
   Row,
   Col,
   Steps,
@@ -9,33 +8,17 @@ import {
   Form,
   Slider,
   Spin,
+  Pagination,
 } from "antd";
-import {
-  faShieldAlt,
-  faArrowLeft,
-  faSmile,
-  faInfoCircle,
-  faChevronRight,
-  faChevronDown,
-  faChevronUp,
-  faChevronLeft,
-} from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import styles from "../../pages/home/Home.module.scss";
 import "../../custom.css";
 import Modal from "react-bootstrap/Modal";
 
-import * as actions from "../../actions/types";
-
 import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
 
-import hospitalsvg from "../../svgs/hospitals.svg";
-import ratiosvg from "../../svgs/claim_ratio.svg";
-
-import starfilled from "../../svgs/starfilled.svg";
-import star from "../../svgs/star.svg";
 import check from "../../svgs/check.svg";
 import uncheck from "../../svgs/uncheck.svg";
 
@@ -50,14 +33,14 @@ import searching from "../../imgs/searching.svg";
 import { formatAsCurrency } from "../../utils";
 import DataCaptureModal from "../payment/DataCapture";
 
-const { Step } = Steps;
-
 export interface homeProps {
   [x: string]: any;
   dispatch(args: any): any;
 }
 
 export interface homeState {}
+
+const pageSize = 5;
 
 class NewContent extends React.Component<homeProps, homeState> {
   constructor(props) {
@@ -100,6 +83,11 @@ class NewContent extends React.Component<homeProps, homeState> {
     },
     plan_ids: [],
     plan_desc_show_less: true,
+    data: [],
+    totalPage: 0,
+    current: 1,
+    minIndex: 0,
+    maxIndex: 0,
   };
 
   toggleModal = () => {
@@ -446,9 +434,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   }
 
-  handleChildrenCheckboxes(e) {
-    let val = e.target.checked;
-  }
+  handleChildrenCheckboxes(e) {}
 
   resetAges() {
     let data = {
@@ -1943,7 +1929,6 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   getClickedPlan = async (index, type) => {
-    let propsData = this.props.plansByHMO[index];
     let data = this.props.planServices[index];
     console.log("data", data);
 
@@ -2590,6 +2575,15 @@ class NewContent extends React.Component<homeProps, homeState> {
       //console.log"window.screen.width < 501", window.screen.width >= 501);
       //this.mobileOnLoadModal();
     }
+
+    if (this.props.planServices.length > 0) {
+      this.setState({
+        data: this.props.planServices,
+        totalPage: this.props.planServices / pageSize,
+        minIndex: 0,
+        maxIndex: pageSize,
+      });
+    }
   }
 
   componentWillMount() {
@@ -3206,10 +3200,20 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   };
 
+  handlePageChange = (page) => {
+    this.setState({
+      current: page,
+      minIndex: (page - 1) * pageSize,
+      maxIndex: page * pageSize,
+    });
+  };
+
   render() {
+    const { data, current, minIndex, maxIndex } = this.state;
     let plansByHMO = this.props.plansByHMO;
     let allPlans = this.props.planServices;
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+    let total = allPlans;
 
     // console.log("this.props.match", this.props.match);
 
@@ -3283,8 +3287,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       planID,
       healthSA_eligibility,
     } = this.state.filter_params;
-
-    let plan_ids: string[] = this.state.plan_ids;
 
     let providersArr;
 
@@ -4394,15 +4396,14 @@ class NewContent extends React.Component<homeProps, homeState> {
 
             <div className="" id="plans-section">
               <ul className="c-list--bare margin-top--2 home-plans-list">
-                {apiData &&
-                  apiData.map((plan, i) => {
-                    // console.log("plan", plan);
-
-                    return (
-                      //plan.packages.length > 0 && (
-                      <li className="margin-bottom--4">
-                        <section className="c-detail-section margin-bottom--4">
-                          {/* <h2 className="border-bottom--1 border--dark padding-bottom--2">
+                {apiData.length > 0 &&
+                  apiData.map(
+                    (plan, i) =>
+                      i >= minIndex &&
+                      i < maxIndex && (
+                        <li className="margin-bottom--4">
+                          <section className="c-detail-section margin-bottom--4">
+                            {/* <h2 className="border-bottom--1 border--dark padding-bottom--2">
                             <button
                               className="ds-h2 text-align--left sans fill--transparent outline--none"
                               aria-expanded="false"
@@ -4437,94 +4438,94 @@ class NewContent extends React.Component<homeProps, homeState> {
                           </h2> 
                         {plan.packages.map((pckage) => {
                           return (*/}
-                          <article
-                            // hidden={
-                            //   !plan_ids.includes(plan.plan_id) ? true : false
-                            // }
-                            className={`plan-card c-base c-fill-white c-box-shadow c--health margin-bottom--4 ${
-                              plans_to_compare && plans_to_compare.includes(i)
-                                ? // plans_to_compare && plans_to_compare.includes(i.toString())
-                                  "c-plan-card--compare-checked"
-                                : ""
-                            }
+                            <article
+                              // hidden={
+                              //   !plan_ids.includes(plan.plan_id) ? true : false
+                              // }
+                              className={`plan-card c-base c-fill-white c-box-shadow c--health margin-bottom--4 ${
+                                plans_to_compare && plans_to_compare.includes(i)
+                                  ? // plans_to_compare && plans_to_compare.includes(i.toString())
+                                    "c-plan-card--compare-checked"
+                                  : ""
+                              }
                           
                           `}
-                            // ${
-                            //   !plan_ids.includes(plan.plan_id)
-                            //     ? "display--none"
-                            //     : ""
-                            // }
-                          >
-                            <div className="plan-card-inner c-clearfix">
-                              <div className="plan-card__top-section display--flex justify-content--between lg-flex-wrap--nowrap flex-wrap--wrap">
-                                <div>
-                                  <header className="plan-card-title">
-                                    <div className="plan-c-provider font-weight--bold">
-                                      {/* Hygeia */}
-                                      {plan.hmo_id && plan.hmo_id.name}
-                                    </div>
-                                    <h2 className="plan-c-name font-weight--normal margin-y--1">
-                                      <a
-                                        href="#"
-                                        onClick={() => {
-                                          //this.goToDetails();
-                                          this.getClickedPlan(i, "view");
-                                        }}
-                                      >
-                                        {/* HyBasic */}
-                                        {plan.name}
-                                      </a>
-                                    </h2>
-                                    <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
-                                      <li
-                                        className="c-plan-title__info-item"
-                                        key={plan.id}
-                                      >
-                                        {plan.plan_id &&
-                                          plan.plan_id.category &&
-                                          plan.plan_id.category.map(
-                                            (cat, i) => {
-                                              return (
-                                                <span className="">
-                                                  {" "}
-                                                  {cat.name}
-                                                  {plan.plan_id.category
-                                                    .length > 1 &&
-                                                    i <
-                                                      plan.plan_id.category
-                                                        .length -
-                                                        1 &&
-                                                    ", "}
-                                                </span>
-                                              );
-                                            }
-                                          )}
-                                      </li>
-                                      <li className="c-plan-title__info-item">
-                                        <span className="">
-                                          <span>
-                                            {/* {plan.hmo_id && plan.hmo_id.hmo_id} */}
-                                            {plan.category}
+                              // ${
+                              //   !plan_ids.includes(plan.plan_id)
+                              //     ? "display--none"
+                              //     : ""
+                              // }
+                            >
+                              <div className="plan-card-inner c-clearfix">
+                                <div className="plan-card__top-section display--flex justify-content--between lg-flex-wrap--nowrap flex-wrap--wrap">
+                                  <div>
+                                    <header className="plan-card-title">
+                                      <div className="plan-c-provider font-weight--bold">
+                                        {/* Hygeia */}
+                                        {plan.hmo_id && plan.hmo_id.name}
+                                      </div>
+                                      <h2 className="plan-c-name font-weight--normal margin-y--1">
+                                        <a
+                                          href="#"
+                                          onClick={() => {
+                                            //this.goToDetails();
+                                            this.getClickedPlan(i, "view");
+                                          }}
+                                        >
+                                          {/* HyBasic */}
+                                          {plan.name}
+                                        </a>
+                                      </h2>
+                                      <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
+                                        <li
+                                          className="c-plan-title__info-item"
+                                          key={plan.id}
+                                        >
+                                          {plan.plan_id &&
+                                            plan.plan_id.category &&
+                                            plan.plan_id.category.map(
+                                              (cat, i) => {
+                                                return (
+                                                  <span className="">
+                                                    {" "}
+                                                    {cat.name}
+                                                    {plan.plan_id.category
+                                                      .length > 1 &&
+                                                      i <
+                                                        plan.plan_id.category
+                                                          .length -
+                                                          1 &&
+                                                      ", "}
+                                                  </span>
+                                                );
+                                              }
+                                            )}
+                                        </li>
+                                        <li className="c-plan-title__info-item">
+                                          <span className="">
+                                            <span>
+                                              {/* {plan.hmo_id && plan.hmo_id.hmo_id} */}
+                                              {plan.category}
+                                            </span>
                                           </span>
-                                        </span>
-                                      </li>
-                                      <li className="c-plan-title__info-item">
-                                        Plan ID:
-                                        <span className="font-weight--bold">
-                                          {
-                                            plan.service_id
-                                            // plan.plan_id && plan.plan_id.category
-                                            //   ? plan.plan_id.plan_id
-                                            //   : plan.plan_id
-                                          }
-                                        </span>
-                                      </li>
-                                    </ul>
-                                  </header>
-                                </div>
+                                        </li>
+                                        <li className="c-plan-title__info-item">
+                                          Plan ID:
+                                          <span className="font-weight--bold">
+                                            {
+                                              plan.service_id
+                                              // plan.plan_id && plan.plan_id.category
+                                              //   ? plan.plan_id.plan_id
+                                              //   : plan.plan_id
+                                            }
+                                          </span>
+                                        </li>
+                                      </ul>
+                                    </header>
+                                  </div>
 
-                                <div className="text-align--right plan-c-title-right">
-                                  {/*                                 
+                                  <div className="text-align--right plan-c-title-right">
+                                    {/*                                 
                                 <div className="quality-rating">
                                   <div className="valign--middle star-rating">
                                     <img
@@ -4562,202 +4563,202 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </button>
                                 </div>
                                 */}
-                                  <div className="display--none lg-display--block plan-c-compare-button">
-                                    <button
-                                      id="desktop"
-                                      className={`c-button c-check-button ${
-                                        plans_to_compare &&
-                                        // plans_to_compare.includes(i)
-                                        plans_to_compare.includes(
-                                          plan.service_id
-                                        )
-                                          ? "c-check-button--checked c-button--secondary"
-                                          : ""
-                                      } `}
-                                      onClick={() => {
-                                        //this.handleCheckedPlanToCompare(i);
-                                        this.handleCheckedPlanToCompare(
-                                          plan.service_id
-                                        );
-                                      }}
-                                    >
-                                      <span className="c-check-button__checkbox">
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          width="16"
-                                          height="16"
-                                          viewBox="0 0 216 146"
-                                          className="check-plan display--none"
-                                        >
-                                          <path d="M168.86 37.966l-11.08-11.08c-1.52-1.52-3.367-2.28-5.54-2.28-2.172 0-4.02.76-5.54 2.28L93.254 80.414 69.3 56.38c-1.52-1.522-3.367-2.282-5.54-2.282-2.172 0-4.02.76-5.54 2.28L47.14 67.46c-1.52 1.522-2.28 3.37-2.28 5.542 0 2.172.76 4.02 2.28 5.54l29.493 29.493 11.08 11.08c1.52 1.52 3.368 2.28 5.54 2.28 2.173 0 4.02-.76 5.54-2.28l11.082-11.08L168.86 49.05c1.52-1.52 2.283-3.37 2.283-5.54 0-2.174-.76-4.02-2.28-5.54z"></path>
-                                        </svg>
-                                      </span>
-                                      Compare
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="plan-card__summary-section">
-                                <div className="c-plan-summary fill--gray-lightest padding--1 lg-padding--2">
-                                  <div className="c-plan-summary__summary">
-                                    <div id="">Estimated yearly premium</div>
-                                    <div className="c-plan-summary__price">
-                                      {/* 18,000 */}
-                                      {"₦"}
-                                      {this.numberwithCommas(
-                                        this.stripNonNumeric(plan.price)
-                                      )}
-                                    </div>
-                                    <ul className="plan-flags c-list--bare"></ul>
-                                  </div>
-                                  <div className="c-plan-summary__children">
-                                    <div className="display--none lg-display--block c-plan-card__desktop-action-buttons margin-top--2">
-                                      <a
-                                        className="c-button c-button--secondary c-plan-card__action-button plan-c-card_action-button"
-                                        href="#"
+                                    <div className="display--none lg-display--block plan-c-compare-button">
+                                      <button
+                                        id="desktop"
+                                        className={`c-button c-check-button ${
+                                          plans_to_compare &&
+                                          // plans_to_compare.includes(i)
+                                          plans_to_compare.includes(
+                                            plan.service_id
+                                          )
+                                            ? "c-check-button--checked c-button--secondary"
+                                            : ""
+                                        } `}
                                         onClick={() => {
-                                          //this.goToDetails();
-                                          this.getClickedPlan(i, "view");
-                                        }}
-                                        role="button"
-                                        target="_self"
-                                      >
-                                        Plan Details
-                                      </a>
-
-                                      <a
-                                        className="c-button c-button--primary c-plan-card__action-button plan-c-card_action-button"
-                                        href="#"
-                                        role="button"
-                                        target="_self"
-                                        onClick={() => {
-                                          this.getClickedPlan(i, "buy");
-                                          this.props.toggleDataCaptureModal(
-                                            true
+                                          //this.handleCheckedPlanToCompare(i);
+                                          this.handleCheckedPlanToCompare(
+                                            plan.service_id
                                           );
                                         }}
                                       >
-                                        Like This Plan
-                                      </a>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide-maybe">
-                                <div className="plan-card__cost-display">
-                                  <div
-                                    className="font-size--small font-weight--bold
-                              display--flex aligh-items--center
-                              "
-                                  >
-                                    In-patient Limit
-                                    <button
-                                      type="button"
-                                      aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
-                                      className="tooltip-trigger padding--0"
-                                    >
-                                      <span className="tooltip-icon-container">
-                                        <FontAwesomeIcon
-                                          className="mt---2"
-                                          icon={faInfoCircle}
-                                        />
-                                      </span>
-                                    </button>
-                                  </div>
-                                  <div className="display--flex flex-wrap--wrap plan-flex-wrap">
-                                    <div className="cost-display__amount">
-                                      <div className="font-size--h2">
-                                        {plan.in_patient_limit == "N/A"
-                                          ? "N/A"
-                                          : `₦${this.numberwithCommas(
-                                              this.stripNonNumeric(
-                                                plan.in_patient_limit
-                                              )
-                                            )}`}
-                                      </div>
-                                      <div className="font-size--small">
-                                        Individual total
-                                      </div>
+                                        <span className="c-check-button__checkbox">
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 216 146"
+                                            className="check-plan display--none"
+                                          >
+                                            <path d="M168.86 37.966l-11.08-11.08c-1.52-1.52-3.367-2.28-5.54-2.28-2.172 0-4.02.76-5.54 2.28L93.254 80.414 69.3 56.38c-1.52-1.522-3.367-2.282-5.54-2.282-2.172 0-4.02.76-5.54 2.28L47.14 67.46c-1.52 1.522-2.28 3.37-2.28 5.542 0 2.172.76 4.02 2.28 5.54l29.493 29.493 11.08 11.08c1.52 1.52 3.368 2.28 5.54 2.28 2.173 0 4.02-.76 5.54-2.28l11.082-11.08L168.86 49.05c1.52-1.52 2.283-3.37 2.283-5.54 0-2.174-.76-4.02-2.28-5.54z"></path>
+                                          </svg>
+                                        </span>
+                                        Compare
+                                      </button>
                                     </div>
                                   </div>
                                 </div>
 
-                                <div className="plan-card__cost-display">
-                                  <div
-                                    className="font-size--small font-weight--bold
-                              display--flex aligh-items--center"
-                                  >
-                                    Out-patient Limiit
-                                    <button
-                                      type="button"
-                                      aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
-                                      className="tooltip-trigger padding--0"
-                                    >
-                                      <span className="tooltip-icon-container">
-                                        <FontAwesomeIcon
-                                          className="mt---2"
-                                          icon={faInfoCircle}
-                                        />
-                                      </span>
-                                    </button>
-                                  </div>
-
-                                  <div className="display--flex flex-wrap--wrap plan-flex-wrap">
-                                    <div className="cost-display__amount">
-                                      <div className="font-size--h2">
-                                        {plan.out_patient_limit == "N/A"
-                                          ? "N/A"
-                                          : `₦${this.numberwithCommas(
-                                              this.stripNonNumeric(
-                                                plan.out_patient_limit
-                                              )
-                                            )}`}
+                                <div className="plan-card__summary-section">
+                                  <div className="c-plan-summary fill--gray-lightest padding--1 lg-padding--2">
+                                    <div className="c-plan-summary__summary">
+                                      <div id="">Estimated yearly premium</div>
+                                      <div className="c-plan-summary__price">
+                                        {/* 18,000 */}
+                                        {"₦"}
+                                        {this.numberwithCommas(
+                                          this.stripNonNumeric(plan.price)
+                                        )}
                                       </div>
-                                      <div className="font-size--small">
-                                        Individual total
+                                      <ul className="plan-flags c-list--bare"></ul>
+                                    </div>
+                                    <div className="c-plan-summary__children">
+                                      <div className="display--none lg-display--block c-plan-card__desktop-action-buttons margin-top--2">
+                                        <a
+                                          className="c-button c-button--secondary c-plan-card__action-button plan-c-card_action-button"
+                                          href="#"
+                                          onClick={() => {
+                                            //this.goToDetails();
+                                            this.getClickedPlan(i, "view");
+                                          }}
+                                          role="button"
+                                          target="_self"
+                                        >
+                                          Plan Details
+                                        </a>
+
+                                        <a
+                                          className="c-button c-button--primary c-plan-card__action-button plan-c-card_action-button"
+                                          href="#"
+                                          role="button"
+                                          target="_self"
+                                          onClick={() => {
+                                            this.getClickedPlan(i, "buy");
+                                            this.props.toggleDataCaptureModal(
+                                              true
+                                            );
+                                          }}
+                                        >
+                                          Like This Plan
+                                        </a>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-
-                                <div className="plan-card__cost-display-yearly-cost display--flex">
-                                  <div className="plan-card-cost-display--info-needed">
-                                    {/* fill--gray-lightest */}
+                                <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide-maybe">
+                                  <div className="plan-card__cost-display">
                                     <div
                                       className="font-size--small font-weight--bold
-                              display--flex align-items--center"
+                              display--flex aligh-items--center
+                              "
                                     >
-                                      Total Benefit Limit
+                                      In-patient Limit
                                       <button
                                         type="button"
-                                        aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
+                                        aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
                                         className="tooltip-trigger padding--0"
                                       >
                                         <span className="tooltip-icon-container">
                                           <FontAwesomeIcon
-                                            className=""
+                                            className="mt---2"
                                             icon={faInfoCircle}
                                           />
                                         </span>
                                       </button>
                                     </div>
-                                    <div className="font-size--h2">
-                                      {plan.out_patient_limit == "N/A" ||
-                                      plan.in_patient_limit == "N/A"
-                                        ? "N/A"
-                                        : `₦${this.numberwithCommas(
-                                            this.handleTotalBenefitLimit(
-                                              plan.out_patient_limit,
-                                              plan.in_patient_limit
-                                            )
-                                          )}`}
-                                      {/* ₦2,000 */}
+                                    <div className="display--flex flex-wrap--wrap plan-flex-wrap">
+                                      <div className="cost-display__amount">
+                                        <div className="font-size--h2">
+                                          {plan.in_patient_limit == "N/A"
+                                            ? "N/A"
+                                            : `₦${this.numberwithCommas(
+                                                this.stripNonNumeric(
+                                                  plan.in_patient_limit
+                                                )
+                                              )}`}
+                                        </div>
+                                        <div className="font-size--small">
+                                          Individual total
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="plan-card__cost-display">
+                                    <div
+                                      className="font-size--small font-weight--bold
+                              display--flex aligh-items--center"
+                                    >
+                                      Out-patient Limiit
+                                      <button
+                                        type="button"
+                                        aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
+                                        className="tooltip-trigger padding--0"
+                                      >
+                                        <span className="tooltip-icon-container">
+                                          <FontAwesomeIcon
+                                            className="mt---2"
+                                            icon={faInfoCircle}
+                                          />
+                                        </span>
+                                      </button>
+                                    </div>
+
+                                    <div className="display--flex flex-wrap--wrap plan-flex-wrap">
+                                      <div className="cost-display__amount">
+                                        <div className="font-size--h2">
+                                          {plan.out_patient_limit == "N/A"
+                                            ? "N/A"
+                                            : `₦${this.numberwithCommas(
+                                                this.stripNonNumeric(
+                                                  plan.out_patient_limit
+                                                )
+                                              )}`}
+                                        </div>
+                                        <div className="font-size--small">
+                                          Individual total
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="plan-card__cost-display-yearly-cost display--flex">
+                                    <div className="plan-card-cost-display--info-needed">
+                                      {/* fill--gray-lightest */}
+                                      <div
+                                        className="font-size--small font-weight--bold
+                              display--flex align-items--center"
+                                      >
+                                        Total Benefit Limit
+                                        <button
+                                          type="button"
+                                          aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
+                                          className="tooltip-trigger padding--0"
+                                        >
+                                          <span className="tooltip-icon-container">
+                                            <FontAwesomeIcon
+                                              className=""
+                                              icon={faInfoCircle}
+                                            />
+                                          </span>
+                                        </button>
+                                      </div>
+                                      <div className="font-size--h2">
+                                        {plan.out_patient_limit == "N/A" ||
+                                        plan.in_patient_limit == "N/A"
+                                          ? "N/A"
+                                          : `₦${this.numberwithCommas(
+                                              this.handleTotalBenefitLimit(
+                                                plan.out_patient_limit,
+                                                plan.in_patient_limit
+                                              )
+                                            )}`}
+                                        {/* ₦2,000 */}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                              {/* 
+                                {/* 
                               <div
                                 className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap
                           display--none sm-display--block
@@ -4827,246 +4828,252 @@ class NewContent extends React.Component<homeProps, homeState> {
                                 </div>
                               </div>
     */}
-                              <div className="plan-card__detail-section border--0 c-clearfix display--flex flex-wrap--wrap">
-                                <div className="plan-card__plan-features-container">
-                                  <div>
-                                    <div className="font-size--small font-weight--bold">
-                                      Plan features
-                                    </div>
-                                    <ul className="c-status-list c-list--bare">
-                                      <li className="c-status-list__item font-size--small">
-                                        <img
-                                          src={
-                                            plan.intermediate_surgeries !==
-                                              "No" &&
-                                            plan.intermediate_surgeries !== ""
-                                              ? check
-                                              : uncheck
-                                          }
-                                          className="c-status-list__item__icon"
-                                        />
-                                        <span className="text-transform--capitalize">
-                                          Intermediate Surgeries
-                                        </span>
-                                      </li>
-                                      <li className="c-status-list__item font-size--small">
-                                        <img
-                                          src={
-                                            plan.major_surgeries !== "No" &&
-                                            plan.major_surgeries !== ""
-                                              ? check
-                                              : uncheck
-                                          }
-                                          className="c-status-list__item__icon"
-                                        />
-                                        <span className="text-transform--capitalize">
-                                          Major Surgeries
-                                        </span>
-                                      </li>
-                                      <li className="c-status-list__item font-size--small">
-                                        <img
-                                          src={
-                                            plan.hospital_admissions !== "No" &&
-                                            plan.hospital_admissions !== ""
-                                              ? check
-                                              : uncheck
-                                          }
-                                          className="c-status-list__item__icon"
-                                        />
-                                        <span className="text-transform--capitalize">
-                                          Hospital Admissions
-                                        </span>
-                                      </li>
+                                <div className="plan-card__detail-section border--0 c-clearfix display--flex flex-wrap--wrap">
+                                  <div className="plan-card__plan-features-container">
+                                    <div>
+                                      <div className="font-size--small font-weight--bold">
+                                        Plan features
+                                      </div>
+                                      <ul className="c-status-list c-list--bare">
+                                        <li className="c-status-list__item font-size--small">
+                                          <img
+                                            src={
+                                              plan.intermediate_surgeries !==
+                                                "No" &&
+                                              plan.intermediate_surgeries !== ""
+                                                ? check
+                                                : uncheck
+                                            }
+                                            className="c-status-list__item__icon"
+                                          />
+                                          <span className="text-transform--capitalize">
+                                            Intermediate Surgeries
+                                          </span>
+                                        </li>
+                                        <li className="c-status-list__item font-size--small">
+                                          <img
+                                            src={
+                                              plan.major_surgeries !== "No" &&
+                                              plan.major_surgeries !== ""
+                                                ? check
+                                                : uncheck
+                                            }
+                                            className="c-status-list__item__icon"
+                                          />
+                                          <span className="text-transform--capitalize">
+                                            Major Surgeries
+                                          </span>
+                                        </li>
+                                        <li className="c-status-list__item font-size--small">
+                                          <img
+                                            src={
+                                              plan.hospital_admissions !==
+                                                "No" &&
+                                              plan.hospital_admissions !== ""
+                                                ? check
+                                                : uncheck
+                                            }
+                                            className="c-status-list__item__icon"
+                                          />
+                                          <span className="text-transform--capitalize">
+                                            Hospital Admissions
+                                          </span>
+                                        </li>
 
-                                      <li className="c-status-list__item font-size--small">
-                                        <img
-                                          src={
-                                            plan.optical_care !== "No" &&
-                                            plan.optical_care !== ""
-                                              ? check
-                                              : uncheck
-                                          }
-                                          className="c-status-list__item__icon"
-                                        />
-                                        <span className="text-transform--capitalize">
-                                          Optical Care
-                                        </span>
-                                      </li>
-                                      <li className="c-status-list__item font-size--small">
-                                        <img
-                                          src={
-                                            plan.lab_investigations !== "No" &&
-                                            plan.lab_investigations !== ""
-                                              ? check
-                                              : uncheck
-                                          }
-                                          className="c-status-list__item__icon"
-                                        />
-                                        <span className="text-transform--capitalize">
-                                          Lab Investigations
-                                        </span>
-                                      </li>
-                                      <li className="c-status-list__item font-size--small">
-                                        <img
-                                          src={
-                                            plan.accidents_emergencies !==
-                                              "No" &&
-                                            plan.accidents_emergencies !== ""
-                                              ? check
-                                              : uncheck
-                                          }
-                                          className="c-status-list__item__icon"
-                                        />
-                                        <span className="text-transform--capitalize">
-                                          Accidents & Emergencies
-                                        </span>
-                                      </li>
-                                      <li className="c-status-list__item font-size--small">
-                                        <img
-                                          src={
-                                            plan.cancer_care !== "No" &&
-                                            plan.cancer_care !== ""
-                                              ? check
-                                              : uncheck
-                                          }
-                                          className="c-status-list__item__icon"
-                                        />
-                                        <span className="text-transform--capitalize">
-                                          Cancer Care
-                                        </span>
-                                      </li>
-                                      <li className="c-status-list__item font-size--small">
-                                        <img
-                                          src={
-                                            plan.covid_19_treatment !== "No" &&
-                                            plan.covid_19_treatment !== ""
-                                              ? check
-                                              : uncheck
-                                          }
-                                          className="c-status-list__item__icon"
-                                        />
-                                        <span className="text-transform--capitalize">
-                                          Covid 19 Treatment
-                                        </span>
-                                      </li>
-                                    </ul>
+                                        <li className="c-status-list__item font-size--small">
+                                          <img
+                                            src={
+                                              plan.optical_care !== "No" &&
+                                              plan.optical_care !== ""
+                                                ? check
+                                                : uncheck
+                                            }
+                                            className="c-status-list__item__icon"
+                                          />
+                                          <span className="text-transform--capitalize">
+                                            Optical Care
+                                          </span>
+                                        </li>
+                                        <li className="c-status-list__item font-size--small">
+                                          <img
+                                            src={
+                                              plan.lab_investigations !==
+                                                "No" &&
+                                              plan.lab_investigations !== ""
+                                                ? check
+                                                : uncheck
+                                            }
+                                            className="c-status-list__item__icon"
+                                          />
+                                          <span className="text-transform--capitalize">
+                                            Lab Investigations
+                                          </span>
+                                        </li>
+                                        <li className="c-status-list__item font-size--small">
+                                          <img
+                                            src={
+                                              plan.accidents_emergencies !==
+                                                "No" &&
+                                              plan.accidents_emergencies !== ""
+                                                ? check
+                                                : uncheck
+                                            }
+                                            className="c-status-list__item__icon"
+                                          />
+                                          <span className="text-transform--capitalize">
+                                            Accidents & Emergencies
+                                          </span>
+                                        </li>
+                                        <li className="c-status-list__item font-size--small">
+                                          <img
+                                            src={
+                                              plan.cancer_care !== "No" &&
+                                              plan.cancer_care !== ""
+                                                ? check
+                                                : uncheck
+                                            }
+                                            className="c-status-list__item__icon"
+                                          />
+                                          <span className="text-transform--capitalize">
+                                            Cancer Care
+                                          </span>
+                                        </li>
+                                        <li className="c-status-list__item font-size--small">
+                                          <img
+                                            src={
+                                              plan.covid_19_treatment !==
+                                                "No" &&
+                                              plan.covid_19_treatment !== ""
+                                                ? check
+                                                : uncheck
+                                            }
+                                            className="c-status-list__item__icon"
+                                          />
+                                          <span className="text-transform--capitalize">
+                                            Covid 19 Treatment
+                                          </span>
+                                        </li>
+                                      </ul>
+                                    </div>
                                   </div>
-                                </div>
-                                <div className="prov-cat">
-                                  <div className="margin-right--1 prov-num">
-                                    <div
-                                      className={`${
-                                        window.screen.width > 500
-                                          ? "plan-card-cost-display--info-needed"
-                                          : "col--12  margin-y--1"
-                                      }`}
-                                    >
-                                      {/* fill--gray-lightest */}
-                                      <div className="justify-content--center display--flex">
+                                  <div className="prov-cat">
+                                    <div className="margin-right--1 prov-num">
+                                      <div
+                                        className={`${
+                                          window.screen.width > 500
+                                            ? "plan-card-cost-display--info-needed"
+                                            : "col--12  margin-y--1"
+                                        }`}
+                                      >
+                                        {/* fill--gray-lightest */}
+                                        <div className="justify-content--center display--flex">
+                                          <div
+                                            className="font-size--small font-weight--bold
+                              display--flex aligh-items--center
+                              "
+                                          >
+                                            Medical providers
+                                          </div>
+                                        </div>
+                                        <div className="font-size--h2">
+                                          <a
+                                            onClick={() =>
+                                              this.goToDetails(plan.service_id)
+                                            }
+                                            className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
+                                            //href={`/details/id/${plan.service_id}/#providers`}
+                                            href="#"
+                                          >
+                                            {this.props.responses.providers
+                                              .length > 0
+                                              ? `View All ${
+                                                  plan.hmo_id.providers
+                                                    ? plan.hmo_id.providers
+                                                        .length
+                                                    : ""
+                                                } Providers`
+                                              : `View Providers (${
+                                                  plan.hmo_id.providers
+                                                    ? plan.hmo_id.providers
+                                                        .length
+                                                    : ""
+                                                })`}
+                                          </a>
+
+                                          {/* Add your medical providers and we'll show
+                                      you which plans cover them */}
+                                        </div>
+                                        {this.props.responses.providers.length >
+                                          0 && (
+                                          <ul className="c-status-list c-list--bare">
+                                            {
+                                              // this.props.responses.providers
+                                              //   .filter((prov) => {
+                                              //     let namesArr = plan.hmo_id.providers.map(
+                                              //       (prvdr) => prvdr.provider_name
+                                              //     );
+
+                                              //     return namesArr.includes(
+                                              //       prov.provider_name
+                                              //     );
+                                              //   });
+
+                                              this.props.responses.providers.map(
+                                                (provider) => {
+                                                  providersArr = plan.hmo_id.providers.map(
+                                                    (prvdr) =>
+                                                      prvdr.provider_name
+                                                  );
+                                                  console.log(
+                                                    "provider.provider_name",
+                                                    provider.provider_name
+                                                  );
+                                                  console.log(
+                                                    "providersArr",
+                                                    providersArr
+                                                  );
+
+                                                  return (
+                                                    <li className="c-status-list__item font-size--small">
+                                                      <img
+                                                        src={
+                                                          providersArr.includes(
+                                                            provider.provider_name
+                                                          )
+                                                            ? check
+                                                            : uncheck
+                                                        }
+                                                        className="c-status-list__item__icon"
+                                                      />
+                                                      <span className="text-transform--capitalize">
+                                                        {provider.provider_name}
+                                                      </span>
+                                                    </li>
+                                                  );
+                                                }
+                                              )
+                                            }
+                                          </ul>
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    <div className="prov-category">
+                                      <div
+                                        className={`${
+                                          window.screen.width > 500
+                                            ? "plan-card-cost-display--info-needed"
+                                            : "col--12"
+                                        }`}
+                                      >
+                                        {/* fill--gray-lightest */}
                                         <div
                                           className="font-size--small font-weight--bold
                               display--flex aligh-items--center
                               "
                                         >
-                                          Medical providers
-                                        </div>
-                                      </div>
-                                      <div className="font-size--h2">
-                                        <a
-                                          onClick={() =>
-                                            this.goToDetails(plan.service_id)
-                                          }
-                                          className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                                          //href={`/details/id/${plan.service_id}/#providers`}
-                                          href="#"
-                                        >
-                                          {this.props.responses.providers
-                                            .length > 0
-                                            ? `View All ${
-                                                plan.hmo_id.providers
-                                                  ? plan.hmo_id.providers.length
-                                                  : ""
-                                              } Providers`
-                                            : `View Providers (${
-                                                plan.hmo_id.providers
-                                                  ? plan.hmo_id.providers.length
-                                                  : ""
-                                              })`}
-                                        </a>
-
-                                        {/* Add your medical providers and we'll show
-                                      you which plans cover them */}
-                                      </div>
-                                      {this.props.responses.providers.length >
-                                        0 && (
-                                        <ul className="c-status-list c-list--bare">
-                                          {
-                                            // this.props.responses.providers
-                                            //   .filter((prov) => {
-                                            //     let namesArr = plan.hmo_id.providers.map(
-                                            //       (prvdr) => prvdr.provider_name
-                                            //     );
-
-                                            //     return namesArr.includes(
-                                            //       prov.provider_name
-                                            //     );
-                                            //   });
-
-                                            this.props.responses.providers.map(
-                                              (provider) => {
-                                                providersArr = plan.hmo_id.providers.map(
-                                                  (prvdr) => prvdr.provider_name
-                                                );
-                                                console.log(
-                                                  "provider.provider_name",
-                                                  provider.provider_name
-                                                );
-                                                console.log(
-                                                  "providersArr",
-                                                  providersArr
-                                                );
-
-                                                return (
-                                                  <li className="c-status-list__item font-size--small">
-                                                    <img
-                                                      src={
-                                                        providersArr.includes(
-                                                          provider.provider_name
-                                                        )
-                                                          ? check
-                                                          : uncheck
-                                                      }
-                                                      className="c-status-list__item__icon"
-                                                    />
-                                                    <span className="text-transform--capitalize">
-                                                      {provider.provider_name}
-                                                    </span>
-                                                  </li>
-                                                );
-                                              }
-                                            )
-                                          }
-                                        </ul>
-                                      )}
-                                    </div>
-                                  </div>
-
-                                  <div className="prov-category">
-                                    <div
-                                      className={`${
-                                        window.screen.width > 500
-                                          ? "plan-card-cost-display--info-needed"
-                                          : "col--12"
-                                      }`}
-                                    >
-                                      {/* fill--gray-lightest */}
-                                      <div
-                                        className="font-size--small font-weight--bold
-                              display--flex aligh-items--center
-                              "
-                                      >
-                                        Hospital Category
-                                        {/* <button
+                                          Hospital Category
+                                          {/* <button
                                         type="button"
                                         aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
                                         className="tooltip-trigger padding--0"
@@ -5078,80 +5085,92 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           />
                                         </span>
                                       </button> */}
-                                      </div>
+                                        </div>
 
-                                      <div className="font-size--h2">
-                                        {plan.hospital_category[0].name
-                                          ? plan.hospital_category[0].name
-                                          : "N/A"}
-                                        {/* Add your prescription drugs and we'll show
+                                        <div className="font-size--h2">
+                                          {plan.hospital_category[0].name
+                                            ? plan.hospital_category[0].name
+                                            : "N/A"}
+                                          {/* Add your prescription drugs and we'll show
                                       you which plans cover them */}
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                              <div className="lg-display--none margin-top--2">
-                                <button
-                                  className={`c-button c-check-button ${
-                                    plans_to_compare &&
-                                    // plans_to_compare.includes(i)
-                                    plans_to_compare.includes(plan.service_id)
-                                      ? "c-check-button--checked c-button--secondary"
-                                      : ""
-                                  } `}
-                                  onClick={() => {
-                                    // this.handleCheckedPlanToCompare(i);
-                                    this.handleCheckedPlanToCompare(
-                                      plan.service_id
-                                    );
-                                  }}
-                                >
-                                  <span
-                                    className="c-check-button__checkbox"
-                                    aria-hidden="true"
+                                <div className="lg-display--none margin-top--2">
+                                  <button
+                                    className={`c-button c-check-button ${
+                                      plans_to_compare &&
+                                      // plans_to_compare.includes(i)
+                                      plans_to_compare.includes(plan.service_id)
+                                        ? "c-check-button--checked c-button--secondary"
+                                        : ""
+                                    } `}
+                                    onClick={() => {
+                                      // this.handleCheckedPlanToCompare(i);
+                                      this.handleCheckedPlanToCompare(
+                                        plan.service_id
+                                      );
+                                    }}
                                   >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="16"
-                                      height="16"
-                                      viewBox="0 0 216 146"
-                                      className="check-plan display--none"
+                                    <span
+                                      className="c-check-button__checkbox"
+                                      aria-hidden="true"
                                     >
-                                      <path d="M168.86 37.966l-11.08-11.08c-1.52-1.52-3.367-2.28-5.54-2.28-2.172 0-4.02.76-5.54 2.28L93.254 80.414 69.3 56.38c-1.52-1.522-3.367-2.282-5.54-2.282-2.172 0-4.02.76-5.54 2.28L47.14 67.46c-1.52 1.522-2.28 3.37-2.28 5.542 0 2.172.76 4.02 2.28 5.54l29.493 29.493 11.08 11.08c1.52 1.52 3.368 2.28 5.54 2.28 2.173 0 4.02-.76 5.54-2.28l11.082-11.08L168.86 49.05c1.52-1.52 2.283-3.37 2.283-5.54 0-2.174-.76-4.02-2.28-5.54z"></path>
-                                    </svg>
-                                  </span>
-                                  Compare
-                                </button>
-                                <div className="c-plan-card__mobile-action-buttons">
-                                  <a
-                                    className="c-button c-button--secondary c-plan-card__action-button"
-                                    href="#"
-                                    target="_self"
-                                    role="button"
-                                  >
-                                    Plan Details
-                                  </a>
-                                  <a
-                                    className="c-button c-button--primary c-plan-card__action-button"
-                                    href="#"
-                                    target="_self"
-                                    role="button"
-                                  >
-                                    Like This Plan
-                                  </a>
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 216 146"
+                                        className="check-plan display--none"
+                                      >
+                                        <path d="M168.86 37.966l-11.08-11.08c-1.52-1.52-3.367-2.28-5.54-2.28-2.172 0-4.02.76-5.54 2.28L93.254 80.414 69.3 56.38c-1.52-1.522-3.367-2.282-5.54-2.282-2.172 0-4.02.76-5.54 2.28L47.14 67.46c-1.52 1.522-2.28 3.37-2.28 5.542 0 2.172.76 4.02 2.28 5.54l29.493 29.493 11.08 11.08c1.52 1.52 3.368 2.28 5.54 2.28 2.173 0 4.02-.76 5.54-2.28l11.082-11.08L168.86 49.05c1.52-1.52 2.283-3.37 2.283-5.54 0-2.174-.76-4.02-2.28-5.54z"></path>
+                                      </svg>
+                                    </span>
+                                    Compare
+                                  </button>
+                                  <div className="c-plan-card__mobile-action-buttons">
+                                    <a
+                                      className="c-button c-button--secondary c-plan-card__action-button"
+                                      href="#"
+                                      target="_self"
+                                      role="button"
+                                    >
+                                      Plan Details
+                                    </a>
+                                    <a
+                                      className="c-button c-button--primary c-plan-card__action-button"
+                                      href="#"
+                                      target="_self"
+                                      role="button"
+                                    >
+                                      Like This Plan
+                                    </a>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </article>
-                          {/* );
+                            </article>
+
+                            {/* );
                          })}{" "} */}
-                        </section>{" "}
-                      </li>
-                      //)
-                    );
-                  })}
+                          </section>{" "}
+                        </li>
+                      )
+                    //)
+                  )}
               </ul>
+              <Pagination
+                total={data.length}
+                showTotal={(total, range) =>
+                  `${range[0]} - ${range[1]} of ${total} items`
+                }
+                // defaultPageSize={pageSize}
+                //defaultCurrent={1}
+                pageSize={pageSize}
+                current={current}
+                onChange={this.handlePageChange}
+              />
             </div>
           </div>
         ) : (
