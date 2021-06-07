@@ -68,6 +68,7 @@ import {
   resetType,
   resetRange,
   resetSelectedProviders,
+  toggleDataCaptureModal,
 } from "../../actions/userInputActions";
 
 import {
@@ -325,4 +326,5 @@ export default connect(mapProps, {
   getPlan,
   getSimilarPlans,
   resetSelectedProviders,
+  toggleDataCaptureModal,
 })(Home);

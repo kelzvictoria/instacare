@@ -696,11 +696,11 @@ button.close:after {
   #secondPage {
     padding-top: 0.5rem;
   }
-
+  /* 
   .input-phone,
   .desktop {
     display: none;
-  }
+  } */
 
   ._1hzhf {
     display: none;
@@ -6422,4 +6422,28 @@ div#desktop-on-page-load-modal.custom-dialog {
 
 .quotes_main_container {
   background: #fff !important;
+}
+
+.dc-modal,
+.styles_modal__gNwvD.styles_modalCenter__L9F2w {
+  border-radius: 0.3rem;
+}
+
+.dc-modal-title {
+  font-size: 24px;
+}
+.justify--content-between {
+  justify-content: space-between !important;
+}
+
+@media (max-width: 600px) {
+  .dc-modal-title {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 768px) {
+  .md-display--flex {
+    display: flex !important;
+  }
 }

@@ -116,7 +116,7 @@ class Details extends Component<DetailsProps> {
   details: any;
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillMount() {
-    predetails = localStorage.getItem("details");
+    predetails = localStorage.getItem("services");
     this.details = JSON.parse(predetails);
     this.services = JSON.parse(predetails).services;
     this.props.dispatch({
@@ -207,7 +207,7 @@ class Details extends Component<DetailsProps> {
   dataSourceA: any = [];
   services: any;
 
-  precovers: any = localStorage.getItem("details");
+  precovers: any = localStorage.getItem("services");
   covers = JSON.parse(this.precovers).services[0];
   AllServices = [
     this.covers.accidentsOrEmergenciesCover.limit,
@@ -616,8 +616,10 @@ class Details extends Component<DetailsProps> {
 }
 const mapProps = (state: any) => {
   return {
-    ...state.details,
-    email: state.quiz.quiz.responses.email,
+    // ...state.details,
+    // email: state.quiz.quiz.responses.email,
+    responses: state.quiz.responses,
+    services: state.fetchData.services,
   };
 };
 export default connect(mapProps)(Details);

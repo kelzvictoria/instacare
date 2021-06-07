@@ -4,13 +4,11 @@ import {
     GET_HMOS,
     GET_PROVIDERS,
     GET_RECOMMENDED_PLANS,
-    GET_CLICKED_PLAN,
     IS_FETCHING_PLANS,
     IS_FETCHING_HMOS,
     IS_FETCHING_SERVICES,
     IS_FETCHING_PROVIDERS,
     IS_FETCHING_RECOMMENDED_PLANS,
-    GET_NUM_OF_PEOPLE,
     IS_FETCHING_PLANS_BY_HMO,
     GET_PLANS_BY_HMO,
     GET_CHEAPEST_PLAN,
@@ -20,10 +18,8 @@ import {
 
     IS_FILTERING_BY_BUDGET,
     IS_FILTERING_BY_PLAN_TYPE,
-    IS_FILTERING_BY_PLAN_RANGE,
     IS_FILTERING_BY_PLAN_ID,
     FILTER_BY_BUDGET,
-    FILTER_BY_HMO,
     FILTER_BY_PLAN_ID,
     FILTER_BY_PLAN_TYPE,
     GET_PLAN,
@@ -31,10 +27,9 @@ import {
     GET_HMO
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
-import { returnErrors } from "../actions/errorActions";
+import { returnErrors } from "../actions/errorActions"
 
 import { stripNonNumeric, CAN_LOG } from "../utils/homeUtils"
-import { get } from "jquery";
 
 const API_URL = "https://instacareconnect.pmglobaltechnology.com";
 
@@ -232,6 +227,7 @@ export const getServices = () => async (dispatch, getState) => {
         .then((res) => {
             if (res.data.length > 0) {
                 services = res.data.map(obj => obj.data);
+                services = services.filter(service => stripNonNumeric(service.price) > 100)
                 for (let i = 0; i < services.length; i++) {
                     let hmoID = services[i]["hmo_id"];
                     let planID = services[i]["plan_id"];

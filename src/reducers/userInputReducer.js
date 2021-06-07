@@ -78,7 +78,8 @@ import {
     SET_IS_LOADING_OFF,
 
     ADD_COMPARE_URL_PARAM,
-    REMOVE_COMPARE_URL_PARAM
+    REMOVE_COMPARE_URL_PARAM,
+    TOGGLE_DATA_CAPTURE_MODAL
 } from "../actions/types";
 
 const initialState = {
@@ -149,11 +150,18 @@ const initialState = {
         //    (provider) => provider.provider_name
         // ),
         [],
-    is_loading: false
+    is_loading: false,
+    is_data_capture_modal_open: false
 }
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case TOGGLE_DATA_CAPTURE_MODAL:
+            return {
+                ...state,
+                is_data_capture_modal_open: action.payload
+            }
+
         case UPDATE_PRICE_RANGE:
             console.log("action.payload", action.payload);
             return {

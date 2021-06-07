@@ -48,6 +48,7 @@ import "./new-design.css";
 import searching from "../../imgs/searching.svg";
 
 import { formatAsCurrency } from "../../utils";
+import DataCaptureModal from "../payment/DataCapture";
 
 const { Step } = Steps;
 
@@ -266,32 +267,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             </div>
           </Col>
         </div>
-
-        <div className="banner-bottom home-banner-bottom">
-          <div className="row col-md-12">
-            <div className="col-md-4 card mr-3">
-              <FontAwesomeIcon className="banner-icon" icon={faShieldAlt} />
-              <div className="card-text">
-                <h5>Compare</h5>
-                <p>HMO Plans</p>
-              </div>
-            </div>
-            <div className="col-md-4 card mr-3">
-              <span className="naira banner-icon">₦</span>
-              <div className="card-text">
-                <h5>Purchase</h5>
-                <p>HMO Plans</p>
-              </div>
-            </div>
-            <div className="col-md-4 card">
-              <FontAwesomeIcon className="far banner-icon" icon={faSmile} />
-              <div className="card-text">
-                <h5>Insure</h5>
-                <p>You & your family</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DataCaptureModal />
       </Col>
     );
   }
@@ -1966,17 +1942,16 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.history.push({ pathname: `/details/id/${serviceID}` });
   }
 
-  getClickedPlan = (index) => {
+  getClickedPlan = async (index, type) => {
     let propsData = this.props.plansByHMO[index];
     let data = this.props.planServices[index];
     console.log("data", data);
 
     let serviceID = data.service_id;
-    this.goToDetails(serviceID);
 
-    this.props.getPlan(data);
+    await this.props.getPlan(data);
     this.props.getSimilarPlans(data);
-
+    type == "view" && this.goToDetails(serviceID);
     // this.props.plansByHMO.length > 0 && this.props.getClickedPlan(propsData);
 
     // this.props.plansByHMO.length == 0 && this.props.getClickedPlan(data);
@@ -2572,19 +2547,19 @@ class NewContent extends React.Component<homeProps, homeState> {
     );
   }
 
-  mobileOnLoadModal() {
-    return (
-      <Modal
-        id="mobile-on-page-load-modal"
-        dialogClassName="custom-dialog"
-        className="mobile-modal center"
-        show={true}
-        onHide={this.mobileToggleModal}
-      >
-        <Modal.Body>{this.renderMobileQuizForm()}</Modal.Body>
-      </Modal>
-    );
-  }
+  // mobileOnLoadModal() {
+  //   return (
+  //     <Modal
+  //       id="mobile-on-page-load-modal"
+  //       dialogClassName="custom-dialog"
+  //       className="mobile-modal center"
+  //       show={true}
+  //       onHide={this.mobileToggleModal}
+  //     >
+  //       <Modal.Body>{this.renderMobileQuizForm()}</Modal.Body>
+  //     </Modal>
+  //   );
+  // }
 
   hideDesktopHomeFrm() {
     this.setState({
@@ -3347,10 +3322,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <HMOInfoSkeleton />
                 </Col>
                 <Col md={10} className="quiz">
-                  <div className="home-frm form-div">
+                  <div className="home-frm form-div  test2">
                     {this.renderDesktopQuizForm()}
 
-                    {this.renderMobileQuizForm()}
+                    {/* {this.renderMobileQuizForm()} */}
                   </div>
                 </Col>
               </Row>
@@ -3365,13 +3340,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <div
                     className={
                       this.state.show_desktop_home_frm
-                        ? "home-frm form-div"
+                        ? "home-frm form-div test3"
                         : "hide-desktop-home-frm"
                     }
                   >
                     {/* call desktop form 3 */ this.renderDesktopQuizForm()}
 
-                    {/* call mobile form 3*/ this.renderMobileQuizForm()}
+                    {/* {this.renderMobileQuizForm()} */}
                     {/* {call the desktop modal } */ this.desktopOnLoadModal()}
                     {/* call desktop quiz modal 3  this.renderDesktopQuizModal()*/}
                     {/* call mobile quiz modal 3 this.renderMobileQuizModal()*/}
@@ -4493,7 +4468,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         href="#"
                                         onClick={() => {
                                           //this.goToDetails();
-                                          this.getClickedPlan(i);
+                                          this.getClickedPlan(i, "view");
                                         }}
                                       >
                                         {/* HyBasic */}
@@ -4640,10 +4615,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     <div className="display--none lg-display--block c-plan-card__desktop-action-buttons margin-top--2">
                                       <a
                                         className="c-button c-button--secondary c-plan-card__action-button plan-c-card_action-button"
-                                        // href=""
+                                        href="#"
                                         onClick={() => {
                                           //this.goToDetails();
-                                          this.getClickedPlan(i);
+                                          this.getClickedPlan(i, "view");
                                         }}
                                         role="button"
                                         target="_self"
@@ -4653,9 +4628,15 @@ class NewContent extends React.Component<homeProps, homeState> {
 
                                       <a
                                         className="c-button c-button--primary c-plan-card__action-button plan-c-card_action-button"
-                                        href=""
+                                        href="#"
                                         role="button"
                                         target="_self"
+                                        onClick={() => {
+                                          this.getClickedPlan(i, "buy");
+                                          this.props.toggleDataCaptureModal(
+                                            true
+                                          );
+                                        }}
                                       >
                                         Like This Plan
                                       </a>

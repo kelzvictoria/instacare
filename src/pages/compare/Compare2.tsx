@@ -44,12 +44,16 @@ import {
   getPlans,
   getServices,
   getCheapestPlan,
+  getPlan,
 } from "../../actions/fetchDataActions";
 
 import {
   addCompareURLParam,
   removeCompareURLParam,
+  toggleDataCaptureModal,
 } from "../../actions/userInputActions";
+
+import DataCaptureModal from "../../components/payment/DataCapture";
 
 interface ComparisonProps {
   [x: string]: any;
@@ -333,6 +337,11 @@ class ComparePlans extends Component<ComparisonProps> {
     this.props.getSimilarPlans(firstPlan);
   };
 
+  getClickedPlan = async (planID, type) => {
+    let data = this.props.plans.filter((plan) => plan.service_id === planID)[0];
+    await this.props.getPlan(data);
+  };
+
   render() {
     let plans_to_compare: number[] = this.state.plans_to_compare;
     let plans = this.props.plans;
@@ -578,6 +587,19 @@ class ComparePlans extends Component<ComparisonProps> {
                       <button
                         className="c-button c-button--primary c-button--small margin-top--2 qa-mobile-visible-plan"
                         type="button"
+                        onClick={() => {
+                          this.getClickedPlan(
+                            this.state.current_page == 1
+                              ? first.service_id
+                              : this.state.current_page == 2
+                              ? second.service_id
+                              : this.state.current_page == 3
+                              ? third.service_id
+                              : "",
+                            "buy"
+                          );
+                          this.props.toggleDataCaptureModal(true);
+                        }}
                       >
                         Like This Plan? Take the Next Step
                       </button>
@@ -2633,6 +2655,10 @@ class ComparePlans extends Component<ComparisonProps> {
                               <button
                                 className="c-button c-button--primary c-button--small qa-details"
                                 type="button"
+                                onClick={() => {
+                                  this.getClickedPlan(first.service_id, "buy");
+                                  this.props.toggleDataCaptureModal(true);
+                                }}
                               >
                                 Like This Plan
                               </button>
@@ -2683,6 +2709,13 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <button
                                   className="c-button c-button--primary c-button--small qa-details"
                                   type="button"
+                                  onClick={() => {
+                                    this.getClickedPlan(
+                                      second.service_id,
+                                      "buy"
+                                    );
+                                    this.props.toggleDataCaptureModal(true);
+                                  }}
                                 >
                                   Like This Plan
                                 </button>
@@ -2733,6 +2766,13 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <button
                                   className="c-button c-button--primary c-button--small qa-details"
                                   type="button"
+                                  onClick={() => {
+                                    this.getClickedPlan(
+                                      third.service_id,
+                                      "buy"
+                                    );
+                                    this.props.toggleDataCaptureModal(true);
+                                  }}
                                 >
                                   Like This Plan
                                 </button>
@@ -6107,6 +6147,7 @@ class ComparePlans extends Component<ComparisonProps> {
             </section>
           </div>
         )}
+        <DataCaptureModal />
       </div>
     );
   }
@@ -6115,6 +6156,7 @@ class ComparePlans extends Component<ComparisonProps> {
 const mapProps = (state: any) => {
   return {
     plans: state.fetchData.services,
+    plan: state.fetchData.plan,
     checked_plans_list: state.compare.checked_plans_list,
     compare_plans_desktop_indexes: state.compare.compare_plans_desktop_indexes,
     similar_plans: state.fetchData.similar_plans,
@@ -6134,4 +6176,6 @@ export default connect(mapProps, {
   getCheapestPlan,
   addCompareURLParam,
   removeCompareURLParam,
+  getPlan,
+  toggleDataCaptureModal,
 })(ComparePlans);

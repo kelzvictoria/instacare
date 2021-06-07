@@ -31,10 +31,14 @@ import {
   getPlans,
   getServices,
   getCheapestPlan,
+  getPlan,
 } from "../../actions/fetchDataActions";
+
+import { toggleDataCaptureModal } from "../../actions/userInputActions";
 
 import { state } from "../../components/home/state";
 import { stripNonNumeric } from "../../utils/homeUtils";
+import DataCaptureModal from "../../components/payment/DataCapture";
 
 interface DetailsProps {
   email: string;
@@ -67,6 +71,17 @@ class PlanDetails extends Component<DetailsProps> {
 
   toggleCollapsible = (prop: string) => {
     this.setState({
+      collapse_accidents_n_emerg: true,
+      collapse_immunizations: true,
+      collapse_admissions: true,
+      collapse_maternity: true,
+      collapse_chronic_conds: true,
+      collapse_prescriptions: true,
+      collapse_investigations: true,
+      collapse_consultations: true,
+      collapse_ent: true,
+      collapse_others: true,
+      collapse_providers: true,
       [prop]: !this.state[prop],
     });
   };
@@ -113,6 +128,11 @@ class PlanDetails extends Component<DetailsProps> {
       paramsArr.push(p);
     }
     this.params = paramsArr;
+  };
+
+  getClickedPlan = async (planID, type) => {
+    let data = this.props.plans.filter((plan) => plan.service_id === planID)[0];
+    await this.props.getPlan(data);
   };
 
   async UNSAFE_componentWillMount() {
@@ -259,52 +279,67 @@ class PlanDetails extends Component<DetailsProps> {
               <div className="fill--white">
                 <div className="container">
                   <div className="margin-y--1">
-                    <header className="md-display--flex justify--content-between align-items--center border-bottom--1 padding-bottom--2 c-plan-title">
-                      <div className="c-plan-title__issuer font-weight--bold">
-                        {plan.hmo_id.name}
-                      </div>
-                      <h2 className="c-plan-title__name font-weight--normal margin-y--1 font-size--h1">
-                        {/* <a href={`details/${plan.service_id}`} target="_self"> */}
-                        {plan.name}
-                        {/* </a> */}
-                      </h2>
+                    <header className="md-display--flex justify--content-between align-items--center border-bottom--1 padding-bottom--2 ">
+                      <header className="c-plan-title">
+                        <div className="c-plan-title__issuer font-weight--bold">
+                          {plan.hmo_id.name}
+                        </div>
+                        <h2 className="c-plan-title__name font-weight--normal margin-y--1 font-size--h1">
+                          {/* <a href={`details/${plan.service_id}`} target="_self"> */}
+                          {plan.name}
+                          {/* </a> */}
+                        </h2>
 
-                      <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
-                        <li className="c-plan-title__info-item" key={plan.id}>
-                          {plan.plan_id &&
-                            plan.plan_id.category &&
-                            plan.plan_id.category.map((cat, i) => {
-                              return (
-                                <span className="">
-                                  {" "}
-                                  {cat.name}
-                                  {plan.plan_id.category.length > 1 &&
-                                    i < plan.plan_id.category.length - 1 &&
-                                    ", "}
-                                </span>
-                              );
-                            })}
-                        </li>
-                        <li className="c-plan-title__info-item">
-                          <span className="">
-                            <span>
-                              {/* {plan.hmo_id && plan.hmo_id.hmo_id} */}
-                              {plan.category}
+                        <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
+                          <li className="c-plan-title__info-item" key={plan.id}>
+                            {plan.plan_id &&
+                              plan.plan_id.category &&
+                              plan.plan_id.category.map((cat, i) => {
+                                return (
+                                  <span className="">
+                                    {" "}
+                                    {cat.name}
+                                    {plan.plan_id.category.length > 1 &&
+                                      i < plan.plan_id.category.length - 1 &&
+                                      ", "}
+                                  </span>
+                                );
+                              })}
+                          </li>
+                          <li className="c-plan-title__info-item">
+                            <span className="">
+                              <span>
+                                {/* {plan.hmo_id && plan.hmo_id.hmo_id} */}
+                                {plan.category}
+                              </span>
                             </span>
-                          </span>
-                        </li>
-                        <li className="c-plan-title__info-item">
-                          Plan ID:
-                          <span className="font-weight--bold">
-                            {
-                              // plan.plan_id && plan.plan_id.category
-                              //   ? plan.plan_id.plan_id
-                              //   : plan.plan_id
-                              plan.service_id
-                            }
-                          </span>
-                        </li>
-                      </ul>
+                          </li>
+                          <li className="c-plan-title__info-item">
+                            Plan ID:
+                            <span className="font-weight--bold">
+                              {
+                                // plan.plan_id && plan.plan_id.category
+                                //   ? plan.plan_id.plan_id
+                                //   : plan.plan_id
+                                plan.service_id
+                              }
+                            </span>
+                          </li>
+                        </ul>
+                      </header>
+                      <div className="padding-y--2">
+                        <a
+                          className="c-button c-button--primary qa-next-step-button"
+                          href="#"
+                          role="button"
+                          onClick={() => {
+                            this.getClickedPlan(plan.service_id, "buy");
+                            this.props.toggleDataCaptureModal(true);
+                          }}
+                        >
+                          Like This Plan? Take the Next Step
+                        </a>
+                      </div>
                     </header>
 
                     <section className="c-detail-section margin-bottom--4">
@@ -459,7 +494,13 @@ class PlanDetails extends Component<DetailsProps> {
                       }
                     >
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_accidents_n_emerg
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -511,7 +552,11 @@ class PlanDetails extends Component<DetailsProps> {
                     </h2>
                     <div hidden={this.state.collapse_ent ? true : false}>
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_ent ? "service-in-view " : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -569,7 +614,13 @@ class PlanDetails extends Component<DetailsProps> {
                       hidden={this.state.collapse_immunizations ? true : false}
                     >
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_immunizations
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -579,6 +630,19 @@ class PlanDetails extends Component<DetailsProps> {
                             <td>
                               <div className="c-star-rating">
                                 <span>{plan.additional_ammunization}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Routine Immunizations
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.routine_immunization}</span>
                               </div>
                             </td>
                           </tr>
@@ -612,7 +676,13 @@ class PlanDetails extends Component<DetailsProps> {
                     </h2>
                     <div hidden={this.state.collapse_admissions ? true : false}>
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_admissions
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -681,7 +751,13 @@ class PlanDetails extends Component<DetailsProps> {
                     </h2>
                     <div hidden={this.state.collapse_maternity ? true : false}>
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_maternity
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -778,7 +854,13 @@ class PlanDetails extends Component<DetailsProps> {
                       hidden={this.state.collapse_chronic_conds ? true : false}
                     >
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_chronic_conds
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -788,6 +870,19 @@ class PlanDetails extends Component<DetailsProps> {
                             <td>
                               <div className="c-star-rating">
                                 <span>{plan.cancer_care}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                HIV/ AIDS Treatment
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.hiv_aids_treatment}</span>
                               </div>
                             </td>
                           </tr>
@@ -823,7 +918,13 @@ class PlanDetails extends Component<DetailsProps> {
                       hidden={this.state.collapse_prescriptions ? true : false}
                     >
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_prescriptions
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -881,7 +982,13 @@ class PlanDetails extends Component<DetailsProps> {
                       hidden={this.state.collapse_investigations ? true : false}
                     >
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_investigations
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -965,7 +1072,13 @@ class PlanDetails extends Component<DetailsProps> {
                       hidden={this.state.collapse_consultations ? true : false}
                     >
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_consultations
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -988,6 +1101,19 @@ class PlanDetails extends Component<DetailsProps> {
                             <td>
                               <div className="c-star-rating">
                                 <span>{plan.specialist_consultation}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Physiotherapy
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.physiotherapy}</span>
                               </div>
                             </td>
                           </tr>
@@ -1021,33 +1147,13 @@ class PlanDetails extends Component<DetailsProps> {
                     </h2>
                     <div hidden={this.state.collapse_others ? true : false}>
                       <table className="c-details-table">
-                        <tbody className="valign--top">
-                          <tr className="border-bottom--2">
-                            <th scope="row">
-                              <span className="display--block">
-                                Physiotherapy
-                              </span>
-                            </th>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{plan.physiotherapy}</span>
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr className="border-bottom--2">
-                            <th scope="row">
-                              <span className="display--block">
-                                HIV/ AIDS Treatment
-                              </span>
-                            </th>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{plan.hiv_aids_treatment}</span>
-                              </div>
-                            </td>
-                          </tr>
-
+                        <tbody
+                          className={`${
+                            !this.state.collapse_others
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
@@ -1106,7 +1212,13 @@ class PlanDetails extends Component<DetailsProps> {
                     </h2>
                     <div hidden={this.state.collapse_providers ? true : false}>
                       <table className="c-details-table">
-                        <tbody className="valign--top">
+                        <tbody
+                          className={`${
+                            !this.state.collapse_providers
+                              ? "service-in-view "
+                              : ""
+                          } valign--top`}
+                        >
                           {plan.hmo_id.providers.map((provider) => {
                             return (
                               <tr className="border-bottom--2">
@@ -1332,6 +1444,7 @@ class PlanDetails extends Component<DetailsProps> {
             ""
           )}
         </div>
+        <DataCaptureModal />
       </div>
     );
   }
@@ -1350,6 +1463,8 @@ export default connect(mapProps, {
   getPlanDetail,
   getProviders,
   getPlans,
+  getPlan,
   getServices,
   getCheapestPlan,
+  toggleDataCaptureModal,
 })(PlanDetails);

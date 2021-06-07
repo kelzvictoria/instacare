@@ -71,7 +71,8 @@ import {
     SET_PROVIDERS,
     RESET_SELECTED_PROVIDERS,
     ADD_COMPARE_URL_PARAM,
-    REMOVE_COMPARE_URL_PARAM
+    REMOVE_COMPARE_URL_PARAM,
+    TOGGLE_DATA_CAPTURE_MODAL
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
 import { loadavg } from "os";
@@ -518,5 +519,13 @@ export const removeCompareURLParam = (param) => (dispatch, getState) => {
     dispatch({
         type: REMOVE_COMPARE_URL_PARAM,
         payload: param
+    })
+}
+
+export const toggleDataCaptureModal = (payload) => (dispatch, getState) => {
+    console.log("payload", payload);
+    dispatch({
+        type: TOGGLE_DATA_CAPTURE_MODAL,
+        payload
     })
 }

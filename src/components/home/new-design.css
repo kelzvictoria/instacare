@@ -1641,7 +1641,7 @@ button.tooltip-trigger {
 
 .c-detail-section > h2 {
   color: #046791;
-  margin-bottom: 24px;
+  /* margin-bottom: 24px; */
 }
 
 .padding-bottom--2 {
@@ -1669,7 +1669,7 @@ button.tooltip-trigger {
 
 .c-details-table tr:nth-child(odd) td,
 .c-details-table tr:nth-child(odd) th {
-  background-color: #f7f7f7;
+  /* background-color: #f7f7f7; */
 }
 
 .c-details-table td,
@@ -1843,6 +1843,16 @@ span.plan-desc {
 }
 
 .prov-cat {
+}
+
+h2.border-bottom--1.border--dark.padding-bottom--2 {
+  margin-bottom: 0px !important;
+}
+
+.service-in-view {
+  /* border-style: dashed;
+  border-color: #046791; */
+  border: 2px dashed #046b99;
 }
 
 @media (max-width: 500px) {
