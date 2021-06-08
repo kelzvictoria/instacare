@@ -503,6 +503,11 @@ button.tooltip-trigger {
   flex: 0 0 50%;
   max-width: 50%;
 }
+
+.ant-spin.ant-spin-spinning.large-loader {
+  padding-top: 4rem;
+}
+
 @media (min-width: 1024px) {
   .limits-lg-col--3 {
     flex: 0 0 25%;
@@ -516,7 +521,7 @@ button.tooltip-trigger {
 
 @media (min-width: 768px) {
   .plan-card__plan-features-container {
-    width: calc(25% - 5.33333px);
+    /* width: calc(25% - 5.33333px); */
     margin-top: 0;
     margin-right: 8px;
   }
@@ -528,6 +533,14 @@ button.tooltip-trigger {
     width: calc(100% - 5.33333px);
     margin-top: 0;
     margin-right: 8px;
+  }
+
+  .feature-col {
+    width: calc(33% - 5.33333px) !important;
+  }
+
+  .plan_feat_cont {
+    display: flex !important;
   }
 }
 
@@ -692,7 +705,7 @@ a {
 
 @media (min-width: 768px) {
   .plan-card__plan-features-container {
-    width: calc(25% - 5.33333px);
+    /* width: calc(25% - 5.33333px); */
     margin-top: 0;
     margin-right: 8px;
   }
@@ -1854,9 +1867,9 @@ h2.border-bottom--1.border--dark.padding-bottom--2 {
   border-color: #046791; */
   border: 2px dashed #046b99;
 }
-
-.ant-paginations {
-  float: right;
+.pag-div {
+  display: flex;
+  justify-content: flex-end;
 }
 
 @media (max-width: 500px) {

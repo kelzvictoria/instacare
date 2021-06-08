@@ -51,12 +51,8 @@ export class App extends React.Component {
   // }
 
   async UNSAFE_componentWillMount() {
-    !localStorage["providers"] && (await store.dispatch(getProviders()));
-    !localStorage["plans"] && (await store.dispatch(getPlans()));
-    !localStorage["services"] && (await store.dispatch(getServices()));
-
-    !localStorage["cheapest_plan"] && (await store.dispatch(getCheapestPlan()));
-    // this.getCheapestPlanByHMO();
+    // !localStorage["services"] && (await store.dispatch(getServices()));
+    // !localStorage["cheapest_plan"] && (await store.dispatch(getCheapestPlan()));
   }
 
   render() {

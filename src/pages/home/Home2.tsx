@@ -86,8 +86,6 @@ import {
 
 import { stripNonNumeric } from "../../utils/homeUtils";
 
-const API_URL = "https://instacareconnect.pmglobaltechnology.com";
-
 interface QuizProps {
   [x: string]: any;
   dispatch(args: any): any;
@@ -201,9 +199,18 @@ class Home extends Component<QuizProps, {}> {
   async UNSAFE_componentWillMount() {
     //   !localStorage["providers"] && (await this.props.getProviders());
     //   !localStorage["plans"] && (await this.props.getPlans());
-    //   !localStorage["services"] && (await this.props.getServices());
+    //!localStorage["services"] && (await this.props.getServices());
     //   // this.getCheapestPlanByHMO();
     //   const hmo = this.props.match.params ? this.props.match.params.id : "";
+    console.log("!localStorage['services']", !localStorage["services"]);
+
+    if (!localStorage["services"]) {
+      await this.props.getServices();
+    }
+
+    if (!localStorage["cheapest_plan"]) {
+      await this.props.getCheapestPlan();
+    }
 
     if (Object.keys(this.props.match.params).length) {
       this.parseParams();
@@ -217,6 +224,7 @@ class Home extends Component<QuizProps, {}> {
         this.getCheapestPlanByHMO();
       }
     }
+    //  console.log("localStorage['services']", localStorage["services"]);
   }
 
   getCheapestPlanByHMO() {

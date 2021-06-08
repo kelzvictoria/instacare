@@ -6,7 +6,7 @@ import * as actions from "../../actions/types";
 
 import shortlist from "../../imgs/shortlist-yellow.svg";
 
-import { Card, Button, Typography, Collapse, Tabs, message } from "antd";
+import { Card, Button, Typography, Collapse, Tabs, message, Spin } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -56,6 +56,7 @@ class PlanDetails extends Component<DetailsProps> {
   state = {
     searchText: "",
     open: false,
+    planID: null,
     collapse_accidents_n_emerg: true,
     collapse_immunizations: true,
     collapse_admissions: true,
@@ -142,6 +143,9 @@ class PlanDetails extends Component<DetailsProps> {
 
       if (idParamsObj.length > 0) {
         let id = idParamsObj[0].value;
+        this.setState({
+          planID: id,
+        });
         console.log("id", id);
         await this.props.getProviders();
         await this.props.getPlans();
@@ -274,7 +278,7 @@ class PlanDetails extends Component<DetailsProps> {
               </div>
             </header>
           </div>
-          {plan.name ? (
+          {plan && plan.name ? (
             <div className="c-plan-details-page__body">
               <div className="fill--white">
                 <div className="container">
@@ -1252,122 +1256,43 @@ class PlanDetails extends Component<DetailsProps> {
                     <div>
                       <section className="section grey_background similar_plans">
                         <h3 className="font-weight--bold">Similar Plans</h3>
-                        {/* 
-                        <div className="similar-plans">
-                          <div className="similar-plans-inner">
-                            <div className="similar_plan_feature">
-                              <div className="box-slider">
-                                <div className="slider-plans">
-                                  {this.props.similar_plans.map(
-                                    (similar_plan) => (
-                                      <div className="box">
-                                        <ul className="similar-plan-ul">
-                                          <li>
-                                            <div className="box_block">
-                                              <div className="img-box-logo-similar">
-                                                <img
-                                                  src={similar_plan.hmo_id.logo}
-                                                />
-                                              </div>
-                                              <span className="greyed-text">
-                                                {similar_plan.name}
-                                              </span>
-                                            </div>
-                                            <ul>
-                                              <li>
-                                                <span>
-                                                  {similar_plan.plan_id &&
-                                                    similar_plan.plan_id
-                                                      .category &&
-                                                    similar_plan.plan_id.category.map(
-                                                      (cat, i) => {
-                                                        return (
-                                                          <b className="">
-                                                            {" "}
-                                                            {cat.name}
-                                                            {plan.plan_id
-                                                              .category.length >
-                                                              1 &&
-                                                              i <
-                                                                plan.plan_id
-                                                                  .category
-                                                                  .length -
-                                                                  1 &&
-                                                              ", "}
-                                                          </b>
-                                                        );
-                                                      }
-                                                    )}
-                                                </span>
-                                              </li>
-                                              <li>
-                                                <span>
-                                                  <b>
-                                                    ₦
-                                                   
-                                                    {this.numberwithCommas(
-                                                      home_utils.stripNonNumeric(
-                                                        similar_plan.price
-                                                      )
-                                                    )}
-                                                    / year
-                                                  </b>
-                                                </span>
-                                              </li>
-                                            </ul>
-                                            <div className="similar-plans-btm">
-                                              <button
-                                                className="btn"
-                                                onClick={this.goToPlans}
-                                              >
-                                                COMPARE NOW
-                                              </button>
-                                            </div>
-                                          </li>
-                                        </ul>
-                                      </div>
-                                    )
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      */}
-
                         <h4>
                           Users who viewed this plan also viewed the below{" "}
                         </h4>
                         <div className="box-mob-slider">
                           <div className="slider-new ">
-                            {this.props.similar_plans.map((similar_plan, i) => {
-                              return (
-                                <div className="box-new">
-                                  <ul className="similar_plan_ul">
-                                    <li>
-                                      <div className="box_block">
-                                        <div className="plan-c-provider font-weight--bold">
-                                          {similar_plan.hmo_id.name["text"]}
-                                        </div>
-                                        <h2 className="plan-c-name font-weight--normal margin-y--1">
-                                          <a
-                                            href={`/details/id/${similar_plan.service_id}`}
-                                          >
-                                            {similar_plan.name}
-                                          </a>
-                                        </h2>
-                                      </div>
-                                      <p className="is-hidden-mobile">
-                                        ₦
-                                        {this.numberwithCommas(
-                                          stripNonNumeric(similar_plan.price)
-                                        )}
-                                        / year
-                                      </p>
-                                      <ul>
+                            {this.props.similar_plans.length > 0 ? (
+                              this.props.similar_plans.map(
+                                (similar_plan, i) => {
+                                  return (
+                                    <div className="box-new">
+                                      <ul className="similar_plan_ul">
                                         <li>
-                                          {similar_plan.hmo_id.name}
-                                          {/* {similar_plan.plan_id &&
+                                          <div className="box_block">
+                                            <div className="plan-c-provider font-weight--bold">
+                                              {similar_plan.hmo_id.name["text"]}
+                                            </div>
+                                            <h2 className="plan-c-name font-weight--normal margin-y--1">
+                                              <a
+                                                href={`/details/id/${similar_plan.service_id}`}
+                                              >
+                                                {similar_plan.name}
+                                              </a>
+                                            </h2>
+                                          </div>
+                                          <p className="is-hidden-mobile">
+                                            ₦
+                                            {this.numberwithCommas(
+                                              stripNonNumeric(
+                                                similar_plan.price
+                                              )
+                                            )}
+                                            / year
+                                          </p>
+                                          <ul>
+                                            <li>
+                                              {similar_plan.hmo_id.name}
+                                              {/* {similar_plan.plan_id &&
                                         similar_plan.plan_id.category &&
                                         similar_plan.plan_id.category.map(
                                           (cat, i) => {
@@ -1387,34 +1312,38 @@ class PlanDetails extends Component<DetailsProps> {
                                           }
                                         )}
                                        <span>Sum Insured</span>  */}
-                                        </li>
-                                        <li>
-                                          {similar_plan.hmo_id.providers
-                                            ? similar_plan.hmo_id.providers
-                                                .length
-                                            : 0}{" "}
-                                          <span>Hospitals</span>
-                                        </li>
-                                      </ul>
-                                      {/* <div className="like-covers">
+                                            </li>
+                                            <li>
+                                              {similar_plan.hmo_id.providers
+                                                ? similar_plan.hmo_id.providers
+                                                    .length
+                                                : 0}{" "}
+                                              <span>Hospitals</span>
+                                            </li>
+                                          </ul>
+                                          {/* <div className="like-covers">
                                   <div className="usp_image"></div>1 Cr in less
                                   premium
                                 </div> */}
-                                      <button
-                                        className="button "
-                                        onClick={() => {
-                                          this.goToPlans();
-                                          //this.handleCheckedPlanToCompare(i);
-                                        }}
-                                      >
-                                        <i className="fas fa-plus"></i>
-                                        Compare
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </div>
-                              );
-                            })}
+                                          <button
+                                            className="button "
+                                            onClick={() => {
+                                              this.goToPlans();
+                                              //this.handleCheckedPlanToCompare(i);
+                                            }}
+                                          >
+                                            <i className="fas fa-plus"></i>
+                                            Compare
+                                          </button>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  );
+                                }
+                              )
+                            ) : (
+                              <Spin size="large" className="large-loader" />
+                            )}
                           </div>
                         </div>
                       </section>
@@ -1441,7 +1370,7 @@ class PlanDetails extends Component<DetailsProps> {
               </div> */}
             </div>
           ) : (
-            ""
+            <Spin size="large" className="large-loader" />
           )}
         </div>
         <DataCaptureModal />

@@ -123,9 +123,9 @@ const mapProps = (state) => {
     return {
         is_data_capture_modal_open: state.quiz.is_data_capture_modal_open,
         plan: state.fetchData.plan,
-        name: state.fetchData.plan.name,
+        name: state.fetchData.plan ? state.fetchData.plan.name : "",
         email: state.quiz.responses.email,
-        price: state.fetchData.plan.price,
+        price: state.fetchData.plan ? state.fetchData.plan.price : "",
         responses: state.quiz.responses
     }
 }

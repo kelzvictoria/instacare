@@ -94,37 +94,40 @@ export const getPlanDetail = (serviceID) => async (dispatch, getState) => {
 }
 
 export const getSimilarPlans = (plan) => async (dispatch, getState) => {
-    await dispatch(getServices())
-    if (plan.plan_id.category) {
-        let type = plan.plan_id.category.map(cat => cat.name.toLowerCase());
+    if (plan) {
+        await dispatch(getServices())
+        if (plan.plan_id.category) {
+            let type = plan.plan_id.category.map(cat => cat.name.toLowerCase());
 
-        let planID = plan.service_id;
+            let planID = plan.service_id;
 
-        console.log("type", type, "planID", planID);
+            console.log("type", type, "planID", planID);
 
-        let packages = getState().fetchData.services;
+            let packages = getState().fetchData.services;
 
-        let res = groupPlansByType(packages, type);
-        //console.log("res", res);
+            let res = groupPlansByType(packages, type);
+            //console.log("res", res);
 
-        let similar_plans = res.filter(plan => {
-            // console.log("plan.service_id", plan.service_id);
-            // console.log("planID", planID);
-            return plan.service_id !== planID
-        })
+            let similar_plans = res.filter(plan => {
+                // console.log("plan.service_id", plan.service_id);
+                // console.log("planID", planID);
+                return plan.service_id !== planID
+            })
 
-        similar_plans = similar_plans.filter((plan, index, self) =>
-            index === self.findIndex((p) => (
-                p.place === plan.place && p.name === plan.name
-            ))
-        )
+            similar_plans = similar_plans.filter((plan, index, self) =>
+                index === self.findIndex((p) => (
+                    p.place === plan.place && p.name === plan.name
+                ))
+            )
 
-        console.log("similar_plans", similar_plans);
+            console.log("similar_plans", similar_plans);
 
-        dispatch({
-            type: GET_SIMILAR_PLANS,
-            payload: similar_plans
-        })
+            dispatch({
+                type: GET_SIMILAR_PLANS,
+                payload: similar_plans
+            })
+        }
+
     }
 
 }
@@ -217,6 +220,8 @@ export const getProviders = () => (dispatch, getState) => {
 
 export const getServices = () => async (dispatch, getState) => {
     dispatch(setIsFetchingServices());
+    await dispatch(getProviders());
+    await dispatch(getPlans());
 
     let services = [];
 
@@ -365,30 +370,33 @@ export const getProviderInfo = (provider) => (dispatch, getState) => {
 }
 
 export const getCheapestPlan = () => (dispatch, getState) => {
-    let lowest = Number.POSITIVE_INFINITY;
-    let highest = Number.NEGATIVE_INFINITY;
-    let tmp;
+    let cheapest_plan = getState().fetchData.cheapest_plan
+    if (!cheapest_plan) {
+        let lowest = Number.POSITIVE_INFINITY;
+        let highest = Number.NEGATIVE_INFINITY;
+        let tmp;
 
-    let arr = getState().fetchData.services;//this.props.planServices;
-    // console.log("arr", arr);
+        let arr = getState().fetchData.services;//this.props.planServices;
+        // console.log("arr", arr);
 
-    for (let i = arr.length - 1; i >= 0; i--) {
-        tmp = stripNonNumeric(arr[i]["price"]);
-        // console.log("arr[i]['price']", stripNonNumeric(arr[i]["price"]));
+        for (let i = arr.length - 1; i >= 0; i--) {
+            tmp = stripNonNumeric(arr[i]["price"]);
+            // console.log("arr[i]['price']", stripNonNumeric(arr[i]["price"]));
 
-        if (tmp > 1000) {
-            if (tmp < lowest) lowest = tmp;
-            if (tmp > highest) highest = tmp;
+            if (tmp > 1000) {
+                if (tmp < lowest) lowest = tmp;
+                if (tmp > highest) highest = tmp;
+            }
         }
+        console.log("most expensive plan", highest, "cheapest plan", lowest);
+
+
+        dispatch({
+            type: GET_CHEAPEST_PLAN,
+            data: lowest
+        })
     }
-    console.log("most expensive plan", highest, "cheapest plan", lowest);
 
-
-
-    dispatch({
-        type: GET_CHEAPEST_PLAN,
-        data: lowest
-    })
 }
 
 export const getCheapestPlanByHMO = (plan) => (dispatch, getState) => {

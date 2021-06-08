@@ -161,7 +161,7 @@ class Providers extends Component<ProvidersProps> {
                         dataSource={this.props.dataSource}
                         onSearch={this.onSearch}
                         onChange={this.onSelectChange}
-                        placeholder="Example: Maitama District Hospital"
+                        placeholder="Example: Abuja Clinics"
                         value={this.props.responses.provider}
                         //value={this.state.search_arg}
                         className="ic-auto-complete margin-bottom--0"
