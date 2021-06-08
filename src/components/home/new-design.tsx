@@ -4460,44 +4460,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </div>
 
                                   <div className="text-align--right plan-c-title-right">
-                                    {/*                                 
-                                <div className="quality-rating">
-                                  <div className="valign--middle star-rating">
-                                    <img
-                                      src={starfilled}
-                                      className="star-rating__star"
-                                    />
-                                    <img
-                                      src={starfilled}
-                                      className="star-rating__star"
-                                    />
-                                    <img
-                                      src={star}
-                                      className="star-rating__star"
-                                    />
-                                    <img
-                                      src={star}
-                                      className="star-rating__star"
-                                    />
-                                    <img
-                                      src={star}
-                                      className="star-rating__star"
-                                    />
-                                  </div>
-                                  <button
-                                    type="button"
-                                    aria-label="Tooltip: "
-                                    className="tooltip-trigger valign--middle"
-                                  >
-                                    <span className="tooltip-icon-container">
-                                      <FontAwesomeIcon
-                                        className=""
-                                        icon={faInfoCircle}
-                                      />
-                                    </span>
-                                  </button>
-                                </div>
-                                */}
                                     <div className="display--none lg-display--block plan-c-compare-button">
                                       <button
                                         id="desktop"
@@ -4591,10 +4553,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       In-patient Limit
                                       <button
                                         type="button"
-                                        aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
+                                        aria-label="Admitted patient limit"
                                         className="tooltip-trigger padding--0"
                                       >
-                                        <span className="tooltip-icon-container">
+                                        <span className="tooltip-icon-container  tooltip-hover">
                                           <FontAwesomeIcon
                                             className="mt---2"
                                             icon={faInfoCircle}
@@ -4628,7 +4590,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       Out-patient Limiit
                                       <button
                                         type="button"
-                                        aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
+                                        aria-label="Walk-in patient limit"
                                         className="tooltip-trigger padding--0"
                                       >
                                         <span className="tooltip-icon-container">
@@ -4668,7 +4630,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         Total Benefit Limit
                                         <button
                                           type="button"
-                                          aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
+                                          aria-label="Outpatient + Inpatient Limit"
                                           className="tooltip-trigger padding--0"
                                         >
                                           <span className="tooltip-icon-container">
@@ -4836,7 +4798,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         Hospital Category
                                         <button
                                           type="button"
-                                          aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
+                                          aria-label="The category of hospitals that provide this plan."
                                           className="tooltip-trigger padding--0"
                                         >
                                           <span className="tooltip-icon-container">
@@ -4868,7 +4830,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         Region of Cover
                                         <button
                                           type="button"
-                                          aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
+                                          aria-label="The region the plan covers."
                                           className="tooltip-trigger padding--0"
                                         >
                                           <span className="tooltip-icon-container">
@@ -4900,7 +4862,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         Medical Providers
                                         <button
                                           type="button"
-                                          aria-label="Tooltip: This estimate is based on how much care you told us each household member is likely to use. It’s useful for comparing plans based on total costs of care, not just monthly premiums. But your actual costs will depend on how much care you wind up using."
+                                          aria-label="Hospitals that provide this plan"
                                           className="tooltip-trigger padding--0"
                                         >
                                           <span className="tooltip-icon-container">
