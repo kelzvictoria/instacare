@@ -31,6 +31,8 @@ import * as home_utils from "../../utils/homeUtils";
 import "./new-design.css";
 
 import searching from "../../imgs/searching.svg";
+import seniors from "../../imgs/seniors.png";
+import family from "../../imgs/family-pic.png";
 
 import { formatAsCurrency } from "../../utils";
 import DataCaptureModal from "../payment/DataCapture";
@@ -206,6 +208,7 @@ class NewContent extends React.Component<homeProps, homeState> {
           <Col xs={24} md={24} className="svg-img-div">
             <div className="svg-img home-svg-img">
               <img src={searching}></img>
+              {/* <img src={family}></img> */}
               <p className="tiny-descrptn">
                 {
                   //this.props.plansByHMO.length > 0
@@ -1941,9 +1944,6 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.getPlan(data);
     this.props.getSimilarPlans(data);
     type == "view" && this.goToDetails(serviceID);
-    // this.props.plansByHMO.length > 0 && this.props.getClickedPlan(propsData);
-
-    // this.props.plansByHMO.length == 0 && this.props.getClickedPlan(data);
   };
 
   renderDesktopQuizForm() {
@@ -4593,7 +4593,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         aria-label="Walk-in patient limit"
                                         className="tooltip-trigger padding--0"
                                       >
-                                        <span className="tooltip-icon-container">
+                                        <span className="tooltip-icon-container tooltip-hover">
                                           <FontAwesomeIcon
                                             className="mt---2"
                                             icon={faInfoCircle}
@@ -4633,7 +4633,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           aria-label="Outpatient + Inpatient Limit"
                                           className="tooltip-trigger padding--0"
                                         >
-                                          <span className="tooltip-icon-container">
+                                          <span className="tooltip-icon-container tooltip-hover">
                                             <FontAwesomeIcon
                                               className=""
                                               icon={faInfoCircle}
@@ -4801,7 +4801,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           aria-label="The category of hospitals that provide this plan."
                                           className="tooltip-trigger padding--0"
                                         >
-                                          <span className="tooltip-icon-container">
+                                          <span className="tooltip-icon-container tooltip-hover">
                                             <FontAwesomeIcon
                                               className=""
                                               icon={faInfoCircle}
@@ -4833,7 +4833,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           aria-label="The region the plan covers."
                                           className="tooltip-trigger padding--0"
                                         >
-                                          <span className="tooltip-icon-container">
+                                          <span className="tooltip-icon-container tooltip-hover">
                                             <FontAwesomeIcon
                                               className=""
                                               icon={faInfoCircle}
@@ -4865,7 +4865,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           aria-label="Hospitals that provide this plan"
                                           className="tooltip-trigger padding--0"
                                         >
-                                          <span className="tooltip-icon-container">
+                                          <span className="tooltip-icon-container tooltip-hover">
                                             <FontAwesomeIcon
                                               className=""
                                               icon={faInfoCircle}
@@ -5340,6 +5340,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     <a
                                       className="c-button c-button--secondary c-plan-card__action-button"
                                       href="#"
+                                      onClick={() => {
+                                        //this.goToDetails();
+                                        this.getClickedPlan(i, "view");
+                                      }}
                                       target="_self"
                                       role="button"
                                     >
@@ -5349,6 +5353,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       className="c-button c-button--primary c-plan-card__action-button"
                                       href="#"
                                       target="_self"
+                                      onClick={() => {
+                                        this.getClickedPlan(i, "buy");
+                                        this.props.toggleDataCaptureModal(true);
+                                      }}
                                       role="button"
                                     >
                                       Like This Plan

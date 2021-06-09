@@ -32,6 +32,7 @@ import {
   getServices,
   getCheapestPlan,
   getPlan,
+  getSimilarPlans,
 } from "../../actions/fetchDataActions";
 
 import { toggleDataCaptureModal } from "../../actions/userInputActions";
@@ -131,9 +132,23 @@ class PlanDetails extends Component<DetailsProps> {
     this.params = paramsArr;
   };
 
-  getClickedPlan = async (planID, type) => {
-    let data = this.props.plans.filter((plan) => plan.service_id === planID)[0];
+  // getClickedPlan = async (planID, type) => {
+  //   let data = this.props.plans.filter((plan) => plan.service_id === planID)[0];
+  //   await this.props.getPlan(data);
+  // };
+
+  goToDetails(serviceID) {
+    this.props.history.push({ pathname: `/details/id/${serviceID}` });
+  }
+
+  getClickedPlan = async (index, type) => {
+    let data = this.props.plans[index];
+
+    let serviceID = data.service_id;
+
     await this.props.getPlan(data);
+    this.props.getSimilarPlans(data);
+    type == "view" && this.goToDetails(serviceID);
   };
 
   async UNSAFE_componentWillMount() {
@@ -1328,12 +1343,17 @@ class PlanDetails extends Component<DetailsProps> {
                                           <button
                                             className="button "
                                             onClick={() => {
-                                              this.goToPlans();
+                                              this.getClickedPlan(i, "view");
+                                              window.scrollTo({
+                                                top: 0,
+                                                behavior: "smooth",
+                                              });
+                                              // this.goToPlans();
                                               //this.handleCheckedPlanToCompare(i);
                                             }}
                                           >
                                             <i className="fas fa-plus"></i>
-                                            Compare
+                                            View Details
                                           </button>
                                         </li>
                                       </ul>
@@ -1396,4 +1416,5 @@ export default connect(mapProps, {
   getServices,
   getCheapestPlan,
   toggleDataCaptureModal,
+  getSimilarPlans,
 })(PlanDetails);
