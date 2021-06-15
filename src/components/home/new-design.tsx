@@ -3165,7 +3165,17 @@ class NewContent extends React.Component<homeProps, homeState> {
       hmoID: this.state.filter_params.hmo_selected,
     };
 
-    this.props.getRecommendedPlans(filterBoxParams);
+    const { range, budget, type, hmoID, planID } = filterBoxParams;
+
+    if (
+      range.length > 0 ||
+      budget.length > 0 ||
+      type.length > 0 ||
+      hmoID ||
+      planID
+    ) {
+      this.props.getRecommendedPlans(filterBoxParams);
+    }
   };
 
   resetServices() {

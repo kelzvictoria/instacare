@@ -265,6 +265,10 @@ export const getServices = () => async (dispatch, getState) => {
 }
 
 export const getRecommendedPlans = (params) => async (dispatch, getState) => {
+    console.log("params", params);
+    if (params) {
+
+    }
     dispatch(setIsFetchingRecPlans())
 
     await dispatch(getServices());
@@ -493,45 +497,46 @@ export const setIsFetchingPlansByHMO = () => (dispatch, getState) => {
 
 export const setIsFetchingPlans = () => (dispatch, getState) => {
     console.log("in here");
-    return {
+    dispatch({
         type: IS_FETCHING_PLANS,
         payload: true
-    }
+    })
 }
 
 export const setIsFetchingHMOs = () => (dispatch, getState) => {
-    return {
+    dispatch({
         type: IS_FETCHING_HMOS,
         payload: true
-    }
+    })
 }
 
 export const setIsFetchingServices = () => (dispatch, getState) => {
-    return {
+    dispatch({
         type: IS_FETCHING_SERVICES,
         payload: true
-    }
+    })
 }
 
 export const setIsFetchingProviders = () => (dispatch, getState) => {
-    return {
+    dispatch({
         type: IS_FETCHING_PROVIDERS,
         payload: true
-    }
+    })
 }
 
 export const setIsFetchingRecPlans = () => (dispatch, getState) => {
-    return {
+    dispatch({
         type: IS_FETCHING_RECOMMENDED_PLANS,
         payload: true
-    }
+    })
+
 }
 
 export const setIsFilteringByBudget = () => (dispatch, getState) => {
-    return {
+    dispatch({
         type: IS_FILTERING_BY_BUDGET,
         payload: true
-    }
+    })
 }
 
 const groupPlansByType = (packages, type) => {
