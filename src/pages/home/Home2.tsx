@@ -202,7 +202,7 @@ class Home extends Component<QuizProps, {}> {
     //!localStorage["services"] && (await this.props.getServices());
     //   // this.getCheapestPlanByHMO();
     //   const hmo = this.props.match.params ? this.props.match.params.id : "";
-    console.log("!localStorage['services']", !localStorage["services"]);
+    //console.log("!localStorage['services']", !localStorage["services"]);
 
     if (!localStorage["services"]) {
       await this.props.getServices();

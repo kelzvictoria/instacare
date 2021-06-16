@@ -11,6 +11,7 @@ import {
   Pagination,
   Icon,
 } from "antd";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -61,7 +62,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     is_phone_valid: "null",
     show_provider_info: false,
     provider_info: [],
-    filter_PLANS_BY_HMO: false,
+
     plansByHMO: [],
     show_desktop_on_load_modal: false,
     show_mobile_on_load_modal: false,
@@ -88,11 +89,15 @@ class NewContent extends React.Component<homeProps, homeState> {
     },
     plan_ids: [],
     plan_desc_show_less: true,
-    data: [],
+
     totalPage: 0,
     current: 1,
     minIndex: 0,
     maxIndex: 0,
+    infiniteScrollData:
+      this.props.match.path === "/hmos/*"
+        ? this.props.plansByHMO.slice(0, pageSize)
+        : this.props.planServices.slice(0, pageSize),
   };
 
   toggleModal = () => {
@@ -376,7 +381,11 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.filterByBudget_and_or_Type();
   }
 
-  filterByBudget_and_or_Type() {
+  async filterByBudget_and_or_Type() {
+    let range =
+      this.props.responses.price_range.length > 0
+        ? this.props.responses.price_range
+        : [];
     let budget =
       this.props.responses.budget.length > 0 ? this.props.responses.budget : [];
     let type =
@@ -385,9 +394,11 @@ class NewContent extends React.Component<homeProps, homeState> {
     let params = {
       budget,
       type,
+      range,
     };
 
-    this.props.filterByBudget_and_or_Type(params);
+    await this.props.filterByBudget_and_or_Type(params);
+    this.infiniteScrollDataReInitOnFilterApplied();
   }
 
   handleAge(key, val) {
@@ -2787,7 +2798,8 @@ class NewContent extends React.Component<homeProps, homeState> {
         await this.props.updatePriceRange("all");
         break;
     }
-    this.props.filterByPlanRange();
+    //this.props.filterByPlanRange();
+    this.filterByBudget_and_or_Type();
   };
 
   toggleShowFilter = () => {
@@ -3145,7 +3157,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   // }
 
-  getRecommendedPlans = () => {
+  getRecommendedPlans = async () => {
     // this.state.filter_params.plan_range_checked.map((range) =>
     //   this.handlePlanRangeCheck(range)
     // );
@@ -3174,7 +3186,8 @@ class NewContent extends React.Component<homeProps, homeState> {
       hmoID ||
       planID
     ) {
-      this.props.getRecommendedPlans(filterBoxParams);
+      await this.props.getRecommendedPlans(filterBoxParams);
+      this.infiniteScrollDataReInitOnFilterApplied();
     }
   };
 
@@ -3212,14 +3225,54 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   };
 
-  handlePageChange = (page) => {
+  infiniteScrollDataReInitOnFilterApplied = () => {
     this.setState({
-      current: page,
-      minIndex: (page - 1) * pageSize,
-      maxIndex: page * pageSize,
+      current: 1,
+      minIndex: 0,
+      maxIndex: pageSize,
+      infiniteScrollData:
+        this.props.match.path === "/hmos/*"
+          ? this.props.plansByHMO.slice(0, pageSize)
+          : this.props.planServices.slice(0, pageSize),
     });
+  };
 
-    console.log("page", page);
+  handlePageChange = async (page) => {
+    // console.log("page", page);
+
+    let plansByHMO = this.props.plansByHMO;
+    let allPlans = this.props.planServices;
+
+    let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+
+    let total_num_of_pages = apiData.length / pageSize;
+
+    //  console.log("total_num_of_pages", total_num_of_pages);
+
+    if (page < total_num_of_pages) {
+      page = page + 1;
+
+      //console.log("page + 1", page);
+      let start_index = (page - 1) * pageSize;
+      let end_index = pageSize * page;
+
+      // console.log("start_index", start_index);
+      // console.log("end_index", end_index);
+
+      this.setState({
+        current: page,
+        minIndex: start_index,
+        maxIndex: end_index,
+      });
+
+      //  setTimeout(() => {
+      this.setState({
+        infiniteScrollData: this.state.infiniteScrollData.concat(
+          apiData.slice(start_index, end_index)
+        ),
+      });
+      // }, 1500);
+    }
   };
 
   componentDidUpdate() {}
@@ -3228,10 +3281,22 @@ class NewContent extends React.Component<homeProps, homeState> {
     let plansByHMO = this.props.plansByHMO;
     let allPlans = this.props.planServices;
     // console.log("allPlans", allPlans);
-    let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+
     //   console.log("apiData", apiData);
 
-    let data = apiData;
+    let data = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+
+    //this.state.maxIndex < data.length
+
+    // console.log("this.state.maxIndex", this.state.maxIndex);
+    //  console.log("data", data);
+
+    //console.log("data", data);
+    // console.log("this.state.maxIndex", this.state.maxIndex);
+
+    let apiData = this.state.infiniteScrollData;
+    // console.log("apiData", apiData);
+
     let {
       //  data,
       current,
@@ -3357,8 +3422,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <div className="margin-bottom--1 md-margin-bottom--0 results-header-left">
                     <div className="font-size--lead font-weight--bold c-results_header_summary">
                       {/* {this.props.plans.length} plans available */}
-                      {apiData.length} plan
-                      {apiData.length > 1 && "s"} available
+                      {data.length} plan
+                      {data.length > 1 && "s"} available
                     </div>
                     <div className="filt_comp_btns">
                       <button
@@ -3410,7 +3475,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                       </label>
                       <select
                         className="c-field rh-plan-type-select"
-                        onChange={(e) => this.changeType(e.target.value)}
+                        onChange={(e) => {
+                          this.changeType(e.target.value);
+                        }}
                         value={
                           this.props.responses.type[
                             this.props.responses.type.length - 1
@@ -4382,14 +4449,25 @@ class NewContent extends React.Component<homeProps, homeState> {
                 </div>
               </div>
             </div>
-
-            <div className="" id="plans-section">
-              <ul className="c-list--bare margin-top--2 home-plans-list">
-                {apiData.length > 0 &&
-                  apiData.map(
-                    (plan, i) =>
-                      i >= minIndex &&
-                      i < maxIndex && (
+            <InfiniteScroll
+              dataLength={this.state.infiniteScrollData.length}
+              next={() => {
+                this.handlePageChange(this.state.current);
+              }}
+              hasMore={
+                data.length > 1 && this.state.maxIndex < data.length
+                  ? true
+                  : false
+              }
+              loader={<h4>Loading more plans...</h4>}
+            >
+              <div className="" id="plans-section">
+                <ul className="c-list--bare margin-top--2 home-plans-list">
+                  {apiData.length > 0 &&
+                    apiData.map(
+                      (plan, i) => (
+                        // i >= minIndex &&
+                        //  i < maxIndex && (
                         <li className="margin-bottom--4">
                           <section className="c-detail-section margin-bottom--4">
                             <article
@@ -5381,10 +5459,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                           </section>{" "}
                         </li>
                       )
-                    //)
-                  )}
-              </ul>
-              <div className="pag-div">
+                      // )
+                      //)
+                    )}
+                </ul>
+
+                {/* <div className="pag-div">
                 <Pagination
                   total={data.length}
                   showTotal={(total, range) =>
@@ -5396,8 +5476,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                   current={current}
                   onChange={this.handlePageChange}
                 />
+              </div> */}
               </div>
-            </div>
+            </InfiniteScroll>
           </div>
         ) : (
           // <Spin indicator={antIcon} className="large-loader" />

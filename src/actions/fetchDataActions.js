@@ -454,19 +454,22 @@ export const filterByBudget_and_or_Type = (params) => async (dispatch, getState)
     await dispatch(getServices());
     let budget = params.budget;
     let type = params.type;
+    let range = params.range;
 
     let min = budget[0];
     let max = budget[1];
 
-    let services = getState().fetchData.services
+    let services = getState().fetchData.services;
 
-    let plansByPlanType = groupPlansByType(services, type);
+    let plansByPlanType = await groupPlansByType(services, type);
 
     let packages = type.length > 0 ? plansByPlanType : services;
 
-    let recommended_plans = budget.length > 0 ? packages.filter(pckg => {
-        return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
-    }) : plansByPlanType;
+    let recommended_plans = range.length > 0 ?
+        // return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
+        groupPlansByRange(plansByPlanType, range)
+
+        : plansByPlanType;
 
     CAN_LOG && console.log("packages", packages);
     CAN_LOG && console.log("recommended_plans", recommended_plans);
