@@ -2698,7 +2698,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     this.props.toggleDataCaptureModal(true);
                                   }}
                                 >
-                                  Like This Plan
+                                  Buy This Plan
                                 </button>
                               </div>
                             </div>
@@ -2755,7 +2755,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       this.props.toggleDataCaptureModal(true);
                                     }}
                                   >
-                                    Like This Plan
+                                    Buy This Plan
                                   </button>
                                 </div>
                               </div>
@@ -2812,7 +2812,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       this.props.toggleDataCaptureModal(true);
                                     }}
                                   >
-                                    Like This Plan
+                                    Buy This Plan
                                   </button>
                                 </div>
                               </div>

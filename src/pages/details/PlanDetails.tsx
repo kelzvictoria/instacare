@@ -33,6 +33,7 @@ import {
   getCheapestPlan,
   getPlan,
   getSimilarPlans,
+  togglePlanProviders,
 } from "../../actions/fetchDataActions";
 
 import { toggleDataCaptureModal } from "../../actions/userInputActions";
@@ -112,6 +113,10 @@ class PlanDetails extends Component<DetailsProps> {
     // if (!this.props.plan.name) {
     //   //this.goToHome();
     // }
+  }
+
+  componentDidUpdate() {
+    // console.log("hafa");
   }
 
   params: any[] = [];
@@ -252,7 +257,7 @@ class PlanDetails extends Component<DetailsProps> {
                         </span>
                       </button>
                     </div>
-                    <div>
+                    <div className="display--none">
                       <button
                         type="button"
                         aria-label="Tooltip: "
@@ -1211,12 +1216,10 @@ class PlanDetails extends Component<DetailsProps> {
                       <button
                         className="ds-h2 text-align--left sans fill--transparent"
                         aria-expanded="false"
-                        onClick={() =>
-                          this.toggleCollapsible("collapse_providers")
-                        }
+                        onClick={() => this.props.togglePlanProviders()}
                       >
                         Medical Providers
-                        {this.state.collapse_providers ? (
+                        {this.props.collapse_providers ? (
                           <FontAwesomeIcon
                             className="fas md-margin-right--1"
                             icon={faChevronDown}
@@ -1229,11 +1232,11 @@ class PlanDetails extends Component<DetailsProps> {
                         )}
                       </button>
                     </h2>
-                    <div hidden={this.state.collapse_providers ? true : false}>
+                    <div hidden={this.props.collapse_providers ? true : false}>
                       <table className="c-details-table">
                         <tbody
                           className={`${
-                            !this.state.collapse_providers
+                            !this.props.collapse_providers
                               ? "service-in-view "
                               : ""
                           } valign--top`}
@@ -1401,6 +1404,7 @@ class PlanDetails extends Component<DetailsProps> {
 
 const mapProps = (state: any) => {
   return {
+    collapse_providers: state.fetchData.collapse_providers,
     plans: state.fetchData.services,
     plan: state.fetchData.plan,
     similar_plans: state.fetchData.similar_plans,
@@ -1417,4 +1421,5 @@ export default connect(mapProps, {
   getCheapestPlan,
   toggleDataCaptureModal,
   getSimilarPlans,
+  togglePlanProviders,
 })(PlanDetails);

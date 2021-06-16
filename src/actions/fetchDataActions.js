@@ -24,7 +24,9 @@ import {
     FILTER_BY_PLAN_TYPE,
     GET_PLAN,
     GET_SIMILAR_PLANS,
-    GET_HMO
+    GET_HMO,
+
+    TOGGLE_PLAN_PROVIDERS
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions"
@@ -285,7 +287,8 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     let min = stripNonNumeric(budget[0]);
     let max = stripNonNumeric(budget[1]);
 
-    CAN_LOG && console.log("min", min, "max", max);
+    CAN_LOG &&
+        console.log("min", min, "max", max);
 
     let services = getState().fetchData.services
 
@@ -468,8 +471,11 @@ export const filterByBudget_and_or_Type = (params) => async (dispatch, getState)
     let recommended_plans = range.length > 0 ?
         // return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
         groupPlansByRange(plansByPlanType, range)
-
-        : plansByPlanType;
+        : budget.length > 0 ?
+            packages.filter(pckg => {
+                return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
+            })
+            : plansByPlanType;
 
     CAN_LOG && console.log("packages", packages);
     CAN_LOG && console.log("recommended_plans", recommended_plans);
@@ -539,6 +545,12 @@ export const setIsFilteringByBudget = () => (dispatch, getState) => {
     dispatch({
         type: IS_FILTERING_BY_BUDGET,
         payload: true
+    })
+}
+
+export const togglePlanProviders = () => (dispatch, getState) => {
+    dispatch({
+        type: TOGGLE_PLAN_PROVIDERS
     })
 }
 

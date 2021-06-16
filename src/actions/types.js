@@ -133,4 +133,6 @@ export const SET_IS_LOADING_OFF = "SET_IS_LOADING_OFF";
 
 export const GET_HMO = "GET_HMO";
 
+export const TOGGLE_PLAN_PROVIDERS = "TOGGLE_PLAN_PROVIDERS";
+
 //export const IS_FILTERING_BY_HMO = "IS_FILTERING_BY_HMO";

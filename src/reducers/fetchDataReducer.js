@@ -24,7 +24,9 @@ import {
     FILTER_BY_PLAN_TYPE,
     GET_PLAN,
     GET_SIMILAR_PLANS,
-    GET_HMO
+    GET_HMO,
+
+    TOGGLE_PLAN_PROVIDERS
 } from "../actions/types";
 
 const initialState = {
@@ -57,7 +59,7 @@ const initialState = {
     is_filtering_by_budget: false,
     is_filtering_by_plan_id: false,
     is_filtering_by_plan_type: false,
-
+    collapse_providers: true
 }
 
 export default function (state = initialState, action) {
@@ -205,6 +207,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 is_filtering_by_plan_type: action.payload
+            }
+
+        case TOGGLE_PLAN_PROVIDERS:
+            return {
+                ...state,
+                collapse_providers: !state.collapse_providers
             }
         default:
             return state

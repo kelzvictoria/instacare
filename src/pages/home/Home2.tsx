@@ -36,6 +36,7 @@ import {
   filterByPlanRange,
   getPlan,
   getSimilarPlans,
+  togglePlanProviders,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -335,4 +336,5 @@ export default connect(mapProps, {
   getSimilarPlans,
   resetSelectedProviders,
   toggleDataCaptureModal,
+  togglePlanProviders,
 })(Home);

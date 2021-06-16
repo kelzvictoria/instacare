@@ -242,7 +242,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                           this.props.match.path === "/hmos/*"
                           ? this.props.cheapest_plan_by_hmo
                           : this.props.cheapest_plan
-                      )} /year`
+                      )}/ year`
                     )}
                   </span>
                 )}
@@ -1946,6 +1946,12 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.history.push({ pathname: `/details/id/${serviceID}` });
   }
 
+  goToPlanProviders(serviceID) {
+    this.props.history.push({
+      pathname: `/details/id/${serviceID}/#providers`,
+    });
+  }
+
   getClickedPlan = async (index, type) => {
     let data = this.props.planServices[index];
     console.log("data", data);
@@ -3188,6 +3194,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     ) {
       await this.props.getRecommendedPlans(filterBoxParams);
       this.infiniteScrollDataReInitOnFilterApplied();
+      this.state.show_filter && this.toggleShowFilter();
     }
   };
 
@@ -3217,6 +3224,8 @@ class NewContent extends React.Component<homeProps, homeState> {
         healthSA_eligibility: false,
       },
     });
+
+    this.state.show_filter && this.toggleShowFilter();
   };
 
   goToProviders = () => {
@@ -4624,7 +4633,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             );
                                           }}
                                         >
-                                          Like This Plan
+                                          Buy This Plan
                                         </a>
                                       </div>
                                     </div>
@@ -4718,7 +4727,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         Total Benefit Limit
                                         <button
                                           type="button"
-                                          aria-label="Outpatient + Inpatient Limit"
+                                          aria-label="Out-patient + In-patient Limit"
                                           className="tooltip-trigger padding--0"
                                         >
                                           <span className="tooltip-icon-container tooltip-hover">
@@ -4918,7 +4927,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         Region of Cover
                                         <button
                                           type="button"
-                                          aria-label="The region the plan covers."
+                                          aria-label="The region of cover can be either local or international."
                                           className="tooltip-trigger padding--0"
                                         >
                                           <span className="tooltip-icon-container tooltip-hover">
@@ -4950,7 +4959,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         Medical Providers
                                         <button
                                           type="button"
-                                          aria-label="Hospitals that provide this plan"
+                                          aria-label="Hospitals networks under the plan"
                                           className="tooltip-trigger padding--0"
                                         >
                                           <span className="tooltip-icon-container tooltip-hover">
@@ -4964,12 +4973,15 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <div className="font-size--h2">
                                         <div className="font-size--h2">
                                           <a
-                                            onClick={() =>
-                                              this.goToDetails(plan.service_id)
-                                            }
+                                            onClick={() => {
+                                              this.goToPlanProviders(
+                                                plan.service_id
+                                              );
+                                              this.props.togglePlanProviders();
+                                            }}
                                             className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
                                             //href={`/details/id/${plan.service_id}/#providers`}
-                                            href="#"
+                                            // href="#"
                                           >
                                             {this.props.responses.providers
                                               .length > 0
@@ -5447,7 +5459,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       }}
                                       role="button"
                                     >
-                                      Like This Plan
+                                      Buy This Plan
                                     </a>
                                   </div>
                                 </div>
