@@ -1357,7 +1357,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Drugs Infusions
+                                      Plastic Surgeries
                                     </span>
                                   </th>
                                   <td
@@ -1368,7 +1368,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     }
                                   >
                                     <div className="c-star-rating">
-                                      <span>{first.drugs_infusions}</span>
+                                      <span>{first.plastic_surgeries}</span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
@@ -1381,7 +1381,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>{second.drugs_infusions}</span>
+                                        <span>{second.plastic_surgeries}</span>
                                       </div>
                                     </td>
                                   )}
@@ -1395,7 +1395,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>{third.drugs_infusions}</span>
+                                        <span>{third.plastic_surgeries}</span>
                                       </div>
                                     </td>
                                   )}
@@ -1892,7 +1892,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Intermediate Surgeries
+                                      Telemedicine
                                     </span>
                                   </th>
                                   <td
@@ -1903,9 +1903,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     }
                                   >
                                     <div className="c-star-rating">
-                                      <span>
-                                        {first.intermediate_surgeries}
-                                      </span>
+                                      <span>{first.telemedicine}</span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
@@ -1918,9 +1916,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>
-                                          {second.intermediate_surgeries}
-                                        </span>
+                                        <span>{second.telemedicine}</span>
                                       </div>
                                     </td>
                                   )}
@@ -1934,9 +1930,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>
-                                          {third.intermediate_surgeries}
-                                        </span>
+                                        <span>{third.telemedicine}</span>
                                       </div>
                                     </td>
                                   )}
@@ -1992,7 +1986,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Major Surgeries
+                                      Congenital Abnormalities
                                     </span>
                                   </th>
                                   <td
@@ -2003,7 +1997,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                     }
                                   >
                                     <div className="c-star-rating">
-                                      <span>{first.major_surgeries}</span>
+                                      <span>
+                                        {first.congenital_abnormalities}
+                                      </span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
@@ -2016,7 +2012,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>{second.major_surgeries}</span>
+                                        <span>
+                                          {second.congenital_abnormalities}
+                                        </span>
                                       </div>
                                     </td>
                                   )}
@@ -2030,7 +2028,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>{third.major_surgeries}</span>
+                                        <span>
+                                          {third.congenital_abnormalities}
+                                        </span>
                                       </div>
                                     </td>
                                   )}
@@ -2092,7 +2092,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Minor Surgeries
+                                      Surgeries
                                     </span>
                                   </th>
                                   <td
@@ -2103,7 +2103,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     }
                                   >
                                     <div className="c-star-rating">
-                                      <span>{first.minor_surgeries}</span>
+                                      <span>{first.surgeries}</span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
@@ -2116,7 +2116,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>{second.minor_surgeries}</span>
+                                        <span>{second.surgeries}</span>
                                       </div>
                                     </td>
                                   )}
@@ -2130,7 +2130,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>{third.minor_surgeries}</span>
+                                        <span>{third.surgeries}</span>
                                       </div>
                                     </td>
                                   )}
@@ -2425,7 +2425,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Prescribed Drugs
+                                      Outpatient Prescribed Drugs
                                     </span>
                                   </th>
                                   <td
@@ -2436,7 +2436,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                     }
                                   >
                                     <div className="c-star-rating">
-                                      <span>{first.prescribed_drugs}</span>
+                                      <span>
+                                        {first.outpatient_prescribed_drugs}
+                                      </span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
@@ -2449,7 +2451,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>{first.prescribed_drugs}</span>
+                                        <span>
+                                          {first.outpatient_prescribed_drugs}
+                                        </span>
                                       </div>
                                     </td>
                                   )}
@@ -2463,7 +2467,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                       }
                                     >
                                       <div className="c-star-rating">
-                                        <span>{third.prescribed_drugs}</span>
+                                        <span>
+                                          {third.outpatient_prescribed_drugs}
+                                        </span>
                                       </div>
                                     </td>
                                   )}
@@ -3572,15 +3578,15 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Drugs Infusions
+                                      Plastic Surgeries
                                     </span>
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.drugs_infusions !== "No" &&
-                                          first.drugs_infusions !== ""
+                                          first.plastic_surgeries !== "No" &&
+                                          first.plastic_surgeries !== ""
                                             ? check
                                             : uncheck
                                         }
@@ -3595,8 +3601,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.drugs_infusions !== "No" &&
-                                            second.drugs_infusions !== ""
+                                            second.plastic_surgeries !== "No" &&
+                                            second.plastic_surgeries !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -3612,8 +3618,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.drugs_infusions !== "No" &&
-                                            third.drugs_infusions !== ""
+                                            third.plastic_surgeries !== "No" &&
+                                            third.plastic_surgeries !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4158,9 +4164,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.intermediate_surgeries !==
-                                            "No" &&
-                                          first.intermediate_surgeries !== ""
+                                          first.telemedicine !== "No" &&
+                                          first.telemedicine !== ""
                                             ? check
                                             : uncheck
                                         }
@@ -4175,9 +4180,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.intermediate_surgeries !==
-                                              "No" &&
-                                            second.intermediate_surgeries !== ""
+                                            second.telemedicine !== "No" &&
+                                            second.telemedicine !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4193,9 +4197,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.intermediate_surgeries !==
-                                              "No" &&
-                                            third.intermediate_surgeries !== ""
+                                            third.telemedicine !== "No" &&
+                                            third.telemedicine !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4267,15 +4270,16 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Major Surgeries
+                                      Congenital Abnormalities
                                     </span>
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.major_surgeries !== "No" &&
-                                          first.major_surgeries !== ""
+                                          first.congenital_abnormalities !==
+                                            "No" &&
+                                          first.congenital_abnormalities !== ""
                                             ? check
                                             : uncheck
                                         }
@@ -4290,8 +4294,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.major_surgeries !== "No" &&
-                                            second.major_surgeries !== ""
+                                            second.congenital_abnormalities !==
+                                              "No" &&
+                                            second.congenital_abnormalities !==
+                                              ""
                                               ? check
                                               : uncheck
                                           }
@@ -4307,8 +4313,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.major_surgeries !== "No" &&
-                                            third.major_surgeries !== ""
+                                            third.congenital_abnormalities !==
+                                              "No" &&
+                                            third.congenital_abnormalities !==
+                                              ""
                                               ? check
                                               : uncheck
                                           }
@@ -4382,15 +4390,15 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Minor Surgeries
+                                      Surgeries
                                     </span>
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.minor_surgeries !== "No" &&
-                                          first.minor_surgeries !== ""
+                                          first.surgeries !== "No" &&
+                                          first.surgeries !== ""
                                             ? check
                                             : uncheck
                                         }
@@ -4405,8 +4413,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.minor_surgeries !== "No" &&
-                                            second.minor_surgeries !== ""
+                                            second.surgeries !== "No" &&
+                                            second.surgeries !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4422,8 +4430,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.minor_surgeries !== "No" &&
-                                            third.minor_surgeries !== ""
+                                            third.surgeries !== "No" &&
+                                            third.surgeries !== ""
                                               ? check
                                               : uncheck
                                           }
@@ -4749,15 +4757,17 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Prescribed Drugs
+                                      Outpatient Prescribed Drugs
                                     </span>
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.prescribed_drugs !== "No" &&
-                                          first.prescribed_drugs !== ""
+                                          first.outpatient_prescribed_drugs !==
+                                            "No" &&
+                                          first.outpatient_prescribed_drugs !==
+                                            ""
                                             ? check
                                             : uncheck
                                         }
@@ -4772,8 +4782,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.prescribed_drugs !== "No" &&
-                                            second.prescribed_drugs !== ""
+                                            second.outpatient_prescribed_drugs !==
+                                              "No" &&
+                                            second.outpatient_prescribed_drugs !==
+                                              ""
                                               ? check
                                               : uncheck
                                           }
@@ -4789,8 +4801,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.prescribed_drugs !== "No" &&
-                                            third.prescribed_drugs !== ""
+                                            third.outpatient_prescribed_drugs !==
+                                              "No" &&
+                                            third.outpatient_prescribed_drugs !==
+                                              ""
                                               ? check
                                               : uncheck
                                           }
@@ -5290,19 +5304,19 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Drugs Infusions
+                                      Plastic Surgeries
                                     </span>
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
-                                      <span>{first.drugs_infusions}</span>
+                                      <span>{first.plastic_surgeries}</span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{second.drugs_infusions}</span>
+                                        <span>{second.plastic_surgeries}</span>
                                       </div>
                                     </td>
                                   )}
@@ -5310,7 +5324,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{third.drugs_infusions}</span>
+                                        <span>{third.plastic_surgeries}</span>
                                       </div>
                                     </td>
                                   )}
@@ -5632,18 +5646,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
-                                      <span>
-                                        {first.intermediate_surgeries}
-                                      </span>
+                                      <span>{first.telemedicine}</span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>
-                                          {second.intermediate_surgeries}
-                                        </span>
+                                        <span>{second.telemedicine}</span>
                                       </div>
                                     </td>
                                   )}
@@ -5651,9 +5661,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>
-                                          {third.intermediate_surgeries}
-                                        </span>
+                                        <span>{third.telemedicine}</span>
                                       </div>
                                     </td>
                                   )}
@@ -5691,19 +5699,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Major Surgeries
+                                      Congenital Abnormalities
                                     </span>
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
-                                      <span>{first.major_surgeries}</span>
+                                      <span>
+                                        {first.congenital_abnormalities}
+                                      </span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{second.major_surgeries}</span>
+                                        <span>
+                                          {second.congenital_abnormalities}
+                                        </span>
                                       </div>
                                     </td>
                                   )}
@@ -5711,7 +5723,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{third.major_surgeries}</span>
+                                        <span>
+                                          {third.congenital_abnormalities}
+                                        </span>
                                       </div>
                                     </td>
                                   )}
@@ -5755,19 +5769,19 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Minor Surgeries
+                                      Surgeries
                                     </span>
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
-                                      <span>{first.minor_surgeries}</span>
+                                      <span>{first.surgeries}</span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{second.minor_surgeries}</span>
+                                        <span>{second.surgeries}</span>
                                       </div>
                                     </td>
                                   )}
@@ -5775,7 +5789,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{third.minor_surgeries}</span>
+                                        <span>{third.surgeries}</span>
                                       </div>
                                     </td>
                                   )}
@@ -5962,19 +5976,23 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Prescribed Drugs
+                                      Outpatient Prescribed Drugs
                                     </span>
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
-                                      <span>{first.prescribed_drugs}</span>
+                                      <span>
+                                        {first.outpatient_prescribed_drugs}
+                                      </span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{first.prescribed_drugs}</span>
+                                        <span>
+                                          {first.outpatient_prescribed_drugs}
+                                        </span>
                                       </div>
                                     </td>
                                   )}
@@ -5982,7 +6000,9 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{third.prescribed_drugs}</span>
+                                        <span>
+                                          {third.outpatient_prescribed_drugs}
+                                        </span>
                                       </div>
                                     </td>
                                   )}

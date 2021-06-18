@@ -26,7 +26,9 @@ import {
     GET_SIMILAR_PLANS,
     GET_HMO,
 
-    TOGGLE_PLAN_PROVIDERS
+    TOGGLE_PLAN_PROVIDERS,
+    UPDATE_INFINITE_SCROLL_DATA,
+    SET_IS_INFINNITE_SCROLL_HAS_MORE
 } from "../actions/types";
 
 const initialState = {
@@ -59,7 +61,10 @@ const initialState = {
     is_filtering_by_budget: false,
     is_filtering_by_plan_id: false,
     is_filtering_by_plan_type: false,
-    collapse_providers: true
+    collapse_providers: true,
+    infiniteScrollData: [],
+    infiniteScrollDataHasMore: false,
+    pageSize: 5
 }
 
 export default function (state = initialState, action) {
@@ -214,6 +219,22 @@ export default function (state = initialState, action) {
                 ...state,
                 collapse_providers: !state.collapse_providers
             }
+
+        case UPDATE_INFINITE_SCROLL_DATA:
+            //  localStorage["infiniteScrollData"] = JSON.stringify(action.payload)
+            console.log("action.payload", action.payload);
+            return {
+                ...state,
+                infiniteScrollData: action.payload
+            }
+
+        case SET_IS_INFINNITE_SCROLL_HAS_MORE:
+            localStorage[""] = JSON.stringify(action.payload);
+            return {
+                ...state,
+                infiniteScrollDataHasMore: !state.infiniteScrollDataHasMore
+            }
+
         default:
             return state
 

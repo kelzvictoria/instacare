@@ -37,6 +37,7 @@ import {
   getPlan,
   getSimilarPlans,
   togglePlanProviders,
+  updateInfiniteScrollData,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -198,6 +199,8 @@ class Home extends Component<QuizProps, {}> {
   };
 
   async UNSAFE_componentWillMount() {
+    console.log("this.props.match.path", this.props.match.path);
+
     //   !localStorage["providers"] && (await this.props.getProviders());
     //   !localStorage["plans"] && (await this.props.getPlans());
     //!localStorage["services"] && (await this.props.getServices());
@@ -225,6 +228,20 @@ class Home extends Component<QuizProps, {}> {
         this.getCheapestPlanByHMO();
       }
     }
+
+    this.props.match.path === "/hmos/*"
+      ? await this.props.updateInfiniteScrollData(
+          this.props.plansByHMO,
+          false,
+          null,
+          null
+        )
+      : await this.props.updateInfiniteScrollData(
+          this.props.planServices,
+          false,
+          null,
+          null
+        );
     //  console.log("localStorage['services']", localStorage["services"]);
   }
 
@@ -275,6 +292,7 @@ const mapProps = (state: any) => ({
   isSonCheckboxChecked: state.quiz.isSonCheckboxChecked,
   isDaughterCheckboxChecked: state.quiz.isDaughterCheckboxChecked,
   is_fetching_data: state.fetchData.is_fetching_data,
+  infiniteScrollData: state.fetchData.infiniteScrollData,
 });
 
 export default connect(mapProps, {
@@ -337,4 +355,5 @@ export default connect(mapProps, {
   resetSelectedProviders,
   toggleDataCaptureModal,
   togglePlanProviders,
+  updateInfiniteScrollData,
 })(Home);

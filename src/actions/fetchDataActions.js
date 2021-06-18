@@ -26,7 +26,9 @@ import {
     GET_SIMILAR_PLANS,
     GET_HMO,
 
-    TOGGLE_PLAN_PROVIDERS
+    TOGGLE_PLAN_PROVIDERS,
+    UPDATE_INFINITE_SCROLL_DATA,
+    SET_IS_INFINNITE_SCROLL_HAS_MORE
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions"
@@ -775,4 +777,33 @@ const groupPlansByRange = (packages, range) => {
     }
     CAN_LOG && console.log("filteredPlansByRange", filteredPlansByRange);
     return filteredPlansByRange;
+}
+
+export const updateInfiniteScrollData = (plans, hasMore, start_index, end_index) => async (dispatch, getState) => {
+    let pageSize = await getState().fetchData.pageSize;
+    let infiniteScrollData = await plans.slice(0, pageSize);
+    let prevInfiniteScrollData = await getState().fetchData.infiniteScrollData;
+    // let allPlans = await getState().fetchData.services;
+    if (hasMore) {
+        let data = prevInfiniteScrollData.concat(
+            plans.slice(start_index, end_index)
+        )
+
+        dispatch({
+            type: UPDATE_INFINITE_SCROLL_DATA,
+            payload: data
+        })
+
+    } else {
+        dispatch({
+            type: UPDATE_INFINITE_SCROLL_DATA,
+            payload: infiniteScrollData
+        })
+    }
+}
+
+export const setInfiniteScrollHasMore = () => (dispatch, getState) => {
+    dispatch({
+        type: SET_IS_INFINNITE_SCROLL_HAS_MORE
+    })
 }

@@ -94,10 +94,10 @@ class NewContent extends React.Component<homeProps, homeState> {
     current: 1,
     minIndex: 0,
     maxIndex: 0,
-    infiniteScrollData:
-      this.props.match.path === "/hmos/*"
-        ? this.props.plansByHMO.slice(0, pageSize)
-        : this.props.planServices.slice(0, pageSize),
+    //infiniteScrollData: this.props.infiniteScrollData,
+    // this.props.match.path === "/hmos/*"
+    //   ? this.props.plansByHMO.slice(0, pageSize)
+    //   : this.props.planServices.slice(0, pageSize),
   };
 
   toggleModal = () => {
@@ -3274,12 +3274,19 @@ class NewContent extends React.Component<homeProps, homeState> {
         maxIndex: end_index,
       });
 
+      this.props.updateInfiniteScrollData(
+        apiData,
+        true,
+        start_index,
+        end_index
+      );
+
       //  setTimeout(() => {
-      this.setState({
-        infiniteScrollData: this.state.infiniteScrollData.concat(
-          apiData.slice(start_index, end_index)
-        ),
-      });
+      // this.setState({
+      //   infiniteScrollData: this.state.infiniteScrollData.concat(
+      //     apiData.slice(start_index, end_index)
+      //   ),
+      // });
       // }, 1500);
     }
   };
@@ -3287,6 +3294,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   componentDidUpdate() {}
 
   render() {
+    console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
+
     let plansByHMO = this.props.plansByHMO;
     let allPlans = this.props.planServices;
     // console.log("allPlans", allPlans);
@@ -3303,8 +3312,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     //console.log("data", data);
     // console.log("this.state.maxIndex", this.state.maxIndex);
 
-    let apiData = this.state.infiniteScrollData;
-    // console.log("apiData", apiData);
+    let apiData = this.props.infiniteScrollData;
+    console.log("apiData", apiData);
 
     let {
       //  data,
@@ -4459,7 +4468,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               </div>
             </div>
             <InfiniteScroll
-              dataLength={this.state.infiniteScrollData.length}
+              dataLength={this.props.infiniteScrollData.length}
               next={() => {
                 this.handlePageChange(this.state.current);
               }}
@@ -5124,23 +5133,37 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           <li className="c-status-list__item font-size--small">
                                             <img
                                               src={
-                                                plan.minor_surgeries !== "No" &&
-                                                plan.minor_surgeries !== ""
+                                                plan.surgeries !== "No" &&
+                                                plan.surgeries !== ""
                                                   ? check
                                                   : uncheck
                                               }
                                               className="c-status-list__item__icon"
                                             />
                                             <span className="text-transform--capitalize">
-                                              Minor Surgeries
+                                              Surgeries
                                             </span>
                                           </li>
                                           <li className="c-status-list__item font-size--small">
                                             <img
                                               src={
-                                                plan.intermediate_surgeries !==
+                                                plan.telemedicine !== "No" &&
+                                                plan.telemedicine !== ""
+                                                  ? check
+                                                  : uncheck
+                                              }
+                                              className="c-status-list__item__icon"
+                                            />
+                                            <span className="text-transform--capitalize">
+                                              Telemedicine
+                                            </span>
+                                          </li>
+                                          <li className="c-status-list__item font-size--small">
+                                            <img
+                                              src={
+                                                plan.congenital_abnormalities !==
                                                   "No" &&
-                                                plan.intermediate_surgeries !==
+                                                plan.congenital_abnormalities !==
                                                   ""
                                                   ? check
                                                   : uncheck
@@ -5148,21 +5171,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                               className="c-status-list__item__icon"
                                             />
                                             <span className="text-transform--capitalize">
-                                              Intermediate Surgeries
-                                            </span>
-                                          </li>
-                                          <li className="c-status-list__item font-size--small">
-                                            <img
-                                              src={
-                                                plan.major_surgeries !== "No" &&
-                                                plan.major_surgeries !== ""
-                                                  ? check
-                                                  : uncheck
-                                              }
-                                              className="c-status-list__item__icon"
-                                            />
-                                            <span className="text-transform--capitalize">
-                                              Major Surgeries
+                                              Congenital Abnormalities
                                             </span>
                                           </li>{" "}
                                         </ul>
@@ -5477,18 +5486,18 @@ class NewContent extends React.Component<homeProps, homeState> {
                 </ul>
 
                 {/* <div className="pag-div">
-                <Pagination
-                  total={data.length}
-                  showTotal={(total, range) =>
-                    `${range[0]} - ${range[1]} of ${total} items`
-                  }
-                  // defaultPageSize={pageSize}
-                  //defaultCurrent={1}
-                  pageSize={pageSize}
-                  current={current}
-                  onChange={this.handlePageChange}
-                />
-              </div> */}
+                  <Pagination
+                    total={data.length}
+                    showTotal={(total, range) =>
+                      `${range[0]} - ${range[1]} of ${total} items`
+                    }
+                    // defaultPageSize={pageSize}
+                    //defaultCurrent={1}
+                    pageSize={pageSize}
+                    current={current}
+                    onChange={this.handlePageChange}
+                  />
+                </div> */}
               </div>
             </InfiniteScroll>
           </div>

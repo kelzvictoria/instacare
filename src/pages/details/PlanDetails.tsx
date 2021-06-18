@@ -924,7 +924,7 @@ class PlanDetails extends Component<DetailsProps> {
                           this.toggleCollapsible("collapse_prescriptions")
                         }
                       >
-                        Prescribed Drugs
+                        Outpatient Prescribed Drugs
                         {this.state.collapse_prescriptions ? (
                           <FontAwesomeIcon
                             className="fas md-margin-right--1"
@@ -952,25 +952,12 @@ class PlanDetails extends Component<DetailsProps> {
                           <tr className="border-bottom--2">
                             <th scope="row">
                               <span className="display--block">
-                                Prescribed Drugs
+                                Outpatient Prescribed Drugs
                               </span>
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.prescribed_drugs}</span>
-                              </div>
-                            </td>
-                          </tr>
-
-                          <tr className="border-bottom--2">
-                            <th scope="row">
-                              <span className="display--block">
-                                Drugs Infusions
-                              </span>
-                            </th>
-                            <td>
-                              <div className="c-star-rating">
-                                <span>{plan.drugs_infusions}</span>
+                                <span>{plan.outpatient_prescribed_drugs}</span>
                               </div>
                             </td>
                           </tr>
@@ -1200,6 +1187,19 @@ class PlanDetails extends Component<DetailsProps> {
                             <td>
                               <div className="c-star-rating">
                                 <span>{plan.covid_19_treatment}</span>
+                              </div>
+                            </td>
+                          </tr>
+
+                          <tr className="border-bottom--2">
+                            <th scope="row">
+                              <span className="display--block">
+                                Plastic Surgeries
+                              </span>
+                            </th>
+                            <td>
+                              <div className="c-star-rating">
+                                <span>{plan.plastic_surgeries}</span>
                               </div>
                             </td>
                           </tr>
