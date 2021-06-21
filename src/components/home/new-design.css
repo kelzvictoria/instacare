@@ -173,6 +173,16 @@ select.c-field {
   line-height: 1.5;
 }
 
+.hmo-svg-img,
+.home-svg-img {
+  width: 450px !important;
+  margin: auto;
+}
+
+.home-svg-img img {
+  width: 100%;
+}
+
 @media (min-width: 1024px) {
   .c--health .plan-card-inner,
   .-plan-card--truncated .plan-card-inner {
@@ -808,7 +818,7 @@ a {
 .hmo-svg-img,
 .home-svg-img {
   display: flex;
-  height: 100% !important;
+  /* height: 100% !important; */
   justify-content: center;
 }
 
@@ -816,7 +826,7 @@ a {
 .home-svg-img img {
   /* height: 100% !important; */
   margin-bottom: 1.2rem;
-  height: 80% !important;
+  /* height: 80% !important; */
 }
 
 @media (max-width: 999px) and (min-width: 768px) {

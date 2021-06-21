@@ -33,7 +33,9 @@ import "./new-design.css";
 
 import searching from "../../imgs/searching.svg";
 import seniors from "../../imgs/seniors.png";
-import family from "../../imgs/family-pic.png";
+//import family from "../../imgs/family-pic.png";
+
+import family from "../../imgs/fam-l.png";
 
 import { formatAsCurrency } from "../../utils";
 import DataCaptureModal from "../payment/DataCapture";
@@ -212,42 +214,42 @@ class NewContent extends React.Component<homeProps, homeState> {
         <div className="view2-svg-and-text svg-and-text">
           <Col xs={24} md={24} className="svg-img-div">
             <div className="svg-img home-svg-img">
-              <img src={searching}></img>
-              {/* <img src={family}></img> */}
-              <p className="tiny-descrptn">
-                {
-                  //this.props.plansByHMO.length > 0
-                  this.props.hmo.length > 0 &&
-                  this.props.plansByHMO.length > 0 &&
-                  this.props.match.path === "/hmos/*"
-                    ? `${this.props.hmo[0].name} plans starting from `
-                    : this.props.hmo.length > 0 &&
-                      this.props.plansByHMO.length === 0 &&
-                      this.props.match.path === "/hmos/*"
-                    ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
-                    : `Find HMO Plans Starting from`
-                }
-                {this.props.plansByHMO.length === 0 &&
-                this.props.match.path === "/hmos/*" ? (
-                  ""
-                ) : (
-                  <span className={styles.headingSpan}>
-                    {this.props.is_fetching_data &&
-                    !this.props.cheapest_plan ? (
-                      <Spin className="cheapest-plan" />
-                    ) : (
-                      ` ₦${this.numberwithCommas(
-                        // this.props.plansByHMO.length > 0
-                        this.props.hmo.length > 0 &&
-                          this.props.match.path === "/hmos/*"
-                          ? this.props.cheapest_plan_by_hmo
-                          : this.props.cheapest_plan
-                      )}/ year`
-                    )}
-                  </span>
-                )}
-              </p>
+              {/* <img src={searching} /> */}
+              <img src={family} />
             </div>
+
+            <p className="tiny-descrptn">
+              {
+                //this.props.plansByHMO.length > 0
+                this.props.hmo.length > 0 &&
+                this.props.plansByHMO.length > 0 &&
+                this.props.match.path === "/hmos/*"
+                  ? `${this.props.hmo[0].name} plans starting from `
+                  : this.props.hmo.length > 0 &&
+                    this.props.plansByHMO.length === 0 &&
+                    this.props.match.path === "/hmos/*"
+                  ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
+                  : `Find HMO Plans Starting from`
+              }
+              {this.props.plansByHMO.length === 0 &&
+              this.props.match.path === "/hmos/*" ? (
+                ""
+              ) : (
+                <span className={styles.headingSpan}>
+                  {this.props.is_fetching_data && !this.props.cheapest_plan ? (
+                    <Spin className="cheapest-plan" />
+                  ) : (
+                    ` ₦${this.numberwithCommas(
+                      // this.props.plansByHMO.length > 0
+                      this.props.hmo.length > 0 &&
+                        this.props.match.path === "/hmos/*"
+                        ? this.props.cheapest_plan_by_hmo
+                        : this.props.cheapest_plan
+                    )}/ year`
+                  )}
+                </span>
+              )}
+            </p>
           </Col>
           <Col xs={24} md={14} className="view2-banner-text banner-text">
             <div className={styles.banner}>

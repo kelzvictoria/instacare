@@ -20,14 +20,14 @@ h5,
 
 .svg-img {
   /*  width: 100%;*/
-  height: 100%;
+  /* height: 100%; */
 }
 
 .svg-img img {
   /* height: 200px !important;
   width: 100%; */
   /* height: 100% !important; */
-  height: 50% !important;
+  /* height: 50% !important; */
 }
 
 .svg-img-div {
@@ -943,7 +943,7 @@ div#thirdPage {
   }
 
   .svg-img img {
-    height: 70% !important;
+    /* height: 70% !important; */
   }
 
   .svg-img {
@@ -6361,7 +6361,7 @@ input.form-control {
 
 .view1-svg-and-text .svg-img {
   display: flex;
-  height: 50%;
+  /* height: 50%; */
   flex-direction: column;
 }
 
