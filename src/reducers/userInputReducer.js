@@ -103,7 +103,7 @@ const initialState = {
     daughterCount: 1,
     tab_opened: "highlights",
     responses: {
-        budget: [0, 300000],
+        budget: [100, 300000],
         // type: "single",
         // price_range: "silver",
         type: [],

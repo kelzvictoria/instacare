@@ -28,7 +28,8 @@ import {
 
     TOGGLE_PLAN_PROVIDERS,
     UPDATE_INFINITE_SCROLL_DATA,
-    SET_IS_INFINNITE_SCROLL_HAS_MORE
+    SET_IS_INFINNITE_SCROLL_HAS_MORE,
+    RESET_INFINITE_SCROLL_DATA
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions"
@@ -146,7 +147,7 @@ export const getPlansByID = (planID) => async (dispatch, getState) => {
     let services = getState().fetchData.services;
     CAN_LOG && console.log("planID", planID);
     let plansByID = services.filter(plan => {
-        return plan.plan_id.plan_id == planID
+        return plan.service_id == planID
     });
 
     CAN_LOG && console.log("plansByID", plansByID);
@@ -228,6 +229,10 @@ export const getServices = () => async (dispatch, getState) => {
     await dispatch(getPlans());
 
     let services = [];
+    let budget = getState().quiz.responses.budget;
+
+    let min = budget[0];
+    let max = budget[1];
 
     await axios
         .get(`${API_URL}/api/services`
@@ -236,7 +241,9 @@ export const getServices = () => async (dispatch, getState) => {
         .then((res) => {
             if (res.data.length > 0) {
                 services = res.data.map(obj => obj.data);
-                services = services.filter(service => stripNonNumeric(service.price) > 100)
+                services = services.filter(service => //stripNonNumeric(service.price) > 100 &&
+                    stripNonNumeric(service.price) >= min && stripNonNumeric(service.price) <= max
+                )
                 for (let i = 0; i < services.length; i++) {
                     let hmoID = services[i]["hmo_id"];
                     let planID = services[i]["plan_id"];
@@ -292,7 +299,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     CAN_LOG &&
         console.log("min", min, "max", max);
 
-    let services = getState().fetchData.services
+    let services = await getState().fetchData.services
 
     let plansByPlanType = groupPlansByType(services, planType);
 
@@ -472,7 +479,7 @@ export const filterByBudget_and_or_Type = (params) => async (dispatch, getState)
 
     let recommended_plans = range.length > 0 ?
         // return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
-        groupPlansByRange(plansByPlanType, range)
+        groupPlansByRange(packages, range)
         : budget.length > 0 ?
             packages.filter(pckg => {
                 return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
@@ -800,6 +807,12 @@ export const updateInfiniteScrollData = (plans, hasMore, start_index, end_index)
             payload: infiniteScrollData
         })
     }
+}
+
+export const resetInfiniteScrollData = () => (dispatch, getState) => {
+    dispatch({
+        type: RESET_INFINITE_SCROLL_DATA
+    })
 }
 
 export const setInfiniteScrollHasMore = () => (dispatch, getState) => {

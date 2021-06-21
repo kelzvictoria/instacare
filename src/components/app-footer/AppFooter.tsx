@@ -13,6 +13,7 @@ import {
   faLinkedin,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
+import { resetInfiniteScrollData } from "../../actions/fetchDataActions";
 import { resetType, updateType } from "../../actions/userInputActions";
 
 import {
@@ -102,16 +103,20 @@ interface FooterProps {
   dispatch(args: any): any;
 }
 
+const pageSize = 5;
+
 class AppFooter extends Component<FooterProps, {}> {
   constructor(props) {
     super(props);
-    this.state = {
-      open: false,
-    };
+
     this.handleHMOClick = this.handleHMOClick.bind(this);
   }
-
-  state = {};
+  state = {
+    open: false,
+    current: 1,
+    minIndex: 0,
+    maxIndex: 0,
+  };
 
   handleHMOClick = (hmo) => {
     console.log("this.props", this.props);
@@ -149,19 +154,67 @@ class AppFooter extends Component<FooterProps, {}> {
     this.filterByBudget_and_or_Type();
   }
 
-  filterByBudget_and_or_Type() {
+  async filterByBudget_and_or_Type() {
+    let range =
+      this.props.responses.price_range.length > 0
+        ? this.props.responses.price_range
+        : [];
+
     let budget =
       this.props.responses.budget.length > 0 ? this.props.responses.budget : [];
+
     let type =
       this.props.responses.type.length > 0 ? this.props.responses.type[0] : [];
 
     let params = {
       budget,
       type,
+      range,
     };
 
-    this.props.filterByBudget_and_or_Type(params);
+    await this.props.filterByBudget_and_or_Type(params);
+    //  await this.props.resetInfiniteScrollData();
+    // this.infiniteScrollDataReInitOnFilterApplied();
   }
+
+  infiniteScrollDataReInitOnFilterApplied = async () => {
+    this.setState({
+      current: 1,
+      minIndex: 0,
+      maxIndex: pageSize,
+      // infiniteScrollData:
+      //   this.props.match.path === "/hmos/*"
+      //     ? this.props.plansByHMO.slice(0, pageSize)
+      //     : this.props.planServices.slice(0, pageSize),
+    });
+
+    let page = this.state.current;
+    let plansByHMO = this.props.plansByHMO;
+    let allPlans = this.props.planServices;
+
+    let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+
+    console.log("apiData", apiData);
+
+    let start_index = (page - 1) * pageSize;
+    let end_index = pageSize * page;
+
+    console.log("start_index", start_index);
+    console.log("end_index", end_index);
+
+    this.setState({
+      current: page,
+      minIndex: start_index,
+      maxIndex: end_index,
+    });
+
+    await this.props.updateInfiniteScrollData(
+      apiData,
+      true,
+      start_index,
+      end_index
+    );
+  };
 
   goToHome = () => {
     this.props.history.push({
@@ -551,6 +604,8 @@ const mapProps = (state: any) => {
   return {
     // ...state.quiz.quiz,
     // ...state.quiz,
+    plansByHMO: state.fetchData.plansByHMO,
+    planServices: state.fetchData.services,
     hmos: state.fetchData.hmos,
     responses: state.quiz.responses,
   };
@@ -560,4 +615,5 @@ export default connect(mapProps, {
   resetType,
   updateType,
   filterByBudget_and_or_Type,
+  resetInfiniteScrollData,
 })(AppFooter);

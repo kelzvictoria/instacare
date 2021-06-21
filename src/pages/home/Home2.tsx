@@ -38,6 +38,7 @@ import {
   getSimilarPlans,
   togglePlanProviders,
   updateInfiniteScrollData,
+  resetInfiniteScrollData,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -199,7 +200,7 @@ class Home extends Component<QuizProps, {}> {
   };
 
   async UNSAFE_componentWillMount() {
-    console.log("this.props.match.path", this.props.match.path);
+    // console.log("this.props.match.path", this.props.match.path);
 
     //   !localStorage["providers"] && (await this.props.getProviders());
     //   !localStorage["plans"] && (await this.props.getPlans());
@@ -356,4 +357,5 @@ export default connect(mapProps, {
   toggleDataCaptureModal,
   togglePlanProviders,
   updateInfiniteScrollData,
+  resetInfiniteScrollData,
 })(Home);

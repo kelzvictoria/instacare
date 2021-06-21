@@ -382,6 +382,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   async filterByBudget_and_or_Type() {
+    console.log("in filt");
+
     let range =
       this.props.responses.price_range.length > 0
         ? this.props.responses.price_range
@@ -398,6 +400,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     };
 
     await this.props.filterByBudget_and_or_Type(params);
+    await this.props.resetInfiniteScrollData();
     this.infiniteScrollDataReInitOnFilterApplied();
   }
 
@@ -2818,8 +2821,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     //console.log"toggle");
 
     this.setState({
-      show_med_mgt_program_multiselect: !this.state
-        .show_med_mgt_program_multiselect,
+      show_med_mgt_program_multiselect:
+        !this.state.show_med_mgt_program_multiselect,
     });
   };
 
@@ -3193,9 +3196,16 @@ class NewContent extends React.Component<homeProps, homeState> {
       planID
     ) {
       await this.props.getRecommendedPlans(filterBoxParams);
+      await this.props.resetInfiniteScrollData();
       this.infiniteScrollDataReInitOnFilterApplied();
       this.state.show_filter && this.toggleShowFilter();
     }
+  };
+
+  getPlansByID = async (planID) => {
+    await this.props.getPlansByID(planID);
+    await this.props.resetInfiniteScrollData();
+    this.infiniteScrollDataReInitOnFilterApplied();
   };
 
   resetServices() {
@@ -3234,52 +3244,62 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   };
 
-  infiniteScrollDataReInitOnFilterApplied = () => {
+  infiniteScrollDataReInitOnFilterApplied = async () => {
     this.setState({
       current: 1,
       minIndex: 0,
       maxIndex: pageSize,
-      infiniteScrollData:
-        this.props.match.path === "/hmos/*"
-          ? this.props.plansByHMO.slice(0, pageSize)
-          : this.props.planServices.slice(0, pageSize),
+      // infiniteScrollData:
+      //   this.props.match.path === "/hmos/*"
+      //     ? this.props.plansByHMO.slice(0, pageSize)
+      //     : this.props.planServices.slice(0, pageSize),
     });
+    let page = this.state.current;
+    let plansByHMO = this.props.plansByHMO;
+    let allPlans = this.props.planServices;
+
+    let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+
+    console.log("apiData", apiData);
+
+    let start_index = (page - 1) * pageSize;
+    let end_index = pageSize * page;
+
+    console.log("start_index", start_index);
+    console.log("end_index", end_index);
+
+    this.setState({
+      current: page,
+      minIndex: start_index,
+      maxIndex: end_index,
+    });
+
+    await this.props.updateInfiniteScrollData(
+      apiData,
+      true,
+      start_index,
+      end_index
+    );
   };
 
   handlePageChange = async (page) => {
-    // console.log("page", page);
+    console.log("page", page);
 
     let plansByHMO = this.props.plansByHMO;
     let allPlans = this.props.planServices;
 
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
+    console.log("apiData", apiData);
+
     let total_num_of_pages = apiData.length / pageSize;
 
-    //  console.log("total_num_of_pages", total_num_of_pages);
+    console.log("total_num_of_pages", total_num_of_pages);
 
     if (page < total_num_of_pages) {
       page = page + 1;
 
       //console.log("page + 1", page);
-      let start_index = (page - 1) * pageSize;
-      let end_index = pageSize * page;
-
-      // console.log("start_index", start_index);
-      // console.log("end_index", end_index);
-
-      this.setState({
-        current: page,
-        minIndex: start_index,
-        maxIndex: end_index,
-      });
-
-      this.props.updateInfiniteScrollData(
-        apiData,
-        true,
-        start_index,
-        end_index
-      );
 
       //  setTimeout(() => {
       // this.setState({
@@ -3289,12 +3309,31 @@ class NewContent extends React.Component<homeProps, homeState> {
       // });
       // }, 1500);
     }
+
+    let start_index = (page - 1) * pageSize;
+    let end_index = pageSize * page;
+
+    console.log("start_index", start_index);
+    console.log("end_index", end_index);
+
+    this.setState({
+      current: page,
+      minIndex: start_index,
+      maxIndex: end_index,
+    });
+
+    await this.props.updateInfiniteScrollData(
+      apiData,
+      true,
+      start_index,
+      end_index
+    );
   };
 
   componentDidUpdate() {}
 
   render() {
-    console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
+    //  console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
 
     let plansByHMO = this.props.plansByHMO;
     let allPlans = this.props.planServices;
@@ -3309,7 +3348,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     // console.log("this.state.maxIndex", this.state.maxIndex);
     //  console.log("data", data);
 
-    //console.log("data", data);
+    console.log("data", data);
     // console.log("this.state.maxIndex", this.state.maxIndex);
 
     let apiData = this.props.infiniteScrollData;
@@ -3329,17 +3368,14 @@ class NewContent extends React.Component<homeProps, homeState> {
     // console.log("this.state.range_selected", this.state.range_selected);
     //console.log"this.props", this.props);
 
-    let med_mgt_programs_selected: string[] = this.state.filter_params[
-      "mgt_program_selected"
-    ];
+    let med_mgt_programs_selected: string[] =
+      this.state.filter_params["mgt_program_selected"];
 
-    let plan_types_checked: string[] = this.state.filter_params[
-      "plan_types_checked"
-    ];
+    let plan_types_checked: string[] =
+      this.state.filter_params["plan_types_checked"];
 
-    let plan_range_checked: string[] = this.state.filter_params[
-      "plan_range_checked"
-    ];
+    let plan_range_checked: string[] =
+      this.state.filter_params["plan_range_checked"];
 
     let plans_to_compare: number[] = this.state.plans_to_compare;
 
@@ -4093,7 +4129,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       </div>
 
                       <div className="l-form-row">
-                        <div className="l-lg-col--12">
+                        <div className="l-lg-col--6">
                           <label className="c-label">
                             <span className="font-weight--bold">
                               Search by plan ID
@@ -4108,9 +4144,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                             // maxLength={10}
                             placeholder="Example: HYGIND00001"
                             value={planID}
-                            onChange={(e) =>
-                              this.handlePlanIDChange(e.target.value)
-                            }
+                            onChange={(e) => {
+                              this.handlePlanIDChange(e.target.value);
+                            }}
                           />
                           <button
                             className="c-button plan-id-search-button"
@@ -4118,15 +4154,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                             type="button"
                             onClick={() => {
                               //this.props.getServices();
-                              this.props.getPlansByID(planID);
+                              this.getPlansByID(planID);
+                              this.state.show_filter && this.toggleShowFilter();
                             }}
                           >
                             Search
                           </button>
                         </div>
-                      </div>
 
-                      <div className="l-form-row">
                         <div className="l-lg-col--6">
                           <div className="hmo-filter">
                             <label className="c-label">
@@ -4147,6 +4182,31 @@ class NewContent extends React.Component<homeProps, homeState> {
                             </select>
                           </div>
                         </div>
+                      </div>
+                      {/* 
+                      <div className="l-form-row">
+
+                        <div className="l-lg-col--6">
+                          <div className="hmo-filter">
+                            <label className="c-label">
+                              <span className="font-weight--bold">HMOs</span>
+                            </label>
+                            <select
+                              className="c-field"
+                              id="select_hmo_filter"
+                              value={this.state.filter_params.hmo_selected}
+                              onChange={(e) =>
+                                this.handleHMOSelected(e.target.value)
+                              }
+                            >
+                              <option value="">Select an HMO</option>
+                              {this.props.hmos.map((hmo) => (
+                                <option value={hmo.hmo_id}>{hmo.name}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        
                         <div className="l-lg-col--6">
                           <div className="c-multiselect-dropdown">
                             <label className="c-label">
@@ -4258,7 +4318,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                                 this.handleMedMgtProgCheck(item)
                                               }
                                             >
-                                              {/* <span className="">Deselect</span> */}
+                                              
                                               <span className="c-filter-tag__label">
                                                 {item}
                                               </span>
@@ -4291,6 +4351,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                           </div>
                         </div>
                       </div>
+                    */}
                     </div>
 
                     <div className="l-lg-col--4">
@@ -5014,9 +5075,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           <ul className="c-status-list c-list--bare">
                                             {this.props.responses.providers.map(
                                               (provider) => {
-                                                providersArr = plan.hmo_id.providers.map(
-                                                  (prvdr) => prvdr.provider_name
-                                                );
+                                                providersArr =
+                                                  plan.hmo_id.providers.map(
+                                                    (prvdr) =>
+                                                      prvdr.provider_name
+                                                  );
                                                 console.log(
                                                   "provider.provider_name",
                                                   provider.provider_name

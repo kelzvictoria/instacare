@@ -28,7 +28,8 @@ import {
 
     TOGGLE_PLAN_PROVIDERS,
     UPDATE_INFINITE_SCROLL_DATA,
-    SET_IS_INFINNITE_SCROLL_HAS_MORE
+    SET_IS_INFINNITE_SCROLL_HAS_MORE,
+    RESET_INFINITE_SCROLL_DATA
 } from "../actions/types";
 
 const initialState = {
@@ -233,6 +234,13 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 infiniteScrollDataHasMore: !state.infiniteScrollDataHasMore
+            }
+
+        case RESET_INFINITE_SCROLL_DATA:
+            return {
+                ...state,
+                infiniteScrollData: [],
+                infiniteScrollDataHasMore: false
             }
 
         default:

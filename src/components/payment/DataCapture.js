@@ -59,8 +59,8 @@ class DataCaptureModal extends Component {
 
     render() {
         let is_open = this.props.is_data_capture_modal_open;
-        console.log("is_open", is_open);
-        console.log("stripNonNumeric(this.props.price)", stripNonNumeric(this.props.price), "typeof", typeof stripNonNumeric(this.props.price));
+        //  console.log("is_open", is_open);
+        // console.log("stripNonNumeric(this.props.price)", stripNonNumeric(this.props.price), "typeof", typeof stripNonNumeric(this.props.price));
         //let details = this.props.plan
         return (
             <div className={styles.content}>
