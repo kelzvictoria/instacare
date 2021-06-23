@@ -241,8 +241,8 @@ export const getServices = () => async (dispatch, getState) => {
         .then((res) => {
             if (res.data.length > 0) {
                 services = res.data.map(obj => obj.data);
-                services = services.filter(service => //stripNonNumeric(service.price) > 100 &&
-                    stripNonNumeric(service.price) >= min && stripNonNumeric(service.price) <= max
+                services = services.filter(service => stripNonNumeric(service.price) > 100
+                    //  stripNonNumeric(service.price) >= min && stripNonNumeric(service.price) <= max
                 )
                 for (let i = 0; i < services.length; i++) {
                     let hmoID = services[i]["hmo_id"];

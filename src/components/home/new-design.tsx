@@ -35,7 +35,7 @@ import searching from "../../imgs/searching.svg";
 import seniors from "../../imgs/seniors.png";
 //import family from "../../imgs/family-pic.png";
 
-import family from "../../imgs/fam-l.png";
+import family from "../../imgs/fam-l-min.png";
 
 import { formatAsCurrency } from "../../utils";
 import DataCaptureModal from "../payment/DataCapture";
@@ -2656,7 +2656,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       let data = true;
       let budget = value;
 
-      await this.props.resetPlans(data);
+    //  await this.props.resetPlans(data);
       await this.props.updateBudget(budget);
       //await this.props.getServices();
       //this.props.filterByBudget(budget);
@@ -2764,10 +2764,10 @@ class NewContent extends React.Component<homeProps, homeState> {
     //console.log("e.target", e.target);
 
     this.setState({
-      range_selected: e.target.value,
+      range_selected: e//.target.value,
     });
 
-    let title = e.target.value;
+    let title = e//.target.value;
     console.log("title", title);
 
     switch (title) {
@@ -3173,6 +3173,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     //   this.handlePlanRangeCheck(range)
     // );
 
+  //  await this.clearFilters();
+
     let filterBoxParams = {
       range: this.state.filter_params.plan_range_checked,
       type: this.state.filter_params.plan_types_checked,
@@ -3197,6 +3199,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       hmoID ||
       planID
     ) {
+      this.resetTypeAndRangeFilters();
       await this.props.getRecommendedPlans(filterBoxParams);
       await this.props.resetInfiniteScrollData();
       this.infiniteScrollDataReInitOnFilterApplied();
@@ -3214,7 +3217,13 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.getServices();
   }
 
-  clearFilters = () => {
+  resetTypeAndRangeFilters(){
+    this.changeType(this.state.filter_params.plan_types_checked[this.state.filter_params.plan_types_checked.length - 1]);
+    this.setPriceRangeBasedOnTitle(this.state.filter_params.plan_range_checked[this.state.filter_params.plan_range_checked.length - 1]);
+
+  }
+
+  clearFilters = async () => {
     console.log("clear");
 
     this.props.resetSelectedProviders();
@@ -3236,8 +3245,27 @@ class NewContent extends React.Component<homeProps, homeState> {
         healthSA_eligibility: false,
       },
     });
-
+   await this.eventHandlers.changeBudget([100, 300000])
+    this.props.resetType();
+    this.props.resetRange()
+    await this.props.resetInfiniteScrollData();
     this.state.show_filter && this.toggleShowFilter();
+    await this.props.getServices();
+    console.log("this.props.planServices", this.props.planServices);
+    
+    this.props.match.path === "/hmos/*"
+    ? await this.props.updateInfiniteScrollData(
+        this.props.plansByHMO,
+        false,
+        null,
+        null
+      )
+    : await this.props.updateInfiniteScrollData(
+        this.props.planServices,
+        false,
+        null,
+        null
+      );
   };
 
   goToProviders = () => {
@@ -3332,6 +3360,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     );
   };
 
+
   componentDidUpdate() {}
 
   render() {
@@ -3350,11 +3379,11 @@ class NewContent extends React.Component<homeProps, homeState> {
     // console.log("this.state.maxIndex", this.state.maxIndex);
     //  console.log("data", data);
 
-    console.log("data", data);
+  //  console.log("data", data);
     // console.log("this.state.maxIndex", this.state.maxIndex);
 
     let apiData = this.props.infiniteScrollData;
-    console.log("apiData", apiData);
+  //  console.log("apiData", apiData);
 
     let {
       //  data,
@@ -3489,6 +3518,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         type="button"
                         onClick={() => {
                           this.toggleShowFilter();
+                          
                           // this.resetServices();
                         }}
                       >
@@ -3566,7 +3596,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       </label>
                       <select
                         className="c-field c-field--medium rh-sort-by-select"
-                        onChange={(e) => this.setPriceRangeBasedOnTitle(e)}
+                        onChange={(e) => this.setPriceRangeBasedOnTitle(e.target.value)}
                         value={
                           this.props.responses.price_range[
                             this.props.responses.price_range.length - 1
@@ -4475,7 +4505,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                       type="button"
                       onClick={() => {
                         this.clearFilters();
-                        this.resetServices();
+                       
+                        //this.resetServices();
                       }}
                     >
                       Clear filters
@@ -4485,7 +4516,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                       type="button"
                       onClick={() => {
                         // this.resetServices();
+         
                         this.getRecommendedPlans();
+
                       }}
                     >
                       Apply filters
