@@ -143,27 +143,27 @@ div#bannertext {
 }
 
 /* .icons-gender path {
-  color: #03aa7d;
+  color: #1a7749;
 } */
 
 .view-plans {
-  background-color: #03aa7d !important;
-  border-color: #03aa7d !important;
+  background-color: #1a7749 !important;
+  border-color: #1a7749 !important;
 }
 
 .radios label input[type="radio"]:checked + span {
-  border: 1px solid #03aa7d;
-  color: #03aa7d !important;
+  border: 1px solid #1a7749;
+  color: #1a7749 !important;
 }
 .num-text-active {
-  color: #03aa7d !important;
+  color: #1a7749 !important;
 }
 
 .radios label input[type="radio"]:checked + span::before {
   content: "";
   width: 18px;
   height: 18px;
-  background: #03aa7d;
+  background: #1a7749;
   border-radius: 50%;
   position: absolute;
   right: -5px;
@@ -175,7 +175,7 @@ div#bannertext {
 }
 
 .radios label input[type="radio"]:checked + span em {
-  color: #03aa7d;
+  color: #1a7749;
 }
 
 .radios label input[type="radio"]:checked + span::after {
@@ -422,8 +422,8 @@ i.gender.icons-gender.male.others {
 
 .checkbox label input[type="checkbox"]:checked + span::before {
   content: "";
-  background: #03aa7d;
-  border: 1px solid #03aa7d;
+  background: #1a7749;
+  border: 1px solid #1a7749;
 }
 
 .checkbox label input[type="checkbox"] + span::before {
@@ -589,7 +589,7 @@ button.close:after {
 
   .AppHeader_appHeader__2t96E {
     height: 60px !important;
-    background-color: #fff !important;
+    /* background-color: #fff !important; */
   }
 
   .svg-and-text {
@@ -869,7 +869,7 @@ button.form-control.state-btn {
 
 .state-btn {
   border-radius: 55px !important;
-  border: 1px solid #03aa7d !important;
+  border: 1px solid #1a7749 !important;
 }
 
 div#thirdPage {
@@ -879,7 +879,7 @@ div#thirdPage {
 
 .state-btn:focus {
   color: #fff !important;
-  background-color: #03aa7d !important;
+  background-color: #1a7749 !important;
 }
 
 .mobile {
@@ -1675,7 +1675,7 @@ i.gender.icons-gender.male.female-icon {
 
 h5.float-left.top-plans,
 .home-span {
-  color: #03aa7d;
+  color: #1a7749;
 }
 
 .tabs_wrapper {
@@ -1697,7 +1697,7 @@ h5.float-left.top-plans,
 }
 
 .tabs_wrapper .tabs ul li.active a {
-  color: #03aa7d;
+  color: #1a7749;
   font-weight: 500;
 }
 
@@ -1712,7 +1712,7 @@ h5.float-left.top-plans,
 .tabs_wrapper .tabs ul li.active a::after {
   content: "";
   height: 3px;
-  background: #03aa7d;
+  background: #1a7749;
   position: absolute;
   bottom: -2px;
   left: 0;
@@ -1969,10 +1969,10 @@ h5.float-left.top-plans,
   /* padding: 10px 12px; */
   /* width: 191px; */
   width: 100%;
-  border: solid 1px #03aa7d;
+  border: solid 1px #1a7749;
   text-transform: uppercase;
   border-radius: 4px;
-  background: #03aa7d;
+  background: #1a7749;
   color: #fff;
 }
 
@@ -2073,7 +2073,7 @@ div#Compare_wrapper__2_PoT p {
 
 div#Compare_wrapper__2_PoT a,
 div#Compare_wrapper__2_PoT a h6 {
-  color: #03aa7d !important;
+  color: #1a7749 !important;
 }
 
 .img_icon {
@@ -5884,7 +5884,7 @@ span.logo-widget.widget-insurer-logo {
 }
 
 .btn-check-prem:hover {
-  background: #03aa7d !important;
+  background: #1a7749 !important;
   color: #fff !important;
 }
 
@@ -6308,7 +6308,8 @@ section.section.hero.compare_parent.sp-top-main {
 }
 
 .banner-div {
-  background-color: #e6fcf6;
+  border-bottom: 1px solid #d6d7d9 !important;
+  /* background-color: #e6fcf6; */
   /* min-height: 100vh;
   background-image: linear-gradient(
     to right,
@@ -6347,7 +6348,7 @@ section.section.hero.compare_parent.sp-top-main {
     #bae2dd,
     #8cc9c9,
     #5aafb8,
-    #03aa7d
+    #1a7749
   ); */
 }
 
@@ -6384,7 +6385,7 @@ h3.no-med.no-med-r {
 }
 
 .price-range {
-  color: #03aa7d !important;
+  color: #1a7749 !important;
 }
 
 .ant-slider.ant-slider-with-marks {

@@ -213,12 +213,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       <Col xs={24} md={14} className="banner-container  left-side-info">
         <div className="view2-svg-and-text svg-and-text">
           <Col xs={24} md={24} className="svg-img-div">
-            <div className="svg-img home-svg-img">
-              {/* <img src={searching} /> */}
-              <img src={family} />
-            </div>
-
-            <p className="tiny-descrptn">
+            <h1 className="tiny-descrptn">
               {
                 //this.props.plansByHMO.length > 0
                 this.props.hmo.length > 0 &&
@@ -229,7 +224,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                     this.props.plansByHMO.length === 0 &&
                     this.props.match.path === "/hmos/*"
                   ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
-                  : `Find HMO Plans Starting from`
+                  : `Protect your health from`
               }
               {this.props.plansByHMO.length === 0 &&
               this.props.match.path === "/hmos/*" ? (
@@ -245,11 +240,16 @@ class NewContent extends React.Component<homeProps, homeState> {
                         this.props.match.path === "/hmos/*"
                         ? this.props.cheapest_plan_by_hmo
                         : this.props.cheapest_plan
-                    )}/ year`
+                    )} per year`
                   )}
                 </span>
               )}
-            </p>
+            </h1>
+
+            <div className="svg-img home-svg-img">
+              {/* <img src={searching} /> */}
+              {/* <img src={family} /> */}
+            </div>
           </Col>
           <Col xs={24} md={14} className="view2-banner-text banner-text">
             <div className={styles.banner}>
@@ -1976,7 +1976,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         className="form desktop"
       >
         <h3 className="no-med">
-          Compare HMO plans in Nigeria from the comfort of your home
+          Compare and buy HMO plans in Nigeria from the comfort of your home
         </h3>
         <h3 className="no-med no-med-r">No medicals required</h3>
 
@@ -2262,7 +2262,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         className="form mobile"
       >
         <h3 className="no-med no-med-mobile">
-          Compare HMO plans in Nigeria from the comfort of your home
+          Compare and buy HMO plans in Nigeria from the comfort of your home
         </h3>
         <h3 className="no-med no-med-r">No medicals required</h3>
         <div
@@ -2656,7 +2656,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       let data = true;
       let budget = value;
 
-    //  await this.props.resetPlans(data);
+      //  await this.props.resetPlans(data);
       await this.props.updateBudget(budget);
       //await this.props.getServices();
       //this.props.filterByBudget(budget);
@@ -2764,10 +2764,10 @@ class NewContent extends React.Component<homeProps, homeState> {
     //console.log("e.target", e.target);
 
     this.setState({
-      range_selected: e//.target.value,
+      range_selected: e, //.target.value,
     });
 
-    let title = e//.target.value;
+    let title = e; //.target.value;
     console.log("title", title);
 
     switch (title) {
@@ -3173,7 +3173,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     //   this.handlePlanRangeCheck(range)
     // );
 
-  //  await this.clearFilters();
+    //  await this.clearFilters();
 
     let filterBoxParams = {
       range: this.state.filter_params.plan_range_checked,
@@ -3217,10 +3217,17 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.getServices();
   }
 
-  resetTypeAndRangeFilters(){
-    this.changeType(this.state.filter_params.plan_types_checked[this.state.filter_params.plan_types_checked.length - 1]);
-    this.setPriceRangeBasedOnTitle(this.state.filter_params.plan_range_checked[this.state.filter_params.plan_range_checked.length - 1]);
-
+  resetTypeAndRangeFilters() {
+    this.changeType(
+      this.state.filter_params.plan_types_checked[
+        this.state.filter_params.plan_types_checked.length - 1
+      ]
+    );
+    this.setPriceRangeBasedOnTitle(
+      this.state.filter_params.plan_range_checked[
+        this.state.filter_params.plan_range_checked.length - 1
+      ]
+    );
   }
 
   clearFilters = async () => {
@@ -3245,27 +3252,27 @@ class NewContent extends React.Component<homeProps, homeState> {
         healthSA_eligibility: false,
       },
     });
-   await this.eventHandlers.changeBudget([100, 300000])
+    await this.eventHandlers.changeBudget([100, 300000]);
     this.props.resetType();
-    this.props.resetRange()
+    this.props.resetRange();
     await this.props.resetInfiniteScrollData();
     this.state.show_filter && this.toggleShowFilter();
     await this.props.getServices();
     console.log("this.props.planServices", this.props.planServices);
-    
+
     this.props.match.path === "/hmos/*"
-    ? await this.props.updateInfiniteScrollData(
-        this.props.plansByHMO,
-        false,
-        null,
-        null
-      )
-    : await this.props.updateInfiniteScrollData(
-        this.props.planServices,
-        false,
-        null,
-        null
-      );
+      ? await this.props.updateInfiniteScrollData(
+          this.props.plansByHMO,
+          false,
+          null,
+          null
+        )
+      : await this.props.updateInfiniteScrollData(
+          this.props.planServices,
+          false,
+          null,
+          null
+        );
   };
 
   goToProviders = () => {
@@ -3360,7 +3367,6 @@ class NewContent extends React.Component<homeProps, homeState> {
     );
   };
 
-
   componentDidUpdate() {}
 
   render() {
@@ -3379,11 +3385,11 @@ class NewContent extends React.Component<homeProps, homeState> {
     // console.log("this.state.maxIndex", this.state.maxIndex);
     //  console.log("data", data);
 
-  //  console.log("data", data);
+    //  console.log("data", data);
     // console.log("this.state.maxIndex", this.state.maxIndex);
 
     let apiData = this.props.infiniteScrollData;
-  //  console.log("apiData", apiData);
+    //  console.log("apiData", apiData);
 
     let {
       //  data,
@@ -3460,6 +3466,40 @@ class NewContent extends React.Component<homeProps, homeState> {
                   md={14}
                   className="banner-container provider-banner"
                 >
+                  <p className="tiny-descrptn">
+                    {
+                      //this.props.plansByHMO.length > 0
+                      this.props.hmo.length > 0 &&
+                      this.props.plansByHMO.length > 0 &&
+                      this.props.match.path === "/hmos/*"
+                        ? `${this.props.hmo[0].name} plans starting from `
+                        : this.props.hmo.length > 0 &&
+                          this.props.plansByHMO.length === 0 &&
+                          this.props.match.path === "/hmos/*"
+                        ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
+                        : `Protect your health from`
+                    }
+                    {this.props.plansByHMO.length === 0 &&
+                    this.props.match.path === "/hmos/*" ? (
+                      ""
+                    ) : (
+                      <span className={styles.headingSpan}>
+                        {this.props.is_fetching_data &&
+                        !this.props.cheapest_plan ? (
+                          <Spin className="cheapest-plan" />
+                        ) : (
+                          ` ₦${this.numberwithCommas(
+                            // this.props.plansByHMO.length > 0
+                            this.props.hmo.length > 0 &&
+                              this.props.match.path === "/hmos/*"
+                              ? this.props.cheapest_plan_by_hmo
+                              : this.props.cheapest_plan
+                          )} per year`
+                        )}
+                      </span>
+                    )}
+                  </p>
+
                   <HMOInfoSkeleton />
                 </Col>
                 <Col md={10} className="quiz">
@@ -3518,7 +3558,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         type="button"
                         onClick={() => {
                           this.toggleShowFilter();
-                          
+
                           // this.resetServices();
                         }}
                       >
@@ -3596,7 +3636,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                       </label>
                       <select
                         className="c-field c-field--medium rh-sort-by-select"
-                        onChange={(e) => this.setPriceRangeBasedOnTitle(e.target.value)}
+                        onChange={(e) =>
+                          this.setPriceRangeBasedOnTitle(e.target.value)
+                        }
                         value={
                           this.props.responses.price_range[
                             this.props.responses.price_range.length - 1
@@ -4505,7 +4547,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       type="button"
                       onClick={() => {
                         this.clearFilters();
-                       
+
                         //this.resetServices();
                       }}
                     >
@@ -4516,9 +4558,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                       type="button"
                       onClick={() => {
                         // this.resetServices();
-         
-                        this.getRecommendedPlans();
 
+                        this.getRecommendedPlans();
                       }}
                     >
                       Apply filters

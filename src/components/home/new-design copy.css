@@ -220,11 +220,11 @@ select.c-field {
   font-weight: 400 !important;
 }
 
-/* .c-link:visited,
+.c-link:visited,
 .c-usa-banner__button:visited,
 a:visited {
   color: #4c2c92;
-} */
+}
 
 .c-link,
 .c-usa-banner__button,
@@ -644,11 +644,11 @@ button.tooltip-trigger {
   }
 }
 
-/* .c-link:visited,
+.c-link:visited,
 .c-usa-banner__button:visited,
 a:visited {
   color: #4c2c92;
-} */
+}
 .c-link,
 .c-usa-banner__button,
 a {
@@ -1982,6 +1982,12 @@ h2.border-bottom--1.border--dark.padding-bottom--2 {
   background-size: cover; 
 } */
 
+@media (max-width: 800px) {
+  .ant-row.banner-content {
+    background-image: none !important;
+  }
+}
+
 .ant-row.banner-content {
   background-image: url("../../imgs/fam-l-min.png") !important;
   /* height: 500px; */
@@ -1990,7 +1996,7 @@ h2.border-bottom--1.border--dark.padding-bottom--2 {
   /* background-size: cover; */
 }
 
-@media (min-width: 1092px) and (max-width: 1200px) {
+@media (min-width: 1092px) and (max-width: 1208px) {
   .ant-row.banner-content {
     background-position: 0px 280px;
     background-image: url("../../imgs/fam-m-min.png") !important;
@@ -1999,12 +2005,12 @@ h2.border-bottom--1.border--dark.padding-bottom--2 {
 
 @media (max-width: 1091px) {
   h1.tiny-descrptn {
-    padding-top: 0.5rem;
+    padding-top: 5.5rem;
     font-size: 32px !important;
   }
   .ant-row.banner-content {
-    background-image: url("../../imgs/fam-m-min.png") !important;
-    background-position: -30px 220px;
+    background-image: url("../../imgs/fam-l-min-reszd.png") !important;
+    background-position: -30px 300px;
   }
 }
 
@@ -2017,12 +2023,6 @@ h2.border-bottom--1.border--dark.padding-bottom--2 {
 @media (min-width: 1321px) {
   .ant-row.banner-content {
     background-position: 90px 160px;
-  }
-}
-
-@media (max-width: 767px) {
-  .ant-row.banner-content {
-    background-image: none !important;
   }
 }
 

@@ -3,7 +3,9 @@ import styles from "./AppHeader.module.scss";
 import { Link } from "react-router-dom";
 import { Menu, Row, Col } from "antd";
 
-import logo from "../../imgs/logo2.png";
+// import logo from "../../imgs/logo2.png";
+//import logo from "../../imgs/logo-w.png";
+import logo from "../../imgs/logo-alt.png";
 
 function AppHeader() {
   const links = [

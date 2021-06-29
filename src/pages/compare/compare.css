@@ -41,6 +41,11 @@ button.ds-h2:active {
   .results-header-right {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+  }
+
+  .rh-sort-by-div {
+    width: 50%;
   }
 
   .filt_comp_btns {
