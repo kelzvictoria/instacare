@@ -867,7 +867,7 @@ a {
 .tiny-descrptn {
   color: #253858 !important;
   /* font-size: 1.2rem; */
-  /* text-align: center; */
+  text-align: center;
 }
 
 .price-slider {
@@ -1987,12 +1987,14 @@ h2.border-bottom--1.border--dark.padding-bottom--2 {
   /* height: 500px; */
   /* background-position: 90px 160px; */
   background-repeat: no-repeat;
+  background-position: bottom left;
+  background-size: contain;
   /* background-size: cover; */
 }
 
 @media (min-width: 1092px) and (max-width: 1200px) {
   .ant-row.banner-content {
-    background-position: 0px 280px;
+    /* background-position: 0px 280px; */
     background-image: url("../../imgs/fam-m-min.png") !important;
   }
 }
@@ -2004,25 +2006,37 @@ h2.border-bottom--1.border--dark.padding-bottom--2 {
   }
   .ant-row.banner-content {
     background-image: url("../../imgs/fam-m-min.png") !important;
-    background-position: -30px 220px;
+    /* background-position: -30px 220px; */
   }
 }
 
 @media (min-width: 1099px) and (max-width: 1320px) {
   .ant-row.banner-content {
-    background-position: 0px 160px;
+    /* background-position: 0px 160px; */
   }
 }
 
 @media (min-width: 1321px) {
   .ant-row.banner-content {
-    background-position: 90px 160px;
+    /* background-position: 90px 160px; */
   }
+}
+
+.ant-row.banner-content {
+  padding: 0px !important;
 }
 
 @media (max-width: 767px) {
   .ant-row.banner-content {
     background-image: none !important;
+  }
+  h1.tiny-descrptn {
+    display: none !important;
+  }
+
+  .ant-row.banner-content {
+    padding-top: 20px !important;
+    /* padding-bottom: 20px !important; */
   }
 }
 
@@ -2057,4 +2071,15 @@ p.tiny-descrptn {
   .hide-for-md {
     display: none !important;
   }
+}
+
+.ant-col.quiz.ant-col-md-10 {
+  margin: 0px 0px -20px -5px;
+}
+
+h1.tiny-descrptn {
+  padding: 20px 0px 0px 0px !important;
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
+  margin-bottom: 0px !important;
 }

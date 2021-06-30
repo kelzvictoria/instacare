@@ -213,39 +213,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       <Col xs={24} md={14} className="banner-container  left-side-info">
         <div className="view2-svg-and-text svg-and-text">
           <Col xs={24} md={24} className="svg-img-div">
-            <h1 className="tiny-descrptn">
-              {
-                //this.props.plansByHMO.length > 0
-                this.props.hmo.length > 0 &&
-                this.props.plansByHMO.length > 0 &&
-                this.props.match.path === "/hmos/*"
-                  ? `${this.props.hmo[0].name} plans starting from `
-                  : this.props.hmo.length > 0 &&
-                    this.props.plansByHMO.length === 0 &&
-                    this.props.match.path === "/hmos/*"
-                  ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
-                  : `Protect your health from`
-              }
-              {this.props.plansByHMO.length === 0 &&
-              this.props.match.path === "/hmos/*" ? (
-                ""
-              ) : (
-                <span className={styles.headingSpan}>
-                  {this.props.is_fetching_data && !this.props.cheapest_plan ? (
-                    <Spin className="cheapest-plan" />
-                  ) : (
-                    ` ₦${this.numberwithCommas(
-                      // this.props.plansByHMO.length > 0
-                      this.props.hmo.length > 0 &&
-                        this.props.match.path === "/hmos/*"
-                        ? this.props.cheapest_plan_by_hmo
-                        : this.props.cheapest_plan
-                    )} per year`
-                  )}
-                </span>
-              )}
-            </h1>
-
             <div className="svg-img home-svg-img">
               {/* <img src={searching} /> */}
               {/* <img src={family} /> */}
@@ -3439,6 +3406,39 @@ class NewContent extends React.Component<homeProps, homeState> {
       <div className="home">
         <div className="banner-div">
           <div className="container home-c">
+            <h1 className="tiny-descrptn">
+              {
+                //this.props.plansByHMO.length > 0
+                this.props.hmo.length > 0 &&
+                this.props.plansByHMO.length > 0 &&
+                this.props.match.path === "/hmos/*"
+                  ? `${this.props.hmo[0].name} plans starting from `
+                  : this.props.hmo.length > 0 &&
+                    this.props.plansByHMO.length === 0 &&
+                    this.props.match.path === "/hmos/*"
+                  ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
+                  : `Protect your health from just`
+              }
+              {this.props.plansByHMO.length === 0 &&
+              this.props.match.path === "/hmos/*" ? (
+                ""
+              ) : (
+                <span className={styles.headingSpan}>
+                  {this.props.is_fetching_data && !this.props.cheapest_plan ? (
+                    <Spin className="cheapest-plan" />
+                  ) : (
+                    ` ₦${this.numberwithCommas(
+                      // this.props.plansByHMO.length > 0
+                      this.props.hmo.length > 0 &&
+                        this.props.match.path === "/hmos/*"
+                        ? this.props.cheapest_plan_by_hmo
+                        : this.props.cheapest_plan
+                    )} per year`
+                  )}
+                </span>
+              )}
+            </h1>
+
             {/* if the path is /hmo and data has been fetched*/}
             {/* {
               this.props.match.params.id &&
@@ -3477,7 +3477,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                           this.props.plansByHMO.length === 0 &&
                           this.props.match.path === "/hmos/*"
                         ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
-                        : `Protect your health from`
+                        : `Protect your health from just`
                     }
                     {this.props.plansByHMO.length === 0 &&
                     this.props.match.path === "/hmos/*" ? (
