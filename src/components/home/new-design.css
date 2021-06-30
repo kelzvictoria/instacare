@@ -2083,3 +2083,23 @@ h1.tiny-descrptn {
   padding-bottom: 2.5rem !important;
   margin-bottom: 0px !important;
 }
+
+.plan-c-card_action-button.background--white {
+  color: #253858 !important;
+  background: none !important;
+  border-color: #046791 !important;
+}
+
+.btn-filter {
+  background-color: #046791 !important;
+}
+
+.ant-slider-rail,
+.ant-slider-track {
+  height: 5px;
+}
+.ant-slider-handle {
+  width: 12px;
+  height: 12px;
+  margin: -4px 0px 0px -4px;
+}

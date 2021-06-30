@@ -3552,7 +3552,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                     </div>
                     <div className="filt_comp_btns">
                       <button
-                        className={`c-button  c-button--primary margin-right--2 margin-bottom--1 lg-margin-bottom--0 c-filter-plans ${
+                        className={`c-button  c-button--primary margin-right--2 margin-bottom--1 lg-margin-bottom--0 c-filter-plans btn-filter ${
                           this.state.show_filter && "display--none"
                         }`}
                         type="button"
@@ -4755,7 +4755,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     <div className="c-plan-summary__children">
                                       <div className="display--none lg-display--block c-plan-card__desktop-action-buttons margin-top--2">
                                         <a
-                                          className="c-button c-button--secondary c-plan-card__action-button plan-c-card_action-button"
+                                          className="c-button c-button--secondary c-plan-card__action-button plan-c-card_action-button background--white"
                                           href="#"
                                           onClick={() => {
                                             //this.goToDetails();
@@ -4764,7 +4764,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           role="button"
                                           target="_self"
                                         >
-                                          Plan Details
+                                          View Details
                                         </a>
 
                                         <a
@@ -5586,7 +5586,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </button>
                                   <div className="c-plan-card__mobile-action-buttons">
                                     <a
-                                      className="c-button c-button--secondary c-plan-card__action-button"
+                                      className="c-button c-button--secondary c-plan-card__action-button background--white"
                                       href="#"
                                       onClick={() => {
                                         //this.goToDetails();
@@ -5595,7 +5595,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       target="_self"
                                       role="button"
                                     >
-                                      Plan Details
+                                      View Details
                                     </a>
                                     <a
                                       className="c-button c-button--primary c-plan-card__action-button"
