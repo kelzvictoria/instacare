@@ -67,11 +67,15 @@ import {
     GET_PROVIDER_INFO,
 
     FILTER_PROVIDERS,
+    FILTER_BENEFITS,
+    FILTER_DOCTORS,
     FILTER_PRESCRIPTIONS,
     UPDATE_SELECTED_PROVIDERS,
 
     FILTER_LOCATIONS,
     SET_PROVIDERS,
+    SET_DOCTORS,
+    SET_BENEFITS,
 
     RESET_SELECTED_PROVIDERS,
     SET_IS_LOADING_ON,
@@ -117,6 +121,8 @@ const initialState = {
         email: "",
         state: "",
         provider: "",
+        doctor: "",
+        benefit: "",
         prescription: "",
         adult: 1,
         children: 0,
@@ -142,6 +148,8 @@ const initialState = {
         child_8_age: 0,
         plan_duration: "1",
         providers: [],
+        doctors: [],
+        benefits: [],
         compare_plan_id_param: []
     },
     dataSource:
@@ -506,6 +514,26 @@ export default function (state = initialState, action) {
                 }
 
             }
+
+            case SET_DOCTORS:
+                return {
+                    ...state,
+                    responses: {
+                        ...state.responses,
+                        providers: action.payload
+                    }
+    
+                }
+
+                case SET_BENEFITS:
+                    return {
+                        ...state,
+                        responses: {
+                            ...state.responses,
+                            providers: action.payload
+                        }
+        
+                    }
         case FILTER_PROVIDERS:
             if (action.payload) {
                 let data_source = [];
@@ -515,6 +543,26 @@ export default function (state = initialState, action) {
                     dataSource: data_source
                 }
             }
+
+            case FILTER_DOCTORS:
+                if (action.payload) {
+                    let data_source = [];
+                    data_source.push(...action.payload);
+                    return {
+                        ...state,
+                        dataSource: data_source
+                    }
+                }
+
+                case FILTER_BENEFITS:
+                    if (action.payload) {
+                        let data_source = [];
+                        data_source.push(...action.payload);
+                        return {
+                            ...state,
+                            dataSource: data_source
+                        }
+                    }
 
 
         case FILTER_PRESCRIPTIONS:

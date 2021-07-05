@@ -63,32 +63,23 @@ import {
     FORMAT_PRICES,
     FILTER_PROVIDERS,
     FILTER_PRESCRIPTIONS,
+    FILTER_BENEFITS,
+    FILTER_DOCTORS,
     UPDATE_SELECTED_PROVIDERS,
 
     IS_FILTERING_BY_PLAN_TYPE,
     IS_FILTERING_BY_PLAN_RANGE,
     IS_FILTERING_BY_PLAN_ID,
     SET_PROVIDERS,
+    SET_DOCTORS,
+    SET_BENEFITS,
     RESET_SELECTED_PROVIDERS,
     ADD_COMPARE_URL_PARAM,
     REMOVE_COMPARE_URL_PARAM,
     TOGGLE_DATA_CAPTURE_MODAL
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
-import { loadavg } from "os";
 
-export const setProviders = (data) => (dispatch, getState) => {
-    dispatch({
-        type: SET_PROVIDERS,
-        payload: data
-    })
-}
-
-export const resetSelectedProviders = () => (dispatch, getState) => {
-    dispatch({
-        type: RESET_SELECTED_PROVIDERS
-    })
-}
 
 export const updatePriceRange = (range) => (dispatch, getState) => {
     let ranges = [...getState().quiz.responses.price_range];
@@ -471,6 +462,47 @@ export const filterPrescriptions = (prescriptions) => (dispatch) => {
     dispatch({
         type: FILTER_PRESCRIPTIONS,
         payload: prescriptions
+    })
+}
+
+export const filterDoctors = (doctors) => (dispatch) => {
+    dispatch({
+        type: FILTER_DOCTORS,
+        payload: doctors
+    })
+}
+
+export const filterBenefits = (benefits) => (dispatch) => {
+    dispatch({
+        type: FILTER_BENEFITS,
+        payload: benefits
+    })
+}
+
+export const setProviders = (data) => (dispatch, getState) => {
+    dispatch({
+        type: SET_PROVIDERS,
+        payload: data
+    })
+}
+
+export const setDoctors = (data) => (dispatch, getState) => {
+    dispatch({
+        type: SET_DOCTORS,
+        payload: data
+    })
+}
+
+export const setBenefits = (data) => (dispatch, getState) => {
+    dispatch({
+        type: SET_BENEFITS,
+        payload: data
+    })
+}
+
+export const resetSelectedProviders = () => (dispatch, getState) => {
+    dispatch({
+        type: RESET_SELECTED_PROVIDERS
     })
 }
 

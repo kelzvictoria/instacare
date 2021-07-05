@@ -10,82 +10,85 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 import "../../components/home/new-design.css";
-import "./providers.css";
+import "./benefits.css";
 
 import {
   updateTextResponse,
-  filterProviders,
-  setProviders,
+  filterBenefits,
+  setBenefits,
 } from "../../actions/userInputActions";
 
-export interface ProvidersProps {
+export interface BenefitsProps {
   [x: string]: any;
   dispatch(args: any): any;
 }
 
-class Providers extends Component<ProvidersProps> {
+class Benefits extends Component<BenefitsProps> {
   state = {
     search_arg: "",
-    selected_providers: [],
-    selected_providers_data: [],
-    show_providers_listing_div: false,
+    selected_benefits: [],
+    selected_benefits_data: [],
+    show_benefits_listing_div: false,
   };
 
   onSearch = async (searchText: string) => {
-    let tempProviders: any[] = [];
-    let providers = await this.props.providers.map(
-      (provider) => provider.provider_name
+    let tempBenefits: any[] = [];
+    let benefits = await this.props.benefits.map(
+      (benefit) => benefit.title
     );
-    providers.forEach((item: string) => {
+
+    console.log("benefits", benefits);
+    
+    benefits.forEach((item: string) => {
       console.log("item", item);
       // const _item = item["name"].toLowerCase();
       const _item = item.toLowerCase();
       if (_item.startsWith(searchText.toLowerCase())) {
-        tempProviders.push(item);
+        tempBenefits.push(item);
       }
     });
 
-    if (tempProviders.length > 0) {
+    if (tempBenefits.length > 0) {
       // this.props.dispatch({
       //   type: actions.FILTER_PROVIDERS,
-      //   data: tempProviders,
+      //   data: tempBenefits,
       // });
-      this.props.filterProviders(tempProviders);
+      this.props.filterBenefits(tempBenefits);
     }
   };
 
   onSelectChange = (value: any) => {
-    this.getProviderInfo(value);
+    this.getBenefitInfo(value);
 
     // this.props.dispatch({
     //   type: actions.UPDATE_TEXT_RESPONSE,
-    //   data: { key: "provider", value },
+    //   data: { key: "benefit", value },
     // });
 
-    this.props.updateTextResponse({ key: "provider", value });
+    this.props.updateTextResponse({ key: "benefit", value });
 
     console.log(this.props.responses.state);
   };
 
-  getProviderInfo = (name) => {
-    let info = this.props.providers.filter(
-      (provider) => provider.provider_name == name
-    ); //home_utils.providersInfo
+  getBenefitInfo = (name) => {
+    let info = this.props.benefits.filter(
+      (benefit) => benefit.title == name
+    ); //home_utils.benefitsInfo
 
     this.setState({
       search_arg: info[0],
     });
   };
 
-  addProviderToSelectedList = (prov_name) => {
-    let arr: string[] = this.state.selected_providers;
-    let data_arr: string[] = this.state.selected_providers_data;
+  addBenefitToSelectedList = (prov_name) => {
+    let arr: string[] = this.state.selected_benefits;
+    let data_arr: string[] = this.state.selected_benefits_data;
 
-    let isProviderSelected: number = arr.indexOf(prov_name);
+    let isBenefitSelected: number = arr.indexOf(prov_name);
 
-    if (isProviderSelected > -1) {
-      arr.splice(isProviderSelected, 1);
-      data_arr.splice(isProviderSelected, 1);
+    if (isBenefitSelected > -1) {
+      arr.splice(isBenefitSelected, 1);
+      data_arr.splice(isBenefitSelected, 1);
     } else {
       arr.push(prov_name);
       data_arr.push(this.state.search_arg);
@@ -97,29 +100,29 @@ class Providers extends Component<ProvidersProps> {
     // });
 
     this.setState({
-      selected_providers: arr,
-      selected_providers_data: data_arr,
+      selected_benefits: arr,
+      selected_benefits_data: data_arr,
     });
   };
 
-  toggleShowSelectedProviders = () => {
+  toggleShowSelectedBenefits = () => {
     this.setState({
-      show_providers_listing_div: !this.state.show_providers_listing_div,
+      show_benefits_listing_div: !this.state.show_benefits_listing_div,
     });
   };
 
   componentDidUpdate(prevProps) {}
 
-  setProviders = async () => {
+  setBenefits = async () => {
     //;
-    await this.props.setProviders(this.state.selected_providers_data);
+    await this.props.setBenefits(this.state.selected_benefits_data);
     this.props.history.push({ pathname: "/" });
   };
 
-  //   updateLocation = (provider: any) => {
+  //   updateLocation = (benefit: any) => {
   //     this.props.dispatch({
   //       type: actions.UPDATE_TEXT_RESPONSE,
-  //       data: { key: "state", value: provider },
+  //       data: { key: "state", value: benefit },
   //     });
   //     console.log(this.props.responses.state);
   //   };
@@ -127,21 +130,20 @@ class Providers extends Component<ProvidersProps> {
   render() {
     console.log("this.state", this.state);
 
-    let providers_arr: string[] = this.state.selected_providers;
+    let benefits_arr: string[] = this.state.selected_benefits;
     return (
       <div className="main-body-content">
-        <div className="container c-page-wrapper qa-provider-search-page">
+        <div className="container c-page-wrapper qa-benefit-search-page">
           <div
             className={
-              !this.state.show_providers_listing_div
+              !this.state.show_benefits_listing_div
                 ? "additions"
                 : "display--none"
             }
           >
             <div className="c-coverables-search">
               <h1 className="font-size--h1 font-weight--normal margin-top--3 leading--base">
-                {/* Add your doctors & facilities */}
-                Add your facilities
+                Add your desired benefits
               </h1>
               <div className="padding-left--0">
                 <div className="display--flex align-items--end">
@@ -149,10 +151,10 @@ class Providers extends Component<ProvidersProps> {
                     <div className="clearfix">
                       <label
                         className="c-label margin-top--0"
-                        id="autocomplete_providers"
+                        id="autocomplete_benefits"
                       >
                         <span>
-                          Begin typing to find & select your doctor or facility.
+                          Begin typing to find & select desired benefits.
                         </span>{" "}
                       </label>
 
@@ -162,8 +164,8 @@ class Providers extends Component<ProvidersProps> {
                         dataSource={this.props.dataSource}
                         onSearch={this.onSearch}
                         onChange={this.onSelectChange}
-                        placeholder="Example: Abuja Clinics"
-                        value={this.props.responses.provider}
+                        placeholder="Example: Plastic Surgery"
+                        value={this.props.responses.benefit}
                         //value={this.state.search_arg}
                         className="ic-auto-complete margin-bottom--0"
                       />
@@ -173,7 +175,7 @@ class Providers extends Component<ProvidersProps> {
                     className="c-button c-button--primary"
                     type="button"
                     onClick={() =>
-                      this.getProviderInfo(this.props.responses.provider)
+                      this.getBenefitInfo(this.props.responses.benefit)
                     }
                   >
                     Find
@@ -181,12 +183,12 @@ class Providers extends Component<ProvidersProps> {
                 </div>
               </div>
 
-              <div className="margin-top--5 margin-bottom--1 providers-results">
+              <div className="margin-top--5 margin-bottom--1 benefits-results">
                 {this.state.search_arg && (
                   <h2 className="ic-color margin-bottom--2 font-size--base font-weight--normal">
                     Showing results for{" "}
                     <span className="font-weight--bold">
-                      {this.props.responses.provider}
+                      {this.props.responses.benefit}
                     </span>
                   </h2>
                 )}
@@ -196,7 +198,7 @@ class Providers extends Component<ProvidersProps> {
                       {/* c-coverable-result--selected */}
                       <div className="display--flex justify-content--between align-items--start">
                         <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                          {this.state.search_arg["provider_name"]}
+                          {this.state.search_arg["title"]}
                         </h5>
 
                         <div>
@@ -204,14 +206,14 @@ class Providers extends Component<ProvidersProps> {
                             className="c-button c-button--small"
                             type="button"
                             onClick={() =>
-                              this.addProviderToSelectedList(
-                                this.state.search_arg["provider_name"]
+                              this.addBenefitToSelectedList(
+                                this.state.search_arg["title"]
                               )
                             }
                           >
                             {" "}
-                            {providers_arr.indexOf(
-                              this.state.search_arg["provider_name"]
+                            {benefits_arr.indexOf(
+                              this.state.search_arg["title"]
                             ) > -1
                               ? "Remove"
                               : "Add"}
@@ -220,20 +222,20 @@ class Providers extends Component<ProvidersProps> {
                         </div>
                       </div>
                       <div>
-                        <div className="provider-search__result__taxonomy">
-                          {this.state.search_arg["coverage_type"]}
-                        </div>
+                        {/* <div className="benefit-search__result__taxonomy">
+                          {this.state.search_arg["title"]}
+                        </div> */}
 
-                        {/* <div className="provider-search__result__specialties">
+                        {/* <div className="benefit-search__result__specialties">
                           <span>primary care - nurse practioner</span>
                         </div> */}
 
-                        <div className="provider-search__result__location">
+                        {/* <div className="benefit-search__result__location">
                           <span className="text-transform--capitalize">
                             {this.state.search_arg["city"]},{" "}
                             {this.state.search_arg["state"]}
                           </span>
-                        </div>
+                        </div> */}
                       </div>
                     </li>
                   </ul>
@@ -245,18 +247,18 @@ class Providers extends Component<ProvidersProps> {
                 </div>
               </div>
 
-              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 providers-search-selection-controls">
-                {this.state.selected_providers.length > 0 && (
+              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 benefits-search-selection-controls">
+                {this.state.selected_benefits.length > 0 && (
                   <div className="">
                     <div className="margin-bottom--1">
-                      {this.state.selected_providers.length} doctor or facilty
+                      {this.state.selected_benefits.length}benefit
                       selected
                     </div>
                     <a
                       className="c-button qa-edit-selections"
-                      //href="#/find-provider/search/edit"
+                      //href="#/find-benefit/search/edit"
                       role="button"
-                      onClick={this.toggleShowSelectedProviders}
+                      onClick={this.toggleShowSelectedBenefits}
                     >
                       See/Edit selections
                     </a>
@@ -264,7 +266,7 @@ class Providers extends Component<ProvidersProps> {
                     <a
                       className="c-button c-button--primary margin-left--1 qa-continue"
                       href="#"
-                      onClick={this.setProviders}
+                      onClick={this.setBenefits}
                       role="button"
                     >
                       Continue
@@ -277,7 +279,7 @@ class Providers extends Component<ProvidersProps> {
             <button
               className="c-button c-button--secondary margin-top--2"
               type="button"
-              onClick={this.setProviders}
+              onClick={this.setBenefits}
             >
               Back to Plans
             </button>
@@ -286,13 +288,13 @@ class Providers extends Component<ProvidersProps> {
 
           <div
             className={
-              this.state.show_providers_listing_div
+              this.state.show_benefits_listing_div
                 ? "listings margin-top--3"
                 : "display--none"
             }
           >
             <a
-              onClick={this.toggleShowSelectedProviders}
+              onClick={this.toggleShowSelectedBenefits}
               className="text-transform--capitalize"
             >
               <FontAwesomeIcon className="margin-right--1" icon={faArrowLeft} />
@@ -308,7 +310,7 @@ class Providers extends Component<ProvidersProps> {
                     <div className="clearfix">
                       <label
                         className="c-label margin-top--0"
-                        id="autocomplete_providers"
+                        id="autocomplete_benefits"
                       >
                         {/* <span>
                           Doctors & facilities
@@ -319,17 +321,17 @@ class Providers extends Component<ProvidersProps> {
                 </div>
               </div>
 
-              <div className="margin-bottom--1 providers-results">
-                {this.state.selected_providers_data.length !== 0 && (
+              <div className="margin-bottom--1 benefits-results">
+                {this.state.selected_benefits_data.length !== 0 && (
                   <ul className="c-coverables-search__results c-list--bare">
-                    {this.state.selected_providers_data.map(
-                      (selected_provider, i) => {
+                    {this.state.selected_benefits_data.map(
+                      (selected_benefit, i) => {
                         return (
                           <li className="c-coverable-result box-shadow margin-top--1 margin-bottom--2">
                             {/* c-coverable-result--selected */}
                             <div className="display--flex justify-content--between align-items--start">
                               <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                                {selected_provider["provider_name"]}
+                                {selected_benefit["benefit_name"]}
                               </h5>
 
                               <div>
@@ -337,14 +339,14 @@ class Providers extends Component<ProvidersProps> {
                                   className="c-button c-button--small"
                                   type="button"
                                   onClick={() =>
-                                    this.addProviderToSelectedList(
-                                      selected_provider["provider_name"]
+                                    this.addBenefitToSelectedList(
+                                      selected_benefit["benefit_name"]
                                     )
                                   }
                                 >
                                   {" "}
-                                  {providers_arr.indexOf(
-                                    selected_provider["provider_name"]
+                                  {benefits_arr.indexOf(
+                                    selected_benefit["benefit_name"]
                                   ) > -1
                                     ? "Remove"
                                     : "Add"}
@@ -353,18 +355,18 @@ class Providers extends Component<ProvidersProps> {
                               </div>
                             </div>
                             <div>
-                              <div className="provider-search__result__taxonomy">
-                                {selected_provider["coverage_type"]}
+                              <div className="benefit-search__result__taxonomy">
+                                {selected_benefit["coverage_type"]}
                               </div>
 
-                              {/* <div className="provider-search__result__specialties">
+                              {/* <div className="benefit-search__result__specialties">
                             <span>primary care - nurse practioner</span>
                           </div> */}
 
-                              <div className="provider-search__result__location">
+                              <div className="benefit-search__result__location">
                                 <span className="text-transform--capitalize">
-                                  {selected_provider["city"]},{" "}
-                                  {selected_provider["state"]}
+                                  {selected_benefit["city"]},{" "}
+                                  {selected_benefit["state"]}
                                 </span>
                               </div>
                             </div>
@@ -375,9 +377,9 @@ class Providers extends Component<ProvidersProps> {
                   </ul>
                 )}
 
-                {this.state.selected_providers_data.length == 0 && (
+                {this.state.selected_benefits_data.length == 0 && (
                   <p className="p-nil">
-                    No medical providers have been selected yet.
+                    No medical benefits have been selected yet.
                   </p>
                 )}
                 <div className="display--flex justify-content--between">
@@ -387,7 +389,7 @@ class Providers extends Component<ProvidersProps> {
                 </div>
               </div>
 
-              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 providers-search-selection-controls">
+              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 benefits-search-selection-controls">
                 <a
                   className="c-button c-button--primary qa-continue"
                   href="#/plan/results"
@@ -410,12 +412,12 @@ const mapProps = (state: any) => {
     // ...state.quiz.quiz,
     responses: state.quiz.responses,
     dataSource: state.quiz.dataSource,
-    providers: state.fetchData.providers,
+    benefits: state.fetchData.benefits,
   };
 };
 
 export default connect(mapProps, {
   updateTextResponse,
-  filterProviders,
-  setProviders,
-})(Providers);
+  filterBenefits,
+  setBenefits,
+})(Benefits);

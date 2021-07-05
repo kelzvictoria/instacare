@@ -84,6 +84,11 @@ class NewContent extends React.Component<homeProps, homeState> {
       plan_range_checked: [],
       planID: "",
       hmo_selected: "",
+      total_benefit_min: undefined,
+      total_benefit_max: undefined,
+      location: undefined,
+      benefits_selected: [],
+      doctors_selected: [],
       mgt_program_selected: [],
       providers_selected: [],
       prescriptions_selected: [],
@@ -101,6 +106,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     //   ? this.props.plansByHMO.slice(0, pageSize)
     //   : this.props.planServices.slice(0, pageSize),
   };
+
+
 
   toggleModal = () => {
     if (this.state.show_desktop_on_load_modal) {
@@ -1954,7 +1961,8 @@ class NewContent extends React.Component<homeProps, homeState> {
           }
         >
           <p className={styles.sideBarHeadings}>
-            What is your annual price range{" "}
+            {/* What is your annual price range{" "} */}
+            What is the maximum you can afford to pay per year?
             <span className="price-range">
               ( {this.formatter(this.minbudgett)} -{" "}
               {this.formatter(this.maxbudgett)})
@@ -2915,6 +2923,26 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   }
 
+  handleTotalBenefitMinChange(val) {
+    console.log("val", val);
+
+    this.setState({
+      filter_params: {
+        ...this.state.filter_params,
+        total_benefit_min: val,
+      },
+    });
+  }
+
+  handleTotalBenefitMaxChange(val) {
+    this.setState({
+      filter_params: {
+        ...this.state.filter_params,
+        total_benefit_max: val,
+      },
+    });
+  }
+
   handlePlanIDChange(val) {
     this.setState({
       filter_params: {
@@ -2926,14 +2954,19 @@ class NewContent extends React.Component<homeProps, homeState> {
     // this.props.setPlanID(this.state.filter_params.planID)
   }
 
-  handleHSAChange() {
+  async handleHSAChange() {
+   await this.getLocation()
+
     let v = this.state.filter_params.healthSA_eligibility;
     this.setState({
       filter_params: {
         ...this.state.filter_params,
         healthSA_eligibility: !v,
+       // location: 
       },
     });
+
+
   }
 
   updateBudgetWithFilterRange = () => {
@@ -3336,6 +3369,39 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   componentDidUpdate() {}
 
+  getLocation = () => {
+    if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(this.showPosition, this.showError);
+    
+    } else {
+    console.log( "The Browser Does not Support Geolocation");
+    
+    }
+    }
+
+    showPosition = (position) => {
+     console.log("Latitude: " + position.coords.latitude + "Longitude: " + position.coords.longitude);
+
+     if (position.coords.latitude && position.coords.longitude) {
+          this.setState({
+            filter_params: {
+              ...this.state.filter_params,
+              location:`${position.coords.latitude}, ${position.coords.longitude}`
+            }
+     
+     })
+     }
+  
+     
+      }
+
+      showError = (error) => {
+        if(error.PERMISSION_DENIED){
+        console.log("The User have denied the request for Geolocation.");
+         ;
+        }
+        }
+
   render() {
     //  console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
 
@@ -3396,11 +3462,21 @@ class NewContent extends React.Component<homeProps, homeState> {
       annual_deductible_min,
       annual_deductible_max,
 
+      total_benefit_min,
+      total_benefit_max,
+      location,
+      benefits_selected,
+      doctors_selected,
+
       planID,
       healthSA_eligibility,
     } = this.state.filter_params;
 
     let providersArr;
+
+    console.log("total_benefit_min", total_benefit_min);
+    console.log("total_benefit_max", total_benefit_max);
+    
 
     return (
       <div className="home">
@@ -3765,18 +3841,19 @@ class NewContent extends React.Component<homeProps, homeState> {
                             <fieldset className="c-range-field c-fieldset margin-top--0">
                               <legend className="c-label c-range-field__label">
                                 <span className="bolden-it">
-                                  Maximum yearly deductible
+                                  Total Benefit Limit
                                 </span>
                                 <span className="c-field__hint">
-                                  Your yearly deductible range is{" "}
-                                  {annual_deductible_min
-                                    ? annual_deductible_min
+                                  
+                                  Your annual Total Benefit Limit range is
+                                  {/* {total_benefit_min
+                                    ? total_benefit_min
                                     : ""}{" "}
-                                  {/* -{" "} */}
-                                  {annual_deductible_max
-                                    ? annual_deductible_max
+                                  
+                                  {total_benefit_min
+                                    ? total_benefit_max
                                     : ""}
-                                  {/* ₦0 - ₦10,000 */}
+                                   */}
                                 </span>
                               </legend>
                               <div className="display--flex justify-content--between align-items--center">
@@ -3791,9 +3868,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       pattern="[0-9.,-]*"
                                       type="text"
                                       name="deductible-start"
-                                      value={annual_deductible_min}
+                                      value={total_benefit_min}
                                       onChange={(e) =>
-                                        this.handleMinDedChange(e.target.value)
+                                        this.handleTotalBenefitMinChange(e.target.value)
                                       }
                                     />
                                   </div>
@@ -3815,9 +3892,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       pattern="[0-9.,-]*"
                                       type="text"
                                       name="deductible-end"
-                                      value={annual_deductible_max}
+                                      value={total_benefit_max}
                                       onChange={(e) =>
-                                        this.handleMaxDedChange(e.target.value)
+                                        this.handleTotalBenefitMaxChange(e.target.value)
                                       }
                                     />
                                   </div>
@@ -4435,7 +4512,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                             <fieldset className="c-fieldset margin-top--0">
                               <legend className="c-label">
                                 <span className="bolden-it">
-                                  Health Savings Account Eligibility (HSA)
+                                  {/* Health Savings Account Eligibility (HSA) */}
+                                  Proximity search
                                 </span>
                               </legend>
                               <div>
@@ -4450,8 +4528,49 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   className="c-label"
                                   onClick={() => this.handleHSAChange()}
                                 >
-                                  <span className="">Eligible for an HSA</span>
+                                  <span className="">
+                                    Find plans near me ? 
+                                  </span>
                                 </label>
+
+                              {location && 
+                              <ul className="c-list--bare">
+                                <li className="display--inline-block">
+                                  <div className="c-filter-tag margin-top--0">
+                                    <button
+                                      className="c-filter-tag__button"
+                                      //id="Asthma (43)-tag"
+                                      // onClick={() =>
+                                      //   this.handleMedMgtProgCheck(item)
+                                      // }
+                                    >
+                                      {/* <span className="">Deselect</span> */}
+                                      <span className="c-filter-tag__label">
+                                        {`Lat,Lng: ${location}`}
+                                      </span>
+                                      {/* <span className="c-filter-tag__clear-icon">
+                                      <svg
+                                        className="c-clear-icon"
+                                        width="15px"
+                                        height="15px"
+                                        viewBox="0 0 15 15"
+                                        version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        focusable="false"
+                                        role="presentation"
+                                        pointer-events="none"
+                                      >
+                                        <path
+                                          className="c-clear-icon__x"
+                                          d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                                        ></path>
+                                      </svg>
+                                    </span> */}
+                                    </button>
+                                  </div>
+                                </li>
+                              </ul>
+                           }
                               </div>
                             </fieldset>
                           </div>
@@ -4512,7 +4631,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                             );
                           })}
                         </div>
-
+{/* 
                         <div className="padding--2 c-plan-filter-container">
                           <fieldset className="c-fieldset margin-top--0">
                             <legend className="c-label">
@@ -4526,6 +4645,38 @@ class NewContent extends React.Component<homeProps, homeState> {
                             Add Drugs
                           </a>
                         </div>
+                     
+                      */}
+                          
+                        <div className="padding--2 c-plan-filter-container">
+                          <fieldset className="c-fieldset margin-top--0">
+                            <legend className="c-label">
+                              Plan Benefits
+                            </legend>
+                          </fieldset>
+                          <a
+                            className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
+                            href="/find-benefits"
+                          >
+                            Add Benefits
+                          </a>
+                        </div>
+                     
+                         
+                        <div className="padding--2 c-plan-filter-container">
+                          <fieldset className="c-fieldset margin-top--0">
+                            <legend className="c-label">
+                              Find Doctor
+                            </legend>
+                          </fieldset>
+                          <a
+                            className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
+                            href="/find-doctors"
+                          >
+                            Add Doctors
+                          </a>
+                        </div>
+                     
                       </div>
                     </div>
                   </div>

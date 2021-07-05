@@ -38,6 +38,8 @@ import {
   getServices,
   getCheapestPlan,
 } from "../src/actions/fetchDataActions";
+import Doctors from "./pages/doctors/Doctors";
+import Benefits from "./pages/benefits/Benefits";
 
 //import HMO from "./pages/home/HMO";
 
@@ -83,6 +85,8 @@ export class App extends React.Component {
               <Route exact path="/hmos/*" component={Home2} />
               <Route exact path="/find-provider" component={Providers} />
               <Route exact path="/find-drugs" component={Prescriptions} />
+              <Route exact path="/find-doctors" component={Doctors} />
+              <Route exact path="/find-benefits" component={Benefits} />
               {/* <Route path= {`/${hmo}`} component = {HMO} /> */}
               <Route component={ErrorPage} />
             </Switch>

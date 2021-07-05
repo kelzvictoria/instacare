@@ -10,82 +10,82 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 import "../../components/home/new-design.css";
-import "./providers.css";
+import "./doctors.css";
 
 import {
   updateTextResponse,
-  filterProviders,
-  setProviders,
+  filterDoctors,
+  setDoctors,
 } from "../../actions/userInputActions";
 
-export interface ProvidersProps {
+export interface DoctorsProps {
   [x: string]: any;
   dispatch(args: any): any;
 }
 
-class Providers extends Component<ProvidersProps> {
+class Doctors extends Component<DoctorsProps> {
   state = {
     search_arg: "",
-    selected_providers: [],
-    selected_providers_data: [],
-    show_providers_listing_div: false,
+    selected_doctors: [],
+    selected_doctors_data: [],
+    show_doctors_listing_div: false,
   };
 
   onSearch = async (searchText: string) => {
-    let tempProviders: any[] = [];
-    let providers = await this.props.providers.map(
-      (provider) => provider.provider_name
+    let tempDoctors: any[] = [];
+    let doctors = await this.props.doctors.map(
+      (doctor) => doctor.full_name
     );
-    providers.forEach((item: string) => {
+    doctors.forEach((item: string) => {
       console.log("item", item);
       // const _item = item["name"].toLowerCase();
       const _item = item.toLowerCase();
       if (_item.startsWith(searchText.toLowerCase())) {
-        tempProviders.push(item);
+        tempDoctors.push(item);
       }
     });
 
-    if (tempProviders.length > 0) {
+    if (tempDoctors.length > 0) {
       // this.props.dispatch({
       //   type: actions.FILTER_PROVIDERS,
-      //   data: tempProviders,
+      //   data: tempDoctors,
       // });
-      this.props.filterProviders(tempProviders);
+      this.props.filterDoctors(tempDoctors);
     }
   };
 
   onSelectChange = (value: any) => {
-    this.getProviderInfo(value);
+    this.getDoctorInfo(value);
 
     // this.props.dispatch({
     //   type: actions.UPDATE_TEXT_RESPONSE,
-    //   data: { key: "provider", value },
+    //   data: { key: "doctor", value },
     // });
 
-    this.props.updateTextResponse({ key: "provider", value });
+    this.props.updateTextResponse({ key: "doctor", value });
 
     console.log(this.props.responses.state);
   };
 
-  getProviderInfo = (name) => {
-    let info = this.props.providers.filter(
-      (provider) => provider.provider_name == name
-    ); //home_utils.providersInfo
+  getDoctorInfo = (name) => {
+    let info = this.props.doctors.filter(
+      (doctor) => doctor.full_name == name
+    ); //home_utils.doctorsInfo
 
     this.setState({
       search_arg: info[0],
     });
   };
 
-  addProviderToSelectedList = (prov_name) => {
-    let arr: string[] = this.state.selected_providers;
-    let data_arr: string[] = this.state.selected_providers_data;
+  addDoctorToSelectedList = (prov_name) => {
+    let arr: string[] = this.state.selected_doctors;
+    let data_arr: string[] = this.state.selected_doctors_data;
 
-    let isProviderSelected: number = arr.indexOf(prov_name);
+    let isDoctorSelected: number = arr.indexOf(prov_name);
 
-    if (isProviderSelected > -1) {
-      arr.splice(isProviderSelected, 1);
-      data_arr.splice(isProviderSelected, 1);
+    if (isDoctorSelected > -1) {
+      arr.splice(isDoctorSelected, 1);
+      data_arr.splice(isDoctorSelected, 1);
     } else {
       arr.push(prov_name);
       data_arr.push(this.state.search_arg);
@@ -97,29 +97,29 @@ class Providers extends Component<ProvidersProps> {
     // });
 
     this.setState({
-      selected_providers: arr,
-      selected_providers_data: data_arr,
+      selected_doctors: arr,
+      selected_doctors_data: data_arr,
     });
   };
 
-  toggleShowSelectedProviders = () => {
+  toggleShowSelectedDoctors = () => {
     this.setState({
-      show_providers_listing_div: !this.state.show_providers_listing_div,
+      show_doctors_listing_div: !this.state.show_doctors_listing_div,
     });
   };
 
   componentDidUpdate(prevProps) {}
 
-  setProviders = async () => {
+  setDoctors = async () => {
     //;
-    await this.props.setProviders(this.state.selected_providers_data);
+    await this.props.setDoctors(this.state.selected_doctors_data);
     this.props.history.push({ pathname: "/" });
   };
 
-  //   updateLocation = (provider: any) => {
+  //   updateLocation = (doctor: any) => {
   //     this.props.dispatch({
   //       type: actions.UPDATE_TEXT_RESPONSE,
-  //       data: { key: "state", value: provider },
+  //       data: { key: "state", value: doctor },
   //     });
   //     console.log(this.props.responses.state);
   //   };
@@ -127,21 +127,20 @@ class Providers extends Component<ProvidersProps> {
   render() {
     console.log("this.state", this.state);
 
-    let providers_arr: string[] = this.state.selected_providers;
+    let doctors_arr: string[] = this.state.selected_doctors;
     return (
       <div className="main-body-content">
-        <div className="container c-page-wrapper qa-provider-search-page">
+        <div className="container c-page-wrapper qa-doctor-search-page">
           <div
             className={
-              !this.state.show_providers_listing_div
+              !this.state.show_doctors_listing_div
                 ? "additions"
                 : "display--none"
             }
           >
             <div className="c-coverables-search">
               <h1 className="font-size--h1 font-weight--normal margin-top--3 leading--base">
-                {/* Add your doctors & facilities */}
-                Add your facilities
+                Add your doctors 
               </h1>
               <div className="padding-left--0">
                 <div className="display--flex align-items--end">
@@ -149,10 +148,10 @@ class Providers extends Component<ProvidersProps> {
                     <div className="clearfix">
                       <label
                         className="c-label margin-top--0"
-                        id="autocomplete_providers"
+                        id="autocomplete_doctors"
                       >
                         <span>
-                          Begin typing to find & select your doctor or facility.
+                          Begin typing to find & select your doctor.
                         </span>{" "}
                       </label>
 
@@ -162,8 +161,8 @@ class Providers extends Component<ProvidersProps> {
                         dataSource={this.props.dataSource}
                         onSearch={this.onSearch}
                         onChange={this.onSelectChange}
-                        placeholder="Example: Abuja Clinics"
-                        value={this.props.responses.provider}
+                        placeholder="Example: Dr Ohams Henry"
+                        value={this.props.responses.doctor}
                         //value={this.state.search_arg}
                         className="ic-auto-complete margin-bottom--0"
                       />
@@ -173,7 +172,7 @@ class Providers extends Component<ProvidersProps> {
                     className="c-button c-button--primary"
                     type="button"
                     onClick={() =>
-                      this.getProviderInfo(this.props.responses.provider)
+                      this.getDoctorInfo(this.props.responses.doctor)
                     }
                   >
                     Find
@@ -181,12 +180,12 @@ class Providers extends Component<ProvidersProps> {
                 </div>
               </div>
 
-              <div className="margin-top--5 margin-bottom--1 providers-results">
+              <div className="margin-top--5 margin-bottom--1 doctors-results">
                 {this.state.search_arg && (
                   <h2 className="ic-color margin-bottom--2 font-size--base font-weight--normal">
                     Showing results for{" "}
                     <span className="font-weight--bold">
-                      {this.props.responses.provider}
+                      {this.props.responses.doctor}
                     </span>
                   </h2>
                 )}
@@ -196,7 +195,7 @@ class Providers extends Component<ProvidersProps> {
                       {/* c-coverable-result--selected */}
                       <div className="display--flex justify-content--between align-items--start">
                         <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                          {this.state.search_arg["provider_name"]}
+                          {this.state.search_arg["full_name"]}
                         </h5>
 
                         <div>
@@ -204,14 +203,14 @@ class Providers extends Component<ProvidersProps> {
                             className="c-button c-button--small"
                             type="button"
                             onClick={() =>
-                              this.addProviderToSelectedList(
-                                this.state.search_arg["provider_name"]
+                              this.addDoctorToSelectedList(
+                                this.state.search_arg["full_name"]
                               )
                             }
                           >
                             {" "}
-                            {providers_arr.indexOf(
-                              this.state.search_arg["provider_name"]
+                            {doctors_arr.indexOf(
+                              this.state.search_arg["full_name"]
                             ) > -1
                               ? "Remove"
                               : "Add"}
@@ -220,20 +219,20 @@ class Providers extends Component<ProvidersProps> {
                         </div>
                       </div>
                       <div>
-                        <div className="provider-search__result__taxonomy">
-                          {this.state.search_arg["coverage_type"]}
-                        </div>
+                        {/* <div className="doctor-search__result__taxonomy">
+                          {this.state.search_arg["full_name"]}
+                        </div> */}
 
-                        {/* <div className="provider-search__result__specialties">
+                        {/* <div className="doctor-search__result__specialties">
                           <span>primary care - nurse practioner</span>
                         </div> */}
 
-                        <div className="provider-search__result__location">
+                        {/* <div className="doctor-search__result__location">
                           <span className="text-transform--capitalize">
                             {this.state.search_arg["city"]},{" "}
                             {this.state.search_arg["state"]}
                           </span>
-                        </div>
+                        </div> */}
                       </div>
                     </li>
                   </ul>
@@ -245,18 +244,18 @@ class Providers extends Component<ProvidersProps> {
                 </div>
               </div>
 
-              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 providers-search-selection-controls">
-                {this.state.selected_providers.length > 0 && (
+              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 doctors-search-selection-controls">
+                {this.state.selected_doctors.length > 0 && (
                   <div className="">
                     <div className="margin-bottom--1">
-                      {this.state.selected_providers.length} doctor or facilty
+                      {this.state.selected_doctors.length} doctor or facilty
                       selected
                     </div>
                     <a
                       className="c-button qa-edit-selections"
-                      //href="#/find-provider/search/edit"
+                      //href="#/find-doctor/search/edit"
                       role="button"
-                      onClick={this.toggleShowSelectedProviders}
+                      onClick={this.toggleShowSelectedDoctors}
                     >
                       See/Edit selections
                     </a>
@@ -264,7 +263,7 @@ class Providers extends Component<ProvidersProps> {
                     <a
                       className="c-button c-button--primary margin-left--1 qa-continue"
                       href="#"
-                      onClick={this.setProviders}
+                      onClick={this.setDoctors}
                       role="button"
                     >
                       Continue
@@ -277,7 +276,7 @@ class Providers extends Component<ProvidersProps> {
             <button
               className="c-button c-button--secondary margin-top--2"
               type="button"
-              onClick={this.setProviders}
+              onClick={this.setDoctors}
             >
               Back to Plans
             </button>
@@ -286,13 +285,13 @@ class Providers extends Component<ProvidersProps> {
 
           <div
             className={
-              this.state.show_providers_listing_div
+              this.state.show_doctors_listing_div
                 ? "listings margin-top--3"
                 : "display--none"
             }
           >
             <a
-              onClick={this.toggleShowSelectedProviders}
+              onClick={this.toggleShowSelectedDoctors}
               className="text-transform--capitalize"
             >
               <FontAwesomeIcon className="margin-right--1" icon={faArrowLeft} />
@@ -308,7 +307,7 @@ class Providers extends Component<ProvidersProps> {
                     <div className="clearfix">
                       <label
                         className="c-label margin-top--0"
-                        id="autocomplete_providers"
+                        id="autocomplete_doctors"
                       >
                         {/* <span>
                           Doctors & facilities
@@ -319,17 +318,17 @@ class Providers extends Component<ProvidersProps> {
                 </div>
               </div>
 
-              <div className="margin-bottom--1 providers-results">
-                {this.state.selected_providers_data.length !== 0 && (
+              <div className="margin-bottom--1 doctors-results">
+                {this.state.selected_doctors_data.length !== 0 && (
                   <ul className="c-coverables-search__results c-list--bare">
-                    {this.state.selected_providers_data.map(
-                      (selected_provider, i) => {
+                    {this.state.selected_doctors_data.map(
+                      (selected_doctor, i) => {
                         return (
                           <li className="c-coverable-result box-shadow margin-top--1 margin-bottom--2">
                             {/* c-coverable-result--selected */}
                             <div className="display--flex justify-content--between align-items--start">
                               <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                                {selected_provider["provider_name"]}
+                                {selected_doctor["doctor_name"]}
                               </h5>
 
                               <div>
@@ -337,14 +336,14 @@ class Providers extends Component<ProvidersProps> {
                                   className="c-button c-button--small"
                                   type="button"
                                   onClick={() =>
-                                    this.addProviderToSelectedList(
-                                      selected_provider["provider_name"]
+                                    this.addDoctorToSelectedList(
+                                      selected_doctor["doctor_name"]
                                     )
                                   }
                                 >
                                   {" "}
-                                  {providers_arr.indexOf(
-                                    selected_provider["provider_name"]
+                                  {doctors_arr.indexOf(
+                                    selected_doctor["doctor_name"]
                                   ) > -1
                                     ? "Remove"
                                     : "Add"}
@@ -353,18 +352,18 @@ class Providers extends Component<ProvidersProps> {
                               </div>
                             </div>
                             <div>
-                              <div className="provider-search__result__taxonomy">
-                                {selected_provider["coverage_type"]}
+                              <div className="doctor-search__result__taxonomy">
+                                {selected_doctor["coverage_type"]}
                               </div>
 
-                              {/* <div className="provider-search__result__specialties">
+                              {/* <div className="doctor-search__result__specialties">
                             <span>primary care - nurse practioner</span>
                           </div> */}
 
-                              <div className="provider-search__result__location">
+                              <div className="doctor-search__result__location">
                                 <span className="text-transform--capitalize">
-                                  {selected_provider["city"]},{" "}
-                                  {selected_provider["state"]}
+                                  {selected_doctor["city"]},{" "}
+                                  {selected_doctor["state"]}
                                 </span>
                               </div>
                             </div>
@@ -375,9 +374,9 @@ class Providers extends Component<ProvidersProps> {
                   </ul>
                 )}
 
-                {this.state.selected_providers_data.length == 0 && (
+                {this.state.selected_doctors_data.length == 0 && (
                   <p className="p-nil">
-                    No medical providers have been selected yet.
+                    No medical doctors have been selected yet.
                   </p>
                 )}
                 <div className="display--flex justify-content--between">
@@ -387,7 +386,7 @@ class Providers extends Component<ProvidersProps> {
                 </div>
               </div>
 
-              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 providers-search-selection-controls">
+              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 doctors-search-selection-controls">
                 <a
                   className="c-button c-button--primary qa-continue"
                   href="#/plan/results"
@@ -410,12 +409,12 @@ const mapProps = (state: any) => {
     // ...state.quiz.quiz,
     responses: state.quiz.responses,
     dataSource: state.quiz.dataSource,
-    providers: state.fetchData.providers,
+    doctors: state.fetchData.doctors,
   };
 };
 
 export default connect(mapProps, {
   updateTextResponse,
-  filterProviders,
-  setProviders,
-})(Providers);
+  filterDoctors,
+  setDoctors,
+})(Doctors);
