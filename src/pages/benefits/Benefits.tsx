@@ -251,8 +251,8 @@ class Benefits extends Component<BenefitsProps> {
                 {this.state.selected_benefits.length > 0 && (
                   <div className="">
                     <div className="margin-bottom--1">
-                      {this.state.selected_benefits.length}benefit
-                      selected
+                      {`${this.state.selected_benefits.length } ${this.state.selected_benefits.length > 1 ? "benefits" : "benefit"} 
+                      selected `}
                     </div>
                     <a
                       className="c-button qa-edit-selections"
