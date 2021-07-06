@@ -34,7 +34,7 @@ import Prescriptions from "./pages/prescriptions/Prescriptions";
 import { getToken } from "../src/actions/authActions";
 import {
   getProviders,
-  getPlans,
+  //getPlans,
   getServices,
   getCheapestPlan,
 } from "../src/actions/fetchDataActions";

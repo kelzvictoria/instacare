@@ -41,10 +41,10 @@ import {
   getSimilarPlans,
   getPlanDetail,
   getProviders,
-  getPlans,
+  //getPlans,
   getServices,
   getCheapestPlan,
-  getPlan,
+  //getPlan,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -152,7 +152,7 @@ class ComparePlans extends Component<ComparisonProps> {
     });
 
     await this.props.getProviders();
-    await this.props.getPlans();
+    //await this.props.getPlans();
     await this.props.getServices();
 
     let firstPlanID = paramsArr[0];
@@ -6273,11 +6273,11 @@ export default connect(mapProps, {
   getSimilarPlans,
   getPlanDetail,
   getProviders,
-  getPlans,
+ // getPlans,
   getServices,
   getCheapestPlan,
   addCompareURLParam,
   removeCompareURLParam,
-  getPlan,
+ //getPlan,
   toggleDataCaptureModal,
 })(ComparePlans);

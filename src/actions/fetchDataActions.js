@@ -29,7 +29,12 @@ import {
     TOGGLE_PLAN_PROVIDERS,
     UPDATE_INFINITE_SCROLL_DATA,
     SET_IS_INFINNITE_SCROLL_HAS_MORE,
-    RESET_INFINITE_SCROLL_DATA
+    RESET_INFINITE_SCROLL_DATA,
+
+    FILTER_BY_TOTAL_BENEFIT_LIMIT,
+    FILTER_BY_BENEFITS,
+    FILTER_BY_DOCTOR,
+    FILTER_BY_PROXIMITY
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions"
@@ -38,128 +43,163 @@ import { stripNonNumeric, CAN_LOG } from "../utils/homeUtils"
 
 const API_URL = "https://instacareconnect.pmglobaltechnology.com";
 
-export const getPlans = () => async (dispatch, getState) => {
-    dispatch(setIsFetchingPlans());
-    await dispatch(getHMOs());
+export const filterByBudget = (budget) => (dispatch, getState) => {
+    dispatch({
+        type: IS_FILTERING_BY_BUDGET,
+        payload: true
+    })
 
-    await axios
-        .get(`${API_URL}/api/plans`
-            //, tokenConfig(getState)
-        )
-        .then((res) => {
-            let plans = [];
-            if (res.data.length > 0) {
-                plans = res.data.map(obj => obj.data);
+    let min = budget[0];
+    let max = budget[1];
 
-                for (let i = 0; i < plans.length; i++) {
-                    let hmoID = plans[i]["hmo_id"];
-                    let hmos = getState().fetchData.hmos;
+    let plans = getState().fetchData.services;
 
-                    let planHMO = hmos.filter(hmo => hmo.hmo_id === hmoID);
-
-                    if (planHMO) {
-                        plans[i]["hmo_id"] = planHMO[0];
-                    }
-
-                }
-
-                dispatch({
-                    type: GET_PLANS,
-                    payload: plans
-                })
-            }
-
-        }).catch((err) => {
-            console.log("err", err);
-
-            err.response && dispatch(returnErrors(err.response.data, err.response.status))
+    let filteredPlansByBudget = plans
+        .filter(plan => {
+            return stripNonNumeric(plan.price) >= min && stripNonNumeric(plan.price) <= max
         })
-}
 
-export const getPlan = (plan) => (dispatch, getState) => {
     dispatch({
-        type: GET_PLAN,
-        payload: plan
+        type: FILTER_BY_BUDGET,
+        payload: filteredPlansByBudget
     })
 }
 
-export const getPlanDetail = (serviceID) => async (dispatch, getState) => {
+export const filterByBudget_and_or_Type = (params) => async (dispatch, getState) => {
+    CAN_LOG && console.log("params", params);
+    dispatch(setIsFetchingRecPlans())
+    await dispatch(getServices());
+    let budget = params.budget;
+    let type = params.type;
+    let range = params.range;
 
-    //  await dispatch(getServices())
+    let min = budget[0];
+    let max = budget[1];
 
+    let plans = getState().fetchData.services;
 
-    let services = getState().fetchData.services;
+    let plansByPlanType = await groupPlansByType(plans, type);
 
-    let service = services.filter(service => service.service_id === serviceID)[0];
-    dispatch(getSimilarPlans(service));
+    let packages = type.length > 0 ? plansByPlanType : plans;
+
+    let recommended_plans = range.length > 0 ?
+        // return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
+        groupPlansByRange(packages, range)
+        : budget.length > 0 ?
+            packages.filter(pckg => {
+                return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
+            })
+            : plansByPlanType;
+
+    CAN_LOG && console.log("packages", packages);
+    CAN_LOG && console.log("recommended_plans", recommended_plans);
+
     dispatch({
-        type: GET_PLAN,
-        payload: service
+        type: GET_RECOMMENDED_PLANS,
+        payload: recommended_plans
     })
 }
 
-export const getSimilarPlans = (plan) => async (dispatch, getState) => {
-    if (plan) {
-        await dispatch(getServices())
-        if (plan.plan_id.category) {
-            let type = plan.plan_id.category.map(cat => cat.name.toLowerCase());
+export const filterByPlanRange = () => async (dispatch, getState) => {
+    await dispatch(getServices());
+    let plans = getState().fetchData.services;
+    let range = getState().quiz.responses.price_range
 
-            let planID = plan.service_id;
+    let plansByRange = groupPlansByRange(plans, range);
 
-            console.log("type", type, "planID", planID);
+    console.log("plansByRange", plansByRange);
+    dispatch({
+        type: GET_RECOMMENDED_PLANS,
+        payload: plansByRange
+    })
+}
 
-            let packages = getState().fetchData.services;
+export const filterByPlanType = (type) => (dispatch, getState) => {
+    dispatch({
+        type: IS_FILTERING_BY_PLAN_TYPE,
+        payload: true
+    })
 
-            let res = groupPlansByType(packages, type);
-            //console.log("res", res);
+    let plans = getState().fetchData.services;
 
-            let similar_plans = res.filter(plan => {
-                // console.log("plan.service_id", plan.service_id);
-                // console.log("planID", planID);
-                return plan.service_id !== planID
-            })
+    let filteredPlansByPlanType = groupPlansByType(plans, type);
 
-            similar_plans = similar_plans.filter((plan, index, self) =>
-                index === self.findIndex((p) => (
-                    p.place === plan.place && p.name === plan.name
-                ))
-            )
+    dispatch({
+        type: FILTER_BY_PLAN_TYPE,
+        payload: filteredPlansByPlanType
+    })
+}
 
-            console.log("similar_plans", similar_plans);
+export const filterByTotalBenefitLimit = (limit) => (dispatch, getState) => {
+    let min = limit[0];
+    let max = limit [1];
 
-            dispatch({
-                type: GET_SIMILAR_PLANS,
-                payload: similar_plans
-            })
+    let plans = getState().fetchData.services;
+
+    let filteredPlansByTotalBenefitLimit = plans
+        .filter(plan => {
+            let totalBL = stripNonNumeric(plan.in_patient_limit) + stripNonNumeric(plan.out_patient_limit)
+            return totalBL  >= min && totalBL <= max
+        })
+
+    dispatch({
+        type: FILTER_BY_TOTAL_BENEFIT_LIMIT,
+        payload: filteredPlansByTotalBenefitLimit
+    })
+}
+
+export const filterByBenefits = (benefits) => async (dispatch, getState) => {
+    await dispatch(getServices());
+    let plans = getState().fetchData.services;
+    let benefits = getState().quiz.responses.benefits
+
+    let plansByBenefit = groupPlansByBenefit(plans, benefits);
+
+    console.log("plansByBenefit", plansByBenefit);
+    dispatch({
+        type: GET_RECOMMENDED_PLANS,
+        payload: plansByBenefit
+    })
+}
+
+export const getCheapestPlan = () => (dispatch, getState) => {
+    let cheapest_plan = getState().fetchData.cheapest_plan
+    if (!cheapest_plan) {
+        let lowest = Number.POSITIVE_INFINITY;
+        let highest = Number.NEGATIVE_INFINITY;
+        let tmp;
+
+        let arr = getState().fetchData.services;//this.props.planServices;
+        // console.log("arr", arr);
+
+        for (let i = arr.length - 1; i >= 0; i--) {
+            tmp = stripNonNumeric(arr[i]["price"]);
+            // console.log("arr[i]['price']", stripNonNumeric(arr[i]["price"]));
+
+            if (tmp > 1000) {
+                if (tmp < lowest) lowest = tmp;
+                if (tmp > highest) highest = tmp;
+            }
         }
+        console.log("most expensive plan", highest, "cheapest plan", lowest);
 
+
+        dispatch({
+            type: GET_CHEAPEST_PLAN,
+            data: lowest
+        })
     }
 
 }
 
-export const getPlansByID = (planID) => async (dispatch, getState) => {
-    await dispatch(getServices());
+export const getCheapestPlanByHMO = (plan) => (dispatch, getState) => {
     dispatch({
-        type: IS_FILTERING_BY_PLAN_ID,
-        payload: true
-    });
-
-    let services = getState().fetchData.services;
-    CAN_LOG && console.log("planID", planID);
-    let plansByID = services.filter(plan => {
-        return plan.service_id == planID
-    });
-
-    CAN_LOG && console.log("plansByID", plansByID);
-
-    dispatch({
-        type: FILTER_BY_PLAN_ID,
-        payload: plansByID
+        type: GET_CHEAPEST_PLAN_BY_HMO,
+        data: plan
     })
 }
 
 export const getHMOs = () => async (dispatch, getState) => {
-    //  await dispatch(getProviders());
     dispatch({
         type: IS_FETCHING_HMOS,
         payload: true
@@ -171,24 +211,20 @@ export const getHMOs = () => async (dispatch, getState) => {
         .then((res) => {
             let hmos = [];
             let providers = getState().fetchData.providers;
-            //  console.log("providers", providers);
+
             if (res.data.length > 0) {
                 hmos = res.data.map(obj => obj.data);
 
                 if (providers.length > 0) {
                     for (let i = 0; i < hmos.length; i++) {
                         let hmoID = hmos[i]["hmo_id"]
-                        // console.log("hmoID", hmoID);
-                        // console.log("providers", providers);
 
                         let hmoProviders = providers.filter(provider => provider.hmo_id === hmoID);
-                        // console.log("hmoProviders", hmoProviders);
                         if (hmoProviders.length > 0) {
                             hmos[i]["providers"] = hmoProviders;
                         }
                     }
                 }
-                //  console.log("hmos", hmos);
                 dispatch({
                     type: GET_HMOS,
                     payload: hmos
@@ -201,73 +237,83 @@ export const getHMOs = () => async (dispatch, getState) => {
         })
 }
 
+export const getPlanByID = (planID) => async (dispatch, getState) => {
+    await dispatch(getServices());
+    dispatch({
+        type: IS_FILTERING_BY_PLAN_ID,
+        payload: true
+    });
+
+    let plans = getState().fetchData.services;
+    CAN_LOG && console.log("planID", planID);
+    let planByID = plans.filter(plan => {
+        return plan.service_id == planID
+    });
+
+    CAN_LOG && console.log("plansByID", planByID);
+
+    dispatch({
+        type: FILTER_BY_PLAN_ID,
+        payload: planByID
+    })
+}
+
+export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
+    let plansByHMO;
+
+    if (hmoId) {
+        dispatch({
+            type: IS_FETCHING_PLANS_BY_HMO,
+            data: true
+        });
+        let HMO = getState().fetchData.hmos.filter(hmo => hmo.hmo_id == hmoId)
+        // console.log("plansByHMO", plansByHMO);
+
+        await dispatch({
+            type: GET_HMO,
+            payload: HMO
+        })
+
+        plansByHMO = getState().fetchData.services.filter(plan => plan.hmo_id.hmo_id === hmoId)
+
+        dispatch({
+            type: GET_PLANS_BY_HMO,
+            payload: plansByHMO
+        })
+    }
+}
+
+export const getPlanDetail = (serviceID) => async (dispatch, getState) => {
+    let plans = getState().fetchData.services;
+
+    let plan = plans.filter(plan => plan.service_id === serviceID)[0];
+    dispatch(getSimilarPlans(plan));
+    dispatch({
+        type: GET_PLAN,
+        payload: plan
+    })
+}
+
+export const getProviderInfo = (provider) => (dispatch, getState) => {
+    dispatch({
+        type: GET_PROVIDER_INFO,
+        data: provider
+    })
+}
+
 export const getProviders = () => (dispatch, getState) => {
     dispatch(setIsFetchingProviders());
     axios
         .get(`${API_URL}/api/providers`)
         .then((res) => {
             let providers = [];
-            //console.log("res", res);
             if (res.data.length > 0) {
                 providers = res.data.map(obj => obj.data)
-                //  console.log("providers", providers);
             }
 
             dispatch({
                 type: GET_PROVIDERS,
                 payload: providers
-            })
-        }).catch((err) => {
-            console.log("err", err);
-            err.response && dispatch(returnErrors(err.response.data, err.response.status))
-        })
-}
-
-export const getServices = () => async (dispatch, getState) => {
-    dispatch(setIsFetchingServices());
-    await dispatch(getProviders());
-    await dispatch(getPlans());
-
-    let services = [];
-    let budget = getState().quiz.responses.budget;
-
-    let min = budget[0];
-    let max = budget[1];
-
-    await axios
-        .get(`${API_URL}/api/services`
-            //, tokenConfig(getState)
-        )
-        .then((res) => {
-            if (res.data.length > 0) {
-                services = res.data.map(obj => obj.data);
-                services = services.filter(service => stripNonNumeric(service.price) > 100
-                    //  stripNonNumeric(service.price) >= min && stripNonNumeric(service.price) <= max
-                )
-                for (let i = 0; i < services.length; i++) {
-                    let hmoID = services[i]["hmo_id"];
-                    let planID = services[i]["plan_id"];
-
-                    let hmos = getState().fetchData.hmos;
-                    let plans = getState().fetchData.plans;
-
-                    let servicePlan = plans.filter(plan => plan.plan_id === planID);
-
-                    let planHMO = hmos.filter(hmo => hmo.hmo_id === hmoID);
-
-                    if (planHMO.length > 0) {
-                        services[i]["hmo_id"] = planHMO[0];
-                    }
-
-                    if (servicePlan.length > 0) {
-                        services[i]["plan_id"] = servicePlan[0];
-                    }
-                }
-            }
-
-            dispatch({
-                type: GET_SERVICES,
-                payload: services
             })
         }).catch((err) => {
             console.log("err", err);
@@ -299,14 +345,14 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     CAN_LOG &&
         console.log("min", min, "max", max);
 
-    let services = await getState().fetchData.services
+    let plans = await getState().fetchData.services
 
-    let plansByPlanType = groupPlansByType(services, planType);
+    let plansByPlanType = groupPlansByType(plans, planType);
 
     CAN_LOG && console.log("plansByPlanType", plansByPlanType);
 
     let recommended_plans;
-    let packages = planType.length > 0 ? plansByPlanType : services;
+    let packages = planType.length > 0 ? plansByPlanType : plans;
 
     if (hmoID && budget.length == 0) {
         CAN_LOG && console.log("hmoID && budget.length == 0");
@@ -351,216 +397,146 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
 
 }
 
-export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
-    let plansByHMO;
+export const getServices = () => async (dispatch, getState) => {
+    dispatch(setIsFetchingServices());
+    
+    await dispatch(getProviders());
+    await dispatch(getHMOs())
+    //await dispatch(getPlans());
 
-    if (hmoId) {
-        dispatch({
-            type: IS_FETCHING_PLANS_BY_HMO,
-            data: true
-        });
-        let HMO = getState().fetchData.hmos.filter(hmo => hmo.hmo_id == hmoId)
-        // console.log("plansByHMO", plansByHMO);
+    let plans = [];
+    let budget = getState().quiz.responses.budget;
 
-        await dispatch({
-            type: GET_HMO,
-            payload: HMO
-        })
+    let min = budget[0];
+    let max = budget[1];
 
-        plansByHMO = getState().fetchData.services.filter(plan => plan.hmo_id.hmo_id === hmoId)
+    await axios
+        .get(`${API_URL}/api/services`
+            //, tokenConfig(getState)
+        )
+        .then((res) => {
+            if (res.data.length > 0) {
+                plans = res.data.map(obj => obj.data);
+                plans = plans.filter(plan => stripNonNumeric(plan.price) > 100
+                    //  stripNonNumeric(plan.price) >= min && stripNonNumeric(plan.price) <= max
+                )
+                for (let i = 0; i < plans.length; i++) {
+                    let hmoID = plans[i]["hmo_id"];
+                    let planID = plans[i]["plan_id"];
 
-        dispatch({
-            type: GET_PLANS_BY_HMO,
-            payload: plansByHMO
-        })
+                    let hmos = getState().fetchData.hmos;
+                    //let plans = getState().fetchData.plans;
 
+                   // let planService = plans.filter(plan => plan.plan_id === planID);
 
-    }
-}
+                    let planHMO = hmos.filter(hmo => hmo.hmo_id === hmoID);
 
-export const getProviderInfo = (provider) => (dispatch, getState) => {
-    dispatch({
-        type: GET_PROVIDER_INFO,
-        data: provider
-    })
-}
+                    if (planHMO.length > 0) {
+                        plans[i]["hmo_id"] = planHMO[0];
+                    }
 
-export const getCheapestPlan = () => (dispatch, getState) => {
-    let cheapest_plan = getState().fetchData.cheapest_plan
-    if (!cheapest_plan) {
-        let lowest = Number.POSITIVE_INFINITY;
-        let highest = Number.NEGATIVE_INFINITY;
-        let tmp;
-
-        let arr = getState().fetchData.services;//this.props.planServices;
-        // console.log("arr", arr);
-
-        for (let i = arr.length - 1; i >= 0; i--) {
-            tmp = stripNonNumeric(arr[i]["price"]);
-            // console.log("arr[i]['price']", stripNonNumeric(arr[i]["price"]));
-
-            if (tmp > 1000) {
-                if (tmp < lowest) lowest = tmp;
-                if (tmp > highest) highest = tmp;
+                    // if (planService.length > 0) {
+                    //     plans[i]["plan_id"] = planService[0];
+                    // }
+                }
             }
-        }
-        console.log("most expensive plan", highest, "cheapest plan", lowest);
 
-
-        dispatch({
-            type: GET_CHEAPEST_PLAN,
-            data: lowest
+            dispatch({
+                type: GET_SERVICES,
+                payload: plans
+            })
+        }).catch((err) => {
+            console.log("err", err);
+            err.response && dispatch(returnErrors(err.response.data, err.response.status))
         })
+}
+
+export const getSimilarPlans = (plan) => async (dispatch, getState) => {
+    if (plan) {
+        await dispatch(getServices())
+        if (plan.plan_id.category) {
+            let type = plan.plan_id.category.map(cat => cat.name.toLowerCase());
+            let planID = plan.service_id;
+
+           CAN_LOG && console.log("type", type, "planID", planID);
+
+            let plans = getState().fetchData.services;
+            let res = groupPlansByType(plans, type);
+
+            let similar_plans = res.filter(plan => {
+                return plan.service_id !== planID
+            })
+
+            similar_plans = similar_plans.filter((plan, index, self) =>
+                index === self.findIndex((p) => (
+                    p.place === plan.place && p.name === plan.name
+                ))
+            )
+
+            CAN_LOG && console.log("similar_plans", similar_plans);
+
+            dispatch({
+                type: GET_SIMILAR_PLANS,
+                payload: similar_plans
+            })
+        }
+
     }
 
 }
 
-export const getCheapestPlanByHMO = (plan) => (dispatch, getState) => {
-    dispatch({
-        type: GET_CHEAPEST_PLAN_BY_HMO,
-        data: plan
-    })
+export const groupPlansByBenefit = (packages, benefit) => async (dispatch, getState) => {
+    let filteredPlansByBenefit = [];
+    let filt;
+
+    for (let i = 0; i < benefit.length; i++) {
+        switch(benefit[i].toLowerCase()) {
+
+        }
+    }
 }
 
-export const filterByBudget = (budget) => (dispatch, getState) => {
-    dispatch({
-        type: IS_FILTERING_BY_BUDGET,
-        payload: true
-    })
+const groupPlansByRange = (packages, range) => {
+    CAN_LOG && console.log("range", range);
+    let filteredPlansByRange = [];
+    let filt;
+    for (let i = 0; i < range.length; i++) {
+        CAN_LOG && console.log("range[i]", range[i]);
+        switch (range[i].toLowerCase()) {
+            case "bronze":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "bronze");
+                filteredPlansByRange.push(...filt);
+                break;
+            case "silver":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "silver");
+                filteredPlansByRange.push(...filt);
+                break;
+            case "gold":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "gold");
+                filteredPlansByRange.push(...filt)
+                break;
+            case "diamond":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "diamond");
+                filteredPlansByRange.push(...filt)
+                break;
+            case "platinum":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "platinum");
+                filteredPlansByRange.push(...filt)
+                break;
+            case "platinum_plus":
+                filt = packages.filter(pckage => pckage.category.toLowerCase() === "platinum plans");
+                filteredPlansByRange.push(...filt)
+                break;
+            default:
+                filteredPlansByRange = packages
+                console.log("default", filteredPlansByRange);
+                break;
+        }
 
-    let min = budget[0];
-    let max = budget[1];
 
-    let packages = getState().fetchData.services;
-
-    let filteredPackagesByBudget = packages
-        .filter(pckg => {
-            return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
-        })
-
-    dispatch({
-        type: FILTER_BY_BUDGET,
-        payload: filteredPackagesByBudget
-    })
-}
-
-export const filterByPlanType = (type) => (dispatch, getState) => {
-    dispatch({
-        type: IS_FILTERING_BY_PLAN_TYPE,
-        payload: true
-    })
-
-    let services = getState().fetchData.services;
-
-    let filteredPackagesByPlanType = groupPlansByType(services, type);
-
-    dispatch({
-        type: FILTER_BY_PLAN_TYPE,
-        payload: filteredPackagesByPlanType
-    })
-}
-
-export const filterByBudget_and_or_Type = (params) => async (dispatch, getState) => {
-    CAN_LOG && console.log("params", params);
-    dispatch(setIsFetchingRecPlans())
-    await dispatch(getServices());
-    let budget = params.budget;
-    let type = params.type;
-    let range = params.range;
-
-    let min = budget[0];
-    let max = budget[1];
-
-    let services = getState().fetchData.services;
-
-    let plansByPlanType = await groupPlansByType(services, type);
-
-    let packages = type.length > 0 ? plansByPlanType : services;
-
-    let recommended_plans = range.length > 0 ?
-        // return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
-        groupPlansByRange(packages, range)
-        : budget.length > 0 ?
-            packages.filter(pckg => {
-                return stripNonNumeric(pckg.price) >= min && stripNonNumeric(pckg.price) <= max
-            })
-            : plansByPlanType;
-
-    CAN_LOG && console.log("packages", packages);
-    CAN_LOG && console.log("recommended_plans", recommended_plans);
-
-    dispatch({
-        type: GET_RECOMMENDED_PLANS,
-        payload: recommended_plans
-    })
-}
-
-export const filterByPlanRange = () => async (dispatch, getState) => {
-    await dispatch(getServices());
-    let services = getState().fetchData.services;
-    let range = getState().quiz.responses.price_range
-
-    let plansByRange = groupPlansByRange(services, range);
-
-    console.log("plansByRange", plansByRange);
-    dispatch({
-        type: GET_RECOMMENDED_PLANS,
-        payload: plansByRange
-    })
-}
-
-export const setIsFetchingPlansByHMO = () => (dispatch, getState) => {
-
-}
-
-export const setIsFetchingPlans = () => (dispatch, getState) => {
-    console.log("in here");
-    dispatch({
-        type: IS_FETCHING_PLANS,
-        payload: true
-    })
-}
-
-export const setIsFetchingHMOs = () => (dispatch, getState) => {
-    dispatch({
-        type: IS_FETCHING_HMOS,
-        payload: true
-    })
-}
-
-export const setIsFetchingServices = () => (dispatch, getState) => {
-    dispatch({
-        type: IS_FETCHING_SERVICES,
-        payload: true
-    })
-}
-
-export const setIsFetchingProviders = () => (dispatch, getState) => {
-    dispatch({
-        type: IS_FETCHING_PROVIDERS,
-        payload: true
-    })
-}
-
-export const setIsFetchingRecPlans = () => (dispatch, getState) => {
-    dispatch({
-        type: IS_FETCHING_RECOMMENDED_PLANS,
-        payload: true
-    })
-
-}
-
-export const setIsFilteringByBudget = () => (dispatch, getState) => {
-    dispatch({
-        type: IS_FILTERING_BY_BUDGET,
-        payload: true
-    })
-}
-
-export const togglePlanProviders = () => (dispatch, getState) => {
-    dispatch({
-        type: TOGGLE_PLAN_PROVIDERS
-    })
+    }
+    CAN_LOG && console.log("filteredPlansByRange", filteredPlansByRange);
+    return filteredPlansByRange;
 }
 
 const groupPlansByType = (packages, type) => {
@@ -743,47 +719,64 @@ const groupPlansByType = (packages, type) => {
     return filteredPackagesByPlanType;
 }
 
-const groupPlansByRange = (packages, range) => {
-    CAN_LOG && console.log("range", range);
-    let filteredPlansByRange = [];
-    let filt;
-    for (let i = 0; i < range.length; i++) {
-        CAN_LOG && console.log("range[i]", range[i]);
-        switch (range[i].toLowerCase()) {
-            case "bronze":
-                filt = packages.filter(pckage => pckage.category.toLowerCase() === "bronze");
-                filteredPlansByRange.push(...filt);
-                break;
-            case "silver":
-                filt = packages.filter(pckage => pckage.category.toLowerCase() === "silver");
-                filteredPlansByRange.push(...filt);
-                break;
-            case "gold":
-                filt = packages.filter(pckage => pckage.category.toLowerCase() === "gold");
-                filteredPlansByRange.push(...filt)
-                break;
-            case "diamond":
-                filt = packages.filter(pckage => pckage.category.toLowerCase() === "diamond");
-                filteredPlansByRange.push(...filt)
-                break;
-            case "platinum":
-                filt = packages.filter(pckage => pckage.category.toLowerCase() === "platinum");
-                filteredPlansByRange.push(...filt)
-                break;
-            case "platinum_plus":
-                filt = packages.filter(pckage => pckage.category.toLowerCase() === "platinum plans");
-                filteredPlansByRange.push(...filt)
-                break;
-            default:
-                filteredPlansByRange = packages
-                console.log("default", filteredPlansByRange);
-                break;
-        }
+export const setInfiniteScrollHasMore = () => (dispatch, getState) => {
+    dispatch({
+        type: SET_IS_INFINNITE_SCROLL_HAS_MORE
+    })
+}
 
+export const setIsFetchingHMOs = () => (dispatch, getState) => {
+    dispatch({
+        type: IS_FETCHING_HMOS,
+        payload: true
+    })
+}
 
-    }
-    CAN_LOG && console.log("filteredPlansByRange", filteredPlansByRange);
-    return filteredPlansByRange;
+export const setIsFetchingPlans = () => (dispatch, getState) => {
+    console.log("in here");
+    dispatch({
+        type: IS_FETCHING_PLANS,
+        payload: true
+    })
+}
+
+export const setIsFetchingPlansByHMO = () => (dispatch, getState) => {
+
+}
+
+export const setIsFetchingProviders = () => (dispatch, getState) => {
+    dispatch({
+        type: IS_FETCHING_PROVIDERS,
+        payload: true
+    })
+}
+
+export const setIsFetchingRecPlans = () => (dispatch, getState) => {
+    dispatch({
+        type: IS_FETCHING_RECOMMENDED_PLANS,
+        payload: true
+    })
+
+}
+
+export const setIsFetchingServices = () => (dispatch, getState) => {
+    dispatch({
+        type: IS_FETCHING_SERVICES,
+        payload: true
+    })
+}
+
+export const setIsFilteringByBudget = () => (dispatch, getState) => {
+    dispatch({
+        type: IS_FILTERING_BY_BUDGET,
+        payload: true
+    })
+}
+
+export const togglePlanProviders = () => (dispatch, getState) => {
+    dispatch({
+        type: TOGGLE_PLAN_PROVIDERS
+    })
 }
 
 export const updateInfiniteScrollData = (plans, hasMore, start_index, end_index) => async (dispatch, getState) => {
@@ -815,8 +808,51 @@ export const resetInfiniteScrollData = () => (dispatch, getState) => {
     })
 }
 
-export const setInfiniteScrollHasMore = () => (dispatch, getState) => {
+
+/*
+
+export const getPlans = () => async (dispatch, getState) => {
+    dispatch(setIsFetchingPlans());
+    await dispatch(getHMOs());
+
+    await axios
+        .get(`${API_URL}/api/plans`
+            //, tokenConfig(getState)
+        )
+        .then((res) => {
+            let plans = [];
+            if (res.data.length > 0) {
+                plans = res.data.map(obj => obj.data);
+
+                for (let i = 0; i < plans.length; i++) {
+                    let hmoID = plans[i]["hmo_id"];
+                    let hmos = getState().fetchData.hmos;
+
+                    let planHMO = hmos.filter(hmo => hmo.hmo_id === hmoID);
+
+                    if (planHMO) {
+                        plans[i]["hmo_id"] = planHMO[0];
+                    }
+
+                }
+
+                dispatch({
+                    type: GET_PLANS,
+                    payload: plans
+                })
+            }
+
+        }).catch((err) => {
+            console.log("err", err);
+
+            err.response && dispatch(returnErrors(err.response.data, err.response.status))
+        })
+}
+
+export const getPlan = (plan) => (dispatch, getState) => {
     dispatch({
-        type: SET_IS_INFINNITE_SCROLL_HAS_MORE
+        type: GET_PLAN,
+        payload: plan
     })
 }
+*/

@@ -44,7 +44,7 @@ import HomeContent from "../../components/home/home";
 
 import {
   getHMOs,
-  getPlans,
+ // getPlans,
   getProviders,
   getServices,
   getPlansByHMO,
@@ -181,96 +181,11 @@ class Home extends Component<QuizProps, {}> {
   }
 
   async fetchPlans() {
-    this.props.getPlans();
-    // this.props.dispatch({
-    //   type: actions.IS_FETCHING_PLANS,
-    //   data: true,
-    // });
-    // const res = await fetch(`${API_URL}/api/plans`, {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   method: "GET",
-    // });
-
-    // if (res) {
-    //   let plans: object[] = [];
-    //   let formelo_resp = await res.json();
-    //   this.props.dispatch({
-    //     type: actions.IS_FETCHING_PLANS,
-    //     data: false,
-    //   });
-    //   if (formelo_resp || formelo_resp.length !== 0) {
-    //     plans = formelo_resp.map((obj) => obj.data);
-
-    //     for (let j = 0; j < plans.length; j++) {
-    //       let hmoID = plans[j]["hmo_id"].id;
-
-    //       let servicesString = plans[j]["service_id"];
-    //       let services = servicesString ? JSON.parse(servicesString) : "";
-
-    //       let hmoDocumentID = home_utils.hmoKeysMapping[hmoID];
-
-    //       let hmo_res = this.props.hmos.filter(
-    //         (hmo) => hmo.id == hmoDocumentID
-    //       );
-
-    //       if (hmo_res) {
-    //         let hmo_resp = hmo_res[0];
-
-    //         plans[j]["hmo_id"] = hmo_resp;
-    //         plans[j]["service_id"] = services;
-    //       }
-    //     }
-
-    //     this.props.dispatch({
-    //       type: actions.GET_PLANS,
-    //       data: plans,
-    //     });
-    //     return;
-    //   }
-    // }
+    //this.props.getPlans();
   }
 
   async getPlansByHMO(hmoId) {
     this.props.getPlansByHMO();
-    // console.log("hmoId", hmoId);
-    // let hmoName;
-
-    // if (hmoId !== "hygeia") {
-    //   hmoName = home_utils.hmos.filter((hmo) => hmo["id"] == hmoId);
-    //   console.log("hmoName", hmoName);
-    // } else {
-    //   hmoName = home_utils.hmos.filter((hmo) => hmo["id"] == "1");
-    //   console.log("hmoName", hmoName);
-    // }
-
-    // if (hmoId) {
-    //   let hmoPlans;
-
-    //   if (hmoId !== "hygeia") {
-    //     hmoPlans = await this.props.plans.filter((plan) => {
-    //       return plan.hmo_id.name.id == hmoName[0].name;
-    //     });
-    //   } else {
-    //     hmoPlans = await this.props.plans.filter((plan) => {
-    //       return plan.hmo_id.name.id == "1";
-    //     });
-    //   }
-
-    //   this.props.dispatch({
-    //     type: "GET_PLANS_BY_HMO",
-    //     data: hmoPlans,
-    //   });
-
-    //   this.props.dispatch({
-    //     type: "IS_FETCHING_PLANS_BY_HMO",
-    //     data: true,
-    //   });
-
-    // } else {
-    //   return "home page has mounted";
-    // }
   }
 
   async UNSAFE_componentWillMount() {
@@ -364,7 +279,7 @@ const mapProps = (state: any) => ({
 
 export default connect(mapProps, {
   getHMOs,
-  getPlans,
+  //getPlans,
   getProviders,
   getServices,
   getPlansByHMO,

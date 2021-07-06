@@ -29,7 +29,12 @@ import {
     TOGGLE_PLAN_PROVIDERS,
     UPDATE_INFINITE_SCROLL_DATA,
     SET_IS_INFINNITE_SCROLL_HAS_MORE,
-    RESET_INFINITE_SCROLL_DATA
+    RESET_INFINITE_SCROLL_DATA,
+
+    FILTER_BY_TOTAL_BENEFIT_LIMIT,
+    FILTER_BY_BENEFITS,
+    FILTER_BY_DOCTOR,
+    FILTER_BY_PROXIMITY
 } from "../actions/types";
 
 const initialState = {
@@ -369,6 +374,12 @@ export default function (state = initialState, action) {
                 ...state,
                 services: action.payload,
                 is_filtering_by_plan_type: false
+            }
+        
+        case FILTER_BY_TOTAL_BENEFIT_LIMIT:
+            return {
+                ...state,
+                services: action.payload
             }
 
         case IS_FILTERING_BY_BUDGET:

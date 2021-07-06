@@ -3207,8 +3207,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   };
 
-  getPlansByID = async (planID) => {
-    await this.props.getPlansByID(planID);
+  getPlanByID = async (planID) => {
+    await this.props.getPlanByID(planID);
     await this.props.resetInfiniteScrollData();
     this.infiniteScrollDataReInitOnFilterApplied();
   };
@@ -3474,8 +3474,8 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     let providersArr;
 
-    console.log("total_benefit_min", total_benefit_min);
-    console.log("total_benefit_max", total_benefit_max);
+    //console.log("total_benefit_min", total_benefit_min);
+  //  console.log("total_benefit_max", total_benefit_max);
     
 
     return (
@@ -4305,7 +4305,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                             type="button"
                             onClick={() => {
                               //this.props.getServices();
-                              this.getPlansByID(planID);
+                              this.getPlanByID(planID);
                               this.state.show_filter && this.toggleShowFilter();
                             }}
                           >

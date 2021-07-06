@@ -28,10 +28,10 @@ import Modal from "react-bootstrap/Modal";
 import {
   getPlanDetail,
   getProviders,
-  getPlans,
+  //getPlans,
   getServices,
   getCheapestPlan,
-  getPlan,
+  //getPlan,
   getSimilarPlans,
   togglePlanProviders,
 } from "../../actions/fetchDataActions";
@@ -168,7 +168,7 @@ class PlanDetails extends Component<DetailsProps> {
         });
         console.log("id", id);
         await this.props.getProviders();
-        await this.props.getPlans();
+       // await this.props.getPlans();
         await this.props.getServices();
         await this.props.getPlanDetail(id);
         this.props.getCheapestPlan();
@@ -1415,8 +1415,8 @@ const mapProps = (state: any) => {
 export default connect(mapProps, {
   getPlanDetail,
   getProviders,
-  getPlans,
-  getPlan,
+ // getPlans,
+ // getPlan,
   getServices,
   getCheapestPlan,
   toggleDataCaptureModal,
