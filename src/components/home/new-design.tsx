@@ -3845,7 +3845,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                 </span>
                                 <span className="c-field__hint">
                                   
-                                  Your annual Total Benefit Limit range is
+                                  Your annual Total Benefit range is
                                   {/* {total_benefit_min
                                     ? total_benefit_min
                                     : ""}{" "}

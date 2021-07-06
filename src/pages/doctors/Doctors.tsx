@@ -32,35 +32,39 @@ class Doctors extends Component<DoctorsProps> {
   };
 
   onSearch = async (searchText: string) => {
+   // console.log("searchText", searchText);
+    
     let tempDoctors: any[] = [];
     let doctors = await this.props.doctors.map(
       (doctor) => doctor.full_name
     );
+   // console.log("doctors", doctors);
+    
     doctors.forEach((item: string) => {
-      console.log("item", item);
-      // const _item = item["name"].toLowerCase();
-      const _item = item.toLowerCase();
-      if (_item.startsWith(searchText.toLowerCase())) {
-        tempDoctors.push(item);
+     // console.log("item", item);
+
+     const _item = item.toLowerCase();
+     console.log("_item", _item);
+
+      const itemArr = item.split(" ").map(text => text.toLowerCase());
+      //console.log("itemArr", itemArr);
+   
+      for (let i = 0; i < itemArr.length; i++ ) {
+        console.log("itemArr[i]", itemArr[i]);
+        
+        if (itemArr[i].startsWith(searchText.toLowerCase())) {
+         tempDoctors.includes(item) === false && tempDoctors.push(item)
+        }
       }
     });
 
     if (tempDoctors.length > 0) {
-      // this.props.dispatch({
-      //   type: actions.FILTER_PROVIDERS,
-      //   data: tempDoctors,
-      // });
       this.props.filterDoctors(tempDoctors);
     }
   };
 
   onSelectChange = (value: any) => {
     this.getDoctorInfo(value);
-
-    // this.props.dispatch({
-    //   type: actions.UPDATE_TEXT_RESPONSE,
-    //   data: { key: "doctor", value },
-    // });
 
     this.props.updateTextResponse({ key: "doctor", value });
 
