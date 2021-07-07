@@ -39,6 +39,8 @@ import {
   togglePlanProviders,
   updateInfiniteScrollData,
   resetInfiniteScrollData,
+  filterByBenefits,
+  filterByTotalBenefitLimit
 } from "../../actions/fetchDataActions";
 
 import {
@@ -358,4 +360,6 @@ export default connect(mapProps, {
   togglePlanProviders,
   updateInfiniteScrollData,
   resetInfiniteScrollData,
+  filterByBenefits,
+  filterByTotalBenefitLimit
 })(Home);

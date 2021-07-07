@@ -18,6 +18,10 @@ import {
   setBenefits,
 } from "../../actions/userInputActions";
 
+import {
+  filterByBenefits
+} from "../../actions/fetchDataActions"
+
 export interface BenefitsProps {
   [x: string]: any;
   dispatch(args: any): any;
@@ -37,10 +41,10 @@ class Benefits extends Component<BenefitsProps> {
       (benefit) => benefit.title
     );
 
-    console.log("benefits", benefits);
+    //console.log("benefits", benefits);
     
     benefits.forEach((item: string) => {
-      console.log("item", item);
+     // console.log("item", item);
       // const _item = item["name"].toLowerCase();
       const _item = item.toLowerCase();
       if (_item.startsWith(searchText.toLowerCase())) {
@@ -115,8 +119,9 @@ class Benefits extends Component<BenefitsProps> {
 
   setBenefits = async () => {
     //;
-    await this.props.setBenefits(this.state.selected_benefits_data);
+    await this.props.setBenefits(this.state.selected_benefits_data.map(b => b['id']));
     this.props.history.push({ pathname: "/" });
+    //await this.filterByBenefits();
   };
 
   //   updateLocation = (benefit: any) => {
@@ -127,8 +132,10 @@ class Benefits extends Component<BenefitsProps> {
   //     console.log(this.props.responses.state);
   //   };
 
+
+
   render() {
-    console.log("this.state", this.state);
+   // console.log("this.state", this.state);
 
     let benefits_arr: string[] = this.state.selected_benefits;
     return (
@@ -266,7 +273,11 @@ class Benefits extends Component<BenefitsProps> {
                     <a
                       className="c-button c-button--primary margin-left--1 qa-continue"
                       href="#"
-                      onClick={this.setBenefits}
+                      onClick={ () => {
+                        this.setBenefits()
+                        //this.filterByBenefits()
+                      }
+                        }
                       role="button"
                     >
                       Continue
@@ -420,4 +431,5 @@ export default connect(mapProps, {
   updateTextResponse,
   filterBenefits,
   setBenefits,
+  filterByBenefits
 })(Benefits);

@@ -224,7 +224,7 @@ export default function (state = initialState, action) {
 
 
         case UPDATE_TEXT_RESPONSE:
-            console.log("action.payload", action.payload);
+           // console.log("action.payload", action.payload);
             let key = action.payload.key;
             let value = action.payload.value;
 
@@ -520,7 +520,7 @@ export default function (state = initialState, action) {
                     ...state,
                     responses: {
                         ...state.responses,
-                        providers: action.payload
+                        doctors: action.payload
                     }
     
                 }
@@ -530,7 +530,7 @@ export default function (state = initialState, action) {
                         ...state,
                         responses: {
                             ...state.responses,
-                            providers: action.payload
+                            benefits: action.payload
                         }
         
                     }

@@ -402,7 +402,7 @@ export default function (state = initialState, action) {
 
         case UPDATE_INFINITE_SCROLL_DATA:
             //  localStorage["infiniteScrollData"] = JSON.stringify(action.payload)
-            console.log("action.payload", action.payload);
+           // console.log("action.payload", action.payload);
             return {
                 ...state,
                 infiniteScrollData: action.payload

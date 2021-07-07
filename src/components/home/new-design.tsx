@@ -378,6 +378,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.filterByBudget_and_or_Type(params);
     await this.props.resetInfiniteScrollData();
     this.infiniteScrollDataReInitOnFilterApplied();
+    this.state.show_filter && this.toggleShowFilter();
   }
 
   handleAge(key, val) {
@@ -2943,6 +2944,23 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   }
 
+  filterByTotalBenefitLimit = async () => {
+    const {total_benefit_min, total_benefit_max} = this.state.filter_params;
+    if ( total_benefit_min && total_benefit_max) {
+          this.props.filterByTotalBenefitLimit([total_benefit_min, total_benefit_max])
+    }
+
+    await this.props.resetInfiniteScrollData();
+    this.infiniteScrollDataReInitOnFilterApplied();
+    this.state.show_filter && this.toggleShowFilter();
+  }
+
+  filterByBenefits = async () => {
+    if(this.props.responses.benefits.length > 0) {
+      this.props.filterByBenefits(this.props.responses.benefits)
+    }
+  }
+
   handlePlanIDChange(val) {
     this.setState({
       filter_params: {
@@ -3149,7 +3167,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     return isNaN(n) ? 0 : n;
   }
 
-  handleTotalBenefitLimit(in_limit, out_limit) {
+  sumTotalBenefitLimit(in_limit, out_limit) {
     let inLimit = this.stripNonNumeric(in_limit); //parseInt(in_limit.split("₦")[1]);
     let outLimit = this.stripNonNumeric(out_limit); //parseInt(out_limit.split("₦")[1]);
 
@@ -3188,16 +3206,18 @@ class NewContent extends React.Component<homeProps, homeState> {
           : [],
       planID: this.state.filter_params.planID,
       hmoID: this.state.filter_params.hmo_selected,
+      benefits: this.props.responses.benefits
     };
 
-    const { range, budget, type, hmoID, planID } = filterBoxParams;
+    const { range, budget, type, hmoID, planID, benefits } = filterBoxParams;
 
     if (
       range.length > 0 ||
       budget.length > 0 ||
       type.length > 0 ||
       hmoID ||
-      planID
+      planID ||
+      benefits.length > 0
     ) {
       this.resetTypeAndRangeFilters();
       await this.props.getRecommendedPlans(filterBoxParams);
@@ -3278,6 +3298,18 @@ class NewContent extends React.Component<homeProps, homeState> {
   goToProviders = () => {
     this.props.history.push({
       pathname: "/find-provider",
+    });
+  };
+
+  goToDoctors = () => {
+    this.props.history.push({
+      pathname: "/find-doctor",
+    });
+  };
+
+  goToBenefits = () => {
+    this.props.history.push({
+      pathname: "/find-benefit",
     });
   };
 
@@ -3903,11 +3935,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                                 <button
                                   className="c-button c-button--secondary c-button--small c-range-field__button"
                                   disabled={
-                                    annual_deductible_min != undefined ||
-                                    annual_deductible_max != undefined
+                                    total_benefit_min != undefined &&
+                                    total_benefit_max != undefined
                                       ? false
                                       : true
                                   }
+                                  onClick={this.filterByTotalBenefitLimit}
                                   type="button"
                                 >
                                   Apply range
@@ -4656,7 +4689,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                           </fieldset>
                           <a
                             className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                            href="/find-benefits"
+                            href="#"
+                            onClick={this.goToBenefits}
                           >
                             Add Benefits
                           </a>
@@ -4671,7 +4705,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                           </fieldset>
                           <a
                             className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                            href="/find-doctors"
+                            href="#"
+                            onClick={this.goToDoctors}
                           >
                             Add Doctors
                           </a>
@@ -5040,7 +5075,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         plan.in_patient_limit == "N/A"
                                           ? "N/A"
                                           : `₦${this.numberwithCommas(
-                                              this.handleTotalBenefitLimit(
+                                              this.sumTotalBenefitLimit(
                                                 plan.out_patient_limit,
                                                 plan.in_patient_limit
                                               )
