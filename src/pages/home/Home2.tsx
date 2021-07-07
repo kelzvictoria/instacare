@@ -110,7 +110,10 @@ class Home extends Component<QuizProps, {}> {
   };
 
   componentDidUpdate() {
-    if (this.props.planServices.length > 0) {
+    if (
+      //this.props.planServices.length > 0
+      this.props.plans.length > 0
+      ) {
       !localStorage["cheapest_plan"] && this.getCheapestPlan();
     }
   }
@@ -240,7 +243,8 @@ class Home extends Component<QuizProps, {}> {
           null
         )
       : await this.props.updateInfiniteScrollData(
-          this.props.planServices,
+          //this.props.planServices,
+          this.props.plans,
           false,
           null,
           null
@@ -279,9 +283,10 @@ class Home extends Component<QuizProps, {}> {
 }
 
 const mapProps = (state: any) => ({
-  plans: state.fetchData.plans,
+  //plans: state.fetchData.plans,
   //plan: state.fetchData.plan,
-  planServices: state.fetchData.services,
+  //planServices: state.fetchData.services,
+  plans: state.fetchData.services,
   hmos: state.fetchData.hmos,
   hmo: state.fetchData.hmo,
   responses: state.quiz.responses,

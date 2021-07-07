@@ -295,7 +295,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     let budget = params.budget ? params.budget : []
     let planType = params.type ? params.type : []
 
-    console.log("planType", planType);
+    //console.log("planType", planType);
 
     let planRange = params.range ? params.range : [];
 
@@ -307,16 +307,14 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     CAN_LOG &&
         console.log("min", min, "max", max);
 
-    if (benefits.length > 0) {
-        await dispatch(filterByBenefits(benefits))
-    }
+    
 
     let services =  getState().fetchData.services
-    console.log("services", services);
+    //console.log("services", services);
 
-    let plansByPlanType = groupPlansByType(services, planType);
+    let plansByPlanType = await groupPlansByType(services, planType);
 
-    //CAN_LOG &&
+    CAN_LOG &&
      console.log("plansByPlanType", plansByPlanType);
 
     let recommended_plans;
@@ -350,12 +348,20 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
         recommended_plans = plansByPlanType
     }
 
-    console.log("planRange", planRange);
+    //console.log("planRange", planRange);
 
     if (planRange.length > 0) {
         console.log("recommended_plans", recommended_plans);
         recommended_plans = groupPlansByRange(
             recommended_plans ? recommended_plans : packages, planRange);
+    }
+
+    if (benefits.length > 0) {
+
+        recommended_plans =  groupPlansByBenefit(recommended_plans, benefits);
+        console.log("recommended_plans", recommended_plans);
+       // await dispatch(filterByBenefits(benefits))
+
     }
 
     CAN_LOG && console.log("packages", packages);
@@ -588,7 +594,8 @@ const groupPlansByType = (packages, type) => {
     let senior_plans = [];
     let corporate_plans = [];
 
-    CAN_LOG && console.log("packages", packages);
+    CAN_LOG &&
+     console.log("packages", packages);
     if (packages.length > 0) {
         for (let i = 0; i < packages.length; i++) {
             let categoryArr = packages[i].plan_id.category;
@@ -837,21 +844,22 @@ export const setInfiniteScrollHasMore = () => (dispatch, getState) => {
     })
 }
 
-export const filterByBenefits = (benefits) => async (dispatch, getState) => {
-    await dispatch(getServices());
-    let plans = getState().fetchData.services;
-   // let benefits = getState().quiz.responses.benefits
+export const filterByBenefits = (rec_plans, benefits) => async (dispatch, getState) => {
+   // await dispatch(getServices());
+    
+console.log("yebaa");
+    //let benefits = getState().quiz.responses.benefits;
+    let allBenefits = getState().fetchData.benefits.map(b => b.id)
+    console.log("allBenefits", allBenefits);
 
-    let plansByBenefit = groupPlansByBenefit(plans, benefits);
+    let plansByBenefit = groupPlansByBenefit(rec_plans, allBenefits, benefits);
 
     console.log("plansByBenefit", plansByBenefit);
-    dispatch({
-        type: GET_RECOMMENDED_PLANS,
-        payload: plansByBenefit
-    })
+    return plansByBenefit;
+   
 }
 
-export const groupPlansByBenefit = (packages, allBenefits, benefit) => async (dispatch, getState) => {
+export const groupPlansByBenefit = (packages, allBenefits, benefit)  => {
     let filteredPlansByBenefit = [];
     let filt;
 
@@ -872,8 +880,9 @@ export const groupPlansByBenefit = (packages, allBenefits, benefit) => async (di
 
         }
     }
+    console.log("filteredPlansByBenefit", filteredPlansByBenefit);
 
-    console.log();
+    return filteredPlansByBenefit;
 }
 
 export const filterByTotalBenefitLimit = (limit) => (dispatch, getState) => {

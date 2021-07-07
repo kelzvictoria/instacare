@@ -290,6 +290,7 @@ export default function (state = initialState, action) {
             }
 
         case GET_RECOMMENDED_PLANS:
+            console.log("action.payload", action.payload);
             return {
                 ...state,
                 services: action.payload,

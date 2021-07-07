@@ -218,11 +218,11 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     return (
       <Col xs={24} md={14} className="banner-container  left-side-info">
+{/* 
         <div className="view2-svg-and-text svg-and-text">
           <Col xs={24} md={24} className="svg-img-div">
             <div className="svg-img home-svg-img">
-              {/* <img src={searching} /> */}
-              {/* <img src={family} /> */}
+              
             </div>
           </Col>
           <Col xs={24} md={14} className="view2-banner-text banner-text">
@@ -243,6 +243,8 @@ class NewContent extends React.Component<homeProps, homeState> {
             </div>
           </Col>
         </div>
+        
+         */}
         <DataCaptureModal />
       </Col>
     );
@@ -1933,7 +1935,10 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   getClickedPlan = async (index, type) => {
-    let data = this.props.planServices[index];
+    let data = 
+    //this.props.planServices[index];
+    this.props.plans[index];
+
     console.log("data", data);
 
     let serviceID = data.service_id;
@@ -3278,7 +3283,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetInfiniteScrollData();
     this.state.show_filter && this.toggleShowFilter();
     await this.props.getServices();
-    console.log("this.props.planServices", this.props.planServices);
+    console.log("this.props.plans", this.props.plans);
 
     this.props.match.path === "/hmos/*"
       ? await this.props.updateInfiniteScrollData(
@@ -3288,7 +3293,9 @@ class NewContent extends React.Component<homeProps, homeState> {
           null
         )
       : await this.props.updateInfiniteScrollData(
-          this.props.planServices,
+         // this.props.planServices,
+         this.props.plans,
+
           false,
           null,
           null
@@ -3325,7 +3332,10 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
     let page = this.state.current;
     let plansByHMO = this.props.plansByHMO;
-    let allPlans = this.props.planServices;
+    let allPlans = 
+    //this.props.planServices;
+    this.props.plans;
+
 
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
@@ -3355,7 +3365,10 @@ class NewContent extends React.Component<homeProps, homeState> {
     console.log("page", page);
 
     let plansByHMO = this.props.plansByHMO;
-    let allPlans = this.props.planServices;
+    let allPlans = 
+    //this.props.planServices;
+    this.props.plans;
+
 
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
@@ -3438,7 +3451,10 @@ class NewContent extends React.Component<homeProps, homeState> {
     //  console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
 
     let plansByHMO = this.props.plansByHMO;
-    let allPlans = this.props.planServices;
+    let allPlans = 
+    //this.props.planServices;
+    this.props.plans;
+
     // console.log("allPlans", allPlans);
 
     //   console.log("apiData", apiData);
