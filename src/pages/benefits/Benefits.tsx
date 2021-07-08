@@ -164,7 +164,7 @@ class Benefits extends Component<BenefitsProps> {
                         dataSource={this.props.dataSource}
                         onSearch={this.onSearch}
                         onChange={this.onSelectChange}
-                        placeholder="Example: Plastic Surgery"
+                        placeholder="Example: Optical Care"
                         value={this.props.responses.benefit}
                         //value={this.state.search_arg}
                         className="ic-auto-complete margin-bottom--0"

@@ -32,28 +32,28 @@ class Doctors extends Component<DoctorsProps> {
   };
 
   onSearch = async (searchText: string) => {
-   // console.log("searchText", searchText);
-    
+    // console.log("searchText", searchText);
+
     let tempDoctors: any[] = [];
     let doctors = await this.props.doctors.map(
-      (doctor) => doctor.full_name
+      (doctor) => `${doctor.first_name + " " + doctor.last_name}`
     );
-   // console.log("doctors", doctors);
-    
+    // console.log("doctors", doctors);
+
     doctors.forEach((item: string) => {
-     // console.log("item", item);
+      // console.log("item", item);
 
-     const _item = item.toLowerCase();
-     console.log("_item", _item);
+      const _item = item.toLowerCase();
+      console.log("_item", _item);
 
-      const itemArr = item.split(" ").map(text => text.toLowerCase());
+      const itemArr = item.split(" ").map((text) => text.toLowerCase());
       //console.log("itemArr", itemArr);
-   
-      for (let i = 0; i < itemArr.length; i++ ) {
+
+      for (let i = 0; i < itemArr.length; i++) {
         console.log("itemArr[i]", itemArr[i]);
-        
+
         if (itemArr[i].startsWith(searchText.toLowerCase())) {
-         tempDoctors.includes(item) === false && tempDoctors.push(item)
+          tempDoctors.includes(item) === false && tempDoctors.push(item);
         }
       }
     });
@@ -73,7 +73,7 @@ class Doctors extends Component<DoctorsProps> {
 
   getDoctorInfo = (name) => {
     let info = this.props.doctors.filter(
-      (doctor) => doctor.full_name == name
+      (doctor) => `${doctor.first_name + " " + doctor.last_name}` == name
     ); //home_utils.doctorsInfo
 
     this.setState({
@@ -104,6 +104,8 @@ class Doctors extends Component<DoctorsProps> {
       selected_doctors: arr,
       selected_doctors_data: data_arr,
     });
+
+    this.setDoctors();
   };
 
   toggleShowSelectedDoctors = () => {
@@ -114,10 +116,13 @@ class Doctors extends Component<DoctorsProps> {
 
   componentDidUpdate(prevProps) {}
 
+  goBack = () => {
+    this.props.history.push({ pathname: "/" });
+  };
+
   setDoctors = async () => {
     //;
     await this.props.setDoctors(this.state.selected_doctors_data);
-    this.props.history.push({ pathname: "/" });
   };
 
   //   updateLocation = (doctor: any) => {
@@ -129,7 +134,7 @@ class Doctors extends Component<DoctorsProps> {
   //   };
 
   render() {
-    console.log("this.state", this.state);
+    // console.log("this.state", this.state);
 
     let doctors_arr: string[] = this.state.selected_doctors;
     return (
@@ -144,7 +149,7 @@ class Doctors extends Component<DoctorsProps> {
           >
             <div className="c-coverables-search">
               <h1 className="font-size--h1 font-weight--normal margin-top--3 leading--base">
-                Add your doctors 
+                Add your doctors
               </h1>
               <div className="padding-left--0">
                 <div className="display--flex align-items--end">
@@ -154,9 +159,7 @@ class Doctors extends Component<DoctorsProps> {
                         className="c-label margin-top--0"
                         id="autocomplete_doctors"
                       >
-                        <span>
-                          Begin typing to find & select your doctor.
-                        </span>{" "}
+                        <span>Begin typing to find & select your doctor.</span>{" "}
                       </label>
 
                       <AutoComplete
@@ -199,22 +202,34 @@ class Doctors extends Component<DoctorsProps> {
                       {/* c-coverable-result--selected */}
                       <div className="display--flex justify-content--between align-items--start">
                         <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                          {this.state.search_arg["full_name"]}
+                          {/* {this.state.search_arg["full_name"]} */}
+                          {`${
+                            this.state.search_arg["first_name"] +
+                            " " +
+                            this.state.search_arg["last_name"]
+                          }`}
                         </h5>
 
                         <div>
                           <button
                             className="c-button c-button--small"
                             type="button"
-                            onClick={() =>
+                            onClick={() => {
                               this.addDoctorToSelectedList(
-                                this.state.search_arg["full_name"]
-                              )
-                            }
+                                //this.state.search_arg["full_name"]
+
+                                this.state.search_arg["first_name"] +
+                                  " " +
+                                  this.state.search_arg["last_name"]
+                              );
+                            }}
                           >
                             {" "}
                             {doctors_arr.indexOf(
-                              this.state.search_arg["full_name"]
+                              //this.state.search_arg["full_name"]
+                              this.state.search_arg["first_name"] +
+                                " " +
+                                this.state.search_arg["last_name"]
                             ) > -1
                               ? "Remove"
                               : "Add"}
@@ -223,20 +238,24 @@ class Doctors extends Component<DoctorsProps> {
                         </div>
                       </div>
                       <div>
-                        {/* <div className="doctor-search__result__taxonomy">
-                          {this.state.search_arg["full_name"]}
-                        </div> */}
+                        <div className="provider-search__result__taxonomy">
+                          {this.state.search_arg["specialty"]}
+                        </div>
 
                         {/* <div className="doctor-search__result__specialties">
                           <span>primary care - nurse practioner</span>
                         </div> */}
 
-                        {/* <div className="doctor-search__result__location">
+                        <div className="doctor-search__result__location">
                           <span className="text-transform--capitalize">
-                            {this.state.search_arg["city"]},{" "}
-                            {this.state.search_arg["state"]}
+                            {
+                              this.state.search_arg["provider_id"][
+                                "provider_name"
+                              ]
+                            }
+                            , {this.state.search_arg["provider_id"]["city"]}
                           </span>
-                        </div> */}
+                        </div>
                       </div>
                     </li>
                   </ul>
@@ -267,7 +286,8 @@ class Doctors extends Component<DoctorsProps> {
                     <a
                       className="c-button c-button--primary margin-left--1 qa-continue"
                       href="#"
-                      onClick={this.setDoctors}
+                      //onClick={this.setDoctors}
+                      onClick={this.goBack}
                       role="button"
                     >
                       Continue
@@ -280,7 +300,8 @@ class Doctors extends Component<DoctorsProps> {
             <button
               className="c-button c-button--secondary margin-top--2"
               type="button"
-              onClick={this.setDoctors}
+              //onClick={this.setDoctors}
+              onClick={this.goBack}
             >
               Back to Plans
             </button>
@@ -303,7 +324,7 @@ class Doctors extends Component<DoctorsProps> {
             </a>
             <div className="c-coverables-search">
               <h1 className="font-size--h1 font-weight--normal margin-top--3 leading--base">
-                Doctors & facilities
+                Doctors
               </h1>
               <div className="padding-left--0">
                 <div className="display--flex align-items--end">
@@ -332,7 +353,9 @@ class Doctors extends Component<DoctorsProps> {
                             {/* c-coverable-result--selected */}
                             <div className="display--flex justify-content--between align-items--start">
                               <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                                {selected_doctor["doctor_name"]}
+                                {selected_doctor["first_name"] +
+                                  " " +
+                                  selected_doctor["last_name"]}
                               </h5>
 
                               <div>
@@ -341,13 +364,17 @@ class Doctors extends Component<DoctorsProps> {
                                   type="button"
                                   onClick={() =>
                                     this.addDoctorToSelectedList(
-                                      selected_doctor["doctor_name"]
+                                      selected_doctor["first_name"] +
+                                        " " +
+                                        selected_doctor["last_name"]
                                     )
                                   }
                                 >
                                   {" "}
                                   {doctors_arr.indexOf(
-                                    selected_doctor["doctor_name"]
+                                    selected_doctor["first_name"] +
+                                      " " +
+                                      selected_doctor["last_name"]
                                   ) > -1
                                     ? "Remove"
                                     : "Add"}
@@ -357,19 +384,30 @@ class Doctors extends Component<DoctorsProps> {
                             </div>
                             <div>
                               <div className="doctor-search__result__taxonomy">
-                                {selected_doctor["coverage_type"]}
+                                {selected_doctor["specialty"]}
                               </div>
 
                               {/* <div className="doctor-search__result__specialties">
-                            <span>primary care - nurse practioner</span>
-                          </div> */}
+                                <span>{selected_doctor["sub_specialty"]}</span>
+                              </div> */}
 
-                              <div className="doctor-search__result__location">
+                              <div className="doctor-search__result__specialties">
+                                <span>
+                                  {
+                                    selected_doctor["provider_id"][
+                                      "provider_name"
+                                    ]
+                                  }
+                                  , {selected_doctor["provider_id"]["city"]}
+                                </span>
+                              </div>
+
+                              {/* <div className="doctor-search__result__location">
                                 <span className="text-transform--capitalize">
                                   {selected_doctor["city"]},{" "}
                                   {selected_doctor["state"]}
                                 </span>
-                              </div>
+                              </div> */}
                             </div>
                           </li>
                         );

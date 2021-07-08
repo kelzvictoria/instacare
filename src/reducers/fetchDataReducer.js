@@ -34,7 +34,9 @@ import {
     FILTER_BY_TOTAL_BENEFIT_LIMIT,
     FILTER_BY_BENEFITS,
     FILTER_BY_DOCTOR,
-    FILTER_BY_PROXIMITY
+    FILTER_BY_PROXIMITY,
+    GET_DOCTORS,
+    GET_SUB_SPECIALTIES
 } from "../actions/types";
 
 const initialState = {
@@ -52,58 +54,7 @@ const initialState = {
             [],
     doctors:
         localStorage["doctors"] ? JSON.parse(localStorage["doctors"]) :
-            [
-                {
-                    address: "Bida, Niger State, P.M.B. 14 Bida, Niger State",
-                    city: "Bida",
-                    state: "Niger",
-                    hospital: "Bida, Niger State, P.M.B. 14 Bida, Niger State",
-                    full_name: "Dr. Babakura Audu Gubio",
-                    taxonomy: "MEDICINE AND SURGERY",
-                    specialties: ["General Practioner"]
-                },
-
-                {
-                    address: "3. Owodumi Street, Off Toyin Street Ikeja Lagos",
-                    city: "Ikeja",
-                    state: "Lagos",
-                    hospital: "Motayo Hospital Limited",
-                    full_name: "Dr. Nnaedozie Umeani",
-                    taxonomy: "MEDICINE AND SURGERY",
-                    specialties: ["General Practioner",
-                        "Family Physician"]
-                },
-                {
-                    address: "Maitama Abuja",
-                    city: "",
-                    state: "",
-                    hospital: "Maitama District Hospital",
-                    full_name: "Dr. Ohams Henry",
-                    taxonomy: "MEDICINE AND SURGERY",
-                    specialties: ["General Practioner",
-                        "Family Physician"]
-                },
-                {
-                    address: "5/7 Umocham Road Aba",
-                    city: "",
-                    state: "",
-                    hospital: "Living Word mission Hospital",
-                    full_name: "Dr. Ezinne Okeoma",
-                    taxonomy: "MEDICINE AND SURGERY",
-                    specialties: ["General Practioner",
-                        "Family Physician"]
-                },
-                {
-                    address: "Millionaire Quarters, Off Kaura Namoda Road, Lebin-Lebin, P.O.Box 792, Gusau, Zamfara State, Nigeria",
-                    city: "",
-                    state: "",
-                    hospital: "First care Multi Specialist Hospital",
-                    full_name: "Dr. Chibitam Hope Obia",
-                    taxonomy: "MBBS",
-                    specialties: ["General Practioner",
-                        "Family Physician"]
-                }
-            ],
+            [],
 
     benefits: localStorage["benefits"] ?
         JSON.parse(localStorage["benefits"]) :
@@ -237,6 +188,8 @@ const initialState = {
             // },
 
         ],
+    sub_specialties: localStorage["sub_specialties"] ?
+        JSON.parse(localStorage["sub_specialties"]) : [],
     plansByHMO: [],
     plan: [],
     similar_plans: [],
@@ -441,6 +394,18 @@ export default function (state = initialState, action) {
                 infiniteScrollDataHasMore: false
             }
 
+        case GET_DOCTORS:
+            localStorage["doctors"] = JSON.stringify(action.payload)
+            return {
+                ...state,
+                doctors: action.payload
+            }
+        case GET_SUB_SPECIALTIES:
+            localStorage["sub_specialties"] = JSON.stringify(action.payload)
+            return {
+                ...state,
+                sub_specialties: action.payload
+            }
         default:
             return state
 

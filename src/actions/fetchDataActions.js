@@ -35,7 +35,9 @@ import {
     TOGGLE_PLAN_PROVIDERS,
     UPDATE_INFINITE_SCROLL_DATA,
     SET_IS_INFINNITE_SCROLL_HAS_MORE,
-    RESET_INFINITE_SCROLL_DATA
+    RESET_INFINITE_SCROLL_DATA,
+    GET_DOCTORS,
+    GET_SUB_SPECIALTIES
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions"
@@ -230,15 +232,21 @@ export const getProviders = () => (dispatch, getState) => {
 }
 
 export const getServices = () => async (dispatch, getState) => {
+
     dispatch(setIsFetchingServices());
+
     await dispatch(getProviders());
     await dispatch(getPlans());
+    dispatch(getDoctors())
 
     let services = [];
     let budget = getState().quiz.responses.budget;
 
     let min = budget[0];
     let max = budget[1];
+
+    let hmos = getState().fetchData.hmos;
+    let plans = getState().fetchData.plans;
 
     await axios
         .get(`${API_URL}/api/services`
@@ -250,12 +258,10 @@ export const getServices = () => async (dispatch, getState) => {
                 services = services.filter(service => stripNonNumeric(service.price) > 100
                     //  stripNonNumeric(service.price) >= min && stripNonNumeric(service.price) <= max
                 )
+
                 for (let i = 0; i < services.length; i++) {
                     let hmoID = services[i]["hmo_id"];
                     let planID = services[i]["plan_id"];
-
-                    let hmos = getState().fetchData.hmos;
-                    let plans = getState().fetchData.plans;
 
                     let servicePlan = plans.filter(plan => plan.plan_id === planID);
 
@@ -302,6 +308,10 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     let benefits = params.benefits ? params.benefits : [];
 
     let total_benefit_range = params.total_benefit_range ? params.total_benefit_range : [];
+
+    let doctors = params.doctors ? params.doctors : [];
+
+    let lat_lng = params.lat_lng ? params.lat_lng : [];
 
     let allBenefits = getState().fetchData.benefits;
 
@@ -368,12 +378,28 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
 
     }
 
-    if (params.total_benefit_range.length > 0) {
+    if (total_benefit_range.length > 0) {
         let data = recommended_plans ? recommended_plans : packages;
         recommended_plans = data.filter(d => {
             let totalBL = stripNonNumeric(d.in_patient_limit) + stripNonNumeric(d.out_patient_limit)
             return totalBL >= params.total_benefit_range[0] && totalBL <= params.total_benefit_range[1]
         })
+    }
+
+    if (doctors.length > 0) {
+        let data = recommended_plans ? recommended_plans : packages;
+        //console.log("doctors", doctors);
+        //console.log("data", data);
+
+        let doctors_hosp = doctors.map(d => d.provider_id.provider_name);
+        console.log("doctors_hosp", doctors_hosp);
+
+        recommended_plans = data.filter(r => {
+            console.log("r.hmo_id.providers.map(p => p.provider_name)", r.hmo_id.providers.map(p => p.provider_name));
+            return doctors_hosp.some(d => r.hmo_id.providers.map(p => p.provider_name).includes(d))
+        })
+        // doctors_hosp.includes(r.hmo_id.providers.map(p => p.provider_name)));
+
     }
 
     CAN_LOG && console.log("packages", packages);
@@ -858,8 +884,6 @@ export const setInfiniteScrollHasMore = () => (dispatch, getState) => {
 
 export const filterByBenefits = (rec_plans, benefits) => async (dispatch, getState) => {
     // await dispatch(getServices());
-
-    console.log("yebaa");
     //let benefits = getState().quiz.responses.benefits;
     let allBenefits = getState().fetchData.benefits.map(b => b.id)
     console.log("allBenefits", allBenefits);
@@ -1069,6 +1093,7 @@ export const groupPlansByBenefit = (packages, allBenefits, benefit) => {
                 break;
 
             case "plastic_surgeries":
+                console.log("plastic_surgeries");
                 filt = packages.filter(pckage => {
                     return pckage["plastic_surgeries"] !== "No" && pckage["plastic_surgeries"] !== ""
                 })
@@ -1132,4 +1157,67 @@ export const filterByTotalBenefitLimit = (limit) => (dispatch, getState) => {
         type: FILTER_BY_TOTAL_BENEFIT_LIMIT,
         payload: filteredPlansByTotalBenefitLimit
     })
+}
+
+export const getSubSpecialties = () => async (dispatch, getState) => {
+    await axios.get(
+        `${API_URL}/api/sub_specialties`
+    ).then(res => {
+        let subSpecialties;
+        if (res.data.length > 0) {
+            subSpecialties = res.data.map(d => d.data);
+
+            dispatch({
+                type: GET_SUB_SPECIALTIES,
+                payload: subSpecialties
+            })
+        }
+    }).catch(err => {
+        err.response && dispatch(returnErrors(err.response.data, err.response.status))
+
+    })
+}
+
+export const getDoctors = () => async (dispatch, getState) => {
+    let doctors = [];
+
+    await dispatch(getSubSpecialties());
+    let all_sub_specialties = getState().fetchData.sub_specialties;
+
+    await axios.get(
+        `${API_URL}/api/doctors`
+    ).then(res => {
+        if (res.data.length > 0) {
+            doctors = res.data.map(d => d.data);
+            console.log("doctors", doctors);
+
+            for (let i = 0; i < doctors.length; i++) {
+                let specialty = JSON.parse(doctors[i]["sub_specialty"]).map(s =>
+                    all_sub_specialties.filter(a => a.id === s)[0]
+                )
+
+                // console.log("specialty[i].name", specialty[i].name);
+
+                let specialtyString = ""
+                for (let j = 0; j < specialty.length; j++) {
+                    specialtyString = specialtyString + specialty[j].name + ", "
+                }
+                console.log("specialtyString", specialtyString);
+                doctors[i]["sub_specialty"] = specialtyString.slice(0, -2);
+                doctors[i]["provider_id"] = getState().fetchData.providers.filter(p => p.provider_id === doctors[i]["provider_id"])[0];
+            }
+        }
+
+        dispatch({
+            type: GET_DOCTORS,
+            payload: doctors
+        })
+    }).catch((err) => {
+        console.log("err", err);
+        err.response && dispatch(returnErrors(err.response.data, err.response.status))
+    })
+}
+
+export const filterByDoctor = async () => (dispatch, getState) => {
+
 }
