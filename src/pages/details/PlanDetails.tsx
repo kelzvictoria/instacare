@@ -31,7 +31,7 @@ import {
   //getPlans,
   getServices,
   getCheapestPlan,
-  //getPlan,
+  getPlan,
   getSimilarPlans,
   togglePlanProviders,
 } from "../../actions/fetchDataActions";
@@ -147,7 +147,11 @@ class PlanDetails extends Component<DetailsProps> {
   }
 
   getClickedPlan = async (index, type) => {
-    let data = this.props.plans[index];
+    console.log("index", index);
+
+    let data = this.props.plans.filter((p) => p.service_id === index)[0]; //this.props.plans[index];
+    console.log("this.props.plans", this.props.plans);
+    console.log("data", data);
 
     let serviceID = data.service_id;
 
@@ -168,7 +172,7 @@ class PlanDetails extends Component<DetailsProps> {
         });
         console.log("id", id);
         await this.props.getProviders();
-       // await this.props.getPlans();
+        // await this.props.getPlans();
         await this.props.getServices();
         await this.props.getPlanDetail(id);
         this.props.getCheapestPlan();
@@ -1415,8 +1419,8 @@ const mapProps = (state: any) => {
 export default connect(mapProps, {
   getPlanDetail,
   getProviders,
- // getPlans,
- // getPlan,
+  // getPlans,
+  getPlan,
   getServices,
   getCheapestPlan,
   toggleDataCaptureModal,

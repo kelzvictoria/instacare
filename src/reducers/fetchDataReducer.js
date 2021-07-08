@@ -51,174 +51,192 @@ const initialState = {
         localStorage["providers"] ? JSON.parse(localStorage["providers"]) :
             [],
     doctors:
-        localStorage["doctors"] ? JSON.parse(localStorage["doctors"]) : 
-        [
-            {
-                address: "Bida, Niger State, P.M.B. 14 Bida, Niger State",
-                city: "Bida",
-                state: "Niger",
-                hospital: "Bida, Niger State, P.M.B. 14 Bida, Niger State",
-                full_name: "Dr. Babakura Audu Gubio",
-                taxonomy: "MEDICINE AND SURGERY",
-                specialties: ["General Practioner"]
-            },
+        localStorage["doctors"] ? JSON.parse(localStorage["doctors"]) :
+            [
+                {
+                    address: "Bida, Niger State, P.M.B. 14 Bida, Niger State",
+                    city: "Bida",
+                    state: "Niger",
+                    hospital: "Bida, Niger State, P.M.B. 14 Bida, Niger State",
+                    full_name: "Dr. Babakura Audu Gubio",
+                    taxonomy: "MEDICINE AND SURGERY",
+                    specialties: ["General Practioner"]
+                },
 
-            {
-                address: "3. Owodumi Street, Off Toyin Street Ikeja Lagos",
-                city: "Ikeja",
-                state: "Lagos",
-                hospital: "Motayo Hospital Limited",
-                full_name: "Dr. Nnaedozie Umeani",
-                taxonomy: "MEDICINE AND SURGERY",
-                specialties: ["General Practioner",
-                 "Family Physician"]
-            },
-            {
-                address: "Maitama Abuja",
-                city: "",
-                state: "",
-                hospital: "Maitama District Hospital",
-                full_name: "Dr. Ohams Henry",
-                taxonomy: "MEDICINE AND SURGERY",
-                specialties:["General Practioner",
-                "Family Physician"]
-            },
-            {
-                address: "5/7 Umocham Road Aba",
-                city: "",
-                state: "",
-                hospital: "Living Word mission Hospital",
-                full_name: "Dr. Ezinne Okeoma",
-                taxonomy: "MEDICINE AND SURGERY",
-                specialties: ["General Practioner",
-                "Family Physician"]
-            },
-            {
-                address: "Millionaire Quarters, Off Kaura Namoda Road, Lebin-Lebin, P.O.Box 792, Gusau, Zamfara State, Nigeria",
-                city: "",
-                state: "",
-                hospital: "First care Multi Specialist Hospital",
-                full_name: "Dr. Chibitam Hope Obia",
-                taxonomy: "MBBS",
-                specialties: ["General Practioner",
-                "Family Physician"]
-            }
-        ],
+                {
+                    address: "3. Owodumi Street, Off Toyin Street Ikeja Lagos",
+                    city: "Ikeja",
+                    state: "Lagos",
+                    hospital: "Motayo Hospital Limited",
+                    full_name: "Dr. Nnaedozie Umeani",
+                    taxonomy: "MEDICINE AND SURGERY",
+                    specialties: ["General Practioner",
+                        "Family Physician"]
+                },
+                {
+                    address: "Maitama Abuja",
+                    city: "",
+                    state: "",
+                    hospital: "Maitama District Hospital",
+                    full_name: "Dr. Ohams Henry",
+                    taxonomy: "MEDICINE AND SURGERY",
+                    specialties: ["General Practioner",
+                        "Family Physician"]
+                },
+                {
+                    address: "5/7 Umocham Road Aba",
+                    city: "",
+                    state: "",
+                    hospital: "Living Word mission Hospital",
+                    full_name: "Dr. Ezinne Okeoma",
+                    taxonomy: "MEDICINE AND SURGERY",
+                    specialties: ["General Practioner",
+                        "Family Physician"]
+                },
+                {
+                    address: "Millionaire Quarters, Off Kaura Namoda Road, Lebin-Lebin, P.O.Box 792, Gusau, Zamfara State, Nigeria",
+                    city: "",
+                    state: "",
+                    hospital: "First care Multi Specialist Hospital",
+                    full_name: "Dr. Chibitam Hope Obia",
+                    taxonomy: "MBBS",
+                    specialties: ["General Practioner",
+                        "Family Physician"]
+                }
+            ],
 
     benefits: localStorage["benefits"] ?
-     JSON.parse(localStorage["benefits"]) :
-    [
-        {
-            id: "accidents_emergencies",
-            title: "Accidents & Emergencies"
-        },
-        {
-            id: "evacuations",
-            title: "Evacuation"
-        },
-        {
-            id: "dental_care",
-            title: "Dental Care"
-        },
-        {
-            id: "optical_care",
-            title: "Optical Care"
-        },
-        {
-            id: "additional_ammunization",
-            title: "Additional Immunizations"
-        },
-        {
-            id: "routine_immunization",
-            title: "Routine Immunizations"
-        },
-        {
-            id: "admission_feeding",
-            title: "Admission Feeding"
-        },
-        {
-            id: "hospital_addmissions",
-            title: "Hospital Admission"
-        },
-        {
-            id: "admissions_per_annum",
-            title: "Admission per Annum"
-        },
-        {
-            id: "antenatal_care_delivery",
-            title: "Antenatal Care"
-        },
-        {
-            id: "fertility_services",
-            title: "Fertility Services"
-        },
-        {
-            id: "family_planning_services",
-            title: "Family Planning"
-        },
-        {
-            id: "neonatal_care",
-            title: "Neonatal Care"
-        },
-        {
-            id: "postnatal_care",
-            title: "Postnatal Care"
-        },
-        {
-            id: "cancer_care",
-            title: "Cancer Care"
-        },{
-            id: "hiv_aids_treatment",
-            title: "HIV/ AIDS Treatment"
-        },
-        {
-            id: "outpatient_prescribed_drugs",
-            title: "Outpatient Prescribed Drugs"
-        },
-        {
-            id: "lab_investigations",
-            title: "Lab Investigations"
-        },
-        {
-            id: "renal_dialysis",
-            title: "Renal Dialysis"
-        },
-        {
-            id: "ultrasound_plans",
-            title: "Ultrasound Scans"
-        },{
-            id: "plain_contrast_xrays",
-            title: "Plain Contrast X-rays"
-        },
-        {
-            id: "general_consultation",
-            title: "General Consultations"
-        },
-        {
-            id: "specialist_consultation",
-            title: "Specialist Consultation"
-        },
-        {
-            id: "physiotherapy",
-            title: "Physiotherapy"
-        },
-        {
-            id: "intensive_care",
-            title: "Intensive Care"
-        },{
-            id: "covid_19_treatment",
-            title: "Covid 19 Treatment"
-        },
-        {
-            id: "plastic_surgeries",
-            title: "Plastic Surgeries"
-        },
-        // {
-        //     id: "",
-        //     title: ""
-        // },
-   
-    ],
+        JSON.parse(localStorage["benefits"]) :
+        [
+            {
+                id: "accidents_emergencies",
+                title: "Accidents & Emergencies"
+            },
+            {
+                id: "evacuations",
+                title: "Evacuation"
+            },
+            {
+                id: "dental_care",
+                title: "Dental Care"
+            },
+            {
+                id: "optical_care",
+                title: "Optical Care"
+            },
+            {
+                id: "additional_ammunization",
+                title: "Additional Immunizations"
+            },
+            {
+                id: "routine_immunization",
+                title: "Routine Immunizations"
+            },
+            {
+                id: "admission_feeding",
+                title: "Admission Feeding"
+            },
+            {
+                id: "hospital_addmissions",
+                title: "Hospital Admission"
+            },
+            {
+                id: "admissions_per_annum",
+                title: "Admission per Annum"
+            },
+            {
+                id: "antenatal_care_delivery",
+                title: "Antenatal Care"
+            },
+            {
+                id: "fertility_services",
+                title: "Fertility Services"
+            },
+            {
+                id: "family_planning_services",
+                title: "Family Planning"
+            },
+            {
+                id: "neonatal_care",
+                title: "Neonatal Care"
+            },
+            {
+                id: "postnatal_care",
+                title: "Postnatal Care"
+            },
+            {
+                id: "cancer_care",
+                title: "Cancer Care"
+            }, {
+                id: "hiv_aids_treatment",
+                title: "HIV/ AIDS Treatment"
+            },
+            {
+                id: "outpatient_prescribed_drugs",
+                title: "Outpatient Prescribed Drugs"
+            },
+            {
+                id: "lab_investigations",
+                title: "Lab Investigations"
+            },
+            {
+                id: "renal_dialysis",
+                title: "Renal Dialysis"
+            },
+            {
+                id: "ultrasound_plans",
+                title: "Ultrasound Scans"
+            }, {
+                id: "plain_contrast_xrays",
+                title: "Plain Contrast X-rays"
+            },
+            {
+                id: "general_consultation",
+                title: "General Consultations"
+            },
+            {
+                id: "specialist_consultation",
+                title: "Specialist Consultation"
+            },
+            {
+                id: "physiotherapy",
+                title: "Physiotherapy"
+            },
+            {
+                id: "intensive_care",
+                title: "Intensive Care"
+            }, {
+                id: "covid_19_treatment",
+                title: "Covid 19 Treatment"
+            },
+            {
+                id: "plastic_surgeries",
+                title: "Plastic Surgeries"
+            },
+            {
+                id: "mental_health_services",
+                title: "Mental Health Services"
+            },
+            {
+                id: "telemedicine",
+                title: "Telemedicine"
+            },
+
+            {
+                id: "congenital_abnormalities",
+                title: "Congenital Abnormalities"
+            },
+
+            {
+                id: "chronic_conditions_management",
+                title: "Chronic Conditions Mgt"
+            },
+            // {
+            //     id: "",
+            //     title: ""
+            // },
+
+        ],
     plansByHMO: [],
     plan: [],
     similar_plans: [],
@@ -376,7 +394,7 @@ export default function (state = initialState, action) {
                 services: action.payload,
                 is_filtering_by_plan_type: false
             }
-        
+
         case FILTER_BY_TOTAL_BENEFIT_LIMIT:
             return {
                 ...state,
@@ -403,7 +421,7 @@ export default function (state = initialState, action) {
 
         case UPDATE_INFINITE_SCROLL_DATA:
             //  localStorage["infiniteScrollData"] = JSON.stringify(action.payload)
-           // console.log("action.payload", action.payload);
+            // console.log("action.payload", action.payload);
             return {
                 ...state,
                 infiniteScrollData: action.payload

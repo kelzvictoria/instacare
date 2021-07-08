@@ -76,7 +76,8 @@ import {
     RESET_SELECTED_PROVIDERS,
     ADD_COMPARE_URL_PARAM,
     REMOVE_COMPARE_URL_PARAM,
-    TOGGLE_DATA_CAPTURE_MODAL
+    TOGGLE_DATA_CAPTURE_MODAL,
+    TOGGLE_FILTER_BOX
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
 
@@ -559,5 +560,12 @@ export const toggleDataCaptureModal = (payload) => (dispatch, getState) => {
     dispatch({
         type: TOGGLE_DATA_CAPTURE_MODAL,
         payload
+    })
+}
+
+export const toggleFilterBox = () => (dispatch, getState) => {
+    dispatch({
+        type: TOGGLE_FILTER_BOX,
+
     })
 }

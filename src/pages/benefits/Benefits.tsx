@@ -18,9 +18,7 @@ import {
   setBenefits,
 } from "../../actions/userInputActions";
 
-import {
-  filterByBenefits
-} from "../../actions/fetchDataActions"
+import { filterByBenefits } from "../../actions/fetchDataActions";
 
 export interface BenefitsProps {
   [x: string]: any;
@@ -37,14 +35,12 @@ class Benefits extends Component<BenefitsProps> {
 
   onSearch = async (searchText: string) => {
     let tempBenefits: any[] = [];
-    let benefits = await this.props.benefits.map(
-      (benefit) => benefit.title
-    );
+    let benefits = await this.props.benefits.map((benefit) => benefit.title);
 
     //console.log("benefits", benefits);
-    
+
     benefits.forEach((item: string) => {
-     // console.log("item", item);
+      // console.log("item", item);
       // const _item = item["name"].toLowerCase();
       const _item = item.toLowerCase();
       if (_item.startsWith(searchText.toLowerCase())) {
@@ -75,9 +71,7 @@ class Benefits extends Component<BenefitsProps> {
   };
 
   getBenefitInfo = (name) => {
-    let info = this.props.benefits.filter(
-      (benefit) => benefit.title == name
-    ); //home_utils.benefitsInfo
+    let info = this.props.benefits.filter((benefit) => benefit.title == name); //home_utils.benefitsInfo
 
     this.setState({
       search_arg: info[0],
@@ -119,7 +113,8 @@ class Benefits extends Component<BenefitsProps> {
 
   setBenefits = async () => {
     //;
-    await this.props.setBenefits(this.state.selected_benefits_data.map(b => b['id']));
+    await this.props.setBenefits(this.state.selected_benefits_data);
+    //.map(b => b['id']));
     this.props.history.push({ pathname: "/" });
     //await this.filterByBenefits();
   };
@@ -132,10 +127,8 @@ class Benefits extends Component<BenefitsProps> {
   //     console.log(this.props.responses.state);
   //   };
 
-
-
   render() {
-   // console.log("this.state", this.state);
+    // console.log("this.state", this.state);
 
     let benefits_arr: string[] = this.state.selected_benefits;
     return (
@@ -258,7 +251,11 @@ class Benefits extends Component<BenefitsProps> {
                 {this.state.selected_benefits.length > 0 && (
                   <div className="">
                     <div className="margin-bottom--1">
-                      {`${this.state.selected_benefits.length } ${this.state.selected_benefits.length > 1 ? "benefits" : "benefit"} 
+                      {`${this.state.selected_benefits.length} ${
+                        this.state.selected_benefits.length > 1
+                          ? "benefits"
+                          : "benefit"
+                      } 
                       selected `}
                     </div>
                     <a
@@ -273,11 +270,10 @@ class Benefits extends Component<BenefitsProps> {
                     <a
                       className="c-button c-button--primary margin-left--1 qa-continue"
                       href="#"
-                      onClick={ () => {
-                        this.setBenefits()
+                      onClick={() => {
+                        this.setBenefits();
                         //this.filterByBenefits()
-                      }
-                        }
+                      }}
                       role="button"
                     >
                       Continue
@@ -431,5 +427,5 @@ export default connect(mapProps, {
   updateTextResponse,
   filterBenefits,
   setBenefits,
-  filterByBenefits
+  filterByBenefits,
 })(Benefits);

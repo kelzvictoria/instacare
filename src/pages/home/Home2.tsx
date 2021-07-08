@@ -16,7 +16,7 @@ import { state } from "../../components/home/state";
 
 import {
   getHMOs,
- // getPlans,
+  // getPlans,
   getProviders,
   getServices,
   getPlansByHMO,
@@ -34,13 +34,13 @@ import {
   filterByPlanType,
   filterByBudget_and_or_Type,
   filterByPlanRange,
-  //getPlan,
+  getPlan,
   getSimilarPlans,
   togglePlanProviders,
   updateInfiniteScrollData,
   resetInfiniteScrollData,
   filterByBenefits,
-  filterByTotalBenefitLimit
+  filterByTotalBenefitLimit,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -74,6 +74,7 @@ import {
   resetRange,
   resetSelectedProviders,
   toggleDataCaptureModal,
+  toggleFilterBox,
 } from "../../actions/userInputActions";
 
 import {
@@ -113,7 +114,7 @@ class Home extends Component<QuizProps, {}> {
     if (
       //this.props.planServices.length > 0
       this.props.plans.length > 0
-      ) {
+    ) {
       !localStorage["cheapest_plan"] && this.getCheapestPlan();
     }
   }
@@ -301,6 +302,7 @@ const mapProps = (state: any) => ({
   isDaughterCheckboxChecked: state.quiz.isDaughterCheckboxChecked,
   is_fetching_data: state.fetchData.is_fetching_data,
   infiniteScrollData: state.fetchData.infiniteScrollData,
+  is_filter_box_open: state.quiz.is_filter_box_open,
 });
 
 export default connect(mapProps, {
@@ -358,7 +360,7 @@ export default connect(mapProps, {
   resetType,
   filterByPlanRange,
   resetRange,
-  //getPlan,
+  getPlan,
   getSimilarPlans,
   resetSelectedProviders,
   toggleDataCaptureModal,
@@ -366,5 +368,6 @@ export default connect(mapProps, {
   updateInfiniteScrollData,
   resetInfiniteScrollData,
   filterByBenefits,
-  filterByTotalBenefitLimit
+  filterByTotalBenefitLimit,
+  toggleFilterBox,
 })(Home);

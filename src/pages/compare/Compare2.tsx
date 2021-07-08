@@ -3042,7 +3042,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                         href={`/details/id/${third.service_id}`}
                                         role="button"
                                       >
-                                        Add medical providers
+                                        View medical providers
                                       </a>
                                     </td>
                                   )}
@@ -6273,11 +6273,11 @@ export default connect(mapProps, {
   getSimilarPlans,
   getPlanDetail,
   getProviders,
- // getPlans,
+  // getPlans,
   getServices,
   getCheapestPlan,
   addCompareURLParam,
   removeCompareURLParam,
- //getPlan,
+  //getPlan,
   toggleDataCaptureModal,
 })(ComparePlans);

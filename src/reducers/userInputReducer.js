@@ -83,7 +83,8 @@ import {
 
     ADD_COMPARE_URL_PARAM,
     REMOVE_COMPARE_URL_PARAM,
-    TOGGLE_DATA_CAPTURE_MODAL
+    TOGGLE_DATA_CAPTURE_MODAL,
+    TOGGLE_FILTER_BOX
 } from "../actions/types";
 
 const initialState = {
@@ -159,11 +160,17 @@ const initialState = {
         // ),
         [],
     is_loading: false,
-    is_data_capture_modal_open: false
+    is_data_capture_modal_open: false,
+    is_filter_box_open: false
 }
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case TOGGLE_FILTER_BOX:
+            return {
+                ...state,
+                is_filter_box_open: !state.is_filter_box_open
+            }
         case TOGGLE_DATA_CAPTURE_MODAL:
             return {
                 ...state,
@@ -224,7 +231,7 @@ export default function (state = initialState, action) {
 
 
         case UPDATE_TEXT_RESPONSE:
-           // console.log("action.payload", action.payload);
+            // console.log("action.payload", action.payload);
             let key = action.payload.key;
             let value = action.payload.value;
 
@@ -515,25 +522,25 @@ export default function (state = initialState, action) {
 
             }
 
-            case SET_DOCTORS:
-                return {
-                    ...state,
-                    responses: {
-                        ...state.responses,
-                        doctors: action.payload
-                    }
-    
+        case SET_DOCTORS:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    doctors: action.payload
                 }
 
-                case SET_BENEFITS:
-                    return {
-                        ...state,
-                        responses: {
-                            ...state.responses,
-                            benefits: action.payload
-                        }
-        
-                    }
+            }
+
+        case SET_BENEFITS:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    benefits: action.payload
+                }
+
+            }
         case FILTER_PROVIDERS:
             if (action.payload) {
                 let data_source = [];
@@ -544,25 +551,25 @@ export default function (state = initialState, action) {
                 }
             }
 
-            case FILTER_DOCTORS:
-                if (action.payload) {
-                    let data_source = [];
-                    data_source.push(...action.payload);
-                    return {
-                        ...state,
-                        dataSource: data_source
-                    }
+        case FILTER_DOCTORS:
+            if (action.payload) {
+                let data_source = [];
+                data_source.push(...action.payload);
+                return {
+                    ...state,
+                    dataSource: data_source
                 }
+            }
 
-                case FILTER_BENEFITS:
-                    if (action.payload) {
-                        let data_source = [];
-                        data_source.push(...action.payload);
-                        return {
-                            ...state,
-                            dataSource: data_source
-                        }
-                    }
+        case FILTER_BENEFITS:
+            if (action.payload) {
+                let data_source = [];
+                data_source.push(...action.payload);
+                return {
+                    ...state,
+                    dataSource: data_source
+                }
+            }
 
 
         case FILTER_PRESCRIPTIONS:

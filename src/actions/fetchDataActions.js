@@ -301,26 +301,27 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
 
     let benefits = params.benefits ? params.benefits : [];
 
+    let total_benefit_range = params.total_benefit_range ? params.total_benefit_range : [];
+
+    let allBenefits = getState().fetchData.benefits;
+
     let min = stripNonNumeric(budget[0]);
     let max = stripNonNumeric(budget[1]);
 
     CAN_LOG &&
         console.log("min", min, "max", max);
 
-    
-
-    let services =  getState().fetchData.services
+    let services = getState().fetchData.services
     //console.log("services", services);
 
     let plansByPlanType = await groupPlansByType(services, planType);
 
     CAN_LOG &&
-     console.log("plansByPlanType", plansByPlanType);
+        console.log("plansByPlanType", plansByPlanType);
 
     let recommended_plans;
     let packages = planType.length > 0 ? plansByPlanType : services;
 
-    
 
     if (hmoID && budget.length == 0) {
         CAN_LOG && console.log("hmoID && budget.length == 0");
@@ -352,16 +353,27 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
 
     if (planRange.length > 0) {
         console.log("recommended_plans", recommended_plans);
-        recommended_plans = groupPlansByRange(
+        recommended_plans = await groupPlansByRange(
             recommended_plans ? recommended_plans : packages, planRange);
     }
 
     if (benefits.length > 0) {
-
-        recommended_plans =  groupPlansByBenefit(recommended_plans, benefits);
         console.log("recommended_plans", recommended_plans);
-       // await dispatch(filterByBenefits(benefits))
+        recommended_plans = groupPlansByBenefit(
+            recommended_plans ? recommended_plans : packages,
 
+            allBenefits, benefits);
+
+        // await dispatch(filterByBenefits(benefits))
+
+    }
+
+    if (params.total_benefit_range.length > 0) {
+        let data = recommended_plans ? recommended_plans : packages;
+        recommended_plans = data.filter(d => {
+            let totalBL = stripNonNumeric(d.in_patient_limit) + stripNonNumeric(d.out_patient_limit)
+            return totalBL >= params.total_benefit_range[0] && totalBL <= params.total_benefit_range[1]
+        })
     }
 
     CAN_LOG && console.log("packages", packages);
@@ -595,7 +607,7 @@ const groupPlansByType = (packages, type) => {
     let corporate_plans = [];
 
     CAN_LOG &&
-     console.log("packages", packages);
+        console.log("packages", packages);
     if (packages.length > 0) {
         for (let i = 0; i < packages.length; i++) {
             let categoryArr = packages[i].plan_id.category;
@@ -845,9 +857,9 @@ export const setInfiniteScrollHasMore = () => (dispatch, getState) => {
 }
 
 export const filterByBenefits = (rec_plans, benefits) => async (dispatch, getState) => {
-   // await dispatch(getServices());
-    
-console.log("yebaa");
+    // await dispatch(getServices());
+
+    console.log("yebaa");
     //let benefits = getState().quiz.responses.benefits;
     let allBenefits = getState().fetchData.benefits.map(b => b.id)
     console.log("allBenefits", allBenefits);
@@ -856,30 +868,249 @@ console.log("yebaa");
 
     console.log("plansByBenefit", plansByBenefit);
     return plansByBenefit;
-   
+
 }
 
-export const groupPlansByBenefit = (packages, allBenefits, benefit)  => {
+export const groupPlansByBenefit = (packages, allBenefits, benefit) => {
+    console.log("packages", packages);
     let filteredPlansByBenefit = [];
     let filt;
 
     let allBenefitsArr = allBenefits.map(b => b.id)
-    for (let j = 0; j < allBenefitsArr.length; j++ ) {
-        for (let i = 0; i < benefit.length; i++) {
-            switch(benefit[i].toLowerCase()) {
-                case allBenefitsArr[j]:
-                    filt = packages.filter(pckage => pckage.allBenefitsArr[j] !== "No" && pckage.allBenefitsArr[j] !== "");
-                    filteredPlansByBenefit.push(...filt);
-                    break;
+    console.log("allBenefitsArr", allBenefitsArr);
 
-                default:
-                    filteredPlansByBenefit = packages;
-                    console.log("default");
-                    break;
-            }
+    benefit = benefit.map(b => b.id)
 
+    //for (let j = 0; j < allBenefitsArr.length; j++ ) {
+
+    for (let i = 0; i < benefit.length; i++) {
+        console.log("benefit[i].toLowerCase()", benefit[i].toLowerCase());
+        switch (benefit[i].toLowerCase()) {
+            case "accidents_emergencies":
+                filt = packages.filter(pckage => {
+                    return pckage["accidents_emergencies"] !== "No" && pckage["accidents_emergencies"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "evacuations":
+                filt = packages.filter(pckage => {
+                    return pckage["evacuations"] !== "No" && pckage["evacuations"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "dental_care":
+                filt = packages.filter(pckage => {
+                    return pckage["dental_care"] !== "No" && pckage["dental_care"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "optical_care":
+                filt = packages.filter(pckage => {
+                    return pckage["optical_care"] !== "No" && pckage["optical_care"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "additional_ammunization":
+                filt = packages.filter(pckage => {
+                    return pckage["additional_ammunization"] !== "No" && pckage["additional_ammunization"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "routine_immunization":
+                filt = packages.filter(pckage => {
+                    return pckage["routine_immunization"] !== "No" && pckage["routine_immunization"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "admission_feeding":
+                filt = packages.filter(pckage => {
+                    return pckage["admission_feeding"] !== "No" && pckage["admission_feeding"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "hospital_addmissions":
+                filt = packages.filter(pckage => {
+                    return pckage["hospital_addmissions"] !== "No" && pckage["hospital_addmissions"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "admissions_per_annum":
+                filt = packages.filter(pckage => {
+                    return pckage["admissions_per_annum"] !== "No" && pckage["admissions_per_annum"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "antenatal_care_delivery":
+                filt = packages.filter(pckage => {
+                    return pckage["antenatal_care_delivery"] !== "No" && pckage["antenatal_care_delivery"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "fertility_services":
+                filt = packages.filter(pckage => {
+                    return pckage["fertility_services"] !== "No" && pckage["fertility_services"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "family_planning_services":
+                filt = packages.filter(pckage => {
+                    return pckage["family_planning_services"] !== "No" && pckage["family_planning_services"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "neonatal_care":
+                filt = packages.filter(pckage => {
+                    return pckage["neonatal_care"] !== "No" && pckage["neonatal_care"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "postnatal_care":
+                filt = packages.filter(pckage => {
+                    return pckage["postnatal_care"] !== "No" && pckage["postnatal_care"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "cancer_care":
+                filt = packages.filter(pckage => {
+                    return pckage["cancer_care"] !== "No" && pckage["cancer_care"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "hiv_aids_treatment":
+                filt = packages.filter(pckage => {
+                    return pckage["hiv_aids_treatment"] !== "No" && pckage["hiv_aids_treatment"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "outpatient_prescribed_drugs":
+                filt = packages.filter(pckage => {
+                    return pckage["outpatient_prescribed_drugs"] !== "No" && pckage["outpatient_prescribed_drugs"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "lab_investigations":
+                filt = packages.filter(pckage => {
+                    return pckage["lab_investigations"] !== "No" && pckage["lab_investigations"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "renal_dialysis":
+                filt = packages.filter(pckage => {
+                    return pckage["renal_dialysis"] !== "No" && pckage["renal_dialysis"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "ultrasound_plans":
+                filt = packages.filter(pckage => {
+                    return pckage["ultrasound_plans"] !== "No" && pckage["ultrasound_plans"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "plain_contrast_xrays":
+                filt = packages.filter(pckage => {
+                    return pckage["plain_contrast_xrays"] !== "No" && pckage["plain_contrast_xrays"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "general_consultation":
+                filt = packages.filter(pckage => {
+                    return pckage["general_consultation"] !== "No" && pckage["general_consultation"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "specialist_consultation":
+                filt = packages.filter(pckage => {
+                    return pckage["specialist_consultation"] !== "No" && pckage["specialist_consultation"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "physiotherapy":
+                filt = packages.filter(pckage => {
+                    return pckage["physiotherapy"] !== "No" && pckage["physiotherapy"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "intensive_care":
+                filt = packages.filter(pckage => {
+                    return pckage["intensive_care"] !== "No" && pckage["intensive_care"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "covid_19_treatment":
+                filt = packages.filter(pckage => {
+                    return pckage["covid_19_treatment"] !== "No" && pckage["covid_19_treatment"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "plastic_surgeries":
+                filt = packages.filter(pckage => {
+                    return pckage["plastic_surgeries"] !== "No" && pckage["plastic_surgeries"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "mental_health_services":
+                filt = packages.filter(pckage => {
+                    return pckage["mental_health_services"] !== "No" && pckage["mental_health_services"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "telemedicine":
+                filt = packages.filter(pckage => {
+                    return pckage["telemedicine"] !== "No" && pckage["telemedicine"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "congenital_abnormalities":
+                filt = packages.filter(pckage => {
+                    return pckage["congenital_abnormalities"] !== "No" && pckage["congenital_abnormalities"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            case "chronic_conditions_management":
+                filt = packages.filter(pckage => {
+                    return pckage["chronic_conditions_management"] !== "No" && pckage["chronic_conditions_management"] !== ""
+                })
+                filteredPlansByBenefit.push(...filt);
+                break;
+
+            default:
+                filteredPlansByBenefit = packages;
+                console.log("default");
+                break;
         }
+
     }
+    //}
     console.log("filteredPlansByBenefit", filteredPlansByBenefit);
 
     return filteredPlansByBenefit;
@@ -887,14 +1118,14 @@ export const groupPlansByBenefit = (packages, allBenefits, benefit)  => {
 
 export const filterByTotalBenefitLimit = (limit) => (dispatch, getState) => {
     let min = limit[0];
-    let max = limit [1];
+    let max = limit[1];
 
     let plans = getState().fetchData.services;
 
     let filteredPlansByTotalBenefitLimit = plans
         .filter(plan => {
             let totalBL = stripNonNumeric(plan.in_patient_limit) + stripNonNumeric(plan.out_patient_limit)
-            return totalBL  >= min && totalBL <= max
+            return totalBL >= min && totalBL <= max
         })
 
     dispatch({
