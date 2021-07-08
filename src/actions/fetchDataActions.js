@@ -186,11 +186,14 @@ export const getHMOs = () => async (dispatch, getState) => {
                 if (providers.length > 0) {
                     for (let i = 0; i < hmos.length; i++) {
                         let hmoID = hmos[i]["hmo_id"]
-                        // console.log("hmoID", hmoID);
+                         console.log("hmoID", hmoID);
                         // console.log("providers", providers);
 
-                        let hmoProviders = providers.filter(provider => provider.hmo_id === hmoID);
-                        // console.log("hmoProviders", hmoProviders);
+                        let hmoProviders = 
+                        //providers.filter(provider => provider.hmo_id === hmoID);
+                        providers.filter(provider => provider.hmo_id.includes(hmoID));
+
+                        console.log("hmoProviders", hmoProviders);
                         if (hmoProviders.length > 0) {
                             hmos[i]["providers"] = hmoProviders;
                         }
@@ -395,8 +398,13 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
         console.log("doctors_hosp", doctors_hosp);
 
         recommended_plans = data.filter(r => {
-            console.log("r.hmo_id.providers.map(p => p.provider_name)", r.hmo_id.providers.map(p => p.provider_name));
-            return doctors_hosp.some(d => r.hmo_id.providers.map(p => p.provider_name).includes(d))
+            console.log("r.hmo_id.providers.map(p => p.provider_name)",
+             r.hmo_id.providers.map(p => p.provider_name));
+            return doctors_hosp.some(d => {
+                console.log("d", d);
+              return r.hmo_id.providers.map(p => p.provider_name).includes(d)
+            })
+                
         })
         // doctors_hosp.includes(r.hmo_id.providers.map(p => p.provider_name)));
 
