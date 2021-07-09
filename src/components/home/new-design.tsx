@@ -3331,19 +3331,19 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   goToProviders = () => {
     this.props.history.push({
-      pathname: "/find-provider",
+      pathname: "/find-providers",
     });
   };
 
   goToDoctors = () => {
     this.props.history.push({
-      pathname: "/find-doctor",
+      pathname: "/find-doctors",
     });
   };
 
   goToBenefits = () => {
     this.props.history.push({
-      pathname: "/find-benefit",
+      pathname: "/find-benefits",
     });
   };
 

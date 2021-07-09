@@ -830,7 +830,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   >
                                     <a
                                       className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                      href="/find-provider"
+                                      href="/find-providers"
                                       role="button"
                                     >
                                       Add
@@ -847,7 +847,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <a
                                         className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                        href="/find-provider"
+                                        href="/find-providers"
                                         role="button"
                                       >
                                         Add
@@ -865,7 +865,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <a
                                         className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                        href="/find-provider"
+                                        href="/find-providers"
                                         role="button"
                                       >
                                         Add
