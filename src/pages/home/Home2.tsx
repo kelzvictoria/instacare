@@ -41,7 +41,8 @@ import {
   resetInfiniteScrollData,
   filterByBenefits,
   filterByTotalBenefitLimit,
-  setLocation
+  setLocation,
+  getDoctors
 } from "../../actions/fetchDataActions";
 
 import {
@@ -304,7 +305,8 @@ const mapProps = (state: any) => ({
   is_fetching_data: state.fetchData.is_fetching_data,
   infiniteScrollData: state.fetchData.infiniteScrollData,
   is_filter_box_open: state.quiz.is_filter_box_open,
-  location: state.fetchData.location
+  location: state.fetchData.location,
+  doctors: state.fetchData.doctors
 });
 
 export default connect(mapProps, {
@@ -372,5 +374,6 @@ export default connect(mapProps, {
   filterByBenefits,
   filterByTotalBenefitLimit,
   toggleFilterBox,
-  setLocation
+  setLocation,
+  getDoctors
 })(Home);

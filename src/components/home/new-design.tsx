@@ -3336,6 +3336,11 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   goToDoctors = () => {
+    console.log("this.props.doctors", this.props.doctors);
+    
+    if (this.props.doctors.length === 0) {
+      this.props.getDoctors();
+    }
     this.props.history.push({
       pathname: "/find-doctors",
     });
