@@ -3224,7 +3224,8 @@ class NewContent extends React.Component<homeProps, homeState> {
             ]
           : [],
       doctors: this.props.responses.doctors,
-      lat_lng: this.state.filter_params.location,
+      lat_lng: this.props.location
+      //lat_lng: this.state.filter_params.location,
     };
 
     const {
@@ -3464,6 +3465,7 @@ class NewContent extends React.Component<homeProps, homeState> {
           location: `${position.coords.latitude}, ${position.coords.longitude}`,
         },
       });
+      this.props.setLocation([position.coords.latitude, position.coords.longitude])
     }
   };
 
@@ -5206,6 +5208,300 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </div>
                                 </div>
 
+                                {/* border--0 */}
+                                <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap">
+                                  <div className="plan-card__plan-features-container">
+                                    <div className="col--12">
+                                      <div className="font-size--small font-weight--bold">
+                                        Plan features
+                                      </div>
+                                      <div className="plan_feat_cont">
+                                        <ul className="c-status-list c-list--bare feature-col">
+                                          <li className="c-status-list__item font-size--small">
+                                            <img
+                                              src={
+                                                plan.surgeries !== "No" &&
+                                                plan.surgeries !== ""
+                                                  ? check
+                                                  : uncheck
+                                              }
+                                              className="c-status-list__item__icon"
+                                            />
+                                            <span className="text-transform--capitalize">
+                                              Surgeries
+                                            </span>
+                                          </li>
+                                          <li className="c-status-list__item font-size--small">
+                                            <img
+                                              src={
+                                                plan.telemedicine !== "No" &&
+                                                plan.telemedicine !== ""
+                                                  ? check
+                                                  : uncheck
+                                              }
+                                              className="c-status-list__item__icon"
+                                            />
+                                            <span className="text-transform--capitalize">
+                                              Telemedicine
+                                            </span>
+                                          </li>
+                                          <li className="c-status-list__item font-size--small">
+                                            <img
+                                              src={
+                                                plan.congenital_abnormalities !==
+                                                  "No" &&
+                                                plan.congenital_abnormalities !==
+                                                  ""
+                                                  ? check
+                                                  : uncheck
+                                              }
+                                              className="c-status-list__item__icon"
+                                            />
+                                            <span className="text-transform--capitalize">
+                                              Congenital Abnormalities
+                                            </span>
+                                          </li>{" "}
+                                        </ul>
+
+                                        <div className="feature-col">
+                                          <ul className="c-status-list c-list--bare">
+                                            <li className="c-status-list__item font-size--small">
+                                              <img
+                                                src={
+                                                  plan.hospital_admissions !==
+                                                    "No" &&
+                                                  plan.hospital_admissions !==
+                                                    ""
+                                                    ? check
+                                                    : uncheck
+                                                }
+                                                className="c-status-list__item__icon"
+                                              />
+                                              <span className="text-transform--capitalize">
+                                                Hospital Admissions
+                                              </span>
+                                            </li>
+
+                                            <li className="c-status-list__item font-size--small">
+                                              <img
+                                                src={
+                                                  plan.optical_care !== "No" &&
+                                                  plan.optical_care !== ""
+                                                    ? check
+                                                    : uncheck
+                                                }
+                                                className="c-status-list__item__icon"
+                                              />
+                                              <span className="text-transform--capitalize">
+                                                Optical Care
+                                              </span>
+                                            </li>
+
+                                            <li className="c-status-list__item font-size--small">
+                                              <img
+                                                src={
+                                                  plan.lab_investigations !==
+                                                    "No" &&
+                                                  plan.lab_investigations !== ""
+                                                    ? check
+                                                    : uncheck
+                                                }
+                                                className="c-status-list__item__icon"
+                                              />
+                                              <span className="text-transform--capitalize">
+                                                Lab Investigations
+                                              </span>
+                                            </li>
+                                          </ul>
+                                        </div>
+
+                                        <div className="feature-col">
+                                          <ul className="c-status-list c-list--bare">
+                                            <li className="c-status-list__item font-size--small">
+                                              <img
+                                                src={
+                                                  plan.accidents_emergencies !==
+                                                    "No" &&
+                                                  plan.accidents_emergencies !==
+                                                    ""
+                                                    ? check
+                                                    : uncheck
+                                                }
+                                                className="c-status-list__item__icon"
+                                              />
+                                              <span className="text-transform--capitalize">
+                                                Accidents & Emergencies
+                                              </span>
+                                            </li>
+
+                                            <li className="c-status-list__item font-size--small">
+                                              <img
+                                                src={
+                                                  plan.cancer_care !== "No" &&
+                                                  plan.cancer_care !== ""
+                                                    ? check
+                                                    : uncheck
+                                                }
+                                                className="c-status-list__item__icon"
+                                              />
+                                              <span className="text-transform--capitalize">
+                                                Cancer Care
+                                              </span>
+                                            </li>
+                                            <li className="c-status-list__item font-size--small">
+                                              <img
+                                                src={
+                                                  plan.covid_19_treatment !==
+                                                    "No" &&
+                                                  plan.covid_19_treatment !== ""
+                                                    ? check
+                                                    : uncheck
+                                                }
+                                                className="c-status-list__item__icon"
+                                              />
+                                              <span className="text-transform--capitalize">
+                                                Covid 19 Treatment
+                                              </span>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* 
+                                  <div className="prov-cat">
+                                    <div className="margin-right--1 prov-num">
+                                      <div
+                                        className={`${
+                                          window.screen.width > 500
+                                            ? "plan-card-cost-display--info-needed"
+                                            : "col--12  margin-y--1"
+                                        }`}
+                                      >
+                                        
+                                        <div className="justify-content--center display--flex">
+                                          <div
+                                            className="font-size--small font-weight--bold
+                              display--flex aligh-items--center
+                              "
+                                          >
+                                            Medical providers
+                                          </div>
+                                        </div>
+                                        <div className="font-size--h2">
+                                          <a
+                                            onClick={() =>
+                                              this.goToDetails(plan.service_id)
+                                            }
+                                            className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
+                                            //href={`/details/id/${plan.service_id}/#providers`}
+                                            href="#"
+                                          >
+                                            {this.props.responses.providers
+                                              .length > 0
+                                              ? `View All ${
+                                                  plan.hmo_id.providers
+                                                    ? plan.hmo_id.providers
+                                                        .length
+                                                    : ""
+                                                } Providers`
+                                              : `View Providers (${
+                                                  plan.hmo_id.providers
+                                                    ? plan.hmo_id.providers
+                                                        .length
+                                                    : ""
+                                                })`}
+                                          </a>
+
+                               
+                                        </div>
+                                        {this.props.responses.providers.length >
+                                          0 && (
+                                          <ul className="c-status-list c-list--bare">
+                                            {
+                                              // this.props.responses.providers
+                                              //   .filter((prov) => {
+                                              //     let namesArr = plan.hmo_id.providers.map(
+                                              //       (prvdr) => prvdr.provider_name
+                                              //     );
+
+                                              //     return namesArr.includes(
+                                              //       prov.provider_name
+                                              //     );
+                                              //   });
+
+                                              this.props.responses.providers.map(
+                                                (provider) => {
+                                                  providersArr = plan.hmo_id.providers.map(
+                                                    (prvdr) =>
+                                                      prvdr.provider_name
+                                                  );
+                                                  console.log(
+                                                    "provider.provider_name",
+                                                    provider.provider_name
+                                                  );
+                                                  console.log(
+                                                    "providersArr",
+                                                    providersArr
+                                                  );
+
+                                                  return (
+                                                    <li className="c-status-list__item font-size--small">
+                                                      <img
+                                                        src={
+                                                          providersArr.includes(
+                                                            provider.provider_name
+                                                          )
+                                                            ? check
+                                                            : uncheck
+                                                        }
+                                                        className="c-status-list__item__icon"
+                                                      />
+                                                      <span className="text-transform--capitalize">
+                                                        {provider.provider_name}
+                                                      </span>
+                                                    </li>
+                                                  );
+                                                }
+                                              )
+                                            }
+                                          </ul>
+                                        )}
+                                      </div>
+                                    </div>
+
+                                    <div className="prov-category">
+                                      <div
+                                        className={`${
+                                          window.screen.width > 500
+                                            ? "plan-card-cost-display--info-needed"
+                                            : "col--12"
+                                        }`}
+                                      >
+                                        
+                                        <div
+                                          className="font-size--small font-weight--bold
+                              display--flex aligh-items--center
+                              "
+                                        >
+                                          Hospital Category
+                                          
+                                        </div>
+
+                                        <div className="font-size--h2">
+                                          {plan.hospital_category[0].name
+                                            ? plan.hospital_category[0].name
+                                            : "N/A"}
+                                          
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                 */}
+                                </div>
+                               
+
                                 <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide-maybe">
                                   {/*                                   
                                   <div className="plan-card__cost-display">
@@ -5566,299 +5862,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </div>
                                 </div>
                               </div>
-    */}
-                                <div className="plan-card__detail-section border--0 c-clearfix display--flex flex-wrap--wrap">
-                                  <div className="plan-card__plan-features-container">
-                                    <div className="col--12">
-                                      <div className="font-size--small font-weight--bold">
-                                        Plan features
-                                      </div>
-                                      <div className="plan_feat_cont">
-                                        <ul className="c-status-list c-list--bare feature-col">
-                                          <li className="c-status-list__item font-size--small">
-                                            <img
-                                              src={
-                                                plan.surgeries !== "No" &&
-                                                plan.surgeries !== ""
-                                                  ? check
-                                                  : uncheck
-                                              }
-                                              className="c-status-list__item__icon"
-                                            />
-                                            <span className="text-transform--capitalize">
-                                              Surgeries
-                                            </span>
-                                          </li>
-                                          <li className="c-status-list__item font-size--small">
-                                            <img
-                                              src={
-                                                plan.telemedicine !== "No" &&
-                                                plan.telemedicine !== ""
-                                                  ? check
-                                                  : uncheck
-                                              }
-                                              className="c-status-list__item__icon"
-                                            />
-                                            <span className="text-transform--capitalize">
-                                              Telemedicine
-                                            </span>
-                                          </li>
-                                          <li className="c-status-list__item font-size--small">
-                                            <img
-                                              src={
-                                                plan.congenital_abnormalities !==
-                                                  "No" &&
-                                                plan.congenital_abnormalities !==
-                                                  ""
-                                                  ? check
-                                                  : uncheck
-                                              }
-                                              className="c-status-list__item__icon"
-                                            />
-                                            <span className="text-transform--capitalize">
-                                              Congenital Abnormalities
-                                            </span>
-                                          </li>{" "}
-                                        </ul>
-
-                                        <div className="feature-col">
-                                          <ul className="c-status-list c-list--bare">
-                                            <li className="c-status-list__item font-size--small">
-                                              <img
-                                                src={
-                                                  plan.hospital_admissions !==
-                                                    "No" &&
-                                                  plan.hospital_admissions !==
-                                                    ""
-                                                    ? check
-                                                    : uncheck
-                                                }
-                                                className="c-status-list__item__icon"
-                                              />
-                                              <span className="text-transform--capitalize">
-                                                Hospital Admissions
-                                              </span>
-                                            </li>
-
-                                            <li className="c-status-list__item font-size--small">
-                                              <img
-                                                src={
-                                                  plan.optical_care !== "No" &&
-                                                  plan.optical_care !== ""
-                                                    ? check
-                                                    : uncheck
-                                                }
-                                                className="c-status-list__item__icon"
-                                              />
-                                              <span className="text-transform--capitalize">
-                                                Optical Care
-                                              </span>
-                                            </li>
-
-                                            <li className="c-status-list__item font-size--small">
-                                              <img
-                                                src={
-                                                  plan.lab_investigations !==
-                                                    "No" &&
-                                                  plan.lab_investigations !== ""
-                                                    ? check
-                                                    : uncheck
-                                                }
-                                                className="c-status-list__item__icon"
-                                              />
-                                              <span className="text-transform--capitalize">
-                                                Lab Investigations
-                                              </span>
-                                            </li>
-                                          </ul>
-                                        </div>
-
-                                        <div className="feature-col">
-                                          <ul className="c-status-list c-list--bare">
-                                            <li className="c-status-list__item font-size--small">
-                                              <img
-                                                src={
-                                                  plan.accidents_emergencies !==
-                                                    "No" &&
-                                                  plan.accidents_emergencies !==
-                                                    ""
-                                                    ? check
-                                                    : uncheck
-                                                }
-                                                className="c-status-list__item__icon"
-                                              />
-                                              <span className="text-transform--capitalize">
-                                                Accidents & Emergencies
-                                              </span>
-                                            </li>
-
-                                            <li className="c-status-list__item font-size--small">
-                                              <img
-                                                src={
-                                                  plan.cancer_care !== "No" &&
-                                                  plan.cancer_care !== ""
-                                                    ? check
-                                                    : uncheck
-                                                }
-                                                className="c-status-list__item__icon"
-                                              />
-                                              <span className="text-transform--capitalize">
-                                                Cancer Care
-                                              </span>
-                                            </li>
-                                            <li className="c-status-list__item font-size--small">
-                                              <img
-                                                src={
-                                                  plan.covid_19_treatment !==
-                                                    "No" &&
-                                                  plan.covid_19_treatment !== ""
-                                                    ? check
-                                                    : uncheck
-                                                }
-                                                className="c-status-list__item__icon"
-                                              />
-                                              <span className="text-transform--capitalize">
-                                                Covid 19 Treatment
-                                              </span>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  {/* 
-                                  <div className="prov-cat">
-                                    <div className="margin-right--1 prov-num">
-                                      <div
-                                        className={`${
-                                          window.screen.width > 500
-                                            ? "plan-card-cost-display--info-needed"
-                                            : "col--12  margin-y--1"
-                                        }`}
-                                      >
-                                        
-                                        <div className="justify-content--center display--flex">
-                                          <div
-                                            className="font-size--small font-weight--bold
-                              display--flex aligh-items--center
-                              "
-                                          >
-                                            Medical providers
-                                          </div>
-                                        </div>
-                                        <div className="font-size--h2">
-                                          <a
-                                            onClick={() =>
-                                              this.goToDetails(plan.service_id)
-                                            }
-                                            className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                                            //href={`/details/id/${plan.service_id}/#providers`}
-                                            href="#"
-                                          >
-                                            {this.props.responses.providers
-                                              .length > 0
-                                              ? `View All ${
-                                                  plan.hmo_id.providers
-                                                    ? plan.hmo_id.providers
-                                                        .length
-                                                    : ""
-                                                } Providers`
-                                              : `View Providers (${
-                                                  plan.hmo_id.providers
-                                                    ? plan.hmo_id.providers
-                                                        .length
-                                                    : ""
-                                                })`}
-                                          </a>
-
-                               
-                                        </div>
-                                        {this.props.responses.providers.length >
-                                          0 && (
-                                          <ul className="c-status-list c-list--bare">
-                                            {
-                                              // this.props.responses.providers
-                                              //   .filter((prov) => {
-                                              //     let namesArr = plan.hmo_id.providers.map(
-                                              //       (prvdr) => prvdr.provider_name
-                                              //     );
-
-                                              //     return namesArr.includes(
-                                              //       prov.provider_name
-                                              //     );
-                                              //   });
-
-                                              this.props.responses.providers.map(
-                                                (provider) => {
-                                                  providersArr = plan.hmo_id.providers.map(
-                                                    (prvdr) =>
-                                                      prvdr.provider_name
-                                                  );
-                                                  console.log(
-                                                    "provider.provider_name",
-                                                    provider.provider_name
-                                                  );
-                                                  console.log(
-                                                    "providersArr",
-                                                    providersArr
-                                                  );
-
-                                                  return (
-                                                    <li className="c-status-list__item font-size--small">
-                                                      <img
-                                                        src={
-                                                          providersArr.includes(
-                                                            provider.provider_name
-                                                          )
-                                                            ? check
-                                                            : uncheck
-                                                        }
-                                                        className="c-status-list__item__icon"
-                                                      />
-                                                      <span className="text-transform--capitalize">
-                                                        {provider.provider_name}
-                                                      </span>
-                                                    </li>
-                                                  );
-                                                }
-                                              )
-                                            }
-                                          </ul>
-                                        )}
-                                      </div>
-                                    </div>
-
-                                    <div className="prov-category">
-                                      <div
-                                        className={`${
-                                          window.screen.width > 500
-                                            ? "plan-card-cost-display--info-needed"
-                                            : "col--12"
-                                        }`}
-                                      >
-                                        
-                                        <div
-                                          className="font-size--small font-weight--bold
-                              display--flex aligh-items--center
-                              "
-                                        >
-                                          Hospital Category
-                                          
-                                        </div>
-
-                                        <div className="font-size--h2">
-                                          {plan.hospital_category[0].name
-                                            ? plan.hospital_category[0].name
-                                            : "N/A"}
-                                          
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                 */}
-                                </div>
-                                <div className="lg-display--none margin-top--2">
+    */} <div className="lg-display--none margin-top--2">
                                   <button
                                     className={`c-button c-check-button ${
                                       plans_to_compare &&

@@ -36,7 +36,8 @@ import {
     FILTER_BY_DOCTOR,
     FILTER_BY_PROXIMITY,
     GET_DOCTORS,
-    GET_SUB_SPECIALTIES
+    GET_SUB_SPECIALTIES,
+    SET_LOCATION
 } from "../actions/types";
 
 const initialState = {
@@ -209,7 +210,8 @@ const initialState = {
     collapse_providers: true,
     infiniteScrollData: [],
     infiniteScrollDataHasMore: false,
-    pageSize: 5
+    pageSize: 5,
+    location: []
 }
 
 export default function (state = initialState, action) {
@@ -406,6 +408,12 @@ export default function (state = initialState, action) {
                 ...state,
                 sub_specialties: action.payload
             }
+        case SET_LOCATION:
+            return {
+                ...state,
+                location: action.payload
+            }
+
         default:
             return state
 

@@ -37,7 +37,8 @@ import {
     SET_IS_INFINNITE_SCROLL_HAS_MORE,
     RESET_INFINITE_SCROLL_DATA,
     GET_DOCTORS,
-    GET_SUB_SPECIALTIES
+    GET_SUB_SPECIALTIES,
+    SET_LOCATION
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions"
@@ -408,6 +409,25 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
         })
         // doctors_hosp.includes(r.hmo_id.providers.map(p => p.provider_name)));
 
+    }
+
+    if (lat_lng) {
+        let data = recommended_plans ? recommended_plans : packages;
+        let lat = lat_lng[0];
+        let lng = lat_lng[1];
+
+        recommended_plans = data.filter(r => {
+            for (let i = 0; i < r.hmo_id.providers.length; i++) {
+                if(r.hmo_id.providers[i].gps) {
+                     if (r.hmo_id.providers[i].gps.latitude.toFixed(6) === lat){
+                    return r;
+                }
+                }
+                 
+            }
+        })
+
+        console.log("recommended_plans", recommended_plans);
     }
 
     CAN_LOG && console.log("packages", packages);
@@ -1228,4 +1248,11 @@ export const getDoctors = () => async (dispatch, getState) => {
 
 export const filterByDoctor = async () => (dispatch, getState) => {
 
+}
+
+export const setLocation = (loc) => (dispatch, getState) => {
+    dispatch({
+        type: SET_LOCATION,
+        payload: loc
+    })
 }

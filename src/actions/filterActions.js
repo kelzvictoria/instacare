@@ -11,7 +11,8 @@ import {
     IS_FILTERING_BY_BUDGET,
     IS_FILTERING_BY_PLAN_TYPE,
     IS_FILTERING_BY_PLAN_RANGE,
-    IS_FILTERING_BY_PLAN_ID
+    IS_FILTERING_BY_PLAN_ID,
+    
 } from "../actions/types";
 
 export const formatPrices = (prices) => (dispatch) => {
