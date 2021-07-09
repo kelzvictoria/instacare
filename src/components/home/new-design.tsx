@@ -5507,7 +5507,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                 </div>
                                
 
-                                <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide-maybe">
+                                <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide display--none">
                                   {/*                                   
                                   <div className="plan-card__cost-display">
                                     <div

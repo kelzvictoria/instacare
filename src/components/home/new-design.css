@@ -2103,3 +2103,7 @@ h1.tiny-descrptn {
   height: 12px;
   margin: -4px 0px 0px -4px;
 }
+
+.hide {
+  display: none !important;
+}
