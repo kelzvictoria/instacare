@@ -39,7 +39,8 @@ import {
     GET_DOCTORS,
     GET_SUB_SPECIALTIES,
     SET_LOCATION,
-    HANDLE_GEOCODING
+    HANDLE_GEOCODING,
+    HANDLE_REVERSE_GEOCODING
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions"
@@ -190,14 +191,14 @@ export const getHMOs = () => async (dispatch, getState) => {
                 if (providers.length > 0) {
                     for (let i = 0; i < hmos.length; i++) {
                         let hmoID = hmos[i]["hmo_id"]
-                         console.log("hmoID", hmoID);
+                         //console.log("hmoID", hmoID);
                         // console.log("providers", providers);
 
                         let hmoProviders = 
                         //providers.filter(provider => provider.hmo_id === hmoID);
                         providers.filter(provider => provider.hmo_id.includes(hmoID));
 
-                        console.log("hmoProviders", hmoProviders);
+                       // console.log("hmoProviders", hmoProviders);
                         if (hmoProviders.length > 0) {
                             hmos[i]["providers"] = hmoProviders;
                         }
@@ -295,7 +296,7 @@ export const getServices = () => async (dispatch, getState) => {
 }
 
 export const getRecommendedPlans = (params) => async (dispatch, getState) => {
-    console.log("params", params);
+    //console.log("params", params);
     if (params) {
 
     }
@@ -416,10 +417,11 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
 
     if (lat_lng) {
         let data = recommended_plans ? recommended_plans : packages;
-        let lat = lat_lng[0];
+        recommended_plans = (filterByProximity(lat_lng, data))
+    /* let lat = lat_lng[0];
         let lng = lat_lng[1];
 
-        recommended_plans = data.filter(r => {
+      recommended_plans = data.filter(r => {
             for (let i = 0; i < r.hmo_id.providers.length; i++) {
                 if(r.hmo_id.providers[i].gps) {
                      if (r.hmo_id.providers[i].gps.latitude.toFixed(6) === lat){
@@ -428,13 +430,14 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
                 }
                  
             }
-        })
+        })*/
 
         console.log("recommended_plans", recommended_plans);
     }
 
     CAN_LOG && console.log("packages", packages);
-    CAN_LOG && console.log("recommended_plans", recommended_plans);
+    //CAN_LOG && 
+    console.log("recommended_plans", recommended_plans);
     dispatch({
         type: GET_RECOMMENDED_PLANS,
         payload: recommended_plans
@@ -605,7 +608,6 @@ export const setIsFetchingPlansByHMO = () => (dispatch, getState) => {
 }
 
 export const setIsFetchingPlans = () => (dispatch, getState) => {
-    console.log("in here");
     dispatch({
         type: IS_FETCHING_PLANS,
         payload: true
@@ -1220,7 +1222,7 @@ export const getDoctors = () => async (dispatch, getState) => {
     ).then(res => {
         if (res.data.length > 0) {
             doctors = res.data.map(d => d.data);
-            console.log("doctors", doctors);
+           // console.log("doctors", doctors);
 
             for (let i = 0; i < doctors.length; i++) {
                 let specialty = JSON.parse(doctors[i]["sub_specialty"]).map(s =>
@@ -1233,7 +1235,7 @@ export const getDoctors = () => async (dispatch, getState) => {
                 for (let j = 0; j < specialty.length; j++) {
                     specialtyString = specialtyString + specialty[j].name + ", "
                 }
-                console.log("specialtyString", specialtyString);
+               // console.log("specialtyString", specialtyString);
                 doctors[i]["sub_specialty"] = specialtyString.slice(0, -2);
                 doctors[i]["provider_id"] = getState().fetchData.providers.filter(p => p.provider_id === doctors[i]["provider_id"])[0];
             }
@@ -1270,11 +1272,11 @@ export const handleReverseGeocoding = () => async (dispatch, getState) => {
         `https://api.opencagedata.com/geocode/v1/json?q=${loc[0]}+${loc[1]}&key=${OPEN_CAGE_DATA_API_KEY}`
         )
     .then(res => {
-        console.log("res", res);
+       // console.log("res", res);
         user_address = res.data.results[0].formatted
     })
     dispatch({
-        type: HANDLE_GEOCODING,
+        type: HANDLE_REVERSE_GEOCODING,
         payload : user_address
         
     })
@@ -1285,15 +1287,52 @@ export const handleGeocoding = (address) => async (dispatch, getState) => {
  let loc;
  await axios
  .get(
-     //`https://maps.googleapis.com/maps/api/geocode/json?latlng=${loc[0]},${loc[1]}&key=${GOOGLE_MAPS_API_KEY}`
      `https://api.opencagedata.com/geocode/v1/json?q=${address_enc}&key=${OPEN_CAGE_DATA_API_KEY}`
      )
  .then(res => {
      loc = res.data.results[0].geometry
-     console.log("loc", loc);
+    // console.log("loc", loc);
      dispatch({
          type: SET_LOCATION,
          payload: [loc.lat, loc.lng]
      })
  })
+}
+
+export const filterByProximity = (user_loc, plans) => {
+        let nearbyPlans = [];
+        let p = 0.017453292519943295;    // Math.PI / 180
+        let r = 1000;
+        let d;
+        let c = Math.cos;
+        for (let i = 0; i < plans.length; i++) {
+            for (let j = 0; j < plans[i].hmo_id.providers.length; j++) {
+                if(plans[i].hmo_id.providers[j].gps) {
+                  
+                    let lat1, lat2, lng1, lng2;
+                    lat1 = user_loc[0];
+                    lng1 = user_loc[1];
+
+                    lat2 = plans[i].hmo_id.providers[j].gps.latitude.toFixed(6);
+                    lng2 = plans[i].hmo_id.providers[j].gps.longitude.toFixed(6);
+
+                    console.log("lat1, lat2, lng1, lng2", lat1, lat2, lng1, lng2);
+
+                    let a = 0.5 - c((lat2 - lat1) * p)/2 + 
+                    c(lat1 * p) * c(lat2 * p) * 
+                    (1 - c((lng2 - lng1) * p))/2;
+
+                    d = 12742 * Math.asin(Math.sqrt(a)) * 1000; // 2 * R = 12742; R = 6371 km
+
+                    console.log("d", d, "a", a);
+
+                    if (d< r) {
+                        nearbyPlans.push(plans[i]);
+                    }
+                } 
+                 
+            }    
+        }
+        console.log("nearbyPlans", nearbyPlans);
+        return nearbyPlans;
 }

@@ -38,7 +38,8 @@ import {
     GET_DOCTORS,
     GET_SUB_SPECIALTIES,
     SET_LOCATION,
-    HANDLE_GEOCODING
+    HANDLE_GEOCODING,
+    HANDLE_REVERSE_GEOCODING
 } from "../actions/types";
 
 const initialState = {
@@ -265,7 +266,7 @@ export default function (state = initialState, action) {
             }
 
         case GET_RECOMMENDED_PLANS:
-            console.log("action.payload", action.payload);
+            //console.log("action.payload", action.payload);
             return {
                 ...state,
                 services: action.payload,
@@ -417,7 +418,7 @@ export default function (state = initialState, action) {
              
             }
 
-        case HANDLE_GEOCODING:
+        case HANDLE_REVERSE_GEOCODING:
             return {
                 ...state,
                 user_address: action.payload

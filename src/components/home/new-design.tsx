@@ -359,7 +359,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   async filterByBudget_and_or_Type() {
-    console.log("in filt");
+    //console.log("in filt");
 
     let range =
       this.props.responses.price_range.length > 0
@@ -2748,7 +2748,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
 
     let title = e; //.target.value;
-    console.log("title", title);
+   // console.log("title", title);
 
     switch (title) {
       case "bronze":
@@ -3388,13 +3388,13 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
-    console.log("apiData", apiData);
+    //console.log("apiData", apiData);
 
     let start_index = (page - 1) * pageSize;
     let end_index = pageSize * page;
 
-    console.log("start_index", start_index);
-    console.log("end_index", end_index);
+   // console.log("start_index", start_index);
+    // console.log("end_index", end_index);
 
     this.setState({
       current: page,
@@ -3474,12 +3474,12 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   showPosition = async (position) => {
-    console.log(
-      "Latitude: " +
-        position.coords.latitude +
-        "Longitude: " +
-        position.coords.longitude
-    );
+    // console.log(
+    //   "Latitude: " +
+    //     position.coords.latitude +
+    //     "Longitude: " +
+    //     position.coords.longitude
+    // );
 
     if (position.coords.latitude && position.coords.longitude) {
       
