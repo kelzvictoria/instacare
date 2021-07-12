@@ -42,7 +42,9 @@ import {
   filterByBenefits,
   filterByTotalBenefitLimit,
   setLocation,
-  getDoctors
+  getDoctors,
+  handleGeocoding,
+  handleReverseGeocoding
 } from "../../actions/fetchDataActions";
 
 import {
@@ -306,7 +308,8 @@ const mapProps = (state: any) => ({
   infiniteScrollData: state.fetchData.infiniteScrollData,
   is_filter_box_open: state.quiz.is_filter_box_open,
   location: state.fetchData.location,
-  doctors: state.fetchData.doctors
+  doctors: state.fetchData.doctors,
+  user_address: state.fetchData.user_address
 });
 
 export default connect(mapProps, {
@@ -375,5 +378,7 @@ export default connect(mapProps, {
   filterByTotalBenefitLimit,
   toggleFilterBox,
   setLocation,
-  getDoctors
+  getDoctors,
+  handleGeocoding,
+  handleReverseGeocoding
 })(Home);

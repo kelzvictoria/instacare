@@ -37,7 +37,8 @@ import {
     FILTER_BY_PROXIMITY,
     GET_DOCTORS,
     GET_SUB_SPECIALTIES,
-    SET_LOCATION
+    SET_LOCATION,
+    HANDLE_GEOCODING
 } from "../actions/types";
 
 const initialState = {
@@ -211,7 +212,8 @@ const initialState = {
     infiniteScrollData: [],
     infiniteScrollDataHasMore: false,
     pageSize: 5,
-    location: []
+    location: [],
+    user_address: ""
 }
 
 export default function (state = initialState, action) {
@@ -411,7 +413,14 @@ export default function (state = initialState, action) {
         case SET_LOCATION:
             return {
                 ...state,
-                location: action.payload
+                location: action.payload,
+             
+            }
+
+        case HANDLE_GEOCODING:
+            return {
+                ...state,
+                user_address: action.payload
             }
 
         default:

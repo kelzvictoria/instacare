@@ -38,7 +38,8 @@ import {
     RESET_INFINITE_SCROLL_DATA,
     GET_DOCTORS,
     GET_SUB_SPECIALTIES,
-    SET_LOCATION
+    SET_LOCATION,
+    HANDLE_GEOCODING
 } from "../actions/types";
 import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions"
@@ -46,6 +47,8 @@ import { returnErrors } from "../actions/errorActions"
 import { stripNonNumeric, CAN_LOG } from "../utils/homeUtils"
 
 const API_URL = "https://instacareconnect.pmglobaltechnology.com";
+const GOOGLE_MAPS_API_KEY = "AIzaSyBzVuBuJJ7S4g8gVjy-udL823dQTShK16I";
+const OPEN_CAGE_DATA_API_KEY = "6b7ff1e8e7834c6f91ff3c02903ca44c";
 
 export const getPlans = () => async (dispatch, getState) => {
     dispatch(setIsFetchingPlans());
@@ -1250,9 +1253,47 @@ export const filterByDoctor = async () => (dispatch, getState) => {
 
 }
 
-export const setLocation = (loc) => (dispatch, getState) => {
+export const setLocation = (loc) => async (dispatch, getState) => {
     dispatch({
         type: SET_LOCATION,
-        payload: loc
+        payload:  loc
+        
     })
+}
+
+export const handleReverseGeocoding = () => async (dispatch, getState) => {
+    let user_address;
+    let loc = getState().fetchData.location;
+    await axios
+    .get(
+        //`https://maps.googleapis.com/maps/api/geocode/json?latlng=${loc[0]},${loc[1]}&key=${GOOGLE_MAPS_API_KEY}`
+        `https://api.opencagedata.com/geocode/v1/json?q=${loc[0]}+${loc[1]}&key=${OPEN_CAGE_DATA_API_KEY}`
+        )
+    .then(res => {
+        console.log("res", res);
+        user_address = res.data.results[0].formatted
+    })
+    dispatch({
+        type: HANDLE_GEOCODING,
+        payload : user_address
+        
+    })
+}
+
+export const handleGeocoding = (address) => async (dispatch, getState) => {
+ let address_enc = encodeURIComponent(address);
+ let loc;
+ await axios
+ .get(
+     //`https://maps.googleapis.com/maps/api/geocode/json?latlng=${loc[0]},${loc[1]}&key=${GOOGLE_MAPS_API_KEY}`
+     `https://api.opencagedata.com/geocode/v1/json?q=${address_enc}&key=${OPEN_CAGE_DATA_API_KEY}`
+     )
+ .then(res => {
+     loc = res.data.results[0].geometry
+     console.log("loc", loc);
+     dispatch({
+         type: SET_LOCATION,
+         payload: [loc.lat, loc.lng]
+     })
+ })
 }
