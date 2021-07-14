@@ -93,7 +93,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       providers_selected: [],
       prescriptions_selected: [],
       healthSA_eligibility: false,
-      user_address: ""
+      user_address: "",
     },
     plan_ids: [],
     plan_desc_show_less: true,
@@ -2748,7 +2748,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
 
     let title = e; //.target.value;
-   // console.log("title", title);
+    // console.log("title", title);
 
     switch (title) {
       case "bronze":
@@ -3207,42 +3207,33 @@ class NewContent extends React.Component<homeProps, homeState> {
       plan_types_checked,
       annual_range_min,
       annual_range_max,
-     
+
       hmo_selected,
       total_benefit_min,
       total_benefit_max,
-      user_address
-    }
-       = this.state.filter_params;
+      user_address,
+    } = this.state.filter_params;
 
-    if(user_address) {
-      this.props.handleGeocoding(user_address)
+    if (user_address) {
+      await this.props.handleGeocoding(user_address);
     }
 
     let filterBoxParams = {
       range: plan_range_checked,
       type: plan_types_checked,
       budget:
-        annual_range_min &&
-        annual_range_max
-          ? [
-              annual_range_min,
-              annual_range_max,
-            ]
+        annual_range_min && annual_range_max
+          ? [annual_range_min, annual_range_max]
           : [],
       planID: this.state.filter_params.planID,
       hmoID: hmo_selected,
       benefits: this.props.responses.benefits,
       total_benefit_range:
-        total_benefit_min &&
-        total_benefit_max
-          ? [
-              total_benefit_min,
-              total_benefit_max,
-            ]
+        total_benefit_min && total_benefit_max
+          ? [total_benefit_min, total_benefit_max]
           : [],
       doctors: this.props.responses.doctors,
-      lat_lng: this.props.location
+      lat_lng: this.props.location,
       //lat_lng: this.state.filter_params.location,
     };
 
@@ -3272,7 +3263,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       this.resetTypeAndRangeFilters();
       await this.props.getRecommendedPlans(filterBoxParams);
       await this.props.resetInfiniteScrollData();
-      this.infiniteScrollDataReInitOnFilterApplied();
+      await this.infiniteScrollDataReInitOnFilterApplied();
       this.props.is_filter_box_open && this.toggleShowFilter();
     }
   };
@@ -3355,7 +3346,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   goToDoctors = () => {
     console.log("this.props.doctors", this.props.doctors);
-    
+
     if (this.props.doctors.length === 0) {
       this.props.getDoctors();
     }
@@ -3393,7 +3384,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     let start_index = (page - 1) * pageSize;
     let end_index = pageSize * page;
 
-   // console.log("start_index", start_index);
+    // console.log("start_index", start_index);
     // console.log("end_index", end_index);
 
     this.setState({
@@ -3482,17 +3473,18 @@ class NewContent extends React.Component<homeProps, homeState> {
     // );
 
     if (position.coords.latitude && position.coords.longitude) {
-      
-      this.props.setLocation([position.coords.latitude, position.coords.longitude])
-     await this.props.handleReverseGeocoding();
-     this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        location: `${position.coords.latitude}, ${position.coords.longitude}`,
-        user_address: this.props.user_address
-      },
-    });
-
+      this.props.setLocation([
+        position.coords.latitude,
+        position.coords.longitude,
+      ]);
+      await this.props.handleReverseGeocoding();
+      this.setState({
+        filter_params: {
+          ...this.state.filter_params,
+          location: `${position.coords.latitude}, ${position.coords.longitude}`,
+          user_address: this.props.user_address,
+        },
+      });
     }
   };
 
@@ -3506,11 +3498,10 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.setState({
       filter_params: {
         ...this.state.filter_params,
-           user_address: e.target.value
-      }
-    })
-
-  }
+        user_address: e.target.value,
+      },
+    });
+  };
 
   render() {
     //  console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
@@ -4632,9 +4623,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   {/* Health Savings Account Eligibility (HSA) */}
                                   Proximity search
                                 </span>
+                                <span className="c-field__hint">
+                                  Your house address is
+                                </span>
                               </legend>
                               <div>
-                                <input
+                                {/* <input
                                   className="c-choice c-choice--small"
                                   type="checkbox"
                                   value="hsa-true"
@@ -4646,12 +4640,19 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   onClick={() => this.handleHSAChange()}
                                 >
                                   <span className="">Find plans near me ?</span>
-                                </label>
+                                </label> */}
 
-                                {location && (
-                                  <input className="c-filter-tag__label user_address"
-                                  onChange={(e) => this.handleAddressImput(e)}
-                                  value= {this.state.filter_params.user_address} />
+                                {
+                                  //location &&
+                                  <input
+                                    className="c-field"
+                                    type="text"
+                                    name="user-address"
+                                    onChange={(e) => this.handleAddressImput(e)}
+                                    value={
+                                      this.state.filter_params.user_address
+                                    }
+                                  />
 
                                   // <ul className="c-list--bare">
                                   //   <li className="display--inline-block">
@@ -4689,8 +4690,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   //     </div>
                                   //   </li>
                                   // </ul>
-                               
-                               )}
+                                }
                               </div>
                             </fieldset>
                           </div>
@@ -5088,7 +5088,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </div>
                                   </div>
                                 </div>
-
                                 <div className="plan-card__summary-section">
                                   <div className="c-plan-summary fill--gray-lightest padding--1 lg-padding--2">
                                     <div className="c-plan-summary__summary">
@@ -5135,7 +5134,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </div>
                                   </div>
                                 </div>
-
                                 <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide-maybe">
                                   <div className="plan-card__cost-display">
                                     <div
@@ -5249,7 +5247,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </div>
                                   </div>
                                 </div>
-
                                 {/* border--0 */}
                                 <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap">
                                   <div className="plan-card__plan-features-container">
@@ -5542,8 +5539,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </div>
                                  */}
                                 </div>
-                               
-
                                 <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide display--none">
                                   {/*                                   
                                   <div className="plan-card__cost-display">
@@ -5834,7 +5829,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </div>
                                   </div>
                                 </div>
-
                                 {/* 
                               <div
                                 className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap
@@ -5904,7 +5898,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   </div>
                                 </div>
                               </div>
-    */} <div className="lg-display--none margin-top--2">
+    */}{" "}
+                                <div className="lg-display--none margin-top--2">
                                   <button
                                     className={`c-button c-check-button ${
                                       plans_to_compare &&

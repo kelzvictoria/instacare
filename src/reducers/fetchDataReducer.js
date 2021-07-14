@@ -415,13 +415,20 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 location: action.payload,
-             
+
             }
 
         case HANDLE_REVERSE_GEOCODING:
             return {
                 ...state,
                 user_address: action.payload
+            }
+
+        case HANDLE_GEOCODING:
+            return {
+                ...state,
+                user_address: action.payload.user_address,
+                location: action.payload.location
             }
 
         default:
