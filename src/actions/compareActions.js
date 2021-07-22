@@ -1,4 +1,18 @@
-import { SET_PLANS_TO_COMPARE_ON_DESKTOP, SET_PLANS_TO_COMPARE_ON_MOBILE, SET_CHECKED_PLANS } from "../actions/types";
+import {
+    SET_PLANS_TO_COMPARE_ON_DESKTOP, SET_PLANS_TO_COMPARE_ON_MOBILE, SET_CHECKED_PLANS,
+
+} from "../actions/types";
+
+export const resetPlansToCompare = () => (dispatch, getState) => {
+    dispatch({
+        type: SET_PLANS_TO_COMPARE_ON_DESKTOP,
+        payload: []
+    })
+    dispatch({
+        type: SET_PLANS_TO_COMPARE_ON_MOBILE,
+        payload: []
+    })
+}
 
 export const setPlansToCompareOnDesktop = (plans) => (dispatch, getState) => {
     dispatch({

@@ -77,7 +77,10 @@ import {
     ADD_COMPARE_URL_PARAM,
     REMOVE_COMPARE_URL_PARAM,
     TOGGLE_DATA_CAPTURE_MODAL,
-    TOGGLE_FILTER_BOX
+    TOGGLE_FILTER_BOX,
+
+    COMPARE_TOP_THREE_PLANS,
+    GET_TOP_THREE_PLANS
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
 
@@ -566,6 +569,11 @@ export const toggleDataCaptureModal = (payload) => (dispatch, getState) => {
 export const toggleFilterBox = () => (dispatch, getState) => {
     dispatch({
         type: TOGGLE_FILTER_BOX,
+    })
+}
 
+export const compareTopThreePlans = (val) => (dispatch, getState) => {
+    dispatch({
+        type: COMPARE_TOP_THREE_PLANS,
     })
 }

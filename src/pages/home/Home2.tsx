@@ -44,7 +44,7 @@ import {
   setLocation,
   getDoctors,
   handleGeocoding,
-  handleReverseGeocoding
+  handleReverseGeocoding,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -79,6 +79,7 @@ import {
   resetSelectedProviders,
   toggleDataCaptureModal,
   toggleFilterBox,
+  compareTopThreePlans,
 } from "../../actions/userInputActions";
 
 import {
@@ -92,6 +93,7 @@ import {
 import {
   setPlansToCompareOnDesktop,
   setPlansToCompareOnMobile,
+  resetPlansToCompare,
 } from "../../actions/compareActions";
 
 import { stripNonNumeric } from "../../utils/homeUtils";
@@ -309,7 +311,8 @@ const mapProps = (state: any) => ({
   is_filter_box_open: state.quiz.is_filter_box_open,
   location: state.fetchData.location,
   doctors: state.fetchData.doctors,
-  user_address: state.fetchData.user_address
+  user_address: state.fetchData.user_address,
+  compare_top_three_plans: state.quiz.responses.compare_top_three_plans,
 });
 
 export default connect(mapProps, {
@@ -380,5 +383,7 @@ export default connect(mapProps, {
   setLocation,
   getDoctors,
   handleGeocoding,
-  handleReverseGeocoding
+  handleReverseGeocoding,
+  compareTopThreePlans,
+  resetPlansToCompare,
 })(Home);

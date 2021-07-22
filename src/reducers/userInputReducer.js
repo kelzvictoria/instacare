@@ -84,7 +84,10 @@ import {
     ADD_COMPARE_URL_PARAM,
     REMOVE_COMPARE_URL_PARAM,
     TOGGLE_DATA_CAPTURE_MODAL,
-    TOGGLE_FILTER_BOX
+    TOGGLE_FILTER_BOX,
+
+    COMPARE_TOP_THREE_PLANS,
+    GET_TOP_THREE_PLANS
 } from "../actions/types";
 
 const initialState = {
@@ -151,7 +154,8 @@ const initialState = {
         providers: [],
         doctors: [],
         benefits: [],
-        compare_plan_id_param: []
+        compare_plan_id_param: [],
+        compare_top_three_plans: false
     },
     dataSource:
         //localStorage["providers"] ? 
@@ -641,6 +645,15 @@ export default function (state = initialState, action) {
                     compare_plan_id_param: state.responses.compare_plan_id_param.filter(
                         param => param !== action.payload
                     )
+                }
+            }
+
+        case COMPARE_TOP_THREE_PLANS:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    compare_top_three_plans: !state.responses.compare_top_three_plans
                 }
             }
 

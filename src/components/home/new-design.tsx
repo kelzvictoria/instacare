@@ -109,10 +109,67 @@ class NewContent extends React.Component<homeProps, homeState> {
     //   : this.props.planServices.slice(0, pageSize),
   };
 
-  toggleCompareTopThree = () => {
-    this.setState({
-      compare_top_three_plans: !this.state.compare_top_three_plans,
-    });
+  toggleCompareTopThree = async () => {
+    // this.setState({
+    //   compare_top_three_plans: !this.state.compare_top_three_plans,
+    // });
+    await this.props.compareTopThreePlans();
+    await this.topThreePlansToCompare();
+    this.goToComparison();
+  };
+
+  topThreePlansToCompare = () => {
+    console.log(
+      "this.props.compare_top_three_plans",
+      this.props.compare_top_three_plans
+    );
+
+    if (this.props.compare_top_three_plans) {
+      let plans = this.props.plans;
+      let indexes: number[] = [];
+      let plan_ids: string[] = [];
+      let min: number = 0;
+      let max: number = plans.length;
+      // indexes.push(Math.floor(Math.random() * max) + min);
+
+      // indexes.push(Math.floor(Math.random() * max) + min);
+
+      // indexes.push(Math.floor(Math.random() * max) + min);
+
+      let rnd,
+        qty = 3;
+
+      do {
+        do {
+          rnd = Math.floor(Math.random() * max) + min;
+        } while (indexes.includes(rnd));
+        indexes.push(rnd);
+      } while (indexes.length < qty);
+
+      console.log("indexes", indexes);
+
+      let plan_one,
+        plan_two,
+        plan_three,
+        plan_id_one,
+        plan_id_two,
+        plan_id_three;
+
+      plan_one = plans[indexes[0]];
+      plan_two = plans[indexes[1]];
+      plan_three = plans[indexes[2]];
+      plan_id_one = plan_one.service_id;
+      plan_id_two = plan_two.service_id;
+      plan_id_three = plan_three.service_id;
+
+      plan_ids = [plan_id_one, plan_id_two, plan_id_three];
+
+      for (let i = 0; i < plan_ids.length; i++) {
+        this.handleCheckedPlanToCompare(plan_ids[i]);
+      }
+    } else {
+      this.props.resetPlansToCompare();
+    }
   };
 
   toggleModal = () => {
@@ -2229,7 +2286,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                 className={`c-button c-check-button
                 top-three-compare-btn
                 ${
-                  this.state.compare_top_three_plans
+                  this.props.compare_top_three_plans
                     ? "c-check-button--checked c-button--secondary"
                     : ""
                 } `}
@@ -3131,7 +3188,9 @@ class NewContent extends React.Component<homeProps, homeState> {
         pathname: `/compare-plans${q}`,
       });
     } else {
-      message.error("You need to select at least 2 plans to compare");
+      if (this.props.compare_top_three_plans !== true) {
+        message.error("You need to select at least 2 plans to compare");
+      }
       return;
     }
   };
