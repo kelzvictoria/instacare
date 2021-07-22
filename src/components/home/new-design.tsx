@@ -102,10 +102,17 @@ class NewContent extends React.Component<homeProps, homeState> {
     current: 1,
     minIndex: 0,
     maxIndex: 0,
+    compare_top_three_plans: false,
     //infiniteScrollData: this.props.infiniteScrollData,
     // this.props.match.path === "/hmos/*"
     //   ? this.props.plansByHMO.slice(0, pageSize)
     //   : this.props.planServices.slice(0, pageSize),
+  };
+
+  toggleCompareTopThree = () => {
+    this.setState({
+      compare_top_three_plans: !this.state.compare_top_three_plans,
+    });
   };
 
   toggleModal = () => {
@@ -2204,22 +2211,47 @@ class NewContent extends React.Component<homeProps, homeState> {
         </div>
 
         <div className="form-group home-view-btn">
-          <div className="col-md-12">
+          {/*<div className="col-md-12">
             <button
               className="btn btn-primary btn-large view-plans btn-demo"
               onClick={() => {
                 this.closeDesktopOnLoadModal();
-                // if (this.props.responses.phone_num) {
-                //  this.toggleModal();
-                // } else {
-                //   this.phoneNumError();
-                // }
               }}
             >
-              View Plans
+              Compare top 3 plans
             </button>
+          </div>*/}
+
+          <div className="plan-c-title-right">
+            <div className="display--none lg-display--block plan-c-compare-button">
+              <button
+                id="desktop"
+                className={`c-button c-check-button
+                top-three-compare-btn
+                ${
+                  this.state.compare_top_three_plans
+                    ? "c-check-button--checked c-button--secondary"
+                    : ""
+                } `}
+                onClick={this.toggleCompareTopThree}
+              >
+                <span className="c-check-button__checkbox top-three-compare-box">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 216 146"
+                    className="check-plan display--none"
+                  >
+                    <path d="M168.86 37.966l-11.08-11.08c-1.52-1.52-3.367-2.28-5.54-2.28-2.172 0-4.02.76-5.54 2.28L93.254 80.414 69.3 56.38c-1.52-1.522-3.367-2.282-5.54-2.282-2.172 0-4.02.76-5.54 2.28L47.14 67.46c-1.52 1.522-2.28 3.37-2.28 5.542 0 2.172.76 4.02 2.28 5.54l29.493 29.493 11.08 11.08c1.52 1.52 3.368 2.28 5.54 2.28 2.173 0 4.02-.76 5.54-2.28l11.082-11.08L168.86 49.05c1.52-1.52 2.283-3.37 2.283-5.54 0-2.174-.76-4.02-2.28-5.54z"></path>
+                  </svg>
+                </span>
+                Compare top 3 plans
+              </button>
+            </div>
           </div>
         </div>
+
         <div className="form-group mobile-view-cont-btn">
           <div className="col-md-12">
             <button
@@ -4648,6 +4680,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     className="c-field"
                                     type="text"
                                     name="user-address"
+                                    placeholder="E.g 7 Eric Moore street, Ikeja"
                                     onChange={(e) => this.handleAddressImput(e)}
                                     value={
                                       this.state.filter_params.user_address
@@ -5072,7 +5105,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           );
                                         }}
                                       >
-                                        <span className="c-check-button__checkbox">
+                                        <span className="c-check-button__checkbox top-three-compare-box">
                                           <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             width="16"
