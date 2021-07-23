@@ -2280,9 +2280,9 @@ class NewContent extends React.Component<homeProps, homeState> {
           </div>*/}
 
           <div className="plan-c-title-right">
-            <div className="display--none lg-display--block plan-c-compare-button">
+            <div className="lg-display--block plan-c-compare-button">
               <button
-                id="desktop"
+                id="desktop d"
                 className={`c-button c-check-button
                 top-three-compare-btn
                 ${

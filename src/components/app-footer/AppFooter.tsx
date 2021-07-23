@@ -222,13 +222,36 @@ class AppFooter extends Component<FooterProps, {}> {
     });
   };
 
+  componentDidMount() {
+    let sponsorsContainer = document.getElementById("box-mob-slider")!;
+    let sponsorsScrollWidth: number = sponsorsContainer.scrollWidth;
+    window.addEventListener("load", () => {
+      window.self.setInterval(() => {
+        console.log("in interval");
+        console.log(
+          'sponsorsContainer["scrollLeft"]',
+          sponsorsContainer["scrollLeft"]
+        );
+        console.log("sponsorsScrollWidth", sponsorsScrollWidth);
+
+        if (sponsorsContainer["scrollLeft"] !== sponsorsScrollWidth) {
+          console.log("not");
+
+          sponsorsContainer.scrollTo(sponsorsContainer.scrollLeft + 1, 0);
+        } else {
+          sponsorsContainer.scrollTo(sponsorsContainer.scrollLeft - 1, 0);
+        }
+      }, 15);
+    });
+  }
+
   render() {
     console.log("this.props.hmos", this.props.hmos);
     return (
       <div className="app_footer" style={{ position: "relative" }}>
         <section className="section grey_background similar_plans">
           <div className="container box-mob-slider">
-            <div className="slider-new ">
+            <div className="slider-new " id="box-mob-slider">
               {this.props.hmos.map((hmo, i) => (
                 <div className="box-new sponsor-box-new">
                   <ul className="similar_plan_ul">

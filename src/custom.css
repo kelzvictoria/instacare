@@ -6479,6 +6479,15 @@ div#desktop-on-page-load-modal.custom-dialog {
   width: 120px;
 }
 
+div#box-mob-slider::-webkit-scrollbar {
+  display: none;
+}
+
+div#box-mob-slider {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @media (max-width: 600px) {
   .dc-modal-title {
     font-size: 18px;
