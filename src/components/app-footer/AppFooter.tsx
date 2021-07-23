@@ -223,9 +223,31 @@ class AppFooter extends Component<FooterProps, {}> {
   };
 
   render() {
-    // console.log("this.props in footer", this.props);
+    console.log("this.props.hmos", this.props.hmos);
     return (
       <div className="app_footer" style={{ position: "relative" }}>
+        <section className="section grey_background similar_plans">
+          <div className="container box-mob-slider">
+            <div className="slider-new ">
+              {this.props.hmos.map((hmo, i) => (
+                <div className="box-new sponsor-box-new">
+                  <ul className="similar_plan_ul">
+                    <li>
+                      <div className="box_block sponsor-img">
+                        {/* <h2 className=""> */}
+                        <a href={`/hmos/id/${hmo.hmo_id}`}>
+                          {/* {hmo.name} */}
+                          <img src={hmo.logo} />
+                        </a>
+                        {/* </h2> */}
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
         <footer className={styles.appFooter}>
           <div className={styles.footer}>
             <div className={styles.h2Tag}>
