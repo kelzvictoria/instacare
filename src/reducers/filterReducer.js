@@ -1,20 +1,4 @@
-import { createReducer, createAction } from "redux-starter-kit";
-
 //import { state } from "../store/state";
-import {
-  FORMAT_PRICES,
-
-  GET_PROVIDER_INFO,
-
-  FILTER_PROVIDERS,
-  FILTER_PRESCRIPTIONS,
-  UPDATE_SELECTED_PROVIDERS,
-
-  FILTER_LOCATIONS,
-
-
-
-} from "../actions/types";
 
 const initialState = {
   plansByHMO: [],

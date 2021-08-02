@@ -1,23 +1,12 @@
-import { providers, providersInfo } from "../utils/homeUtils";
-
 import {
     GET_CLICKED_PLAN,
     IS_FETCHING_RECOMMENDED_PLANS,
     CHANGE_PAGE,
     UPDATE_PRICE_RANGE,
-    UPDATE_PREFS,
     CHANGE_PLAN_TYPE,
     UPDATE_TEXT_RESPONSE,
     RESET_RESPONSES,
-    UPDATE_PLANS,
-    UPDATE_SORT_ORDER,
     UPDATE_BUDGET,
-    UPDATE_BEST_PLAN,
-    UPDATE_CHEAPEST_PLAN,
-    UPDATE_MOSTEXPENSIVE_PLAN,
-
-    TOGGLE_FAMILY_PLAN_SELECTED,
-    UPDATE_COVERS,
     RESET_PLANS,
     TOGGLE_DESKTOP_MODAL,
     TOGGLE_MOBILE_MODAL,
@@ -56,8 +45,6 @@ import {
     UPDATE_NUM_OF_PEOPLE,
     RESET_NUM_OF_PEOPLE,
     GET_NUM_OF_PEOPLE,
-    SET_PLANS_TO_COMPARE_ON_DESKTOP,
-    SET_PLANS_TO_COMPARE_ON_MOBILE,
     SET_PLAN_ID,
     SET_HMO_ID,
     RESET_TYPE,
@@ -87,7 +74,8 @@ import {
     TOGGLE_FILTER_BOX,
 
     COMPARE_TOP_THREE_PLANS,
-    GET_TOP_THREE_PLANS
+
+    RESET_SELECTED_DOCTOR
 } from "../actions/types";
 
 const initialState = {
@@ -175,6 +163,7 @@ export default function (state = initialState, action) {
                 ...state,
                 is_filter_box_open: !state.is_filter_box_open
             }
+
         case TOGGLE_DATA_CAPTURE_MODAL:
             return {
                 ...state,
@@ -263,7 +252,7 @@ export default function (state = initialState, action) {
                     }
                 }
             }
-
+            break;
 
         case GET_CLICKED_PLAN:
             //state.clicked_plan = action.payload;
@@ -293,7 +282,7 @@ export default function (state = initialState, action) {
                 }
 
             }
-
+            break;
         case TOGGLE_DESKTOP_MODAL:
             return {
                 ...state,
@@ -388,7 +377,7 @@ export default function (state = initialState, action) {
                 }
 
             }
-
+            break;
         case UPDATE_SON_CHECKED:
             console.log("action.payload", action.payload);
             return {
@@ -554,7 +543,7 @@ export default function (state = initialState, action) {
                     dataSource: data_source
                 }
             }
-
+            break;
         case FILTER_DOCTORS:
             if (action.payload) {
                 let data_source = [];
@@ -564,7 +553,7 @@ export default function (state = initialState, action) {
                     dataSource: data_source
                 }
             }
-
+            break;
         case FILTER_BENEFITS:
             if (action.payload) {
                 let data_source = [];
@@ -575,7 +564,7 @@ export default function (state = initialState, action) {
                 }
             }
 
-
+            break
         case FILTER_PRESCRIPTIONS:
 
             if (action.payload) {
@@ -586,7 +575,7 @@ export default function (state = initialState, action) {
                     dataSource: data_source
                 }
             }
-
+            break
         case UPDATE_SELECTED_PROVIDERS:
             return {
                 ...state,
@@ -604,7 +593,7 @@ export default function (state = initialState, action) {
                 }
 
             }
-
+            break
         case RESET_SELECTED_PROVIDERS:
             return {
                 ...state,
@@ -654,6 +643,15 @@ export default function (state = initialState, action) {
                 responses: {
                     ...state.responses,
                     compare_top_three_plans: !state.responses.compare_top_three_plans
+                }
+            }
+
+        case RESET_SELECTED_DOCTOR:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    doctors: action.payload
                 }
             }
 

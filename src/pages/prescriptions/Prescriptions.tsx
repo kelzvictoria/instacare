@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { Form, AutoComplete } from "antd";
+import { AutoComplete } from "antd";
 
 import { connect } from "react-redux";
-import * as actions from "../../actions/types";
 import * as home_utils from "../../utils/homeUtils";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -64,7 +63,7 @@ class Prescriptions extends Component<PrescriptionsProps> {
 
   getPrescriptionInfo = (name) => {
     let info = home_utils.prescriptionsInfo.filter(
-      (prescription) => prescription.name == name
+      (prescription) => prescription.name === name
     );
 
     this.setState({
@@ -99,8 +98,8 @@ class Prescriptions extends Component<PrescriptionsProps> {
 
   toggleShowSelectedPrescriptions = () => {
     this.setState({
-      show_prescriptions_listing_div: !this.state
-        .show_prescriptions_listing_div,
+      show_prescriptions_listing_div:
+        !this.state.show_prescriptions_listing_div,
     });
   };
 
@@ -238,6 +237,7 @@ class Prescriptions extends Component<PrescriptionsProps> {
                     </div>
                     <a
                       className="c-button qa-edit-selections"
+                      href="#"
                       //href="#/find-provider/search/edit"
                       role="button"
                       onClick={this.toggleShowSelectedPrescriptions}
@@ -353,7 +353,7 @@ class Prescriptions extends Component<PrescriptionsProps> {
                   </ul>
                 )}
 
-                {this.state.selected_prescriptions_data.length == 0 && (
+                {this.state.selected_prescriptions_data.length === 0 && (
                   <p className="p-nil">
                     No prescriptions have been selected yet.
                   </p>

@@ -255,10 +255,10 @@ class Details extends Component<DetailsProps> {
   };
 
   toggleView = (key) => {
-    if (key == 1) {
+    if (key === 1) {
       this.notGettingProvidersView();
     }
-    if (key == 2) {
+    if (key === 2) {
       this.gettingProviders();
     }
   };
@@ -372,7 +372,7 @@ class Details extends Component<DetailsProps> {
             {notGettingProviders ? (
               <Row gutter={8}>
                 <Col md={8}>
-                  {this.details.covers == "1" ? (
+                  {this.details.covers === "1" ? (
                     <Card
                       style={{ width: "100%" }}
                       cover={
@@ -388,7 +388,7 @@ class Details extends Component<DetailsProps> {
                         // description="This Plan Covers One Person"
                       />
                     </Card>
-                  ) : this.details.covers == "2" ? (
+                  ) : this.details.covers === "2" ? (
                     <Card
                       style={{ width: "100%" }}
                       cover={
@@ -426,7 +426,7 @@ class Details extends Component<DetailsProps> {
                       </h3>
                       <p>Malaria Treatment</p>
                       <p>Typhoid Treatment</p>
-                      {this.AllServices[0] != 0 ? (
+                      {this.AllServices[0] !== 0 ? (
                         <p>
                           <span style={{ width: "80%" }}>
                             Accidents and Emergencies
@@ -462,7 +462,7 @@ class Details extends Component<DetailsProps> {
                       ) : (
                         console.log("no cancer care")
                       )}
-                      {this.AllServices[3] && this.AllServices[3] != null ? (
+                      {this.AllServices[3] && this.AllServices[3] !== null ? (
                         <p style={{ width: "80%" }}>
                           Chronic Disease Medication
                         </p>
@@ -476,7 +476,7 @@ class Details extends Component<DetailsProps> {
                       ) : (
                         console.log("consultations")
                       )}
-                      {this.AllServices[5] || this.AllServices[5] != 0 ? (
+                      {this.AllServices[5] || this.AllServices[5] !== 0 ? (
                         <p>Death Benefits</p>
                       ) : (
                         console.log("Death Benefits")
@@ -490,7 +490,7 @@ class Details extends Component<DetailsProps> {
                         console.log("No dental")
                       )}
                       {this.AllServices[7] &&
-                      typeof this.AllServices[7] != null ? (
+                      typeof this.AllServices[7] !== null ? (
                         this.covers.diagnostics.offerings[1] &&
                         this.covers.diagnostics.limit ? (
                           <p style={{ width: "80%" }}>

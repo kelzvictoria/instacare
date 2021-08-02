@@ -2063,7 +2063,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="single"
                   name="numOfPeople"
                   className="radio-group-num"
-                  // onChange={this.handleType}
+                  //uncommented onChange
+                  onChange={this.handleType}
                   checked={
                     this.props.responses.type[
                       this.props.responses.type.length - 1
@@ -2101,7 +2102,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "couple"
                   }
                   onClick={this.handleType}
-                  // onChange={this.handleType}
+                  //uncommented onChange
+                  onChange={this.handleType}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2131,7 +2133,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "fam-of-4"
                   }
                   onClick={this.handleType}
-                  //onChange={this.handleType}
+                  //uncommented onChange
+                  onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2166,7 +2169,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "corporate"
                   }
                   onClick={this.handleType}
-                  // onChange={this.handleType}
+                  //uncommented onChange
+                  onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2197,7 +2201,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "parents"
                   }
                   onClick={this.handleType}
-                  // onChange={this.handleType}
+                  //uncommented onChange
+                  onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -3022,7 +3027,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   handleTotalBenefitMinChange(val) {
-    console.log("val", val);
+    // console.log("val", val);
 
     this.setState({
       filter_params: {
@@ -3287,11 +3292,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   // }
 
   getRecommendedPlans = async () => {
-    // this.state.filter_params.plan_range_checked.map((range) =>
-    //   this.handlePlanRangeCheck(range)
-    // );
-
-    //  await this.clearFilters();
+    //  console.log("in here");
 
     const {
       plan_range_checked,
@@ -3325,6 +3326,7 @@ class NewContent extends React.Component<homeProps, homeState> {
           : [],
       doctors: this.props.responses.doctors,
       lat_lng: this.props.location,
+      providers: this.props.responses.providers,
       //lat_lng: this.state.filter_params.location,
     };
 
@@ -3338,6 +3340,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       total_benefit_range,
       doctors,
       lat_lng,
+      providers,
     } = filterBoxParams;
 
     if (
@@ -3349,7 +3352,8 @@ class NewContent extends React.Component<homeProps, homeState> {
       benefits.length > 0 ||
       total_benefit_range.length > 0 ||
       doctors.length > 0 ||
-      lat_lng
+      lat_lng ||
+      providers.length > 0
     ) {
       this.resetTypeAndRangeFilters();
       await this.props.getRecommendedPlans(filterBoxParams);
@@ -3383,8 +3387,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   clearFilters = async () => {
-    console.log("clear");
-
+    // console.log("clear");
+    this.props.resetSelectedDoctors();
     this.props.resetSelectedProviders();
 
     this.setState({
@@ -3410,7 +3414,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetInfiniteScrollData();
     this.props.is_filter_box_open && this.toggleShowFilter();
     await this.props.getServices();
-    console.log("this.props.plans", this.props.plans);
+    // console.log("this.props.plans", this.props.plans);
 
     this.props.match.path === "/hmos/*"
       ? await this.props.updateInfiniteScrollData(
@@ -3436,7 +3440,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   goToDoctors = () => {
-    console.log("this.props.doctors", this.props.doctors);
+    //console.log("this.props.doctors", this.props.doctors);
 
     if (this.props.doctors.length === 0) {
       this.props.getDoctors();
@@ -3493,7 +3497,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   handlePageChange = async (page) => {
-    console.log("page", page);
+    // console.log("page", page);
 
     let plansByHMO = this.props.plansByHMO;
     let allPlans =
@@ -3502,11 +3506,11 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
-    console.log("apiData", apiData);
+    //console.log("apiData", apiData);
 
     let total_num_of_pages = apiData.length / pageSize;
 
-    console.log("total_num_of_pages", total_num_of_pages);
+    //console.log("total_num_of_pages", total_num_of_pages);
 
     if (page < total_num_of_pages) {
       page = page + 1;
@@ -3525,8 +3529,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     let start_index = (page - 1) * pageSize;
     let end_index = pageSize * page;
 
-    console.log("start_index", start_index);
-    console.log("end_index", end_index);
+    // console.log("start_index", start_index);
+    // console.log("end_index", end_index);
 
     this.setState({
       current: page,
@@ -3889,7 +3893,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                         </option> */}
                         {home_utils.plan_types.map((plan_type) => {
                           return (
-                            <option value={plan_type.id} id={plan_type.id}>
+                            <option
+                              key={plan_type.id}
+                              value={plan_type.id}
+                              id={plan_type.id}
+                            >
                               {plan_type.name}
                             </option>
                           );
@@ -3917,7 +3925,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       >
                         {home_utils.plan_range.map((plan_range) => {
                           return (
-                            <option value={plan_range.id}>
+                            <option key={plan_range.id} value={plan_range.id}>
                               {plan_range.name}
                             </option>
                           );
@@ -4527,7 +4535,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                             >
                               <option value="">Select an HMO</option>
                               {this.props.hmos.map((hmo) => (
-                                <option value={hmo.hmo_id}>{hmo.name}</option>
+                                <option key={hmo.hmo_id} value={hmo.hmo_id}>
+                                  {hmo.name}
+                                </option>
                               ))}
                             </select>
                           </div>
@@ -5065,7 +5075,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       (plan, i) => (
                         // i >= minIndex &&
                         //  i < maxIndex && (
-                        <li className="margin-bottom--4">
+                        <li key={i} className="margin-bottom--4">
                           <section className="c-detail-section margin-bottom--4">
                             <article
                               className={`plan-card c-base c-fill-white c-box-shadow c--health margin-bottom--4 ${
@@ -5106,7 +5116,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             plan.plan_id.category.map(
                                               (cat, i) => {
                                                 return (
-                                                  <span className="">
+                                                  <span key={i} className="">
                                                     {" "}
                                                     {cat.name}
                                                     {plan.plan_id.category
@@ -5887,14 +5897,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                                                     (prvdr) =>
                                                       prvdr.provider_name
                                                   );
-                                                console.log(
+                                                /* console.log(
                                                   "provider.provider_name",
                                                   provider.provider_name
                                                 );
                                                 console.log(
                                                   "providersArr",
                                                   providersArr
-                                                );
+                                                ); */
 
                                                 return (
                                                   <li className="c-status-list__item font-size--small">

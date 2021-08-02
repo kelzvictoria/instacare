@@ -175,40 +175,40 @@ class Compare extends Component<QuizProps> {
         data: { key: "adult", value },
       });
       if (
-        value == 1 &&
-        this.props.responses.children == 0 &&
-        this.props.responses.infants == 0
+        value === 1 &&
+        this.props.responses.children === 0 &&
+        this.props.responses.infants === 0
       ) {
         this.props.dispatch({
           type: actions.CHANGE_PLAN_TYPE,
           data: "individual",
         });
       } else if (
-        value == 0 &&
-        this.props.responses.children == 1 &&
-        this.props.responses.infants == 0
+        value === 0 &&
+        this.props.responses.children === 1 &&
+        this.props.responses.infants === 0
       ) {
         this.props.dispatch({
           type: actions.CHANGE_PLAN_TYPE,
           data: "individual",
         });
       } else if (
-        value == 0 &&
-        this.props.responses.children == 0 &&
-        this.props.responses.infants == 1
+        value === 0 &&
+        this.props.responses.children === 0 &&
+        this.props.responses.infants === 1
       ) {
         this.props.dispatch({
           type: actions.CHANGE_PLAN_TYPE,
           data: "individual",
         });
-      } else if (value == 0 && this.props.responses.children > 1) {
+      } else if (value === 0 && this.props.responses.children > 1) {
         this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value == 0 && this.props.responses.infants > 1) {
+      } else if (value === 0 && this.props.responses.infants > 1) {
         this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
       } else if (
-        value == 2 &&
-        this.props.responses.children == 0 &&
-        this.props.responses.infants == 0
+        value === 2 &&
+        this.props.responses.children === 0 &&
+        this.props.responses.infants === 0
       ) {
         this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "couple" });
       } else if (value > 2) {
@@ -231,21 +231,21 @@ class Compare extends Component<QuizProps> {
         data: { key: "children", value },
       });
       if (
-        value == 1 &&
-        this.props.responses.adult == 0 &&
-        this.props.responses.infants == 0
+        value === 1 &&
+        this.props.responses.adult === 0 &&
+        this.props.responses.infants === 0
       ) {
         this.props.dispatch({
           type: actions.CHANGE_PLAN_TYPE,
           data: "individual",
         });
-      } else if (value >= 1 && this.props.responses.adult != 0) {
+      } else if (value >= 1 && this.props.responses.adult !== 0) {
         this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value >= 1 && this.props.responses.infants != 0) {
+      } else if (value >= 1 && this.props.responses.infants !== 0) {
         this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value == 0 && this.props.responses.adult == 2) {
+      } else if (value === 0 && this.props.responses.adult === 2) {
         this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "couple" });
-      } else if (value == 0 && this.props.responses.adult == 1) {
+      } else if (value === 0 && this.props.responses.adult === 1) {
         this.props.dispatch({
           type: actions.CHANGE_PLAN_TYPE,
           data: "individual",
@@ -264,14 +264,14 @@ class Compare extends Component<QuizProps> {
         type: actions.UPDATE_TEXT_RESPONSE,
         data: { key: "infants", value },
       });
-      if (value == 1 && this.props.responses.adult == 0) {
+      if (value === 1 && this.props.responses.adult === 0) {
         this.props.dispatch({
           type: actions.CHANGE_PLAN_TYPE,
           data: "individual",
         });
-      } else if (value >= 1 && this.props.responses.adult != 0) {
+      } else if (value >= 1 && this.props.responses.adult !== 0) {
         this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
-      } else if (value == 0 && this.props.responses.adult == 2) {
+      } else if (value === 0 && this.props.responses.adult === 2) {
         this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "couple" });
       } else if (value >= 1 && this.props.responses.children >= 1) {
         this.props.dispatch({ type: actions.CHANGE_PLAN_TYPE, data: "family" });
@@ -482,7 +482,7 @@ class Compare extends Component<QuizProps> {
           </div>
           {/*<h3>Filter Plans</h3>*/}
           <div id={styles.filterBtn}>
-            {this.state.toggleBar == true ? (
+            {this.state.toggleBar === true ? (
               <Button type="ghost" onClick={this.toggle}>
                 Hide filters
               </Button>
@@ -612,7 +612,7 @@ class Compare extends Component<QuizProps> {
             </div>
           </div>
 
-          {this.state.toggleBar == true ? (
+          {this.state.toggleBar === true ? (
             <div className={styles.smallScreenSidebar}>
               <div className={styles.optionsGroup}>
                 <p className={styles.sideBarHeadings}>No of People</p>
@@ -982,7 +982,7 @@ class Compare extends Component<QuizProps> {
                                     </Button>
                                 </div>
                       </Col>*/}
-            {this.props.fetching == true ? (
+            {this.props.fetching === true ? (
               <Col xs={24} className={styles.example}>
                 <Spin />
               </Col>

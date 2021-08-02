@@ -80,7 +80,8 @@ import {
     TOGGLE_FILTER_BOX,
 
     COMPARE_TOP_THREE_PLANS,
-    GET_TOP_THREE_PLANS
+    GET_TOP_THREE_PLANS,
+    RESET_SELECTED_DOCTOR,
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
 
@@ -437,6 +438,13 @@ export const resetType = () => (dispatch, getState) => {
 export const resetRange = () => (dispatch, getState) => {
     dispatch({
         type: RESET_RANGE,
+        payload: []
+    })
+}
+
+export const resetSelectedDoctors = () => (dispatch, getState) => {
+    dispatch({
+        type: RESET_SELECTED_DOCTOR,
         payload: []
     })
 }

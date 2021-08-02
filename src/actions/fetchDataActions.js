@@ -24,10 +24,6 @@ import {
     FILTER_BY_PLAN_TYPE,
 
     FILTER_BY_TOTAL_BENEFIT_LIMIT,
-    FILTER_BY_PROXIMITY,
-    FILTER_BY_DOCTOR,
-    FILTER_BY_BENEFITS,
-
     GET_PLAN,
     GET_SIMILAR_PLANS,
     GET_HMO,
@@ -40,11 +36,8 @@ import {
     GET_SUB_SPECIALTIES,
     SET_LOCATION,
     HANDLE_GEOCODING,
-    HANDLE_REVERSE_GEOCODING,
-
-    GET_TOP_THREE_PLANS
+    HANDLE_REVERSE_GEOCODING
 } from "../actions/types";
-import { tokenConfig } from "../actions/authActions";
 import { returnErrors } from "../actions/errorActions"
 
 import { stripNonNumeric, CAN_LOG } from "../utils/homeUtils"
@@ -91,7 +84,7 @@ export const getPlans = () => async (dispatch, getState) => {
         })
 }
 
-export const getPlan = (plan) => (dispatch, getState) => {
+export const getPlan = (plan) => (dispatch) => {
     dispatch({
         type: GET_PLAN,
         payload: plan
@@ -147,9 +140,7 @@ export const getSimilarPlans = (plan) => async (dispatch, getState) => {
                 payload: similar_plans
             })
         }
-
     }
-
 }
 
 export const getPlanByID = (planID) => async (dispatch, getState) => {
@@ -162,7 +153,7 @@ export const getPlanByID = (planID) => async (dispatch, getState) => {
     let services = getState().fetchData.services;
     CAN_LOG && console.log("planID", planID);
     let plansByID = services.filter(plan => {
-        return plan.service_id == planID
+        return plan.service_id === planID
     });
 
     CAN_LOG && console.log("plansByID", plansByID);
@@ -174,7 +165,7 @@ export const getPlanByID = (planID) => async (dispatch, getState) => {
 }
 
 export const getHMOs = () => async (dispatch, getState) => {
-    console.log("getHMOs");
+    //  console.log("getHMOs");
     await dispatch(getProviders());
     dispatch({
         type: IS_FETCHING_HMOS,
@@ -187,24 +178,23 @@ export const getHMOs = () => async (dispatch, getState) => {
         .then((res) => {
             let hmos = [];
             let providers = getState().fetchData.providers;
-            //  console.log("providers", providers);
+            // console.log("providers", providers);
             if (res.data.length > 0) {
                 hmos = res.data.map(obj => obj.data);
-                console.log("providers.length", providers.length);
+                //console.log("providers.length", providers.length);
                 if (providers.length > 0) {
                     for (let i = 0; i < hmos.length; i++) {
                         let hmoID = hmos[i]["hmo_id"]
-                        //console.log("hmoID", hmoID);
                         // console.log("providers", providers);
 
                         let hmoProviders =
                             //providers.filter(provider => provider.hmo_id === hmoID);
                             providers.filter(provider => {
-                                //console.log("provider.hmo_id", provider.hmo_id);
-                                return provider.hmo_id.includes(hmoID)
+                                // console.log("provider", provider);
+                                return provider.hmo_id && provider.hmo_id.includes(hmoID)
                             });
 
-                        // console.log("hmoProviders", hmoProviders);
+                        //  console.log("hmoID", hmoID, "hmoProviders", hmoProviders);
                         if (hmoProviders.length > 0) {
                             hmos[i]["providers"] = hmoProviders;
                         }
@@ -223,22 +213,23 @@ export const getHMOs = () => async (dispatch, getState) => {
         })
 }
 
-export const getProviders = () => (dispatch, getState) => {
+export const getProviders = () => async (dispatch) => {
     dispatch(setIsFetchingProviders());
-    axios
+    await axios
         .get(`${API_URL}/api/providers`)
         .then((res) => {
             let providers = [];
             //console.log("res", res);
             if (res.data.length > 0) {
                 providers = res.data.map(obj => obj.data)
+                dispatch({
+                    type: GET_PROVIDERS,
+                    payload: providers
+                })
                 //  console.log("providers", providers);
             }
 
-            dispatch({
-                type: GET_PROVIDERS,
-                payload: providers
-            })
+
         }).catch((err) => {
             console.log("err", err);
             err.response && dispatch(returnErrors(err.response.data, err.response.status))
@@ -253,10 +244,6 @@ export const getServices = () => async (dispatch, getState) => {
     dispatch(getDoctors())
 
     let services = [];
-    let budget = getState().quiz.responses.budget;
-
-    let min = budget[0];
-    let max = budget[1];
 
     let hmos = getState().fetchData.hmos;
     let plans = getState().fetchData.plans;
@@ -301,6 +288,7 @@ export const getServices = () => async (dispatch, getState) => {
 }
 
 export const getRecommendedPlans = (params) => async (dispatch, getState) => {
+    // console.log("in here for fetchData");
     //console.log("params", params);
     if (params) {
 
@@ -326,6 +314,8 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
 
     let lat_lng = params.lat_lng ? params.lat_lng : [];
 
+    let providers = params.providers ? params.providers : [];
+
     let allBenefits = getState().fetchData.benefits;
 
     let min = stripNonNumeric(budget[0]);
@@ -339,49 +329,54 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
 
     let plansByPlanType = await groupPlansByType(services, planType);
 
-    CAN_LOG &&
-        console.log("plansByPlanType", plansByPlanType);
+    // CAN_LOG &&
+    planType.length && console.log("plansByPlanType", plansByPlanType);
 
     let recommended_plans;
     let packages = planType.length > 0 ? plansByPlanType : services;
 
 
-    if (hmoID && budget.length == 0) {
-        CAN_LOG && console.log("hmoID && budget.length == 0");
+    if (hmoID && budget.length === 0) {
+        // CAN_LOG && 
+        console.log("hmoID && budget.length === 0");
         recommended_plans = packages.filter(pckage => {
             return pckage.hmo_id.hmo_id === hmoID
         })
     }
 
     if (!hmoID && budget.length > 0) {
-        CAN_LOG && console.log("!hmoID && budget.length > 0");
+        //  CAN_LOG && 
+        console.log("!hmoID && budget.length > 0");
         recommended_plans = packages.filter(pckage => {
             return (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
         })
     }
 
     if (hmoID && budget.length > 0) {
-        CAN_LOG && console.log("hmoID && budget.length > 0");
+        // CAN_LOG && 
+        console.log("hmoID && budget.length > 0");
         recommended_plans = packages.filter(pckage => {
             return pckage.hmo_id.hmo_id === hmoID && (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
         });
     }
 
-    if (planType.length > 0 && !hmoID && budget.length == 0) {
-        CAN_LOG && console.log("planType.length > 0 && !hmoID && budget.length == 0");
+    if (planType.length > 0 && !hmoID && budget.length === 0) {
+        //CAN_LOG && 
+        console.log("planType.length > 0 && !hmoID && budget.length === 0");
         recommended_plans = plansByPlanType
     }
 
     //console.log("planRange", planRange);
 
     if (planRange.length > 0) {
-        console.log("recommended_plans", recommended_plans);
+        console.log("planRange.length > 0");
+        // console.log("recommended_plans", recommended_plans);
         recommended_plans = await groupPlansByRange(
             recommended_plans ? recommended_plans : packages, planRange);
     }
 
     if (benefits.length > 0) {
-        console.log("recommended_plans", recommended_plans);
+        console.log("benefits.length > 0");
         recommended_plans = groupPlansByBenefit(
             recommended_plans ? recommended_plans : packages,
 
@@ -392,6 +387,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     }
 
     if (total_benefit_range.length > 0) {
+        // console.log("total_benefit_range.length > 0");
         let data = recommended_plans ? recommended_plans : packages;
         recommended_plans = data.filter(d => {
             let totalBL = stripNonNumeric(d.in_patient_limit) + stripNonNumeric(d.out_patient_limit)
@@ -400,27 +396,23 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     }
 
     if (doctors.length > 0) {
+        console.log("doctors.length > 0");
         let data = recommended_plans ? recommended_plans : packages;
-        //console.log("doctors", doctors);
-        //console.log("data", data);
-
         let doctors_hosp = doctors.map(d => d.provider_id.provider_name);
-        console.log("doctors_hosp", doctors_hosp);
-
         recommended_plans = data.filter(r => {
-            console.log("r.hmo_id.providers.map(p => p.provider_name)",
-                r.hmo_id.providers.map(p => p.provider_name));
             return doctors_hosp.some(d => {
-                console.log("d", d);
+                //  console.log("doctors_hosp", doctors_hosp);
+                //  console.log("r.hmo_id.providers", r.hmo_id.providers);
                 return r.hmo_id.providers.map(p => p.provider_name).includes(d)
             })
+        });
 
-        })
-        // doctors_hosp.includes(r.hmo_id.providers.map(p => p.provider_name)));
-
+        console.log("recommended_plans by doctor", recommended_plans);
     }
 
-    if (lat_lng) {
+    if (lat_lng.length > 0) {
+        //  console.log("lat_lng");
+        //  console.log("lat_lng", lat_lng);
         let data = recommended_plans ? recommended_plans : packages;
         recommended_plans = (filterByProximity(lat_lng, data))
         /* let lat = lat_lng[0];
@@ -437,12 +429,30 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
                 }
             })*/
 
-        console.log("recommended_plans", recommended_plans);
+    }
+
+    if (providers.length > 0) {
+        console.log("providers.length > 0");
+        // let data = recommended_plans ? recommended_plans : packages;
+        // recommended_plans = data.filter(plan => {
+        //     let provider_names = providers.map(
+        //      (selected_prvdr) => selected_prvdr.provider_name
+        //     );
+
+        //     return provider_names.includes
+        // })
+        let data = recommended_plans ? recommended_plans : packages;
+        let provider_names = providers.map(p => p.provider_name);
+        recommended_plans = data.filter(r => {
+            return provider_names.some(d => {
+                return r.hmo_id.providers.map(p => p.provider_name).includes(d)
+            })
+        })
     }
 
     CAN_LOG && console.log("packages", packages);
     //CAN_LOG && 
-    console.log("recommended_plans", recommended_plans);
+    // console.log("final recommended_plans", recommended_plans);
     dispatch({
         type: GET_RECOMMENDED_PLANS,
         payload: recommended_plans
@@ -458,7 +468,7 @@ export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
             type: IS_FETCHING_PLANS_BY_HMO,
             data: true
         });
-        let HMO = getState().fetchData.hmos.filter(hmo => hmo.hmo_id == hmoId)
+        let HMO = getState().fetchData.hmos.filter(hmo => hmo.hmo_id === hmoId)
         // console.log("plansByHMO", plansByHMO);
 
         await dispatch({
@@ -477,7 +487,7 @@ export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
     }
 }
 
-export const getProviderInfo = (provider) => (dispatch, getState) => {
+export const getProviderInfo = (provider) => (dispatch) => {
     dispatch({
         type: GET_PROVIDER_INFO,
         data: provider
@@ -503,8 +513,7 @@ export const getCheapestPlan = () => (dispatch, getState) => {
                 if (tmp > highest) highest = tmp;
             }
         }
-        console.log("most expensive plan", highest, "cheapest plan", lowest);
-
+        // console.log("most expensive plan", highest, "cheapest plan", lowest);
 
         dispatch({
             type: GET_CHEAPEST_PLAN,
@@ -514,7 +523,7 @@ export const getCheapestPlan = () => (dispatch, getState) => {
 
 }
 
-export const getCheapestPlanByHMO = (plan) => (dispatch, getState) => {
+export const getCheapestPlanByHMO = (plan) => (dispatch) => {
     dispatch({
         type: GET_CHEAPEST_PLAN_BY_HMO,
         data: plan
@@ -608,39 +617,39 @@ export const filterByPlanRange = () => async (dispatch, getState) => {
     })
 }
 
-export const setIsFetchingPlansByHMO = () => (dispatch, getState) => {
+export const setIsFetchingPlansByHMO = () => () => {
 
 }
 
-export const setIsFetchingPlans = () => (dispatch, getState) => {
+export const setIsFetchingPlans = () => (dispatch) => {
     dispatch({
         type: IS_FETCHING_PLANS,
         payload: true
     })
 }
 
-export const setIsFetchingHMOs = () => (dispatch, getState) => {
+export const setIsFetchingHMOs = () => (dispatch) => {
     dispatch({
         type: IS_FETCHING_HMOS,
         payload: true
     })
 }
 
-export const setIsFetchingServices = () => (dispatch, getState) => {
+export const setIsFetchingServices = () => (dispatch) => {
     dispatch({
         type: IS_FETCHING_SERVICES,
         payload: true
     })
 }
 
-export const setIsFetchingProviders = () => (dispatch, getState) => {
+export const setIsFetchingProviders = () => (dispatch) => {
     dispatch({
         type: IS_FETCHING_PROVIDERS,
         payload: true
     })
 }
 
-export const setIsFetchingRecPlans = () => (dispatch, getState) => {
+export const setIsFetchingRecPlans = () => (dispatch) => {
     dispatch({
         type: IS_FETCHING_RECOMMENDED_PLANS,
         payload: true
@@ -648,14 +657,14 @@ export const setIsFetchingRecPlans = () => (dispatch, getState) => {
 
 }
 
-export const setIsFilteringByBudget = () => (dispatch, getState) => {
+export const setIsFilteringByBudget = () => (dispatch) => {
     dispatch({
         type: IS_FILTERING_BY_BUDGET,
         payload: true
     })
 }
 
-export const togglePlanProviders = () => (dispatch, getState) => {
+export const togglePlanProviders = () => (dispatch) => {
     dispatch({
         type: TOGGLE_PLAN_PROVIDERS
     })
@@ -676,13 +685,13 @@ const groupPlansByType = (packages, type) => {
         for (let i = 0; i < packages.length; i++) {
             let categoryArr = packages[i].plan_id.category;
 
-            let individualPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "individual" || cat.name.toLowerCase() == "individuals").length > 0;
-            let groupPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "group").length > 0;
-            let corporatePlans = categoryArr.filter(cat => cat.name.toLowerCase() == "corporate").length > 0;
-            let familyPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "family").length > 0;
-            let couplePlans = categoryArr.filter(cat => cat.name.toLowerCase() == "couple").length > 0;
-            let internationalPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "international").length > 0;
-            let seniorCitizenPlans = categoryArr.filter(cat => cat.name.toLowerCase() == "senior citizen").length > 0;
+            let individualPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "individual" || cat.name.toLowerCase() === "individuals").length > 0;
+            let groupPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "group").length > 0;
+            let corporatePlans = categoryArr.filter(cat => cat.name.toLowerCase() === "corporate").length > 0;
+            let familyPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "family").length > 0;
+            let couplePlans = categoryArr.filter(cat => cat.name.toLowerCase() === "couple").length > 0;
+            let internationalPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "international").length > 0;
+            let seniorCitizenPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "senior citizen").length > 0;
 
             if (individualPlans) {
                 individual_plans.push(packages[i])
@@ -729,7 +738,7 @@ const groupPlansByType = (packages, type) => {
 
     let filteredPackagesByPlanType = [];
 
-    if (typeof type == "object") {
+    if (typeof type === "object") {
         for (let i = 0; i < type.length; i++) {
             // CAN_LOG &&
             //  console.log("type[i]", type[i]);
@@ -886,6 +895,7 @@ const groupPlansByRange = (packages, range) => {
 }
 
 export const updateInfiniteScrollData = (plans, hasMore, start_index, end_index) => async (dispatch, getState) => {
+    console.log("in here");
     let pageSize = await getState().fetchData.pageSize;
     let infiniteScrollData = await plans.slice(0, pageSize);
     let prevInfiniteScrollData = await getState().fetchData.infiniteScrollData;
@@ -908,13 +918,13 @@ export const updateInfiniteScrollData = (plans, hasMore, start_index, end_index)
     }
 }
 
-export const resetInfiniteScrollData = () => (dispatch, getState) => {
+export const resetInfiniteScrollData = () => (dispatch) => {
     dispatch({
         type: RESET_INFINITE_SCROLL_DATA
     })
 }
 
-export const setInfiniteScrollHasMore = () => (dispatch, getState) => {
+export const setInfiniteScrollHasMore = () => (dispatch) => {
     dispatch({
         type: SET_IS_INFINNITE_SCROLL_HAS_MORE
     })
@@ -1197,7 +1207,7 @@ export const filterByTotalBenefitLimit = (limit) => (dispatch, getState) => {
     })
 }
 
-export const getSubSpecialties = () => async (dispatch, getState) => {
+export const getSubSpecialties = () => async (dispatch) => {
     await axios.get(
         `${API_URL}/api/sub_specialties`
     ).then(res => {
@@ -1256,11 +1266,11 @@ export const getDoctors = () => async (dispatch, getState) => {
     })
 }
 
-export const filterByDoctor = async () => (dispatch, getState) => {
+export const filterByDoctor = async () => () => {
 
 }
 
-export const setLocation = (loc) => async (dispatch, getState) => {
+export const setLocation = (loc) => async (dispatch) => {
     dispatch({
         type: SET_LOCATION,
         payload: loc
@@ -1287,7 +1297,7 @@ export const handleReverseGeocoding = () => async (dispatch, getState) => {
     })
 }
 
-export const handleGeocoding = (address) => async (dispatch, getState) => {
+export const handleGeocoding = (address) => async (dispatch) => {
     let address_enc = encodeURIComponent(address);
     let loc;
     await axios
@@ -1312,10 +1322,12 @@ export const handleGeocoding = (address) => async (dispatch, getState) => {
 export const filterByProximity = (user_loc, plans) => {
     let nearbyPlans = [];
     let p = 0.017453292519943295;    // Math.PI / 180
-    let r = 20;
+    let r = 10; //in km
     let d;
     let c = Math.cos;
     for (let i = 0; i < plans.length; i++) {
+        // console.log("plans.length", plans.length);
+        // console.log("plans[i].hmo_id.providers.length", plans[i].hmo_id.providers.length);
         for (let j = 0; j < plans[i].hmo_id.providers.length; j++) {
             if (plans[i].hmo_id.providers[j].gps) {
 
@@ -1333,16 +1345,24 @@ export const filterByProximity = (user_loc, plans) => {
                     (1 - c((lng2 - lng1) * p)) / 2;
 
                 d = 12742 * Math.asin(Math.sqrt(a)); // 2 * R = 12742; R = 6371 km
-
-                console.log("distance in km", d);
+                //  console.log("plans[i].hmo_id.name",
+                // plans[i].hmo_id.name,
+                //     "distance in km",
+                //     d);
 
                 if (d < r) {
-                    nearbyPlans.push(plans[i]);
+                    let plans_in_nearby_plans_arr = nearbyPlans.map(n => n.service_id);
+                    // console.log("plans_in_nearby_plans_arr", plans_in_nearby_plans_arr);
+                    if (!plans_in_nearby_plans_arr.includes(plans[i].service_id)) {
+                        // console.log("plans_in_nearby_plans_arr.includes(plans[i].service_id)", plans_in_nearby_plans_arr.includes(plans[i].service_id));
+                        nearbyPlans.push(plans[i]);
+                    }
+
                 }
             }
 
         }
     }
-    console.log("nearbyPlans", nearbyPlans);
+    // console.log("nearbyPlans", nearbyPlans);
     return nearbyPlans;
 }

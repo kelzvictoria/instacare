@@ -44,13 +44,13 @@ class Doctors extends Component<DoctorsProps> {
       // console.log("item", item);
 
       const _item = item.toLowerCase();
-      console.log("_item", _item);
+      // console.log("_item", _item);
 
       const itemArr = item.split(" ").map((text) => text.toLowerCase());
       //console.log("itemArr", itemArr);
 
       for (let i = 0; i < itemArr.length; i++) {
-        console.log("itemArr[i]", itemArr[i]);
+        //console.log("itemArr[i]", itemArr[i]);
 
         if (itemArr[i].startsWith(searchText.toLowerCase())) {
           tempDoctors.includes(item) === false && tempDoctors.push(item);
@@ -68,7 +68,7 @@ class Doctors extends Component<DoctorsProps> {
 
     this.props.updateTextResponse({ key: "doctor", value });
 
-    console.log(this.props.responses.state);
+    // console.log(this.props.responses.state);
   };
 
   getDoctorInfo = (name) => {
@@ -349,7 +349,10 @@ class Doctors extends Component<DoctorsProps> {
                     {this.state.selected_doctors_data.map(
                       (selected_doctor, i) => {
                         return (
-                          <li className="c-coverable-result box-shadow margin-top--1 margin-bottom--2">
+                          <li
+                            key={i}
+                            className="c-coverable-result box-shadow margin-top--1 margin-bottom--2"
+                          >
                             {/* c-coverable-result--selected */}
                             <div className="display--flex justify-content--between align-items--start">
                               <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">

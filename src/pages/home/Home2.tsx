@@ -80,6 +80,7 @@ import {
   toggleDataCaptureModal,
   toggleFilterBox,
   compareTopThreePlans,
+  resetSelectedDoctors,
 } from "../../actions/userInputActions";
 
 import {
@@ -386,4 +387,5 @@ export default connect(mapProps, {
   handleReverseGeocoding,
   compareTopThreePlans,
   resetPlansToCompare,
+  resetSelectedDoctors,
 })(Home);

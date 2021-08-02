@@ -24,8 +24,6 @@ import {
 import "../../components/home/new-design.css";
 import "./compare.css";
 
-import starfilled from "../../svgs/starfilled.svg";
-import star from "../../svgs/star.svg";
 import { stripNonNumeric, CAN_LOG } from "../../utils/homeUtils";
 
 import check from "../../svgs/check.svg";
@@ -119,15 +117,15 @@ class ComparePlans extends Component<ComparisonProps> {
   };
 
   handleMobileNav = (btnType) => {
-    if (btnType == "prev") {
+    if (btnType === "prev") {
       this.onPrevBtnClick();
     } else {
       this.onNextBtnClick();
     }
 
-    if (this.state.current_page == 1) {
+    if (this.state.current_page === 1) {
       this.showPrevBtn();
-    } else if (this.state.current_page == this.state.num_of_pages) {
+    } else if (this.state.current_page === this.state.num_of_pages) {
       this.showNextBtn();
     }
   };
@@ -212,13 +210,13 @@ class ComparePlans extends Component<ComparisonProps> {
 
     let isPlanChecked = indexes.indexOf(index);
 
-    if (isPlanChecked == -1 && indexes.length > 0) {
+    if (isPlanChecked === -1 && indexes.length > 0) {
       // this.showCompareButton();
     }
     console.log("isPlanChecked", isPlanChecked);
 
     if (isPlanChecked > -1) {
-      if (indexes.length == 1) {
+      if (indexes.length === 1) {
         // console.log("in?");
 
         message.error("Add more plans to compare");
@@ -515,7 +513,7 @@ class ComparePlans extends Component<ComparisonProps> {
                         return (
                           <button
                             className={`c-button c-button--transparent padding-x--0 ${
-                              i == this.state.current_page - 1
+                              i === this.state.current_page - 1
                                 ? "color--muted-inverse"
                                 : "color--white"
                             }`}
@@ -566,21 +564,21 @@ class ComparePlans extends Component<ComparisonProps> {
                       <div className="md-display--none print-display--none">
                         <header className="c-plan-title">
                           <div className="c-plan-title__issuer font-weight--bold">
-                            {this.state.current_page == 1
+                            {this.state.current_page === 1
                               ? first.hmo_id.name
-                              : this.state.current_page == 2
+                              : this.state.current_page === 2
                               ? second.hmo_id.name
-                              : this.state.current_page == 3
+                              : this.state.current_page === 3
                               ? third.hmo_id.name
                               : ""}
                           </div>
                           <h2 className="c-plan-title__name font-weight--normal margin-y--1">
                             <a href={`details/serviceID/`} target="_self">
-                              {this.state.current_page == 1
+                              {this.state.current_page === 1
                                 ? first.name
-                                : this.state.current_page == 2
+                                : this.state.current_page === 2
                                 ? second.name
-                                : this.state.current_page == 3
+                                : this.state.current_page === 3
                                 ? third.name
                                 : ""}
                             </a>
@@ -591,11 +589,11 @@ class ComparePlans extends Component<ComparisonProps> {
                           type="button"
                           onClick={() => {
                             this.getClickedPlan(
-                              this.state.current_page == 1
+                              this.state.current_page === 1
                                 ? first.service_id
-                                : this.state.current_page == 2
+                                : this.state.current_page === 2
                                 ? second.service_id
-                                : this.state.current_page == 3
+                                : this.state.current_page === 3
                                 ? third.service_id
                                 : "",
                               "buy"
@@ -616,7 +614,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <th scope="row">Price</th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -627,7 +625,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -639,7 +637,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -653,7 +651,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <th scope="row">HMO</th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -664,7 +662,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -676,7 +674,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -690,7 +688,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <th scope="row">Plan metal level</th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -701,7 +699,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -713,7 +711,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -726,7 +724,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <th scope="row">Plan type</th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -755,7 +753,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -787,7 +785,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -823,7 +821,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -840,7 +838,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -858,7 +856,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -878,7 +876,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <th scope="row">Drugs covered/not covered</th>
                                 <td
                                   className={
-                                    this.state.current_page == 1
+                                    this.state.current_page === 1
                                       ? ""
                                       : "display--none"
                                   }
@@ -895,7 +893,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   undefined && (
                                   <td
                                     className={
-                                      this.state.current_page == 2
+                                      this.state.current_page === 2
                                         ? ""
                                         : "display--none"
                                     }
@@ -913,7 +911,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   undefined && (
                                   <td
                                     className={
-                                      this.state.current_page == 3
+                                      this.state.current_page === 3
                                         ? ""
                                         : "display--none"
                                     }
@@ -970,7 +968,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -983,7 +981,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -999,7 +997,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1020,7 +1018,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1035,7 +1033,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1051,7 +1049,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1072,7 +1070,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1085,7 +1083,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1099,7 +1097,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1118,7 +1116,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1131,7 +1129,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1147,7 +1145,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1169,7 +1167,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1184,7 +1182,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1200,7 +1198,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1222,7 +1220,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1235,7 +1233,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1249,7 +1247,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1268,7 +1266,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1281,7 +1279,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1295,7 +1293,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1315,7 +1313,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1328,7 +1326,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1342,7 +1340,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1362,7 +1360,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1375,7 +1373,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1389,7 +1387,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1409,7 +1407,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1422,7 +1420,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1436,7 +1434,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1456,7 +1454,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1469,7 +1467,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1483,7 +1481,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1503,7 +1501,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1518,7 +1516,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1534,7 +1532,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1556,7 +1554,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1569,7 +1567,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1583,7 +1581,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1603,7 +1601,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1616,7 +1614,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1632,7 +1630,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1654,7 +1652,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1667,7 +1665,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1681,7 +1679,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1701,7 +1699,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1714,7 +1712,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1730,7 +1728,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1750,7 +1748,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1765,7 +1763,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1781,7 +1779,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1803,7 +1801,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1816,7 +1814,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1830,7 +1828,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1850,7 +1848,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1863,7 +1861,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1877,7 +1875,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1897,7 +1895,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1910,7 +1908,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1924,7 +1922,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1944,7 +1942,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -1957,7 +1955,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -1971,7 +1969,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -1991,7 +1989,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2006,7 +2004,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2022,7 +2020,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2044,7 +2042,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2059,7 +2057,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2075,7 +2073,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2097,7 +2095,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2110,7 +2108,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2124,7 +2122,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2144,7 +2142,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2157,7 +2155,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2171,7 +2169,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2191,7 +2189,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2204,7 +2202,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2218,7 +2216,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2238,7 +2236,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2251,7 +2249,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2265,7 +2263,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2285,7 +2283,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2298,7 +2296,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2312,7 +2310,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2332,7 +2330,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2345,7 +2343,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2361,7 +2359,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2383,7 +2381,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2396,7 +2394,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2410,7 +2408,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2430,7 +2428,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2445,7 +2443,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2461,7 +2459,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2483,7 +2481,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2496,7 +2494,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2510,7 +2508,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2530,7 +2528,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2543,7 +2541,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2559,7 +2557,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2581,7 +2579,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2596,7 +2594,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2612,7 +2610,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -2634,7 +2632,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td
                                     className={
-                                      this.state.current_page == 1
+                                      this.state.current_page === 1
                                         ? ""
                                         : "display--none"
                                     }
@@ -2647,7 +2645,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 2
+                                        this.state.current_page === 2
                                           ? ""
                                           : "display--none"
                                       }
@@ -2661,7 +2659,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td
                                       className={
-                                        this.state.current_page == 3
+                                        this.state.current_page === 3
                                           ? ""
                                           : "display--none"
                                       }
@@ -6162,7 +6160,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     similar_plan.service_id
                                     //i
                                     // .toString()
-                                  ) == false ? (
+                                  ) === false ? (
                                     <div className="box-new">
                                       <ul className="similar_plan_ul">
                                         <li>

@@ -227,15 +227,15 @@ class AppFooter extends Component<FooterProps, {}> {
     let sponsorsScrollWidth: number = sponsorsContainer.scrollWidth;
     window.addEventListener("load", () => {
       window.self.setInterval(() => {
-        console.log("in interval");
-        console.log(
-          'sponsorsContainer["scrollLeft"]',
-          sponsorsContainer["scrollLeft"]
-        );
-        console.log("sponsorsScrollWidth", sponsorsScrollWidth);
+        // console.log("in interval");
+        // console.log(
+        //   'sponsorsContainer["scrollLeft"]',
+        //   sponsorsContainer["scrollLeft"]
+        // );
+        // console.log("sponsorsScrollWidth", sponsorsScrollWidth);
 
         if (sponsorsContainer["scrollLeft"] !== sponsorsScrollWidth) {
-          console.log("not");
+          // console.log("not");
 
           sponsorsContainer.scrollTo(sponsorsContainer.scrollLeft + 1, 0);
         } else {
@@ -246,16 +246,16 @@ class AppFooter extends Component<FooterProps, {}> {
   }
 
   render() {
-    console.log("this.props.hmos", this.props.hmos);
+    // console.log("this.props.hmos", this.props.hmos);
     return (
       <div className="app_footer" style={{ position: "relative" }}>
         <section className="section grey_background similar_plans">
           <div className="container box-mob-slider">
             <div className="slider-new " id="box-mob-slider">
-              {this.props.hmos.map((hmo, i) => (
-                <div className="box-new sponsor-box-new">
+              {this.props.hmos.map((hmo, i: any) => (
+                <div key={i} className="box-new sponsor-box-new">
                   <ul className="similar_plan_ul">
-                    <li>
+                    <li key={i}>
                       <div className="box_block sponsor-img">
                         {/* <h2 className=""> */}
                         <a href={`/hmos/id/${hmo.hmo_id}`}>
@@ -319,8 +319,8 @@ class AppFooter extends Component<FooterProps, {}> {
                       className={styles.allInsurance}
                       style={{ padding: 0, margin: 0 }}
                     >
-                      {this.props.hmos.map((hmo) => (
-                        <li>
+                      {this.props.hmos.map((hmo, i) => (
+                        <li key={i}>
                           <a href={`/hmos/id/${hmo.hmo_id}`}>{hmo.name}</a>
                         </li>
                       ))}
