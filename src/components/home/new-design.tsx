@@ -92,7 +92,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       mgt_program_selected: [],
       providers_selected: [],
       prescriptions_selected: [],
-      healthSA_eligibility: false,
+      enableSearchByProximity: false,
       user_address: "",
     },
     plan_ids: [],
@@ -2064,7 +2064,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   name="numOfPeople"
                   className="radio-group-num"
                   //uncommented onChange
-                  onChange={this.handleType}
+                  // onChange={this.handleType}
                   checked={
                     this.props.responses.type[
                       this.props.responses.type.length - 1
@@ -2103,7 +2103,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   }
                   onClick={this.handleType}
                   //uncommented onChange
-                  onChange={this.handleType}
+                  // onChange={this.handleType}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2134,7 +2134,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   }
                   onClick={this.handleType}
                   //uncommented onChange
-                  onChange={this.handleType}
+                  //onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2170,7 +2170,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   }
                   onClick={this.handleType}
                   //uncommented onChange
-                  onChange={this.handleType}
+                  //onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2202,7 +2202,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   }
                   onClick={this.handleType}
                   //uncommented onChange
-                  onChange={this.handleType}
+                  // onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -3077,14 +3077,14 @@ class NewContent extends React.Component<homeProps, homeState> {
     // this.props.setPlanID(this.state.filter_params.planID)
   }
 
-  async handleHSAChange() {
-    await this.getLocation();
+  async handleUserAddress() {
+    this.getLocation();
 
-    let v = this.state.filter_params.healthSA_eligibility;
+    let v = this.state.filter_params.enableSearchByProximity;
     this.setState({
       filter_params: {
         ...this.state.filter_params,
-        healthSA_eligibility: !v,
+        enableSearchByProximity: !v,
         // location:
       },
     });
@@ -3356,6 +3356,8 @@ class NewContent extends React.Component<homeProps, homeState> {
       providers.length > 0
     ) {
       this.resetTypeAndRangeFilters();
+      console.log("filterBoxParams", filterBoxParams);
+
       await this.props.getRecommendedPlans(filterBoxParams);
       await this.props.resetInfiniteScrollData();
       await this.infiniteScrollDataReInitOnFilterApplied();
@@ -3405,7 +3407,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         mgt_program_selected: [],
         providers_selected: [],
         prescriptions_selected: [],
-        healthSA_eligibility: false,
+        enableSearchByProximity: false,
       },
     });
     await this.eventHandlers.changeBudget([100, 300000]);
@@ -3668,7 +3670,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       doctors_selected,
 
       planID,
-      healthSA_eligibility,
+      enableSearchByProximity,
     } = this.state.filter_params;
 
     let providersArr;
@@ -4733,12 +4735,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   className="c-choice c-choice--small"
                                   type="checkbox"
                                   value="hsa-true"
-                                  checked={healthSA_eligibility}
-                                  onChange={() => this.handleHSAChange()}
+                                  checked={enableSearchByProximity}
+                                  onChange={() => this.handleUserAddress()}
                                 />
                                 <label
                                   className="c-label"
-                                  onClick={() => this.handleHSAChange()}
+                                  onClick={() => this.handleUserAddress()}
                                 >
                                   <span className="">Find plans near me ?</span>
                                 </label> */}

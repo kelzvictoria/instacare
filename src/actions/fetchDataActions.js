@@ -895,7 +895,6 @@ const groupPlansByRange = (packages, range) => {
 }
 
 export const updateInfiniteScrollData = (plans, hasMore, start_index, end_index) => async (dispatch, getState) => {
-    console.log("in here");
     let pageSize = await getState().fetchData.pageSize;
     let infiniteScrollData = await plans.slice(0, pageSize);
     let prevInfiniteScrollData = await getState().fetchData.infiniteScrollData;

@@ -37,7 +37,7 @@ class Providers extends Component<ProvidersProps> {
       (provider) => provider.provider_name
     );
     providers.forEach((item: string) => {
-      console.log("item", item);
+      //console.log("item", item);
       // const _item = item["name"].toLowerCase();
       const _item = item.toLowerCase();
       if (_item.startsWith(searchText.toLowerCase())) {
