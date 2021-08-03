@@ -103,6 +103,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     minIndex: 0,
     maxIndex: 0,
     compare_top_three_plans: false,
+    applied_filters: {},
     //infiniteScrollData: this.props.infiniteScrollData,
     // this.props.match.path === "/hmos/*"
     //   ? this.props.plansByHMO.slice(0, pageSize)
@@ -441,6 +442,25 @@ class NewContent extends React.Component<homeProps, homeState> {
     };
 
     await this.props.filterByBudget_and_or_Type(params);
+    if (this.props.responses.type.length > 0) {
+      this.setState({
+        applied_filters: {
+          ...this.state.applied_filters,
+          plan_type: this.props.responses.type,
+        },
+      });
+      // console.log("this.props.responses.type", this.props.responses.type);
+    }
+
+    if (this.props.responses.budget.length > 0) {
+      this.setState({
+        applied_filters: {
+          ...this.state.applied_filters,
+          budget: this.props.responses.budget,
+        },
+      });
+      // console.log("this.props.responses.budget", this.props.responses.budget);
+    }
     await this.props.resetInfiniteScrollData();
     this.infiniteScrollDataReInitOnFilterApplied();
     this.props.is_filter_box_open && this.toggleShowFilter();
@@ -3356,9 +3376,83 @@ class NewContent extends React.Component<homeProps, homeState> {
       providers.length > 0
     ) {
       this.resetTypeAndRangeFilters();
+
       console.log("filterBoxParams", filterBoxParams);
 
       await this.props.getRecommendedPlans(filterBoxParams);
+
+      if (range.length > 0) {
+        this.setState({
+          applied_filters: {
+            ...this.state.applied_filters,
+            range,
+          },
+        });
+      }
+
+      if (hmoID) {
+        this.setState({
+          applied_filters: {
+            ...this.state.applied_filters,
+            hmoID,
+          },
+        });
+      }
+
+      if (planID) {
+        this.setState({
+          applied_filters: {
+            ...this.state.applied_filters,
+            planID,
+          },
+        });
+      }
+
+      if (benefits.length > 0) {
+        this.setState({
+          applied_filters: {
+            ...this.state.applied_filters,
+            benefits,
+          },
+        });
+      }
+
+      if (total_benefit_range.length) {
+        this.setState({
+          applied_filters: {
+            ...this.state.applied_filters,
+            total_benefit_range,
+          },
+        });
+      }
+
+      if (doctors.length) {
+        this.setState({
+          applied_filters: {
+            ...this.state.applied_filters,
+            doctors,
+          },
+        });
+      }
+
+      if (lat_lng) {
+        this.setState({
+          applied_filters: {
+            ...this.state.applied_filters,
+            lat_lng,
+          },
+        });
+      }
+
+      if (providers.length) {
+        this.setState({
+          applied_filters: {
+            ...this.state.applied_filters,
+            providers,
+          },
+        });
+      }
+
       await this.props.resetInfiniteScrollData();
       await this.infiniteScrollDataReInitOnFilterApplied();
       this.props.is_filter_box_open && this.toggleShowFilter();
@@ -3394,6 +3488,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.resetSelectedProviders();
 
     this.setState({
+      applied_filters: {},
       filter_params: {
         ...this.state.filter_params,
         annual_range_min: "",
@@ -3602,6 +3697,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   render() {
     //  console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
+    console.log("this.state.applied_filters", this.state.applied_filters);
 
     let plansByHMO = this.props.plansByHMO;
     let allPlans =

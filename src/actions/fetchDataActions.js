@@ -356,6 +356,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
         // CAN_LOG && 
         console.log("hmoID && budget.length > 0");
         recommended_plans = packages.filter(pckage => {
+            console.log("pckage.hmo_id", pckage.hmo_id);
             return pckage.hmo_id.hmo_id === hmoID && (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
         });
     }
