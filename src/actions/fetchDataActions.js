@@ -36,7 +36,8 @@ import {
     GET_SUB_SPECIALTIES,
     SET_LOCATION,
     HANDLE_GEOCODING,
-    HANDLE_REVERSE_GEOCODING
+    HANDLE_REVERSE_GEOCODING,
+    RESET_LOCATION
 } from "../actions/types";
 import { returnErrors } from "../actions/errorActions"
 
@@ -335,37 +336,46 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     let recommended_plans;
     let packages = planType.length > 0 ? plansByPlanType : services;
 
-
-    if (hmoID && budget.length === 0) {
-        // CAN_LOG && 
-        console.log("hmoID && budget.length === 0");
-        recommended_plans = packages.filter(pckage => {
-            return pckage.hmo_id.hmo_id === hmoID
-        })
+    if (budget.length === 0) {
+        recommended_plans = packages
     }
 
-    if (!hmoID && budget.length > 0) {
-        //  CAN_LOG && 
-        console.log("!hmoID && budget.length > 0");
-        recommended_plans = packages.filter(pckage => {
+    if (budget.length > 0) {
+        recommended_plans = await packages.filter(pckage => {
             return (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
         })
     }
 
-    if (hmoID && budget.length > 0) {
+    if (hmoID) {
         // CAN_LOG && 
-        console.log("hmoID && budget.length > 0");
-        recommended_plans = packages.filter(pckage => {
-            console.log("pckage.hmo_id", pckage.hmo_id);
-            return pckage.hmo_id.hmo_id === hmoID && (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
-        });
+        console.log("hmoID");
+        recommended_plans = await packages.filter(pckage => {
+            return pckage.hmo_id.hmo_id === hmoID
+        })
     }
 
-    if (planType.length > 0 && !hmoID && budget.length === 0) {
-        //CAN_LOG && 
-        console.log("planType.length > 0 && !hmoID && budget.length === 0");
-        recommended_plans = plansByPlanType
-    }
+    // if (!hmoID) {
+    //     //  CAN_LOG && 
+    //     console.log("!hmoID");
+    //     recommended_plans = packages.filter(pckage => {
+    //         return (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
+    //     })
+    // }
+
+    // if (hmoID && budget.length > 0) {
+    //     // CAN_LOG && 
+    //     console.log("hmoID && budget.length > 0");
+    //     recommended_plans = packages.filter(pckage => {
+    //         console.log("pckage.hmo_id", pckage.hmo_id);
+    //         return pckage.hmo_id.hmo_id === hmoID && (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
+    //     });
+    // }
+
+    // if (planType.length > 0 && !hmoID && budget.length === 0) {
+    //     //CAN_LOG && 
+    //     console.log("planType.length > 0 && !hmoID && budget.length === 0");
+    //     recommended_plans = plansByPlanType
+    // }
 
     //console.log("planRange", planRange);
 
@@ -378,7 +388,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
 
     if (benefits.length > 0) {
         console.log("benefits.length > 0");
-        recommended_plans = groupPlansByBenefit(
+        recommended_plans = await groupPlansByBenefit(
             recommended_plans ? recommended_plans : packages,
 
             allBenefits, benefits);
@@ -390,7 +400,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     if (total_benefit_range.length > 0) {
         // console.log("total_benefit_range.length > 0");
         let data = recommended_plans ? recommended_plans : packages;
-        recommended_plans = data.filter(d => {
+        recommended_plans = await data.filter(d => {
             let totalBL = stripNonNumeric(d.in_patient_limit) + stripNonNumeric(d.out_patient_limit)
             return totalBL >= params.total_benefit_range[0] && totalBL <= params.total_benefit_range[1]
         })
@@ -400,7 +410,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
         console.log("doctors.length > 0");
         let data = recommended_plans ? recommended_plans : packages;
         let doctors_hosp = doctors.map(d => d.provider_id.provider_name);
-        recommended_plans = data.filter(r => {
+        recommended_plans = await data.filter(r => {
             return doctors_hosp.some(d => {
                 //  console.log("doctors_hosp", doctors_hosp);
                 //  console.log("r.hmo_id.providers", r.hmo_id.providers);
@@ -415,7 +425,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
         //  console.log("lat_lng");
         //  console.log("lat_lng", lat_lng);
         let data = recommended_plans ? recommended_plans : packages;
-        recommended_plans = (filterByProximity(lat_lng, data))
+        recommended_plans = filterByProximity(lat_lng, data);
         /* let lat = lat_lng[0];
             let lng = lat_lng[1];
     
@@ -444,7 +454,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
         // })
         let data = recommended_plans ? recommended_plans : packages;
         let provider_names = providers.map(p => p.provider_name);
-        recommended_plans = data.filter(r => {
+        recommended_plans = await data.filter(r => {
             return provider_names.some(d => {
                 return r.hmo_id.providers.map(p => p.provider_name).includes(d)
             })
@@ -1275,6 +1285,12 @@ export const setLocation = (loc) => async (dispatch) => {
         type: SET_LOCATION,
         payload: loc
 
+    })
+}
+
+export const resetLocation = (loc) => async (dispatch) => {
+    dispatch({
+        type: RESET_LOCATION,
     })
 }
 

@@ -39,7 +39,10 @@ import {
     GET_SUB_SPECIALTIES,
     SET_LOCATION,
     HANDLE_GEOCODING,
-    HANDLE_REVERSE_GEOCODING
+    HANDLE_REVERSE_GEOCODING,
+
+    RESET_BENEFITS,
+    RESET_LOCATION
 } from "../actions/types";
 
 const initialState = {
@@ -429,6 +432,14 @@ export default function (state = initialState, action) {
                 ...state,
                 user_address: action.payload.user_address,
                 location: action.payload.location
+            }
+
+        case RESET_LOCATION:
+            return {
+                ...state,
+
+                user_address: "",
+                location: [],
             }
 
         default:

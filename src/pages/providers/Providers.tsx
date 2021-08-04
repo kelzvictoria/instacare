@@ -263,7 +263,7 @@ class Providers extends Component<ProvidersProps> {
 
                     <a
                       className="c-button c-button--primary margin-left--1 qa-continue"
-                      href="#"
+                      // href="#"
                       onClick={this.setProviders}
                       role="button"
                     >

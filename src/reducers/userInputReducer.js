@@ -75,7 +75,9 @@ import {
 
     COMPARE_TOP_THREE_PLANS,
 
-    RESET_SELECTED_DOCTOR
+    RESET_SELECTED_DOCTOR,
+    RESET_BENEFITS,
+    RESET_PLAN_ID
 } from "../actions/types";
 
 const initialState = {
@@ -534,6 +536,15 @@ export default function (state = initialState, action) {
                 }
 
             }
+        case RESET_BENEFITS:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    benefits: []
+                }
+            }
+
         case FILTER_PROVIDERS:
             if (action.payload) {
                 let data_source = [];
@@ -652,6 +663,15 @@ export default function (state = initialState, action) {
                 responses: {
                     ...state.responses,
                     doctors: action.payload
+                }
+            }
+
+        case RESET_PLAN_ID:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    planID: action.payload
                 }
             }
 

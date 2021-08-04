@@ -73,6 +73,7 @@ import {
     SET_PROVIDERS,
     SET_DOCTORS,
     SET_BENEFITS,
+
     RESET_SELECTED_PROVIDERS,
     ADD_COMPARE_URL_PARAM,
     REMOVE_COMPARE_URL_PARAM,
@@ -82,6 +83,8 @@ import {
     COMPARE_TOP_THREE_PLANS,
     GET_TOP_THREE_PLANS,
     RESET_SELECTED_DOCTOR,
+    RESET_BENEFITS,
+    RESET_PLAN_ID
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
 
@@ -191,8 +194,7 @@ export const updateGender = (payload) => (dispatch, getState) => {
 export const updateType = (data) => (dispatch, getState) => {
     // console.log("data", data);
     let types = [...getState().quiz.responses.type];
-    // console.log("types", types);
-
+    console.log("types", types);
 
     let isTypeChecked = types.indexOf(data.value);
 
@@ -421,6 +423,12 @@ export const setPlanID = (planID) => (dispatch, getState) => {
     })
 }
 
+export const resetPlanID = () => (dispatch, getState) => {
+    dispatch({
+        type: RESET_PLAN_ID
+    })
+}
+
 export const setHMOID = (hmoID) => (dispatch, getState) => {
     dispatch({
         type: SET_HMO_ID,
@@ -509,6 +517,12 @@ export const setBenefits = (data) => (dispatch, getState) => {
     dispatch({
         type: SET_BENEFITS,
         payload: data
+    })
+}
+
+export const resetBenefits = () => (dispatch, getState) => {
+    dispatch({
+        type: RESET_BENEFITS
     })
 }
 

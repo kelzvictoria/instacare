@@ -45,6 +45,7 @@ import {
   getDoctors,
   handleGeocoding,
   handleReverseGeocoding,
+  resetLocation,
 } from "../../actions/fetchDataActions";
 
 import {
@@ -81,6 +82,8 @@ import {
   toggleFilterBox,
   compareTopThreePlans,
   resetSelectedDoctors,
+  resetBenefits,
+  resetPlanID,
 } from "../../actions/userInputActions";
 
 import {
@@ -388,4 +391,7 @@ export default connect(mapProps, {
   compareTopThreePlans,
   resetPlansToCompare,
   resetSelectedDoctors,
+  resetBenefits,
+  resetLocation,
+  resetPlanID,
 })(Home);

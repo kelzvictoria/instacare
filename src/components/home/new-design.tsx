@@ -103,7 +103,18 @@ class NewContent extends React.Component<homeProps, homeState> {
     minIndex: 0,
     maxIndex: 0,
     compare_top_three_plans: false,
-    applied_filters: {},
+    applied_filters: {
+      metal_level: [],
+      hmoID: null,
+      plan_ID: null,
+      benefits: [],
+      total_benefit_range: [],
+      doctors: [],
+      lat_lng: [],
+      providers: [],
+      plan_type: [],
+      budget: [],
+    },
     //infiniteScrollData: this.props.infiniteScrollData,
     // this.props.match.path === "/hmos/*"
     //   ? this.props.plansByHMO.slice(0, pageSize)
@@ -459,7 +470,15 @@ class NewContent extends React.Component<homeProps, homeState> {
           budget: this.props.responses.budget,
         },
       });
-      // console.log("this.props.responses.budget", this.props.responses.budget);
+    }
+
+    if (this.props.responses.price_range.length > 0) {
+      this.setState({
+        applied_filters: {
+          ...this.state.applied_filters,
+          metal_level: this.props.responses.price_range,
+        },
+      });
     }
     await this.props.resetInfiniteScrollData();
     this.infiniteScrollDataReInitOnFilterApplied();
@@ -3312,7 +3331,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   // }
 
   getRecommendedPlans = async () => {
-    //  console.log("in here");
+    console.log("in here");
 
     const {
       plan_range_checked,
@@ -3326,9 +3345,14 @@ class NewContent extends React.Component<homeProps, homeState> {
       user_address,
     } = this.state.filter_params;
 
+    console.log("user_address", user_address);
+    console.log("this.props.location", this.props.location);
+
     if (user_address) {
       await this.props.handleGeocoding(user_address);
     }
+
+    console.log("this.props.location", this.props.location);
 
     let filterBoxParams = {
       range: plan_range_checked,
@@ -3377,7 +3401,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     ) {
       this.resetTypeAndRangeFilters();
 
-      console.log("filterBoxParams", filterBoxParams);
+      // console.log("filterBoxParams", filterBoxParams);
 
       await this.props.getRecommendedPlans(filterBoxParams);
 
@@ -3385,7 +3409,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         this.setState({
           applied_filters: {
             ...this.state.applied_filters,
-            range,
+            metal_level: range,
           },
         });
       }
@@ -3403,7 +3427,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         this.setState({
           applied_filters: {
             ...this.state.applied_filters,
-            planID,
+            plan_ID: planID,
           },
         });
       }
@@ -3462,6 +3486,14 @@ class NewContent extends React.Component<homeProps, homeState> {
   getPlanByID = async (planID) => {
     await this.props.getPlanByID(planID);
     await this.props.resetInfiniteScrollData();
+    if (planID) {
+      this.setState({
+        applied_filters: {
+          ...this.state.applied_filters,
+          plan_ID: planID,
+        },
+      });
+    }
     this.infiniteScrollDataReInitOnFilterApplied();
   };
 
@@ -3488,7 +3520,18 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.resetSelectedProviders();
 
     this.setState({
-      applied_filters: {},
+      applied_filters: {
+        metal_level: [],
+        hmoID: null,
+        plan_ID: null,
+        benefits: [],
+        total_benefit_range: [],
+        doctors: [],
+        lat_lng: [],
+        providers: [],
+        plan_type: [],
+        budget: [],
+      },
       filter_params: {
         ...this.state.filter_params,
         annual_range_min: "",
@@ -3695,9 +3738,173 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   };
 
+  clearDoctorsFilter = async () => {
+    await this.props.resetSelectedDoctors();
+    this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        doctors: [],
+      },
+    });
+    await this.getRecommendedPlans();
+  };
+
+  clearProvidersFilter = async () => {
+    await this.props.resetSelectedProviders();
+    this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        providers: [],
+      },
+      filter_params: {
+        ...this.state.filter_params,
+        providers_selected: [],
+      },
+    });
+    await this.getRecommendedPlans();
+  };
+
+  clearBudgetFilter = async () => {
+    this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        budget: [],
+      },
+      filter_params: {
+        ...this.state.filter_params,
+        annual_range_min: "",
+        annual_range_max: "",
+      },
+    });
+
+    await this.eventHandlers.changeBudget([100, 300000]);
+    await this.getRecommendedPlans();
+  };
+
+  clearPlanTypeFilter = async () => {
+    this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        plan_type: [],
+      },
+      filter_params: {
+        ...this.state.filter_params,
+        plan_types_checked: [],
+      },
+    });
+    await this.props.resetType();
+    await this.getRecommendedPlans();
+  };
+
+  clearPlanMetalLevelFilter = async () => {
+    this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        metal_level: [],
+      },
+      filter_params: {
+        ...this.state.filter_params,
+        plan_range_checked: [],
+      },
+    });
+    await this.props.resetRange();
+    await this.getRecommendedPlans();
+  };
+
+  clearPlanIDFilter = async () => {
+    this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        plan_ID: null,
+      },
+      filter_params: {
+        ...this.state.filter_params,
+        planID: "",
+      },
+    });
+    await this.props.resetPlanID();
+    await this.getRecommendedPlans();
+  };
+
+  clearHMOIDFilter = async () => {
+    await this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        hmoID: null,
+      },
+      filter_params: {
+        ...this.state.filter_params,
+        hmo_selected: "",
+      },
+    });
+    await this.getRecommendedPlans();
+  };
+
+  clearProximityFilter = async () => {
+    await this.props.resetLocation();
+    await this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        lat_lng: [],
+      },
+      filter_params: {
+        ...this.state.filter_params,
+        location: undefined,
+        user_address: "",
+        enableSearchByProximity: false,
+      },
+    });
+
+    await this.getRecommendedPlans();
+  };
+
+  clearBenefitsFilter = async () => {
+    this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        benefits: [],
+      },
+      filter_params: {
+        ...this.state.filter_params,
+        benefits_selected: [],
+      },
+    });
+    await this.props.resetBenefits();
+    await this.getRecommendedPlans();
+  };
+
+  clearTotalBenefitRangeFilter = async () => {
+    this.setState({
+      applied_filters: {
+        ...this.state.applied_filters,
+        total_benefit_range: [],
+      },
+      filter_params: {
+        ...this.state.filter_params,
+        total_benefit_range: [],
+      },
+    });
+    await this.getRecommendedPlans();
+  };
+
   render() {
     //  console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
-    console.log("this.state.applied_filters", this.state.applied_filters);
+    // console.log("this.state.applied_filters", this.state.applied_filters);
+
+   // console.log("this.state", this.state);
+
+    const {
+      metal_level,
+      hmoID,
+      plan_ID,
+      benefits,
+      total_benefit_range,
+      doctors,
+      lat_lng,
+      providers,
+      plan_type,
+      budget,
+    } = this.state.applied_filters;
 
     let plansByHMO = this.props.plansByHMO;
     let allPlans =
@@ -4032,6 +4239,387 @@ class NewContent extends React.Component<homeProps, homeState> {
                     </div>
                   </div>
                 </div>
+                <ul
+                  className={`c-list--bare ${this.state.sticky_inner_optional_style}`}
+                >
+                  {metal_level.length > 0 && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`Metal Level(s): ${metal_level.map(
+                              (m) => m,
+                              ", "
+                            )}`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearPlanMetalLevelFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {budget.length > 0 && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`Price Range: ${
+                              "₦" +
+                              this.numberwithCommas(budget[0]) +
+                              " - " +
+                              "₦" +
+                              this.numberwithCommas(budget[1])
+                            }`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearBudgetFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {plan_type.length > 0 && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`Plan Type(s): ${plan_type.map((t) => t, ", ")}`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearPlanTypeFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {hmoID && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`HMO ID: ${hmoID}`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearHMOIDFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {plan_ID && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`Plan ID: ${plan_ID}`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearPlanIDFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {benefits.length > 0 && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`Benefit(s): ${benefits.map(
+                              (b: any) => b.title,
+                              ", "
+                            )}`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearBenefitsFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {total_benefit_range.length > 0 && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`Total Benefit Limit: ${
+                              "₦" +
+                              this.numberwithCommas(total_benefit_range[0]) +
+                              " - " +
+                              "₦" +
+                              this.numberwithCommas(total_benefit_range[1])
+                            }`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearTotalBenefitRangeFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {doctors.length > 0 && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`Doctor(s): ${doctors.map(
+                              (d: any) => d.first_name + " " + d.last_name,
+                              ", "
+                            )}`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearDoctorsFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {lat_lng.length > 0 && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`Location: ${lat_lng[0] + ", " + lat_lng[1]}`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearProximityFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {providers.length > 0 && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button className="c-filter-tag__button">
+                          <span className="c-filter-tag__label">
+                            {`Provider(s): ${providers.map(
+                              (p: any) => p.provider_name,
+                              ", "
+                            )}`}
+                          </span>
+                          <span
+                            className="c-filter-tag__clear-icon"
+                            onClick={this.clearProvidersFilter}
+                          >
+                            <svg
+                              className="c-clear-icon"
+                              width="15px"
+                              height="15px"
+                              viewBox="0 0 15 15"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              focusable="false"
+                              role="presentation"
+                              pointer-events="none"
+                            >
+                              <path
+                                className="c-clear-icon__x"
+                                d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                              ></path>
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+
+                  {(metal_level.length > 0 ||
+                    budget.length > 0 ||
+                    plan_type.length > 0 ||
+                    hmoID ||
+                    plan_ID ||
+                    benefits.length > 0 ||
+                    total_benefit_range.length > 0 ||
+                    doctors.length > 0 ||
+                    lat_lng.length > 0 ||
+                    providers.length > 0) && (
+                    <li className="display--inline-block">
+                      <div className="c-filter-tag margin-top--0">
+                        <button
+                          className="c-filter-tag__button clear-all"
+                          onClick={() => {
+                            this.clearFilters();
+                          }}
+                        >
+                          <span className="c-filter-tag__label">Clear All</span>
+                        </button>
+                      </div>
+                    </li>
+                  )}
+                </ul>
               </div>
 
               <div
