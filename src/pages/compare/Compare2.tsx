@@ -138,7 +138,6 @@ class ComparePlans extends Component<ComparisonProps> {
     let paramsArr = params.split("/");
     paramsArr = paramsArr.map((p) => p);
     this.propsParams = paramsArr;
-    console.log("");
 
     // for (let i = 0; i < paramsArr.length; i++) {
     //   this.props.addCompareURLParam(paramsArr[i])
@@ -358,6 +357,8 @@ class ComparePlans extends Component<ComparisonProps> {
       "this.state.num_of_pages",
       this.state.num_of_pages
     );
+
+    console.log("this.props.params", this.props.params);
 
     //console.log("first", first);
     // console.log("second", second);

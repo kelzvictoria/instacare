@@ -72,6 +72,7 @@ export class App extends React.Component {
             <Switch>
               {/* <Route exact path="/" component={Home} /> */}
               <Route exact path="/" component={Home2} />
+              <Route exact path="/search/*" component={Home2} />
               <Route path="/quiz" component={Quiz} />
               <Route path="/compare-old" component={Compare} />
               <Route path="/plans" component={Plans} />
@@ -79,7 +80,11 @@ export class App extends React.Component {
               <Route exact path="/details" component={PlanDetails} />
               <Route exact path="/details/*" component={PlanDetails} />
               <Route exact path="/compare" component={SideBySideComparison} />
-              <Route path="/compare-plans/plans/*" component={ComparePlans} />
+              <Route
+                exact
+                path="/compare-plans/plans/*"
+                component={ComparePlans}
+              />
 
               <Route path="/new-design" component={Home2} />
               <Route exact path="/hmos/*" component={Home2} />

@@ -48,6 +48,7 @@ import {
     SET_PLAN_ID,
     SET_HMO_ID,
     RESET_TYPE,
+    RESET_BUDGET,
     RESET_RANGE,
     FORMAT_PRICES,
 
@@ -77,7 +78,35 @@ import {
 
     RESET_SELECTED_DOCTOR,
     RESET_BENEFITS,
-    RESET_PLAN_ID
+    RESET_PLAN_ID,
+
+    HANDLE_PLAN_RANGE_CHECK,
+    HANDLE_PLAN_TYPES_CHECK,
+    HANDLE_PROVIDER_SELECTED,
+    HANDLE_PRESCRIPTION_SELECTED,
+    HANDLE_MIN_RANGE_CHANGE,
+    HANDLE_MAX_RANGE_CHANGE,
+    HANDLE_TOTAL_BENEFIT_MIN_CHANGE,
+    HANDLE_TOTAL_BENEFIT_MAX_CHANGE,
+    HANDLE_PLAN_ID_CHANGE,
+    ENABLE_SEARCH_BY_PROXIMITY,
+    HANDLE_MIN_DED_CHANGE,
+    HANDLE_MAX_DED_CHANGE,
+    HANDLE_HMO_SELECTED,
+    RESET_FILTER_PARAMS,
+    SET_COORDINATES_AND_ADDRESS,
+    HANDLE_ADDRESS_IMPUT,
+    CLEAR_DOCTORS_FILTER,
+    CLEAR_PROVIDERS_FILTER,
+    CLEAR_BUDGET_FILTER,
+    CLEAR_PLAN_TYPE_FILTER,
+    CLEAR_PLAN_METAL_LEVEL_FILTER,
+    CLEAR_PLAN_ID_FILTER,
+    CLEAR_HMO_ID_FILTER,
+    CLEAR_PROXIMITY_FILTER,
+    CLEAR_BENEFITS_FILTER,
+    CLEAR_TOTAL_BENEFIT_RANGE_FILTER,
+    UPDATE_APPLIED_FILTERS
 } from "../actions/types";
 
 const initialState = {
@@ -101,7 +130,7 @@ const initialState = {
     daughterCount: 1,
     tab_opened: "highlights",
     responses: {
-        budget: [100, 300000],
+        budget: [],
         // type: "single",
         // price_range: "silver",
         type: [],
@@ -155,7 +184,40 @@ const initialState = {
         [],
     is_loading: false,
     is_data_capture_modal_open: false,
-    is_filter_box_open: false
+    is_filter_box_open: false,
+    filter_params: {
+        annual_range_min: undefined,
+        annual_range_max: undefined,
+        annual_deductible_min: undefined,
+        annual_deductible_max: undefined,
+        plan_types_checked: [],
+        plan_range_checked: [],
+        planID: "",
+        hmo_selected: "",
+        total_benefit_min: undefined,
+        total_benefit_max: undefined,
+        location: undefined,
+        benefits_selected: [],
+        doctors_selected: [],
+        mgt_program_selected: [],
+        providers_selected: [],
+        prescriptions_selected: [],
+        enableSearchByProximity: false,
+        user_address: "",
+    },
+
+    applied_filters: {
+        metal_level: [],
+        hmoID: null,
+        plan_ID: null,
+        benefits: [],
+        total_benefit_range: [],
+        doctors: [],
+        lat_lng: [],
+        providers: [],
+        plan_type: [],
+        budget: [],
+    },
 }
 
 export default function (state = initialState, action) {
@@ -201,6 +263,15 @@ export default function (state = initialState, action) {
                 }
             }
 
+        case RESET_BUDGET:
+            return {
+                ...state,
+                responses: {
+                    ...state.responses,
+                    budget: action.payload
+                }
+            }
+
         case RESET_RANGE:
             return {
                 ...state,
@@ -220,7 +291,17 @@ export default function (state = initialState, action) {
                         budget: action.payload
                     }
                 }
-            } else {
+            } else if (action.payload.length === 0) {
+                return {
+                    ...state,
+                    responses: {
+                        ...state.responses,
+                        budget: []
+                    }
+                }
+            }
+
+            else {
                 return state;
             }
 
@@ -672,6 +753,62 @@ export default function (state = initialState, action) {
                 responses: {
                     ...state.responses,
                     planID: action.payload
+                }
+            }
+
+        case HANDLE_PLAN_RANGE_CHECK:
+            return {
+                ...state,
+                filter_params: action.payload
+            }
+
+        case HANDLE_PLAN_TYPES_CHECK:
+        case HANDLE_PROVIDER_SELECTED:
+        case HANDLE_PRESCRIPTION_SELECTED:
+        case HANDLE_MIN_RANGE_CHANGE:
+        case HANDLE_MAX_RANGE_CHANGE:
+        case HANDLE_TOTAL_BENEFIT_MIN_CHANGE:
+        case HANDLE_TOTAL_BENEFIT_MAX_CHANGE:
+        case HANDLE_PLAN_ID_CHANGE:
+        case ENABLE_SEARCH_BY_PROXIMITY:
+        case HANDLE_MIN_DED_CHANGE:
+        case HANDLE_MAX_DED_CHANGE:
+        case HANDLE_HMO_SELECTED:
+        case SET_COORDINATES_AND_ADDRESS:
+        case HANDLE_ADDRESS_IMPUT:
+            return {
+                ...state,
+                filter_params: action.payload
+            }
+
+        case CLEAR_DOCTORS_FILTER:
+            return {
+                ...state,
+                applied_filters: action.payload
+            }
+
+        case RESET_FILTER_PARAMS:
+        case CLEAR_PROVIDERS_FILTER:
+        case CLEAR_BUDGET_FILTER:
+        case CLEAR_PLAN_TYPE_FILTER:
+        case CLEAR_PLAN_METAL_LEVEL_FILTER:
+        case CLEAR_PLAN_ID_FILTER:
+        case CLEAR_HMO_ID_FILTER:
+        case CLEAR_PROXIMITY_FILTER:
+        case CLEAR_BENEFITS_FILTER:
+        case CLEAR_TOTAL_BENEFIT_RANGE_FILTER:
+            return {
+                ...state,
+                filter_params: action.payload.filter_params,
+                applied_filters: action.payload.applied_filters
+            }
+
+        case UPDATE_APPLIED_FILTERS:
+            return {
+                ...state,
+                applied_filters: {
+                    ...state.applied_filters,
+                    [action.payload.key]: action.payload.value
                 }
             }
 

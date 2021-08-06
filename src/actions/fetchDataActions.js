@@ -301,6 +301,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     let hmoID = params.hmoID ? params.hmoID : ""
     //let planID = getState().quiz.responses.planID;
     let budget = params.budget ? params.budget : []
+    console.log("budget", budget);
     let planType = params.type ? params.type : []
 
     //console.log("planType", planType);
@@ -322,148 +323,49 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     let min = stripNonNumeric(budget[0]);
     let max = stripNonNumeric(budget[1]);
 
+
+    let doctors_hosp = doctors.map(d => d.provider_id.provider_name);
+    let provider_names = providers.map(p => p.provider_name);
+
     CAN_LOG &&
         console.log("min", min, "max", max);
 
-    let services = getState().fetchData.services
-    //console.log("services", services);
+    let services = getState().fetchData.services;
 
     let plansByPlanType = await groupPlansByType(services, planType);
 
-    // CAN_LOG &&
-    planType.length && console.log("plansByPlanType", plansByPlanType);
-
     let recommended_plans;
+
     let packages = planType.length > 0 ? plansByPlanType : services;
-
-    if (budget.length === 0) {
-        recommended_plans = packages
-    }
-
-    if (budget.length > 0) {
-        recommended_plans = await packages.filter(pckage => {
-            return (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
+    packages = benefits.length > 0 ? await groupPlansByBenefit(packages, benefits) : packages;
+    packages = planRange.length > 0 ? await groupPlansByRange(packages, planRange) : packages;
+    packages = lat_lng.length > 0 ? await filterByProximity(lat_lng, packages) : packages;
+    packages = budget.length > 0 ? await packages.filter(pckage => {
+        return (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
+    }) : packages;
+    packages = hmoID ? await packages.filter(pckage => {
+        return pckage.hmo_id.hmo_id === hmoID
+    }) : packages;
+    packages = total_benefit_range.length > 0 ? packages.filter(d => {
+        let totalBL = stripNonNumeric(d.in_patient_limit) + stripNonNumeric(d.out_patient_limit);
+        return totalBL >= params.total_benefit_range[0] && totalBL <= params.total_benefit_range[1]
+    }) : packages;
+    packages = doctors.length > 0 ? await packages.filter(r => {
+        return doctors_hosp.some(d => {
+            return r.hmo_id.providers.map(p => p.provider_name).includes(d)
         })
-    }
+    }) : packages;
 
-    if (hmoID) {
-        // CAN_LOG && 
-        console.log("hmoID");
-        recommended_plans = await packages.filter(pckage => {
-            return pckage.hmo_id.hmo_id === hmoID
+    recommended_plans = providers.length > 0 ? await packages.filter(r => {
+        return provider_names.some(d => {
+            return r.hmo_id.providers.map(p => p.provider_name).includes(d)
         })
-    }
+    }) : packages;
 
-    // if (!hmoID) {
-    //     //  CAN_LOG && 
-    //     console.log("!hmoID");
-    //     recommended_plans = packages.filter(pckage => {
-    //         return (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
-    //     })
-    // }
 
-    // if (hmoID && budget.length > 0) {
-    //     // CAN_LOG && 
-    //     console.log("hmoID && budget.length > 0");
-    //     recommended_plans = packages.filter(pckage => {
-    //         console.log("pckage.hmo_id", pckage.hmo_id);
-    //         return pckage.hmo_id.hmo_id === hmoID && (stripNonNumeric(pckage.price) >= min && stripNonNumeric(pckage.price) <= max)
-    //     });
-    // }
-
-    // if (planType.length > 0 && !hmoID && budget.length === 0) {
-    //     //CAN_LOG && 
-    //     console.log("planType.length > 0 && !hmoID && budget.length === 0");
-    //     recommended_plans = plansByPlanType
-    // }
-
-    //console.log("planRange", planRange);
-
-    if (planRange.length > 0) {
-        console.log("planRange.length > 0");
-        // console.log("recommended_plans", recommended_plans);
-        recommended_plans = await groupPlansByRange(
-            recommended_plans ? recommended_plans : packages, planRange);
-    }
-
-    if (benefits.length > 0) {
-        console.log("benefits.length > 0");
-        recommended_plans = await groupPlansByBenefit(
-            recommended_plans ? recommended_plans : packages,
-
-            allBenefits, benefits);
-
-        // await dispatch(filterByBenefits(benefits))
-
-    }
-
-    if (total_benefit_range.length > 0) {
-        // console.log("total_benefit_range.length > 0");
-        let data = recommended_plans ? recommended_plans : packages;
-        recommended_plans = await data.filter(d => {
-            let totalBL = stripNonNumeric(d.in_patient_limit) + stripNonNumeric(d.out_patient_limit)
-            return totalBL >= params.total_benefit_range[0] && totalBL <= params.total_benefit_range[1]
-        })
-    }
-
-    if (doctors.length > 0) {
-        console.log("doctors.length > 0");
-        let data = recommended_plans ? recommended_plans : packages;
-        let doctors_hosp = doctors.map(d => d.provider_id.provider_name);
-        recommended_plans = await data.filter(r => {
-            return doctors_hosp.some(d => {
-                //  console.log("doctors_hosp", doctors_hosp);
-                //  console.log("r.hmo_id.providers", r.hmo_id.providers);
-                return r.hmo_id.providers.map(p => p.provider_name).includes(d)
-            })
-        });
-
-        console.log("recommended_plans by doctor", recommended_plans);
-    }
-
-    if (lat_lng.length > 0) {
-        //  console.log("lat_lng");
-        //  console.log("lat_lng", lat_lng);
-        let data = recommended_plans ? recommended_plans : packages;
-        recommended_plans = filterByProximity(lat_lng, data);
-        /* let lat = lat_lng[0];
-            let lng = lat_lng[1];
-    
-          recommended_plans = data.filter(r => {
-                for (let i = 0; i < r.hmo_id.providers.length; i++) {
-                    if(r.hmo_id.providers[i].gps) {
-                         if (r.hmo_id.providers[i].gps.latitude.toFixed(6) === lat){
-                        return r;
-                    }
-                    }
-                     
-                }
-            })*/
-
-    }
-
-    if (providers.length > 0) {
-        console.log("providers.length > 0");
-        // let data = recommended_plans ? recommended_plans : packages;
-        // recommended_plans = data.filter(plan => {
-        //     let provider_names = providers.map(
-        //      (selected_prvdr) => selected_prvdr.provider_name
-        //     );
-
-        //     return provider_names.includes
-        // })
-        let data = recommended_plans ? recommended_plans : packages;
-        let provider_names = providers.map(p => p.provider_name);
-        recommended_plans = await data.filter(r => {
-            return provider_names.some(d => {
-                return r.hmo_id.providers.map(p => p.provider_name).includes(d)
-            })
-        })
-    }
-
-    CAN_LOG && console.log("packages", packages);
+    console.log("packages", packages);
     //CAN_LOG && 
-    // console.log("final recommended_plans", recommended_plans);
+    console.log("final recommended_plans", recommended_plans);
     dispatch({
         type: GET_RECOMMENDED_PLANS,
         payload: recommended_plans

@@ -39,6 +39,7 @@ import family from "../../imgs/fam-l-min.png";
 
 import { formatAsCurrency } from "../../utils";
 import DataCaptureModal from "../payment/DataCapture";
+import { updateAppliedFilters } from "../../actions/userInputActions";
 
 export interface homeProps {
   [x: string]: any;
@@ -115,6 +116,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       plan_type: [],
       budget: [],
     },
+    trimmed_applied_filters: [],
     //infiniteScrollData: this.props.infiniteScrollData,
     // this.props.match.path === "/hmos/*"
     //   ? this.props.plansByHMO.slice(0, pageSize)
@@ -126,7 +128,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     //   compare_top_three_plans: !this.state.compare_top_three_plans,
     // });
     await this.props.compareTopThreePlans();
-    await this.topThreePlansToCompare();
+    this.topThreePlansToCompare();
     this.goToComparison();
   };
 
@@ -434,6 +436,11 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.filterByBudget_and_or_Type();
   }
 
+  updateAppliedFilters = async (data) => {
+    await this.props.updateAppliedFilters(data);
+    this.buildFilterQueryParams();
+  };
+
   async filterByBudget_and_or_Type() {
     //console.log("in filt");
 
@@ -454,30 +461,44 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     await this.props.filterByBudget_and_or_Type(params);
     if (this.props.responses.type.length > 0) {
-      this.setState({
-        applied_filters: {
-          ...this.state.applied_filters,
-          plan_type: this.props.responses.type,
-        },
+      // this.setState({
+      //   applied_filters: {
+      //     ...this.state.applied_filters,
+      //     plan_type: this.props.responses.type,
+      //   },
+      // });
+      await this.updateAppliedFilters({
+        key: "plan_type",
+        value: this.props.responses.type,
       });
+
       // console.log("this.props.responses.type", this.props.responses.type);
     }
 
     if (this.props.responses.budget.length > 0) {
-      this.setState({
-        applied_filters: {
-          ...this.state.applied_filters,
-          budget: this.props.responses.budget,
-        },
+      // this.setState({
+      //   applied_filters: {
+      //     ...this.state.applied_filters,
+      //     budget: this.props.responses.budget,
+      //   },
+      // });
+      this.updateAppliedFilters({
+        key: "budget",
+        value: this.props.responses.budget,
       });
     }
 
     if (this.props.responses.price_range.length > 0) {
-      this.setState({
-        applied_filters: {
-          ...this.state.applied_filters,
-          metal_level: this.props.responses.price_range,
-        },
+      // this.setState({
+      //   applied_filters: {
+      //     ...this.state.applied_filters,
+      //     metal_level: this.props.responses.price_range,
+      //   },
+      // });
+
+      this.updateAppliedFilters({
+        key: "metal_level",
+        value: this.props.responses.price_range,
       });
     }
     await this.props.resetInfiniteScrollData();
@@ -2071,11 +2092,14 @@ class NewContent extends React.Component<homeProps, homeState> {
           <p className={styles.sideBarHeadings}>
             {/* What is your annual price range{" "} */}
             What is the maximum you can afford to pay per year?
-            <span className="price-range">
-              ( {this.formatter(this.minbudgett)} -{" "}
-              {this.formatter(this.maxbudgett)})
-            </span>{" "}
-            ?
+            {this.props.responses.budget.length > 0 ? (
+              <span className="price-range">
+                ( {this.formatter(this.minbudgett)} -{" "}
+                {this.formatter(this.maxbudgett)}){" ?"}
+              </span>
+            ) : (
+              ""
+            )}
           </p>
           <Slider
             style={{ width: "80%", margin: "0px auto" }}
@@ -2086,7 +2110,8 @@ class NewContent extends React.Component<homeProps, homeState> {
             min={5000}
             max={1000000}
             onAfterChange={this.eventHandlers.changeBudget}
-            defaultValue={this.props.responses.budget}
+            defaultValue={[100, 300000]}
+            //{this.props.responses.budget}
           />
         </div>
         <div className="form-group num-div">
@@ -2697,6 +2722,13 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   }
 
+  getFiltersFromURLParams = async () => {
+    let params = this.props.match.params[0];
+    let paramsArr = params.split("/");
+    paramsArr = paramsArr.map((p) => p);
+    // this.propsParams = paramsArr;
+  };
+
   async UNSAFE_componentWillMount() {
     //this.handlePlanTypesCheck(this.props.responses.type);
     //this.handlePlanRangeCheck(this.props.responses.price_range);
@@ -2762,6 +2794,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   eventHandlers = {
     changeBudget: async (value: any) => {
+      this.props.responses.budget.length > 0 && this.props.resetBudget();
       this.minBudget = value[0];
       this.maxBudget = value[1];
       this.changek(this.minBudget, this.maxBudget);
@@ -2776,7 +2809,8 @@ class NewContent extends React.Component<homeProps, homeState> {
 
       //this.handlePriceRangeTitle();
 
-      this.filterByBudget_and_or_Type();
+      // this.filterByBudget_and_or_Type();
+      await this.getRecommendedPlans();
     },
   };
   formatter(value: number) {
@@ -2957,31 +2991,9 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   };
 
-  handleMedMgtProgCheck(id) {
-    //console.log"id", id);
-
-    let arr: string[] = this.state.filter_params.mgt_program_selected;
-
-    let isProgChecked: number = arr.indexOf(id);
-
-    //console.log"isProgChecked", isProgChecked);
-
-    if (isProgChecked > -1) {
-      arr.splice(isProgChecked, 1);
-    } else {
-      arr.push(id);
-    }
-
-    this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        mgt_program_selected: arr,
-      },
-    });
-  }
-
   handlePlanRangeCheck(id) {
-    let arr: string[] = this.state.filter_params.plan_range_checked;
+    this.props.handlePlanRangeCheck(id);
+    /* let arr: string[] = this.state.filter_params.plan_range_checked;
 
     let isPlanRangeChecked: number = arr.indexOf(id);
 
@@ -2996,12 +3008,12 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         plan_range_checked: arr,
       },
-    });
+    });*/
   }
 
   handlePlanTypesCheck(id) {
-    let arr: string[] = this.state.filter_params.plan_types_checked;
-
+    this.props.handlePlanTypesCheck(id);
+    /* let arr: string[] = this.state.filter_params.plan_types_checked;
     let isPlanChecked: number = arr.indexOf(id);
 
     if (isPlanChecked > -1) {
@@ -3015,20 +3027,22 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         plan_types_checked: arr,
       },
-    });
+    });*/
   }
 
   handleProviderSelected = (id) => {
-    this.setState({
+    this.props.handleProviderSelected(id);
+    /* this.setState({
       filter_params: {
         ...this.state.filter_params,
         providers_selected: id,
       },
-    });
+    });*/
   };
 
   handlePrescriptionSelected = (id) => {
-    let arr: string[] = this.state.filter_params.prescriptions_selected;
+    this.props.handlePrescriptionSelected(id);
+    /* let arr: string[] = this.state.filter_params.prescriptions_selected;
     arr.push(id);
 
     this.setState({
@@ -3036,11 +3050,12 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         arr,
       },
-    });
+    });*/
   };
 
   handleMinRangeChange(val) {
-    console.log(
+    this.props.handleMinRangeChange(val);
+    /* console.log(
       "this.state.filter_params.annual_range_min",
 
       this.state.filter_params.annual_range_min
@@ -3053,36 +3068,37 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         annual_range_min: val,
       },
-    });
+    });*/
   }
 
   handleMaxRangeChange(val) {
-    this.setState({
+    this.props.handleMaxRangeChange(val);
+    /* this.setState({
       filter_params: {
         ...this.state.filter_params,
         annual_range_max: val,
       },
-    });
+    });*/
   }
 
   handleTotalBenefitMinChange(val) {
-    // console.log("val", val);
-
-    this.setState({
+    this.props.handleTotalBenefitMinChange(val);
+    /*this.setState({
       filter_params: {
         ...this.state.filter_params,
         total_benefit_min: val,
       },
-    });
+    });*/
   }
 
   handleTotalBenefitMaxChange(val) {
-    this.setState({
+    this.props.handleTotalBenefitMaxChange(val);
+    /* this.setState({
       filter_params: {
         ...this.state.filter_params,
         total_benefit_max: val,
       },
-    });
+    });*/
   }
 
   filterByTotalBenefitLimit = async () => {
@@ -3106,65 +3122,70 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   handlePlanIDChange(val) {
-    this.setState({
+    this.props.handlePlanIDChange(val);
+    /* this.setState({
       filter_params: {
         ...this.state.filter_params,
         planID: val,
       },
-    });
-
-    // this.props.setPlanID(this.state.filter_params.planID)
+    });*/
   }
 
   async handleUserAddress() {
     this.getLocation();
+    /* this.props.enableSearchByProximity
 
     let v = this.state.filter_params.enableSearchByProximity;
     this.setState({
       filter_params: {
         ...this.state.filter_params,
         enableSearchByProximity: !v,
-        // location:
       },
     });
+
+    */
   }
 
   updateBudgetWithFilterRange = () => {
+    //updated
     this.eventHandlers.changeBudget([
-      this.state.filter_params.annual_range_min
-        ? this.state.filter_params.annual_range_min
+      this.props.filter_params.annual_range_min
+        ? this.props.filter_params.annual_range_min
         : this.props.responses.budget[0],
-      this.state.filter_params.annual_range_max
-        ? this.state.filter_params.annual_range_max
+      this.props.filter_params.annual_range_max
+        ? this.props.filter_params.annual_range_max
         : this.props.responses.budget[1],
     ]);
   };
 
   handleMinDedChange(val) {
-    this.setState({
+    this.props.handleMinDedChange(val);
+    /* this.setState({
       filter_params: {
         ...this.state.filter_params,
         annual_deductible_min: val,
       },
-    });
+    });*/
   }
 
   handleMaxDedChange(val) {
-    this.setState({
+    this.props.handleMaxDedChange(val);
+    /* this.setState({
       filter_params: {
         ...this.state.filter_params,
         annual_deductible_max: val,
       },
-    });
+    });*/
   }
 
   handleHMOSelected(val) {
-    this.setState({
+    this.props.handleHMOSelected(val);
+    /* this.setState({
       filter_params: {
         ...this.state.filter_params,
         hmo_selected: val,
       },
-    });
+    });*/
   }
 
   showCompareButton() {
@@ -3214,18 +3235,65 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.setPlansToCompareOnMobile(data);
   };
 
-  buildQueryParams = () => {
+  buildCompareQueryParams = () => {
     let query_string = "/plans/" + this.state.plans_to_compare[0];
 
     for (let i = 1; i < this.state.plans_to_compare.length; i++) {
       query_string += "/" + this.state.plans_to_compare[i];
     }
+
     return query_string;
   };
 
+  buildFilterQueryParams = async () => {
+    let x = await Object.entries(this.props.applied_filters);
+    // console.log("x", x);
+
+    let appliedFilters = x.filter((filt: any) => {
+      // console.log("filt[1]", filt[1]);
+
+      if (filt[1]) {
+        return filt[1].length > 0;
+      }
+    });
+
+    this.setState({
+      trimmed_applied_filters: appliedFilters,
+    });
+
+    let query_string = "";
+
+    for (let i = 0; i < appliedFilters.length; i++) {
+      query_string +=
+        "/search" + appliedFilters[i][0] + "/" + appliedFilters[i][1];
+    }
+    // console.log("appliedFilters", appliedFilters);
+    // console.log("query_string", query_string);
+
+    // this.props.history.push({
+    //   pathname: query_string,
+    // });
+    //return query_string;
+  };
+
+  updateURL() {
+    let path = "/search";
+
+    if (this.state.trimmed_applied_filters) {
+      let params = this.buildFilterQueryParams();
+      path = path + params;
+    }
+
+    // this.props.history.push({
+    //   pathname: path,
+    // });
+  }
+
+  propsParams = this.props.params;
+
   goToComparison = () => {
     if (this.state.plans_to_compare.length > 1) {
-      let q = this.buildQueryParams();
+      let q = this.buildCompareQueryParams();
 
       this.setRecPlansIndexesToCompare();
       this.props.history.push({
@@ -3343,7 +3411,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       total_benefit_min,
       total_benefit_max,
       user_address,
-    } = this.state.filter_params;
+    } = this.props.filter_params; // updated this.state.filter_params;
 
     console.log("user_address", user_address);
     console.log("this.props.location", this.props.location);
@@ -3360,8 +3428,10 @@ class NewContent extends React.Component<homeProps, homeState> {
       budget:
         annual_range_min && annual_range_max
           ? [annual_range_min, annual_range_max]
+          : this.props.responses.budget.length > 0
+          ? this.props.responses.budget
           : [],
-      planID: this.state.filter_params.planID,
+      planID: this.props.filter_params.planID,
       hmoID: hmo_selected,
       benefits: this.props.responses.benefits,
       total_benefit_range:
@@ -3406,74 +3476,106 @@ class NewContent extends React.Component<homeProps, homeState> {
       await this.props.getRecommendedPlans(filterBoxParams);
 
       if (range.length > 0) {
-        this.setState({
-          applied_filters: {
-            ...this.state.applied_filters,
-            metal_level: range,
-          },
+        // this.setState({
+        //   applied_filters: {
+        //     ...this.state.applied_filters,
+        //     metal_level: range,
+        //   },
+        // });
+        this.updateAppliedFilters({
+          key: "metal_level",
+          value: range,
         });
       }
 
       if (hmoID) {
-        this.setState({
-          applied_filters: {
-            ...this.state.applied_filters,
-            hmoID,
-          },
+        // this.setState({
+        //   applied_filters: {
+        //     ...this.state.applied_filters,
+        //     hmoID,
+        //   },
+        // });
+        this.updateAppliedFilters({
+          key: "hmoID",
+          value: hmoID,
         });
       }
 
       if (planID) {
-        this.setState({
-          applied_filters: {
-            ...this.state.applied_filters,
-            plan_ID: planID,
-          },
+        // this.setState({
+        //   applied_filters: {
+        //     ...this.state.applied_filters,
+        //     plan_ID: planID,
+        //   },
+        // });
+        this.updateAppliedFilters({
+          key: "plan_ID",
+          value: planID,
         });
       }
 
       if (benefits.length > 0) {
-        this.setState({
-          applied_filters: {
-            ...this.state.applied_filters,
-            benefits,
-          },
+        // this.setState({
+        //   applied_filters: {
+        //     ...this.state.applied_filters,
+        //     benefits,
+        //   },
+        // });
+        this.updateAppliedFilters({
+          key: "benefits",
+          value: benefits,
         });
       }
 
       if (total_benefit_range.length) {
-        this.setState({
-          applied_filters: {
-            ...this.state.applied_filters,
-            total_benefit_range,
-          },
+        // this.setState({
+        //   applied_filters: {
+        //     ...this.state.applied_filters,
+        //     total_benefit_range,
+        //   },
+        // });
+        this.updateAppliedFilters({
+          key: "total_benefit_range",
+          value: total_benefit_range,
         });
       }
 
       if (doctors.length) {
-        this.setState({
-          applied_filters: {
-            ...this.state.applied_filters,
-            doctors,
-          },
+        // this.setState({
+        //   applied_filters: {
+        //     ...this.state.applied_filters,
+        //     doctors,
+        //   },
+        // });
+        this.updateAppliedFilters({
+          key: "doctors",
+          value: doctors,
         });
       }
 
       if (lat_lng) {
-        this.setState({
-          applied_filters: {
-            ...this.state.applied_filters,
-            lat_lng,
-          },
+        // this.setState({
+        //   applied_filters: {
+        //     ...this.state.applied_filters,
+        //     lat_lng,
+        //   },
+        // });
+        this.updateAppliedFilters({
+          key: "lat_lng",
+          value: lat_lng,
         });
       }
 
       if (providers.length) {
-        this.setState({
-          applied_filters: {
-            ...this.state.applied_filters,
-            providers,
-          },
+        // this.setState({
+        //   applied_filters: {
+        //     ...this.state.applied_filters,
+        //     providers,
+        //   },
+        // });
+        this.updateAppliedFilters({
+          key: "providers",
+          value: providers,
         });
       }
 
@@ -3487,11 +3589,15 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.getPlanByID(planID);
     await this.props.resetInfiniteScrollData();
     if (planID) {
-      this.setState({
-        applied_filters: {
-          ...this.state.applied_filters,
-          plan_ID: planID,
-        },
+      // this.setState({
+      //   applied_filters: {
+      //     ...this.state.applied_filters,
+      //     plan_ID: planID,
+      //   },
+      // });
+      this.updateAppliedFilters({
+        key: " plan_ID",
+        value: planID,
       });
     }
     this.infiniteScrollDataReInitOnFilterApplied();
@@ -3502,14 +3608,15 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   resetTypeAndRangeFilters() {
+    //updated
     this.changeType(
-      this.state.filter_params.plan_types_checked[
-        this.state.filter_params.plan_types_checked.length - 1
+      this.props.filter_params.plan_types_checked[
+        this.props.filter_params.plan_types_checked.length - 1
       ]
     );
     this.setPriceRangeBasedOnTitle(
-      this.state.filter_params.plan_range_checked[
-        this.state.filter_params.plan_range_checked.length - 1
+      this.props.filter_params.plan_range_checked[
+        this.props.filter_params.plan_range_checked.length - 1
       ]
     );
   }
@@ -3519,7 +3626,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.resetSelectedDoctors();
     this.props.resetSelectedProviders();
 
-    this.setState({
+    /* this.setState({
       applied_filters: {
         metal_level: [],
         hmoID: null,
@@ -3547,8 +3654,12 @@ class NewContent extends React.Component<homeProps, homeState> {
         prescriptions_selected: [],
         enableSearchByProximity: false,
       },
-    });
-    await this.eventHandlers.changeBudget([100, 300000]);
+    }); */
+
+    this.props.resetFilterParams();
+
+    await this.eventHandlers.changeBudget([]);
+    this.props.resetBudget();
     this.props.resetType();
     this.props.resetRange();
     await this.props.resetInfiniteScrollData();
@@ -3700,26 +3811,22 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   showPosition = async (position) => {
-    // console.log(
-    //   "Latitude: " +
-    //     position.coords.latitude +
-    //     "Longitude: " +
-    //     position.coords.longitude
-    // );
-
     if (position.coords.latitude && position.coords.longitude) {
       this.props.setLocation([
         position.coords.latitude,
         position.coords.longitude,
       ]);
       await this.props.handleReverseGeocoding();
-      this.setState({
+      /* updated
+     
+     this.setState({
         filter_params: {
           ...this.state.filter_params,
           location: `${position.coords.latitude}, ${position.coords.longitude}`,
           user_address: this.props.user_address,
         },
-      });
+      });*/
+      this.props.setCoordinatesAndAddress(position);
     }
   };
 
@@ -3730,28 +3837,35 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   handleAddressImput = (e) => {
-    this.setState({
+    this.props.handleAddressImput(e.target.value);
+    /* this.setState({
       filter_params: {
         ...this.state.filter_params,
         user_address: e.target.value,
       },
-    });
+    });*/
   };
 
   clearDoctorsFilter = async () => {
     await this.props.resetSelectedDoctors();
-    this.setState({
+    this.props.clearDoctorsFilter();
+    /* updated
+   
+   this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         doctors: [],
       },
-    });
+    });*/
     await this.getRecommendedPlans();
   };
 
   clearProvidersFilter = async () => {
     await this.props.resetSelectedProviders();
-    this.setState({
+    this.props.clearProvidersFilter();
+    /* updated
+   
+   this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         providers: [],
@@ -3760,12 +3874,15 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         providers_selected: [],
       },
-    });
+    });*/
     await this.getRecommendedPlans();
   };
 
   clearBudgetFilter = async () => {
-    this.setState({
+    this.props.clearBudgetFilter();
+    /* updated
+   
+   this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         budget: [],
@@ -3775,14 +3892,16 @@ class NewContent extends React.Component<homeProps, homeState> {
         annual_range_min: "",
         annual_range_max: "",
       },
-    });
+    });*/
 
-    await this.eventHandlers.changeBudget([100, 300000]);
+    await this.eventHandlers.changeBudget([]);
+    await this.props.resetBudget();
     await this.getRecommendedPlans();
   };
 
   clearPlanTypeFilter = async () => {
-    this.setState({
+    this.props.clearPlanTypeFilter();
+    /* this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         plan_type: [],
@@ -3791,13 +3910,14 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         plan_types_checked: [],
       },
-    });
+    }); */
     await this.props.resetType();
     await this.getRecommendedPlans();
   };
 
   clearPlanMetalLevelFilter = async () => {
-    this.setState({
+    this.props.clearPlanMetalLevelFilter();
+    /*  this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         metal_level: [],
@@ -3806,13 +3926,14 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         plan_range_checked: [],
       },
-    });
+    });*/
     await this.props.resetRange();
     await this.getRecommendedPlans();
   };
 
   clearPlanIDFilter = async () => {
-    this.setState({
+    this.props.clearPlanIDFilter();
+    /*  this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         plan_ID: null,
@@ -3821,13 +3942,14 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         planID: "",
       },
-    });
+    }); */
     await this.props.resetPlanID();
     await this.getRecommendedPlans();
   };
 
   clearHMOIDFilter = async () => {
-    await this.setState({
+    this.props.clearHMOIDFilter();
+    /* this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         hmoID: null,
@@ -3836,13 +3958,14 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         hmo_selected: "",
       },
-    });
+    }); */
     await this.getRecommendedPlans();
   };
 
   clearProximityFilter = async () => {
     await this.props.resetLocation();
-    await this.setState({
+    this.props.clearProximityFilter();
+    /* this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         lat_lng: [],
@@ -3853,13 +3976,14 @@ class NewContent extends React.Component<homeProps, homeState> {
         user_address: "",
         enableSearchByProximity: false,
       },
-    });
+    }); */
 
     await this.getRecommendedPlans();
   };
 
   clearBenefitsFilter = async () => {
-    this.setState({
+    this.props.clearBenefitsFilter();
+    /* this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         benefits: [],
@@ -3868,13 +3992,14 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         benefits_selected: [],
       },
-    });
+    }); */
     await this.props.resetBenefits();
     await this.getRecommendedPlans();
   };
 
   clearTotalBenefitRangeFilter = async () => {
-    this.setState({
+    this.props.clearTotalBenefitRangeFilter();
+    /* this.setState({
       applied_filters: {
         ...this.state.applied_filters,
         total_benefit_range: [],
@@ -3883,7 +4008,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         ...this.state.filter_params,
         total_benefit_range: [],
       },
-    });
+    }); */
     await this.getRecommendedPlans();
   };
 
@@ -3891,7 +4016,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     //  console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
     // console.log("this.state.applied_filters", this.state.applied_filters);
 
-   // console.log("this.state", this.state);
+    // console.log("this.state", this.state);
 
     const {
       metal_level,
@@ -3904,7 +4029,8 @@ class NewContent extends React.Component<homeProps, homeState> {
       providers,
       plan_type,
       budget,
-    } = this.state.applied_filters;
+    } = this.props.applied_filters;
+    //this.state.applied_filters;
 
     let plansByHMO = this.props.plansByHMO;
     let allPlans =
@@ -3943,13 +4069,13 @@ class NewContent extends React.Component<homeProps, homeState> {
     //console.log"this.props", this.props);
 
     let med_mgt_programs_selected: string[] =
-      this.state.filter_params["mgt_program_selected"];
+      this.props.filter_params["mgt_program_selected"];
 
     let plan_types_checked: string[] =
-      this.state.filter_params["plan_types_checked"];
+      this.props.filter_params["plan_types_checked"];
 
     let plan_range_checked: string[] =
-      this.state.filter_params["plan_range_checked"];
+      this.props.filter_params["plan_range_checked"];
 
     let plans_to_compare: number[] = this.state.plans_to_compare;
 
@@ -3974,7 +4100,8 @@ class NewContent extends React.Component<homeProps, homeState> {
 
       planID,
       enableSearchByProximity,
-    } = this.state.filter_params;
+    } = this.props.filter_params;
+    //this.state.filter_params;
 
     let providersArr;
 
@@ -4245,17 +4372,17 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {metal_level.length > 0 && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearPlanMetalLevelFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`Metal Level(s): ${metal_level.map(
                               (m) => m,
                               ", "
                             )}`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearPlanMetalLevelFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4281,7 +4408,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {budget.length > 0 && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearBudgetFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`Price Range: ${
                               "₦" +
@@ -4291,10 +4421,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                               this.numberwithCommas(budget[1])
                             }`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearBudgetFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4320,14 +4447,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {plan_type.length > 0 && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearPlanTypeFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`Plan Type(s): ${plan_type.map((t) => t, ", ")}`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearPlanTypeFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4353,14 +4480,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {hmoID && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearHMOIDFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`HMO ID: ${hmoID}`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearHMOIDFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4386,14 +4513,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {plan_ID && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearPlanIDFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`Plan ID: ${plan_ID}`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearPlanIDFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4419,17 +4546,17 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {benefits.length > 0 && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearBenefitsFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`Benefit(s): ${benefits.map(
                               (b: any) => b.title,
                               ", "
                             )}`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearBenefitsFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4455,7 +4582,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {total_benefit_range.length > 0 && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearTotalBenefitRangeFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`Total Benefit Limit: ${
                               "₦" +
@@ -4465,10 +4595,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                               this.numberwithCommas(total_benefit_range[1])
                             }`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearTotalBenefitRangeFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4494,17 +4621,17 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {doctors.length > 0 && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearDoctorsFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`Doctor(s): ${doctors.map(
                               (d: any) => d.first_name + " " + d.last_name,
                               ", "
                             )}`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearDoctorsFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4530,14 +4657,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {lat_lng.length > 0 && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearProximityFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`Location: ${lat_lng[0] + ", " + lat_lng[1]}`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearProximityFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4563,17 +4690,17 @@ class NewContent extends React.Component<homeProps, homeState> {
                   {providers.length > 0 && (
                     <li className="display--inline-block">
                       <div className="c-filter-tag margin-top--0">
-                        <button className="c-filter-tag__button">
+                        <button
+                          className="c-filter-tag__button"
+                          onClick={this.clearProvidersFilter}
+                        >
                           <span className="c-filter-tag__label">
                             {`Provider(s): ${providers.map(
                               (p: any) => p.provider_name,
                               ", "
                             )}`}
                           </span>
-                          <span
-                            className="c-filter-tag__clear-icon"
-                            onClick={this.clearProvidersFilter}
-                          >
+                          <span className="c-filter-tag__clear-icon">
                             <svg
                               className="c-clear-icon"
                               width="15px"
@@ -4661,7 +4788,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       type="text"
                                       name="premium-start"
                                       value={
-                                        this.state.filter_params
+                                        this.props.filter_params
                                           .annual_range_min
                                       }
                                       // value={this.props.responses.budget[0]}
@@ -5214,7 +5341,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                             <select
                               className="c-field"
                               id="select_hmo_filter"
-                              value={this.state.filter_params.hmo_selected}
+                              value={this.props.filter_params.hmo_selected}
                               onChange={(e) =>
                                 this.handleHMOSelected(e.target.value)
                               }
@@ -5438,7 +5565,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     placeholder="E.g 7 Eric Moore street, Ikeja"
                                     onChange={(e) => this.handleAddressImput(e)}
                                     value={
-                                      this.state.filter_params.user_address
+                                      this.props.filter_params.user_address
                                     }
                                   />
 

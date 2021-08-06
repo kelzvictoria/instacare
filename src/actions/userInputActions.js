@@ -59,6 +59,7 @@ import {
     SET_PLAN_ID,
     SET_HMO_ID,
     RESET_TYPE,
+    RESET_BUDGET,
     RESET_RANGE,
     FORMAT_PRICES,
     FILTER_PROVIDERS,
@@ -84,7 +85,35 @@ import {
     GET_TOP_THREE_PLANS,
     RESET_SELECTED_DOCTOR,
     RESET_BENEFITS,
-    RESET_PLAN_ID
+    RESET_PLAN_ID,
+
+    HANDLE_PLAN_RANGE_CHECK,
+    HANDLE_PLAN_TYPES_CHECK,
+    HANDLE_PROVIDER_SELECTED,
+    HANDLE_PRESCRIPTION_SELECTED,
+    HANDLE_MIN_RANGE_CHANGE,
+    HANDLE_MAX_RANGE_CHANGE,
+    HANDLE_TOTAL_BENEFIT_MIN_CHANGE,
+    HANDLE_TOTAL_BENEFIT_MAX_CHANGE,
+    HANDLE_PLAN_ID_CHANGE,
+    ENABLE_SEARCH_BY_PROXIMITY,
+    HANDLE_MIN_DED_CHANGE,
+    HANDLE_MAX_DED_CHANGE,
+    HANDLE_HMO_SELECTED,
+    RESET_FILTER_PARAMS,
+    SET_COORDINATES_AND_ADDRESS,
+    HANDLE_ADDRESS_IMPUT,
+    CLEAR_DOCTORS_FILTER,
+    CLEAR_PROVIDERS_FILTER,
+    CLEAR_BUDGET_FILTER,
+    CLEAR_PLAN_TYPE_FILTER,
+    CLEAR_PLAN_METAL_LEVEL_FILTER,
+    CLEAR_PLAN_ID_FILTER,
+    CLEAR_HMO_ID_FILTER,
+    CLEAR_PROXIMITY_FILTER,
+    CLEAR_BENEFITS_FILTER,
+    CLEAR_TOTAL_BENEFIT_RANGE_FILTER,
+    UPDATE_APPLIED_FILTERS
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
 
@@ -194,7 +223,7 @@ export const updateGender = (payload) => (dispatch, getState) => {
 export const updateType = (data) => (dispatch, getState) => {
     // console.log("data", data);
     let types = [...getState().quiz.responses.type];
-    console.log("types", types);
+    // console.log("types", types);
 
     let isTypeChecked = types.indexOf(data.value);
 
@@ -436,6 +465,13 @@ export const setHMOID = (hmoID) => (dispatch, getState) => {
     })
 }
 
+export const resetBudget = () => (dispatch, getState) => {
+    dispatch({
+        type: RESET_BUDGET,
+        payload: []
+    })
+}
+
 export const resetType = () => (dispatch, getState) => {
     dispatch({
         type: RESET_TYPE,
@@ -597,5 +633,435 @@ export const toggleFilterBox = () => (dispatch, getState) => {
 export const compareTopThreePlans = (val) => (dispatch, getState) => {
     dispatch({
         type: COMPARE_TOP_THREE_PLANS,
+    })
+}
+
+export const handlePlanRangeCheck = (id) => (dispatch, getState) => {
+    let arr = [...getState().quiz.filter_params.plan_range_checked];
+
+    let isPlanRangeChecked = arr.indexOf(id);
+
+    if (isPlanRangeChecked > -1) {
+        arr.splice(isPlanRangeChecked, 1);
+    } else {
+        arr.push(id);
+    }
+
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        plan_range_checked: arr,
+    }
+
+    dispatch({
+        type: HANDLE_PLAN_RANGE_CHECK,
+        payload: filter_params
+    })
+}
+
+export const handlePlanTypesCheck = (id) => (dispatch, getState) => {
+    let arr = [...getState().quiz.filter_params.plan_types_checked];
+    let isPlanChecked = arr.indexOf(id);
+
+    if (isPlanChecked > -1) {
+        arr.splice(isPlanChecked, 1);
+    } else {
+        arr.push(id);
+    }
+
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        plan_types_checked: arr,
+    }
+
+    dispatch({
+        type: HANDLE_PLAN_TYPES_CHECK,
+        payload: filter_params
+    })
+}
+
+export const handleProviderSelected = (id) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        providers_selected: id,
+    }
+
+    dispatch({
+        type: HANDLE_PROVIDER_SELECTED,
+        payload: filter_params
+    })
+};
+
+export const handlePrescriptionSelected = (id) => (dispatch, getState) => {
+    let arr = getState().quiz.filter_params.prescriptions_selected;
+    arr.push(id);
+
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        arr,
+    }
+    dispatch({
+        type: HANDLE_PRESCRIPTION_SELECTED,
+        payload: filter_params
+    })
+};
+
+export const handleMinRangeChange = (val) => (dispatch, getState) => {
+
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        annual_range_min: val,
+    }
+    dispatch({
+        type: HANDLE_MIN_RANGE_CHANGE,
+        payload: filter_params
+    })
+}
+
+export const handleMaxRangeChange = (val) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        annual_range_max: val,
+    }
+    dispatch({
+        type: HANDLE_MAX_RANGE_CHANGE,
+        payload: filter_params
+    })
+}
+
+export const handleTotalBenefitMinChange = (val) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        total_benefit_min: val,
+    }
+
+    dispatch({
+        type: HANDLE_TOTAL_BENEFIT_MIN_CHANGE,
+        payload: filter_params
+    })
+}
+
+export const handleTotalBenefitMaxChange = (val) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        total_benefit_max: val,
+    }
+
+    dispatch({
+        type: HANDLE_TOTAL_BENEFIT_MAX_CHANGE,
+        payload: filter_params
+    })
+}
+
+export const handlePlanIDChange = (val) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        planID: val,
+    }
+
+    dispatch({
+        type: HANDLE_PLAN_ID_CHANGE,
+        payload: filter_params
+    })
+}
+
+export const enableSearchByProximity = () => (dispatch, getState) => {
+    let v = getState().quiz.filter_params.enableSearchByProximity;
+
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        enableSearchByProximity: !v,
+    }
+
+    dispatch({
+        type: ENABLE_SEARCH_BY_PROXIMITY,
+        payload: filter_params
+    })
+}
+
+export const handleMinDedChange = (val) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        annual_deductible_min: val,
+    }
+
+    dispatch({
+        type: HANDLE_MIN_DED_CHANGE,
+        payload: filter_params
+    })
+}
+
+export const handleMaxDedChange = (val) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        annual_deductible_max: val,
+    }
+
+    dispatch({
+        type: HANDLE_MAX_DED_CHANGE,
+        payload: filter_params
+    })
+}
+
+export const handleHMOSelected = (val) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        hmo_selected: val,
+    }
+    dispatch({
+        type: HANDLE_HMO_SELECTED,
+        payload: filter_params
+    })
+}
+
+export const resetFilterParams = () => (dispatch, getState) => {
+    let applied_filters = {
+        metal_level: [],
+        hmoID: null,
+        plan_ID: null,
+        benefits: [],
+        total_benefit_range: [],
+        doctors: [],
+        lat_lng: [],
+        providers: [],
+        plan_type: [],
+        budget: [],
+    }
+
+    let filter_params = {
+        ...this.state.filter_params,
+        annual_range_min: "",
+        annual_range_max: "",
+        annual_deductible_min: "",
+        annual_deductible_max: "",
+        plan_types_checked: [],
+        plan_range_checked: [],
+        planID: "",
+        hmo_selected: "",
+        mgt_program_selected: [],
+        providers_selected: [],
+        prescriptions_selected: [],
+        enableSearchByProximity: false,
+    }
+
+    dispatch({
+        type: RESET_FILTER_PARAMS,
+        payload: {
+            filter_params,
+            applied_filters
+        }
+    })
+}
+
+export const setCoordinatesAndAddress = (position) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        location: `${position.coords.latitude}, ${position.coords.longitude}`,
+        user_address: getState().fetchData.user_address,
+    }
+    dispatch({
+        type: SET_COORDINATES_AND_ADDRESS,
+        payload: filter_params
+    })
+}
+
+export const handleAddressImput = (val) => (dispatch, getState) => {
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        user_address: val,
+    }
+
+    dispatch({
+        type: HANDLE_ADDRESS_IMPUT,
+        payload: filter_params
+    })
+}
+
+export const clearDoctorsFilter = () => (dispatch, getState) => {
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        doctors: [],
+    };
+
+    dispatch({
+        type: CLEAR_DOCTORS_FILTER,
+        payload: applied_filters
+    })
+
+}
+
+export const clearProvidersFilter = () => (dispatch, getState) => {
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        providers: [],
+    };
+
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        providers_selected: [],
+    }
+    dispatch({
+        type: CLEAR_PROVIDERS_FILTER,
+        payload: {
+            applied_filters,
+            filter_params
+        }
+    })
+}
+
+export const clearBudgetFilter = () => async (dispatch, getState) => {
+    await dispatch(updateBudget([]))
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        budget: [],
+    }
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        annual_range_min: "",
+        annual_range_max: "",
+    }
+
+    dispatch({
+        type: CLEAR_BUDGET_FILTER,
+        payload: {
+            applied_filters,
+            filter_params
+        }
+    })
+};
+
+export const clearPlanTypeFilter = () => (dispatch, getState) => {
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        plan_type: [],
+    }
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        plan_types_checked: [],
+    }
+
+    dispatch({
+        type: CLEAR_PLAN_TYPE_FILTER,
+        payload: {
+            applied_filters,
+            filter_params
+        }
+    })
+};
+
+export const clearPlanMetalLevelFilter = () => (dispatch, getState) => {
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        metal_level: [],
+    }
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        plan_range_checked: [],
+    }
+
+    dispatch({
+        type: CLEAR_PLAN_METAL_LEVEL_FILTER,
+        payload: {
+            applied_filters,
+            filter_params
+        }
+    })
+};
+
+export const clearPlanIDFilter = () => (dispatch, getState) => {
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        plan_ID: null,
+    }
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        planID: "",
+    }
+    dispatch({
+        type: CLEAR_PLAN_ID_FILTER,
+        payload: {
+            applied_filters,
+            filter_params
+        }
+    })
+}
+
+export const clearHMOIDFilter = () => (dispatch, getState) => {
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        hmoID: null,
+    }
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        hmo_selected: "",
+    }
+    dispatch({
+        type: CLEAR_HMO_ID_FILTER,
+        payload: {
+            applied_filters,
+            filter_params
+        }
+    })
+}
+
+export const clearProximityFilter = () => (dispatch, getState) => {
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        lat_lng: [],
+    }
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        location: undefined,
+        user_address: "",
+        enableSearchByProximity: false,
+    }
+    dispatch({
+        type: CLEAR_PROXIMITY_FILTER,
+        payload: {
+            applied_filters,
+            filter_params
+        }
+    })
+}
+
+export const clearBenefitsFilter = () => (dispatch, getState) => {
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        benefits: [],
+    }
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        benefits_selected: [],
+    }
+    dispatch({
+        type: CLEAR_BENEFITS_FILTER,
+        payload: {
+            applied_filters,
+            filter_params
+        }
+    })
+}
+
+export const clearTotalBenefitRangeFilter = () => (dispatch, getState) => {
+    let applied_filters = {
+        ...getState().quiz.applied_filters,
+        total_benefit_range: [],
+    }
+    let filter_params = {
+        ...getState().quiz.filter_params,
+        total_benefit_range: [],
+    }
+    dispatch({
+        type: CLEAR_TOTAL_BENEFIT_RANGE_FILTER,
+        payload: {
+            applied_filters,
+            filter_params
+        }
+    })
+}
+
+export const updateAppliedFilters = (filter) => (dispatch, getState) => {
+    dispatch({
+        type: UPDATE_APPLIED_FILTERS,
+        payload: filter
     })
 }
