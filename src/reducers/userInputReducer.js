@@ -5,6 +5,7 @@ import {
     UPDATE_PRICE_RANGE,
     CHANGE_PLAN_TYPE,
     UPDATE_TEXT_RESPONSE,
+
     RESET_RESPONSES,
     UPDATE_BUDGET,
     RESET_PLANS,
@@ -54,7 +55,6 @@ import {
 
     GET_PROVIDER_INFO,
 
-    FILTER_PROVIDERS,
     FILTER_BENEFITS,
     FILTER_DOCTORS,
     FILTER_PRESCRIPTIONS,
@@ -176,6 +176,10 @@ const initialState = {
         compare_plan_id_param: [],
         compare_top_three_plans: false
     },
+    doctorsDataSource: localStorage["doctors"] ?
+        JSON.parse(localStorage["doctors"]).map(
+            (doctor) => doctor.doctor_name
+        ) : [],
     dataSource:
         //localStorage["providers"] ? 
         // JSON.parse(localStorage["providers"]).map(
@@ -321,6 +325,7 @@ export default function (state = initialState, action) {
                 }
             }
             return state;
+
 
 
         case RESET_RESPONSES:
@@ -626,16 +631,7 @@ export default function (state = initialState, action) {
                 }
             }
 
-        case FILTER_PROVIDERS:
-            if (action.payload) {
-                let data_source = [];
-                data_source.push(...action.payload);
-                return {
-                    ...state,
-                    dataSource: data_source
-                }
-            }
-            break;
+
         case FILTER_DOCTORS:
             if (action.payload) {
                 let data_source = [];

@@ -164,6 +164,13 @@ export const updateTextResponse = (resObj) => (dispatch, getState) => {
     })
 }
 
+export const resetTextResponse = (resObj) => (dispatch, getState) => {
+    dispatch({
+        type: UPDATE_TEXT_RESPONSE,
+        payload: resObj
+    })
+}
+
 export const resetResponses = (resObj) => (dispatch, getState) => {
     dispatch({
         type: RESET_RESPONSES,
@@ -536,9 +543,10 @@ export const filterBenefits = (benefits) => (dispatch) => {
 }
 
 export const setProviders = (data) => (dispatch, getState) => {
+    let providers = data
     dispatch({
         type: SET_PROVIDERS,
-        payload: data
+        payload: providers
     })
 }
 

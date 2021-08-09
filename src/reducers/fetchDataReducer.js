@@ -42,7 +42,8 @@ import {
     HANDLE_REVERSE_GEOCODING,
 
     RESET_BENEFITS,
-    RESET_LOCATION
+    RESET_LOCATION,
+    FILTER_PROVIDERS,
 } from "../actions/types";
 
 const initialState = {
@@ -217,7 +218,11 @@ const initialState = {
     infiniteScrollDataHasMore: false,
     pageSize: 5,
     location: [],
-    user_address: ""
+    user_address: "",
+    providersDataSource: localStorage["providers"] ?
+        JSON.parse(localStorage["providers"]).map(
+            (provider) => provider.provider_name
+        ) : [],
 }
 
 export default function (state = initialState, action) {
@@ -252,7 +257,8 @@ export default function (state = initialState, action) {
             }
 
         case GET_PROVIDERS:
-            localStorage["providers"] = JSON.stringify(action.payload)
+            localStorage["providers"] = JSON.stringify(action.payload);
+            //localStorage["providersDataSource"] = JSON.stringify(action.payload);
             return {
                 ...state,
                 providers: action.payload,
@@ -441,7 +447,18 @@ export default function (state = initialState, action) {
                 user_address: "",
                 location: [],
             }
+        case FILTER_PROVIDERS:
+            console.log("action.payload", action.payload);
+            if (action.payload) {
 
+                let data_source = [];
+                data_source.push(...action.payload);
+                return {
+                    ...state,
+                    providersDataSource: data_source
+                }
+            }
+            break;
         default:
             return state
 

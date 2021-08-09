@@ -2756,6 +2756,9 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   componentWillMount() {
+    console.log("will");
+    //let plansSection = document.getElementById("plans")!;
+    // plansSection.scrollIntoView({ behavior: "smooth" });
     document.addEventListener("scroll", this.trackScrolling);
   }
 

@@ -121,3 +121,7 @@
     justify-content: space-between;
   }
 }
+
+.selected-providers-list {
+  justify-content: normal !important;
+}

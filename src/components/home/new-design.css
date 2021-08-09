@@ -1048,7 +1048,8 @@ a {
 }
 
 .c-range-field__input {
-  max-width: 78px;
+  /* max-width: 78px; */
+  max-width: 92px;
   flex-shrink: 1;
 }
 

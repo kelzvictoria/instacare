@@ -6511,3 +6511,7 @@ div#box-mob-slider {
     /* width: calc(100% * 1 / 6.001) !important; */
   }
 }
+
+.c-list--bare li {
+  padding-bottom: 0.5rem !important;
+}
