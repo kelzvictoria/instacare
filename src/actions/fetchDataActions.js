@@ -337,7 +337,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     let recommended_plans;
 
     let packages = planType.length > 0 ? plansByPlanType : services;
-    packages = benefits.length > 0 ? await groupPlansByBenefit(packages, benefits) : packages;
+    packages = benefits.length > 0 ? await groupPlansByBenefit(packages, allBenefits, benefits) : packages;
     packages = planRange.length > 0 ? await groupPlansByRange(packages, planRange) : packages;
     packages = lat_lng.length > 0 ? await filterByProximity(lat_lng, packages) : packages;
     packages = budget.length > 0 ? await packages.filter(pckage => {
@@ -855,13 +855,17 @@ export const filterByBenefits = (rec_plans, benefits) => async (dispatch, getSta
 
 }
 
-export const groupPlansByBenefit = (packages, allBenefits, benefit) => {
+export const groupPlansByBenefit = (packages,
+    allBenefits,
+    benefit) => {
     console.log("packages", packages);
     let filteredPlansByBenefit = [];
     let filt;
 
+
     let allBenefitsArr = allBenefits.map(b => b.id)
     console.log("allBenefitsArr", allBenefitsArr);
+    console.log("benefit", benefit);
 
     benefit = benefit.map(b => b.id)
 

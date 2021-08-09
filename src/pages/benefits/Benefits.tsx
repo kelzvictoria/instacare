@@ -16,6 +16,7 @@ import {
   updateTextResponse,
   filterBenefits,
   setBenefits,
+  resetTextResponse,
 } from "../../actions/userInputActions";
 
 import { filterByBenefits } from "../../actions/fetchDataActions";
@@ -30,7 +31,7 @@ class Benefits extends Component<BenefitsProps> {
     search_arg: "",
     selected_benefits: [],
     selected_benefits_data: [],
-    show_benefits_listing_div: false,
+    // show_benefits_listing_div: false,
   };
 
   onSearch = async (searchText: string) => {
@@ -57,7 +58,7 @@ class Benefits extends Component<BenefitsProps> {
     }
   };
 
-  onSelectChange = (value: any) => {
+  onSelectChange = async (value: any) => {
     this.getBenefitInfo(value);
 
     // this.props.dispatch({
@@ -65,57 +66,70 @@ class Benefits extends Component<BenefitsProps> {
     //   data: { key: "benefit", value },
     // });
 
-    this.props.updateTextResponse({ key: "benefit", value });
+    await this.props.updateTextResponse({ key: "benefit", value });
 
     console.log(this.props.responses.state);
   };
 
-  getBenefitInfo = (name) => {
-    let info = this.props.benefits.filter((benefit) => benefit.title == name); //home_utils.benefitsInfo
+  getBenefitInfo = async (name) => {
+    let info = this.props.benefits.filter((benefit) => benefit.title === name); //home_utils.benefitsInfo
 
-    this.setState({
+    await this.setState({
       search_arg: info[0],
     });
+
+    if (name) {
+      this.addBenefitToSelectedList(name);
+    }
   };
 
-  addBenefitToSelectedList = (prov_name) => {
-    let arr: string[] = this.state.selected_benefits;
-    let data_arr: string[] = this.state.selected_benefits_data;
+  addBenefitToSelectedList = (benefit) => {
+    let arr: string[] =
+      this.props.responses.benefits.length > 0
+        ? this.props.responses.benefits.map((b) => b.title)
+        : [...this.state.selected_benefits];
 
-    let isBenefitSelected: number = arr.indexOf(prov_name);
+    let data_arr: string[] =
+      this.props.responses.benefits.length > 0
+        ? [...this.props.responses.providers]
+        : [...this.state.selected_benefits_data];
+
+    let isBenefitSelected: number = arr.indexOf(benefit);
 
     if (isBenefitSelected > -1) {
       arr.splice(isBenefitSelected, 1);
       data_arr.splice(isBenefitSelected, 1);
     } else {
-      arr.push(prov_name);
-      data_arr.push(this.state.search_arg);
+      if (this.state.search_arg) {
+        arr.push(benefit);
+        data_arr.push(this.state.search_arg);
+      }
+
+      this.setState({
+        selected_benefits: arr,
+        selected_benefits_data: data_arr,
+      });
     }
-
-    // this.props.dispatch({
-    //   type: actions.UPDATE_SELECTED_PROVIDERS,
-    //   data: arr,
-    // });
-
-    this.setState({
-      selected_benefits: arr,
-      selected_benefits_data: data_arr,
-    });
   };
 
-  toggleShowSelectedBenefits = () => {
-    this.setState({
-      show_benefits_listing_div: !this.state.show_benefits_listing_div,
-    });
-  };
+  // toggleShowSelectedBenefits = () => {
+  //   this.setState({
+  //     show_benefits_listing_div: !this.state.show_benefits_listing_div,
+  //   });
+  // };
 
   componentDidUpdate(prevProps) {}
 
   setBenefits = async () => {
     //;
-    await this.props.setBenefits(this.state.selected_benefits_data);
+    let benefits = this.state.selected_benefits_data;
+    await this.props.setBenefits(benefits);
     //.map(b => b['id']));
     this.props.history.push({ pathname: "/" });
+    this.props.resetTextResponse({
+      key: "benefit",
+      value: "",
+    });
     //await this.filterByBenefits();
   };
 
@@ -128,17 +142,23 @@ class Benefits extends Component<BenefitsProps> {
   //   };
 
   render() {
-    // console.log("this.state", this.state);
+    console.log("this.state", this.state);
 
     let benefits_arr: string[] = this.state.selected_benefits;
+    let selected_benefits_data =
+      this.props.responses.benefits.length > 0 &&
+      this.state.selected_benefits.length === 0
+        ? this.props.responses.benefits
+        : this.state.selected_benefits_data;
+
     return (
       <div className="main-body-content">
         <div className="container c-page-wrapper qa-benefit-search-page">
           <div
             className={
-              !this.state.show_benefits_listing_div
-                ? "additions"
-                : "display--none"
+              //!this.state.show_benefits_listing_div ?
+              "additions"
+              // : "display--none"
             }
           >
             <div className="c-coverables-search">
@@ -160,8 +180,9 @@ class Benefits extends Component<BenefitsProps> {
 
                       <AutoComplete
                         // size="large"
+                        allowClear={true}
                         style={{ width: "100%" }}
-                        dataSource={this.props.dataSource}
+                        dataSource={this.props.benefitsDataSource}
                         onSearch={this.onSearch}
                         onChange={this.onSelectChange}
                         placeholder="Example: Optical Care"
@@ -184,101 +205,55 @@ class Benefits extends Component<BenefitsProps> {
               </div>
 
               <div className="margin-top--5 margin-bottom--1 benefits-results">
-                {this.state.search_arg && (
+                {/* {this.state.search_arg && (
                   <h2 className="ic-color margin-bottom--2 font-size--base font-weight--normal">
                     Showing results for{" "}
                     <span className="font-weight--bold">
                       {this.props.responses.benefit}
                     </span>
                   </h2>
-                )}
-                {this.state.search_arg && (
-                  <ul className="c-coverables-search__results c-list--bare">
-                    <li className="c-coverable-result box-shadow margin-top--1 margin-bottom--2">
-                      {/* c-coverable-result--selected */}
-                      <div className="display--flex justify-content--between align-items--start">
-                        <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                          {this.state.search_arg["title"]}
-                        </h5>
-
-                        <div>
-                          <button
-                            className="c-button c-button--small"
-                            type="button"
-                            onClick={() =>
-                              this.addBenefitToSelectedList(
-                                this.state.search_arg["title"]
-                              )
-                            }
-                          >
-                            {" "}
-                            {benefits_arr.indexOf(
-                              this.state.search_arg["title"]
-                            ) > -1
-                              ? "Remove"
-                              : "Add"}
-                            {/* Remove */}
-                          </button>
-                        </div>
-                      </div>
-                      <div>
-                        {/* <div className="benefit-search__result__taxonomy">
-                          {this.state.search_arg["title"]}
-                        </div> */}
-
-                        {/* <div className="benefit-search__result__specialties">
-                          <span>primary care - nurse practioner</span>
-                        </div> */}
-
-                        {/* <div className="benefit-search__result__location">
-                          <span className="text-transform--capitalize">
-                            {this.state.search_arg["city"]},{" "}
-                            {this.state.search_arg["state"]}
-                          </span>
-                        </div> */}
-                      </div>
-                    </li>
+                )} */}
+                {selected_benefits_data.length > 0 && (
+                  <ul className="c-coverables-search__results c-list--bare selected-providers-list">
+                    {selected_benefits_data.map((selected_benefit, i) => {
+                      return (
+                        <li className="display--inline-block">
+                          <div className="c-filter-tag margin-top--0">
+                            <button
+                              className="c-filter-tag__button"
+                              onClick={() =>
+                                this.addBenefitToSelectedList(
+                                  selected_benefit["title"]
+                                )
+                              }
+                            >
+                              <span className="c-filter-tag__label">
+                                {selected_benefit["title"]}
+                              </span>
+                              <span className="c-filter-tag__clear-icon">
+                                <svg
+                                  className="c-clear-icon"
+                                  width="15px"
+                                  height="15px"
+                                  viewBox="0 0 15 15"
+                                  version="1.1"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  focusable="false"
+                                  role="presentation"
+                                  pointer-events="none"
+                                >
+                                  <path
+                                    className="c-clear-icon__x"
+                                    d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
+                                  ></path>
+                                </svg>
+                              </span>
+                            </button>
+                          </div>
+                        </li>
+                      );
+                    })}{" "}
                   </ul>
-                )}
-                <div className="display--flex justify-content--between">
-                  <div className="c-pagination__end-button"></div>
-
-                  <div className="c-pagination__end-button"></div>
-                </div>
-              </div>
-
-              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 benefits-search-selection-controls">
-                {this.state.selected_benefits.length > 0 && (
-                  <div className="">
-                    <div className="margin-bottom--1">
-                      {`${this.state.selected_benefits.length} ${
-                        this.state.selected_benefits.length > 1
-                          ? "benefits"
-                          : "benefit"
-                      } 
-                      selected `}
-                    </div>
-                    <a
-                      className="c-button qa-edit-selections"
-                      //href="#/find-benefit/search/edit"
-                      role="button"
-                      onClick={this.toggleShowSelectedBenefits}
-                    >
-                      See/Edit selections
-                    </a>
-
-                    <a
-                      className="c-button c-button--primary margin-left--1 qa-continue"
-                      href="#"
-                      onClick={() => {
-                        this.setBenefits();
-                        //this.filterByBenefits()
-                      }}
-                      role="button"
-                    >
-                      Continue
-                    </a>
-                  </div>
                 )}
               </div>
             </div>
@@ -292,121 +267,6 @@ class Benefits extends Component<BenefitsProps> {
             </button>
             {/* </a> */}
           </div>
-
-          <div
-            className={
-              this.state.show_benefits_listing_div
-                ? "listings margin-top--3"
-                : "display--none"
-            }
-          >
-            <a
-              onClick={this.toggleShowSelectedBenefits}
-              className="text-transform--capitalize"
-            >
-              <FontAwesomeIcon className="margin-right--1" icon={faArrowLeft} />
-              back
-            </a>
-            <div className="c-coverables-search">
-              <h1 className="font-size--h1 font-weight--normal margin-top--3 leading--base">
-                Doctors & facilities
-              </h1>
-              <div className="padding-left--0">
-                <div className="display--flex align-items--end">
-                  <div className="clearfix c-autocomplete c-search-field__autocomplete margin-right--1">
-                    <div className="clearfix">
-                      <label
-                        className="c-label margin-top--0"
-                        id="autocomplete_benefits"
-                      >
-                        {/* <span>
-                          Doctors & facilities
-                        </span>{" "} */}
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="margin-bottom--1 benefits-results">
-                {this.state.selected_benefits_data.length !== 0 && (
-                  <ul className="c-coverables-search__results c-list--bare">
-                    {this.state.selected_benefits_data.map(
-                      (selected_benefit, i) => {
-                        return (
-                          <li className="c-coverable-result box-shadow margin-top--1 margin-bottom--2">
-                            {/* c-coverable-result--selected */}
-                            <div className="display--flex justify-content--between align-items--start">
-                              <h5 className="h5 margin-top--0 overflow-wrap--break-word c-coverable-result--title">
-                                {selected_benefit["benefit_name"]}
-                              </h5>
-
-                              <div>
-                                <button
-                                  className="c-button c-button--small"
-                                  type="button"
-                                  onClick={() =>
-                                    this.addBenefitToSelectedList(
-                                      selected_benefit["benefit_name"]
-                                    )
-                                  }
-                                >
-                                  {" "}
-                                  {benefits_arr.indexOf(
-                                    selected_benefit["benefit_name"]
-                                  ) > -1
-                                    ? "Remove"
-                                    : "Add"}
-                                  {/* Remove */}
-                                </button>
-                              </div>
-                            </div>
-                            <div>
-                              <div className="benefit-search__result__taxonomy">
-                                {selected_benefit["coverage_type"]}
-                              </div>
-
-                              {/* <div className="benefit-search__result__specialties">
-                            <span>primary care - nurse practioner</span>
-                          </div> */}
-
-                              <div className="benefit-search__result__location">
-                                <span className="text-transform--capitalize">
-                                  {selected_benefit["city"]},{" "}
-                                  {selected_benefit["state"]}
-                                </span>
-                              </div>
-                            </div>
-                          </li>
-                        );
-                      }
-                    )}
-                  </ul>
-                )}
-
-                {this.state.selected_benefits_data.length == 0 && (
-                  <p className="p-nil">
-                    No medical benefits have been selected yet.
-                  </p>
-                )}
-                <div className="display--flex justify-content--between">
-                  <div className="c-pagination__end-button"></div>
-
-                  <div className="c-pagination__end-button"></div>
-                </div>
-              </div>
-
-              <div className="c-sticky c-sticky--bottom c-coverables-search__selection-controls padding-y--2 benefits-search-selection-controls">
-                <a
-                  className="c-button c-button--primary qa-continue"
-                  href="#/plan/results"
-                  role="button"
-                >
-                  Continue to plans
-                </a>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     );
@@ -419,6 +279,7 @@ const mapProps = (state: any) => {
     // ...state.quiz.quiz,
     responses: state.quiz.responses,
     dataSource: state.quiz.dataSource,
+    benefitsDataSource: state.fetchData.benefitsDataSource,
     benefits: state.fetchData.benefits,
   };
 };
@@ -428,4 +289,5 @@ export default connect(mapProps, {
   filterBenefits,
   setBenefits,
   filterByBenefits,
+  resetTextResponse,
 })(Benefits);

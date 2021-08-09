@@ -176,10 +176,10 @@ const initialState = {
         compare_plan_id_param: [],
         compare_top_three_plans: false
     },
-    doctorsDataSource: localStorage["doctors"] ?
-        JSON.parse(localStorage["doctors"]).map(
-            (doctor) => doctor.doctor_name
-        ) : [],
+    // doctorsDataSource: localStorage["doctors"] ?
+    //     JSON.parse(localStorage["doctors"]).map(
+    //         (doctor) => doctor.doctor_name
+    //     ) : [],
     dataSource:
         //localStorage["providers"] ? 
         // JSON.parse(localStorage["providers"]).map(

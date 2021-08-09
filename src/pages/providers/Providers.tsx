@@ -67,7 +67,7 @@ class Providers extends Component<ProvidersProps> {
 
   getProviderInfo = async (name) => {
     let info = this.props.providers.filter(
-      (provider) => provider.provider_name == name
+      (provider) => provider.provider_name === name
     );
 
     await this.setState({

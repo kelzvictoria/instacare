@@ -45,6 +45,7 @@ import {
     RESET_LOCATION,
     FILTER_PROVIDERS,
     FILTER_DOCTORS,
+    FILTER_BENEFITS
 } from "../actions/types";
 
 const initialState = {
@@ -64,8 +65,8 @@ const initialState = {
         localStorage["doctors"] ? JSON.parse(localStorage["doctors"]) :
             [],
 
-    benefits: localStorage["benefits"] ?
-        JSON.parse(localStorage["benefits"]) :
+    benefits:
+        // localStorage["benefits"] ? JSON.parse(localStorage["benefits"]) :
         [
             {
                 id: "accidents_emergencies",
@@ -228,6 +229,10 @@ const initialState = {
         JSON.parse(localStorage["doctors"]).map(
             (doctor) => doctor.first_name + " " + doctor.last_name
         ) : [],
+    benefitsDataSource: localStorage["benefits"] ?
+        JSON.parse(localStorage["benefits"]).map(
+            (benefit) => benefit.title
+        ) : [],
 }
 
 export default function (state = initialState, action) {
@@ -263,7 +268,7 @@ export default function (state = initialState, action) {
 
         case GET_PROVIDERS:
             localStorage["providers"] = JSON.stringify(action.payload);
-            //localStorage["providersDataSource"] = JSON.stringify(action.payload);
+            localStorage["providersDataSource"] = JSON.stringify(action.payload);
             return {
                 ...state,
                 providers: action.payload,
@@ -272,6 +277,7 @@ export default function (state = initialState, action) {
 
         case GET_SERVICES:
             localStorage["services"] = JSON.stringify(action.payload)
+            localStorage["benefits"] = JSON.stringify(state.benefits)
             return {
                 ...state,
                 services: action.payload,
@@ -415,10 +421,12 @@ export default function (state = initialState, action) {
 
         case GET_DOCTORS:
             localStorage["doctors"] = JSON.stringify(action.payload)
+            localStorage["doctorsDataSource"] = JSON.stringify(action.payload)
             return {
                 ...state,
                 doctors: action.payload
             }
+
         case GET_SUB_SPECIALTIES:
             localStorage["sub_specialties"] = JSON.stringify(action.payload)
             return {
@@ -473,6 +481,17 @@ export default function (state = initialState, action) {
                 return {
                     ...state,
                     doctorsDataSource: data_source
+                }
+            }
+        case FILTER_BENEFITS:
+            console.log("action.payload", action.payload);
+            if (action.payload) {
+
+                let data_source = [];
+                data_source.push(...action.payload);
+                return {
+                    ...state,
+                    benefitsDataSource: data_source
                 }
             }
             break;
