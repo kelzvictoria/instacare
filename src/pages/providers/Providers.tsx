@@ -63,9 +63,6 @@ class Providers extends Component<ProvidersProps> {
     this.getProviderInfo(value);
 
     await this.props.updateTextResponse({ key: "provider", value });
-    console.log("value", value);
-
-    console.log(this.props.responses.state);
   };
 
   getProviderInfo = async (name) => {
@@ -84,12 +81,11 @@ class Providers extends Component<ProvidersProps> {
   };
 
   addProviderToSelectedList = (prov_name) => {
-    console.log("in here");
-
     let arr: string[] =
       this.props.responses.providers.length > 0
         ? this.props.responses.providers.map((p) => p.provider_name)
         : [...this.state.selected_providers];
+
     let data_arr: string[] =
       this.props.responses.providers.length > 0
         ? [...this.props.responses.providers]
@@ -113,12 +109,12 @@ class Providers extends Component<ProvidersProps> {
       if (this.state.search_arg) {
         arr.push(prov_name);
         data_arr.push(this.state.search_arg);
-        this.setState({
-          selected_providers: arr,
-          selected_providers_data: data_arr,
-        });
       }
     }
+    this.setState({
+      selected_providers: arr,
+      selected_providers_data: data_arr,
+    });
   };
 
   // toggleShowSelectedProviders = () => {

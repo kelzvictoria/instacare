@@ -1,6 +1,7 @@
 import {
     FORMAT_PRICES,
     FILTER_PROVIDERS,
+    FILTER_DOCTORS,
     FILTER_PRESCRIPTIONS,
     UPDATE_SELECTED_PROVIDERS,
     FILTER_LOCATIONS,
@@ -12,7 +13,7 @@ import {
     IS_FILTERING_BY_PLAN_TYPE,
     IS_FILTERING_BY_PLAN_RANGE,
     IS_FILTERING_BY_PLAN_ID,
-    
+
 } from "../actions/types";
 
 export const formatPrices = (prices) => (dispatch) => {
@@ -33,6 +34,13 @@ export const filterProviders = (providers) => (dispatch) => {
     dispatch({
         type: FILTER_PROVIDERS,
         payload: providers
+    })
+}
+
+export const filterDoctors = (doctors) => (dispatch) => {
+    dispatch({
+        type: FILTER_DOCTORS,
+        payload: doctors
     })
 }
 

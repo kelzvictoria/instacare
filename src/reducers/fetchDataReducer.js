@@ -44,6 +44,7 @@ import {
     RESET_BENEFITS,
     RESET_LOCATION,
     FILTER_PROVIDERS,
+    FILTER_DOCTORS,
 } from "../actions/types";
 
 const initialState = {
@@ -222,6 +223,10 @@ const initialState = {
     providersDataSource: localStorage["providers"] ?
         JSON.parse(localStorage["providers"]).map(
             (provider) => provider.provider_name
+        ) : [],
+    doctorsDataSource: localStorage["doctors"] ?
+        JSON.parse(localStorage["doctors"]).map(
+            (doctor) => doctor.first_name + " " + doctor.last_name
         ) : [],
 }
 
@@ -456,6 +461,18 @@ export default function (state = initialState, action) {
                 return {
                     ...state,
                     providersDataSource: data_source
+                }
+            }
+            break;
+        case FILTER_DOCTORS:
+            console.log("action.payload", action.payload);
+            if (action.payload) {
+
+                let data_source = [];
+                data_source.push(...action.payload);
+                return {
+                    ...state,
+                    doctorsDataSource: data_source
                 }
             }
             break;
