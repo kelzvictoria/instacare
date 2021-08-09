@@ -91,7 +91,7 @@ class Benefits extends Component<BenefitsProps> {
 
     let data_arr: string[] =
       this.props.responses.benefits.length > 0
-        ? [...this.props.responses.providers]
+        ? [...this.props.responses.benefits]
         : [...this.state.selected_benefits_data];
 
     let isBenefitSelected: number = arr.indexOf(benefit);

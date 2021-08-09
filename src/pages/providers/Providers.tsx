@@ -80,7 +80,7 @@ class Providers extends Component<ProvidersProps> {
     }
   };
 
-  addProviderToSelectedList = (prov_name) => {
+  addProviderToSelectedList = async (prov_name) => {
     let arr: string[] =
       this.props.responses.providers.length > 0
         ? this.props.responses.providers.map((p) => p.provider_name)
@@ -95,9 +95,8 @@ class Providers extends Component<ProvidersProps> {
 
     if (isProviderSelected > -1) {
       console.log(">-1");
-
-      arr.splice(isProviderSelected, 1);
-      data_arr.splice(isProviderSelected, 1);
+      arr = arr.filter((a) => a !== prov_name);
+      data_arr = data_arr.filter((d) => d["provider_name"] !== prov_name);
     } else {
       console.log("def");
       console.log(
@@ -126,7 +125,6 @@ class Providers extends Component<ProvidersProps> {
   componentDidUpdate(prevProps) {}
 
   setProviders = async () => {
-    //;
     let providers = this.state.selected_providers_data;
 
     await this.props.setProviders(providers);
@@ -169,7 +167,7 @@ class Providers extends Component<ProvidersProps> {
                         id="autocomplete_providers"
                       >
                         <span>
-                          Begin typing to find & select your doctor or facility.
+                          Begin typing to find & select your facility.
                         </span>{" "}
                       </label>
 

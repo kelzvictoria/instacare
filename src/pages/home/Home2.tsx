@@ -112,6 +112,9 @@ import {
   clearBenefitsFilter,
   clearTotalBenefitRangeFilter,
   updateAppliedFilters,
+  setProviders,
+  setBenefits,
+  setDoctors,
 } from "../../actions/userInputActions";
 
 import {
@@ -453,4 +456,7 @@ export default connect(mapProps, {
   clearBenefitsFilter,
   clearTotalBenefitRangeFilter,
   updateAppliedFilters,
+  setProviders,
+  setBenefits,
+  setDoctors,
 })(Home);
