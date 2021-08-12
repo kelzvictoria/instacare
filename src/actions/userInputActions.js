@@ -834,10 +834,11 @@ export const resetFilterParams = () => (dispatch, getState) => {
         providers: [],
         plan_type: [],
         budget: [],
+        plan_type: []
     }
 
     let filter_params = {
-        ...this.state.filter_params,
+        // ...this.state.filter_params,
         annual_range_min: "",
         annual_range_max: "",
         annual_deductible_min: "",

@@ -871,11 +871,12 @@ a {
 }
 
 .price-slider {
-  padding-bottom: 32px;
+  /* padding-bottom: 32px; */
+  padding-bottom: 1rem;
 }
 
 .price-slider p {
-  padding-top: 16px;
+  /* padding-top: 16px; */
   padding-bottom: 16px;
 }
 
@@ -918,6 +919,10 @@ a {
 } */
 
 @media (max-width: 500px) {
+  .results-header-left {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
   .ant-slider-rail {
     width: 85% !important;
   }
@@ -2158,4 +2163,8 @@ h1.tiny-descrptn {
 
 .clear-all {
   padding-right: 8px;
+}
+
+.margin-top--2 {
+  margin-top: 16px;
 }

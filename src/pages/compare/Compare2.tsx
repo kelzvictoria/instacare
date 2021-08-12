@@ -372,7 +372,8 @@ class ComparePlans extends Component<ComparisonProps> {
               <div>
                 <a
                   className="c-button c-button--transparent c-plan-nav-bar__back-link padding--0 text-decoration--underline"
-                  href="/#plans"
+                  //href="/#plans"
+                  onClick={this.goToPlans}
                   target="_self"
                   role="button"
                 >
@@ -829,10 +830,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                   >
                                     <a
                                       className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                      href="/find-providers"
+                                      href={`/details/id/${first.service_id}`}
                                       role="button"
                                     >
-                                      Add
+                                      View providers
                                     </a>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
@@ -846,10 +847,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <a
                                         className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                        href="/find-providers"
+                                        href={`/details/id/${second.service_id}`}
                                         role="button"
                                       >
-                                        Add
+                                        View providers
                                       </a>
                                     </td>
                                   )}
@@ -864,10 +865,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <a
                                         className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                        href="/find-providers"
+                                        href={`/details/id/${third.service_id}`}
                                         role="button"
                                       >
-                                        Add
+                                        View providers
                                       </a>
                                     </td>
                                   )}

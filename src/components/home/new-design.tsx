@@ -2380,12 +2380,34 @@ class NewContent extends React.Component<homeProps, homeState> {
 
         <div className="form-group mobile-view-cont-btn">
           <div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              // onClick={this.toggleModal}
-            >
-              Continue
-            </button>
+            <div className="plan-c-title-right">
+              <div className="lg-display--block plan-c-compare-button">
+                <button
+                  id="desktop d"
+                  className={`c-button c-check-button
+                top-three-compare-btn
+                ${
+                  this.props.compare_top_three_plans
+                    ? "c-check-button--checked c-button--secondary"
+                    : ""
+                } `}
+                  onClick={this.toggleCompareTopThree}
+                >
+                  <span className="c-check-button__checkbox top-three-compare-box">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 216 146"
+                      className="check-plan display--none"
+                    >
+                      <path d="M168.86 37.966l-11.08-11.08c-1.52-1.52-3.367-2.28-5.54-2.28-2.172 0-4.02.76-5.54 2.28L93.254 80.414 69.3 56.38c-1.52-1.522-3.367-2.282-5.54-2.282-2.172 0-4.02.76-5.54 2.28L47.14 67.46c-1.52 1.522-2.28 3.37-2.28 5.542 0 2.172.76 4.02 2.28 5.54l29.493 29.493 11.08 11.08c1.52 1.52 3.368 2.28 5.54 2.28 2.173 0 4.02-.76 5.54-2.28l11.082-11.08L168.86 49.05c1.52-1.52 2.283-3.37 2.283-5.54 0-2.174-.76-4.02-2.28-5.54z"></path>
+                    </svg>
+                  </span>
+                  Compare top 3 plans
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </form>
@@ -3661,7 +3683,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       },
     }); */
 
-    this.props.resetFilterParams();
+    await this.props.resetFilterParams();
 
     await this.eventHandlers.changeBudget([]);
     this.props.resetBudget();
@@ -5595,7 +5617,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                     <div className="l-lg-col--4">
                       <div className="l-form-row">
                         <div className="l-lg-col--12 c-plan-filter-container">
-                          <div className="fill--gray-lightest padding--2">
+                          <div className="fill--gray-lightest padding--2 margin-top--2">
                             <fieldset className="c-fieldset margin-top--0">
                               <legend className="c-label">
                                 <span className="bolden-it">
@@ -5886,8 +5908,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                       type="button"
                       onClick={() => {
                         this.clearFilters();
-
-                        //this.resetServices();
                       }}
                     >
                       Clear filters
@@ -5896,8 +5916,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                       className="c-button c-button--success qa-apply-desktop"
                       type="button"
                       onClick={() => {
-                        // this.resetServices();
-
                         this.getRecommendedPlans();
                       }}
                     >
@@ -5912,6 +5930,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                       <button
                         className="c-button c-button--success margin-top--2 qa-apply-mobile"
                         type="button"
+                        onClick={() => {
+                          this.getRecommendedPlans();
+                        }}
                       >
                         Apply Filters
                       </button>
@@ -5923,6 +5944,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                       <button
                         className="c-button c-button--secondary margin-y--2 text-transform--capitalize qa-clear-mobile"
                         type="button"
+                        onClick={() => {
+                          this.clearFilters();
+                        }}
                       >
                         Clear filters
                       </button>

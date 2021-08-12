@@ -211,7 +211,7 @@ form.form.steppers {
 }
 
 .form p {
-  font-size: 0.875rem;
+  /* font-size: 0.875rem; */
 }
 
 .modal-title {
@@ -599,7 +599,7 @@ button.close:after {
     display: none !important;
   }
   .form p {
-    font-size: 0.75rem !important;
+    /* font-size: 0.75rem !important; */
   }
 
   /* .Home_content__1-Kmv {
@@ -638,7 +638,7 @@ button.close:after {
   .form h3 {
     font-size: 1rem !important;
     /* font-size: 0.65rem !important; */
-    margin-top: 0.5rem;
+    /* margin-top: 0.5rem; */
   }
   i.gender.icons-gender.male.me {
     margin-left: 1.5rem !important;
@@ -767,8 +767,7 @@ button.close:after {
     text-align: left !important;
   }
   .home-frm.form-div {
-    /* margin-top: 1rem; */
-    margin-top: 20px;
+    /* margin-top: 20px; */
   }
 
   .mt-1rem {
