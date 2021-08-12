@@ -75,7 +75,7 @@ class Providers extends Component<ProvidersProps> {
       search_arg: info[0],
     });
 
-    console.log("name", name);
+    //    console.log("name", name);
     if (name) {
       this.addProviderToSelectedList(name);
     }
@@ -99,13 +99,13 @@ class Providers extends Component<ProvidersProps> {
       arr = arr.filter((a) => a !== prov_name);
       data_arr = data_arr.filter((d) => d["provider_name"] !== prov_name);
     } else {
-      console.log("def");
-      console.log(
-        "prov_name",
-        prov_name,
-        "this.state.search_arg",
-        this.state.search_arg
-      );
+      // console.log("def");
+      // console.log(
+      //   "prov_name",
+      //   prov_name,
+      //   "this.state.search_arg",
+      //   this.state.search_arg
+      // );
       if (this.state.search_arg) {
         arr.push(prov_name);
         data_arr.push(this.state.search_arg);
@@ -138,7 +138,7 @@ class Providers extends Component<ProvidersProps> {
   };
 
   render() {
-    console.log("this.state", this.state);
+    // console.log("this.state", this.state);
 
     let providers_arr: string[] = this.state.selected_providers;
     let selected_providers_data =

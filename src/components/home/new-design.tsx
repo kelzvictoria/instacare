@@ -2756,7 +2756,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   componentWillMount() {
-    console.log("will");
+    //console.log("will");
     //let plansSection = document.getElementById("plans")!;
     // plansSection.scrollIntoView({ behavior: "smooth" });
     document.addEventListener("scroll", this.trackScrolling);
@@ -3417,14 +3417,14 @@ class NewContent extends React.Component<homeProps, homeState> {
       user_address,
     } = this.props.filter_params; // updated this.state.filter_params;
 
-    console.log("user_address", user_address);
-    console.log("this.props.location", this.props.location);
+    // console.log("user_address", user_address);
+    // console.log("this.props.location", this.props.location);
 
     if (user_address) {
       await this.props.handleGeocoding(user_address);
     }
 
-    console.log("this.props.location", this.props.location);
+    // console.log("this.props.location", this.props.location);
 
     let filterBoxParams = {
       range: plan_range_checked,
@@ -4803,7 +4803,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                             this.clearFilters();
                           }}
                         >
-                          <span className="c-filter-tag__label">Clear All</span>
+                          <span className="c-filter-tag__label">
+                            Clear all Applied Filters
+                          </span>
                         </button>
                       </div>
                     </li>

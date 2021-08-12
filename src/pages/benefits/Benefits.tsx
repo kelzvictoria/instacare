@@ -69,7 +69,7 @@ class Benefits extends Component<BenefitsProps> {
 
     await this.props.updateTextResponse({ key: "benefit", value });
 
-    console.log(this.props.responses.state);
+    //  console.log(this.props.responses.state);
   };
 
   getBenefitInfo = async (name) => {
@@ -144,7 +144,7 @@ class Benefits extends Component<BenefitsProps> {
   //   };
 
   render() {
-    console.log("this.state", this.state);
+    //  console.log("this.state", this.state);
 
     let benefits_arr: string[] = this.state.selected_benefits;
     let selected_benefits_data =

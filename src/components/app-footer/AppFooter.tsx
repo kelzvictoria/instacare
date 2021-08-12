@@ -225,21 +225,18 @@ class AppFooter extends Component<FooterProps, {}> {
   componentDidMount() {
     let sponsorsContainer = document.getElementById("box-mob-slider")!;
     let sponsorsScrollWidth: number = sponsorsContainer.scrollWidth;
+    let browserWidth = sponsorsContainer.clientWidth;
+    let maxScrollLeft = sponsorsScrollWidth - browserWidth;
+
+    console.log("sponsorsScrollWidth", sponsorsScrollWidth);
+
     window.addEventListener("load", () => {
       window.self.setInterval(() => {
-        // console.log("in interval");
-        // console.log(
-        //   'sponsorsContainer["scrollLeft"]',
-        //   sponsorsContainer["scrollLeft"]
-        // );
-        // console.log("sponsorsScrollWidth", sponsorsScrollWidth);
-
-        if (sponsorsContainer["scrollLeft"] !== sponsorsScrollWidth) {
+        if (sponsorsContainer["scrollLeft"] < maxScrollLeft) {
           // console.log("not");
-
           sponsorsContainer.scrollTo(sponsorsContainer.scrollLeft + 1, 0);
         } else {
-          sponsorsContainer.scrollTo(sponsorsContainer.scrollLeft - 1, 0);
+          sponsorsContainer.scrollLeft = 0;
         }
       }, 15);
     });

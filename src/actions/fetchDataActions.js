@@ -301,7 +301,7 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     let hmoID = params.hmoID ? params.hmoID : ""
     //let planID = getState().quiz.responses.planID;
     let budget = params.budget ? params.budget : []
-    console.log("budget", budget);
+    // console.log("budget", budget);
     let planType = params.type ? params.type : []
 
     //console.log("planType", planType);
@@ -363,9 +363,9 @@ export const getRecommendedPlans = (params) => async (dispatch, getState) => {
     }) : packages;
 
 
-    console.log("packages", packages);
+    // console.log("packages", packages);
     //CAN_LOG && 
-    console.log("final recommended_plans", recommended_plans);
+    // console.log("final recommended_plans", recommended_plans);
     dispatch({
         type: GET_RECOMMENDED_PLANS,
         payload: recommended_plans
@@ -1100,7 +1100,7 @@ export const groupPlansByBenefit = (packages,
 
     }
     //}
-    console.log("filteredPlansByBenefit", filteredPlansByBenefit);
+    // console.log("filteredPlansByBenefit", filteredPlansByBenefit);
 
     return filteredPlansByBenefit;
 }
