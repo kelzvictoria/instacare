@@ -113,7 +113,8 @@ import {
     CLEAR_PROXIMITY_FILTER,
     CLEAR_BENEFITS_FILTER,
     CLEAR_TOTAL_BENEFIT_RANGE_FILTER,
-    UPDATE_APPLIED_FILTERS
+    UPDATE_APPLIED_FILTERS,
+    TOGGLE_JUMP_TO_FILTER_BOX
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
 
@@ -1071,5 +1072,11 @@ export const updateAppliedFilters = (filter) => (dispatch, getState) => {
     dispatch({
         type: UPDATE_APPLIED_FILTERS,
         payload: filter
+    })
+}
+
+export const jumpToFilterBox = () => (dispatch, getState) => {
+    dispatch({
+        type: TOGGLE_JUMP_TO_FILTER_BOX,
     })
 }

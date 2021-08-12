@@ -17,6 +17,7 @@ import {
   filterDoctors,
   setDoctors,
   resetTextResponse,
+  jumpToFilterBox,
 } from "../../actions/userInputActions";
 
 export interface DoctorsProps {
@@ -145,6 +146,8 @@ class Doctors extends Component<DoctorsProps> {
       key: "doctor",
       value: "",
     });
+
+    this.props.jumpToFilterBox();
   };
 
   //   updateLocation = (doctor: any) => {
@@ -470,4 +473,5 @@ export default connect(mapProps, {
   filterDoctors,
   setDoctors,
   resetTextResponse,
+  jumpToFilterBox,
 })(Doctors);

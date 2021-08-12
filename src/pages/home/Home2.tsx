@@ -115,6 +115,7 @@ import {
   setProviders,
   setBenefits,
   setDoctors,
+  jumpToFilterBox,
 } from "../../actions/userInputActions";
 
 import {
@@ -151,7 +152,7 @@ class Home extends Component<QuizProps, {}> {
     plansByHMO: [],
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (
       //this.props.planServices.length > 0
       this.props.plans.length > 0
@@ -328,6 +329,7 @@ const mapProps = (state: any) => ({
   //plans: state.fetchData.plans,
   //plan: state.fetchData.plan,
   //planServices: state.fetchData.services,
+  test: state,
   plans: state.fetchData.services,
   hmos: state.fetchData.hmos,
   hmo: state.fetchData.hmo,
@@ -350,6 +352,7 @@ const mapProps = (state: any) => ({
   compare_top_three_plans: state.quiz.responses.compare_top_three_plans,
   applied_filters: state.quiz.applied_filters,
   filter_params: state.quiz.filter_params,
+  jump_to_filter_box: state.quiz.jump_to_filter_box,
 });
 
 export default connect(mapProps, {
@@ -459,4 +462,5 @@ export default connect(mapProps, {
   setProviders,
   setBenefits,
   setDoctors,
+  jumpToFilterBox,
 })(Home);

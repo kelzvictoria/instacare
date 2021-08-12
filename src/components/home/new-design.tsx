@@ -2970,6 +2970,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     // this.setState({
     //   show_filter: !this.state.show_filter,
     // });
+    this.props.jump_to_filter_box && this.props.jumpToFilterBox();
     this.props.toggleFilterBox();
   };
 
@@ -3402,7 +3403,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   // }
 
   getRecommendedPlans = async () => {
-    console.log("in here");
+    this.props.jump_to_filter_box && this.props.jumpToFilterBox();
 
     const {
       plan_range_checked,
@@ -3626,6 +3627,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   clearFilters = async () => {
     // console.log("clear");
+    this.props.jump_to_filter_box && this.props.jumpToFilterBox();
     this.props.resetSelectedDoctors();
     this.props.resetSelectedProviders();
 
@@ -3800,7 +3802,11 @@ class NewContent extends React.Component<homeProps, homeState> {
     );
   };
 
-  componentDidUpdate() {}
+  componentDidUpdate(prevProps) {
+    if (this.props.jump_to_filter_box && this.props.is_filter_box_open) {
+      document.getElementById("filter-box")!.scrollIntoView();
+    }
+  }
 
   getLocation = () => {
     if (navigator.geolocation) {
@@ -4811,6 +4817,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ? "l-col fill--white c-filter-panel"
                     : "display--none"
                 }
+                id="filter-box"
               >
                 <div className="c-filter-panel-margin-for-mobile-buttons">
                   <div className="l-form-row margin-y--2">

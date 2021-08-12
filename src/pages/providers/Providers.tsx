@@ -17,6 +17,7 @@ import {
   filterProviders,
   setProviders,
   resetTextResponse,
+  jumpToFilterBox,
 } from "../../actions/userInputActions";
 
 export interface ProvidersProps {
@@ -133,6 +134,7 @@ class Providers extends Component<ProvidersProps> {
       key: "provider",
       value: "",
     });
+    this.props.jumpToFilterBox();
   };
 
   render() {
@@ -470,4 +472,5 @@ export default connect(mapProps, {
   filterProviders,
   setProviders,
   resetTextResponse,
+  jumpToFilterBox,
 })(Providers);

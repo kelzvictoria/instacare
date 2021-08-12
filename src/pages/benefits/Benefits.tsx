@@ -17,6 +17,7 @@ import {
   filterBenefits,
   setBenefits,
   resetTextResponse,
+  jumpToFilterBox,
 } from "../../actions/userInputActions";
 
 import { filterByBenefits } from "../../actions/fetchDataActions";
@@ -130,6 +131,7 @@ class Benefits extends Component<BenefitsProps> {
       key: "benefit",
       value: "",
     });
+    this.props.jumpToFilterBox();
     //await this.filterByBenefits();
   };
 
@@ -290,4 +292,5 @@ export default connect(mapProps, {
   setBenefits,
   filterByBenefits,
   resetTextResponse,
+  jumpToFilterBox,
 })(Benefits);

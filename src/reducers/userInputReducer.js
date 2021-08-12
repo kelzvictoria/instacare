@@ -106,7 +106,8 @@ import {
     CLEAR_PROXIMITY_FILTER,
     CLEAR_BENEFITS_FILTER,
     CLEAR_TOTAL_BENEFIT_RANGE_FILTER,
-    UPDATE_APPLIED_FILTERS
+    UPDATE_APPLIED_FILTERS,
+    TOGGLE_JUMP_TO_FILTER_BOX
 } from "../actions/types";
 
 const initialState = {
@@ -222,6 +223,7 @@ const initialState = {
         plan_type: [],
         budget: [],
     },
+    jump_to_filter_box: false
 }
 
 export default function (state = initialState, action) {
@@ -806,6 +808,12 @@ export default function (state = initialState, action) {
                     ...state.applied_filters,
                     [action.payload.key]: action.payload.value
                 }
+            }
+
+        case TOGGLE_JUMP_TO_FILTER_BOX:
+            return {
+                ...state,
+                jump_to_filter_box: !state.jump_to_filter_box
             }
 
         default:
