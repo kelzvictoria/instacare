@@ -349,8 +349,9 @@ class NewContent extends React.Component<homeProps, homeState> {
       type,
       range,
     };
-
-    await this.props.filterByBudget_and_or_Type(params);
+    //call filter function
+    this.filterPlans();
+    // await this.props.filterByBudget_and_or_Type(params);
     if (this.props.responses.type.length > 0) {
       await this.updateAppliedFilters({
         key: "plan_type",
@@ -2536,7 +2537,8 @@ class NewContent extends React.Component<homeProps, homeState> {
       let data = true;
       let budget = value;
       await this.props.updateBudget(budget);
-      await this.getRecommendedPlans();
+      //call filter fuction
+      //await this.getRecommendedPlans();
     },
   };
   formatter(value: number) {
@@ -2987,6 +2989,82 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
   };
 
+  filterParamsSelected = () => {
+    let all_filters = {
+      metal_level: this.props.responses.price_range,
+      hmoID: this.props.responses.hmoID,
+      planID: this.props.responses.planID,
+      benefits: this.props.responses.benefits,
+      total_benefit_range: this.props.total_benefit_limit,
+      doctors: this.props.responses.doctors,
+      lat_lng: this.props.location,
+      providers: this.props.responses.providers,
+      plan_type: this.props.responses.type,
+      budget: this.props.responses.budget,
+    };
+
+    let filters = {
+      metal_level: [],
+      hmoID: [],
+      planID: [],
+      benefits: [],
+      total_benefit_range: [],
+      doctors: [],
+      lat_lng: [],
+      providers: [],
+      plan_type: [],
+      budget: [],
+    };
+
+    let arr: any[] = [];
+    let filter: any;
+
+    for (filter in all_filters) {
+      if (all_filters[filter]) {
+        if (
+          (typeof all_filters[filter] === "object" &&
+            all_filters[filter].length > 0) ||
+          (typeof all_filters[filter] === "string" && all_filters[filter])
+        ) {
+          filters[filter].push(...all_filters[filter]);
+        }
+      }
+    }
+
+    console.log("filters", filters);
+
+    return filters;
+  };
+
+  filterPlans = () => {
+    let plans = this.multiPropsFilter(
+      this.props.plans,
+      this.filterParamsSelected()
+    );
+    console.log("plans", plans);
+
+    return plans;
+  };
+
+  multiPropsFilter = (plans, filters) => {
+    const filterKeys = Object.keys(filters);
+
+    console.log("filters", filters, "filterKeys", filterKeys);
+
+    /* let final = plans.filter((plan) => {
+      return filterKeys.every((key) => {
+        if (!filters[key].length) return true;
+        if (Array.isArray(plan[key])) {
+          return plan[key].some((keyEle) => filters[key].includes(keyEle));
+        }
+        return filters[key].includes(plan[key]);
+      });
+    });
+    console.log("final", final);
+
+    return final; */
+  };
+
   getRecommendedPlans = async () => {
     this.props.jump_to_filter_box && this.props.jumpToFilterBox();
 
@@ -3054,7 +3132,9 @@ class NewContent extends React.Component<homeProps, homeState> {
     ) {
       this.resetTypeAndRangeFilters();
 
-      await this.props.getRecommendedPlans(filterBoxParams);
+      //call filter fuction
+      this.filterPlans();
+      // await this.props.getRecommendedPlans(filterBoxParams);
 
       if (range.length > 0) {
         this.updateAppliedFilters({
@@ -3300,13 +3380,18 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   clearDoctorsFilter = async () => {
     await this.props.resetSelectedDoctors();
-    await this.getRecommendedPlans();
+    //call filter fuction
+    this.filterPlans();
+    // await this.getRecommendedPlans();
   };
 
   clearProvidersFilter = async () => {
     await this.props.resetSelectedProviders();
     this.props.clearProvidersFilter();
-    await this.getRecommendedPlans();
+
+    //call filter fuction
+    this.filterPlans();
+    // await this.getRecommendedPlans();
   };
 
   clearBudgetFilter = async () => {
@@ -3314,47 +3399,71 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     await this.eventHandlers.changeBudget([]);
     await this.props.resetBudget();
-    await this.getRecommendedPlans();
+
+    //call filter fuction
+    this.filterPlans();
+    // await this.getRecommendedPlans();
   };
 
   clearPlanTypeFilter = async () => {
     this.props.clearPlanTypeFilter();
     await this.props.resetType();
-    await this.getRecommendedPlans();
+
+    //call filter fuction
+    this.filterPlans();
+    // await this.getRecommendedPlans();
   };
 
   clearPlanMetalLevelFilter = async () => {
     this.props.clearPlanMetalLevelFilter();
     await this.props.resetRange();
-    await this.getRecommendedPlans();
+
+    //call filter fuction
+    this.filterPlans();
+    // await this.getRecommendedPlans();
   };
 
   clearPlanIDFilter = async () => {
     this.props.clearPlanIDFilter();
     await this.props.resetPlanID();
-    await this.getRecommendedPlans();
+
+    //call filter fuction
+    this.filterPlans();
+    // await this.getRecommendedPlans();
   };
 
   clearHMOIDFilter = async () => {
     this.props.clearHMOIDFilter();
-    await this.getRecommendedPlans();
+
+    //call filter fuction
+    this.filterPlans();
+    //await this.getRecommendedPlans();
   };
 
   clearProximityFilter = async () => {
     await this.props.resetLocation();
     this.props.clearProximityFilter();
-    await this.getRecommendedPlans();
+
+    //call filter fuction
+    this.filterPlans();
+    // await this.getRecommendedPlans();
   };
 
   clearBenefitsFilter = async () => {
     this.props.clearBenefitsFilter();
     await this.props.resetBenefits();
-    await this.getRecommendedPlans();
+
+    //call filter fuction
+    this.filterPlans();
+    // await this.getRecommendedPlans();
   };
 
   clearTotalBenefitRangeFilter = async () => {
     this.props.clearTotalBenefitRangeFilter();
-    await this.getRecommendedPlans();
+
+    //call filter fuction
+    this.filterPlans();
+    //await this.getRecommendedPlans();
   };
 
   handleSelectedProviders = async (provider) => {
@@ -5123,7 +5232,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                       className="c-button c-button--success qa-apply-desktop"
                       type="button"
                       onClick={() => {
-                        this.getRecommendedPlans();
+                        //call filter fuction
+                        this.filterPlans();
+
+                        //this.getRecommendedPlans();
                       }}
                     >
                       Apply filters
@@ -5138,7 +5250,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                         className="c-button c-button--success margin-top--2 qa-apply-mobile"
                         type="button"
                         onClick={() => {
-                          this.getRecommendedPlans();
+                          //call filter fuction
+                          this.filterPlans();
+                          //this.getRecommendedPlans();
                         }}
                       >
                         Apply Filters

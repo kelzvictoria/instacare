@@ -353,6 +353,7 @@ const mapProps = (state: any) => ({
   applied_filters: state.quiz.applied_filters,
   filter_params: state.quiz.filter_params,
   jump_to_filter_box: state.quiz.jump_to_filter_box,
+  total_benefit_limit: state.quiz.total_benefit_limit,
 });
 
 export default connect(mapProps, {

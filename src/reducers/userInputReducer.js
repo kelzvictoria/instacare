@@ -223,7 +223,32 @@ const initialState = {
         plan_type: [],
         budget: [],
     },
-    jump_to_filter_box: false
+    jump_to_filter_box: false,
+    doctors: [],
+    hospitals: [],
+    total_benefit_limit: [],
+    location: [],
+    plan_metal_levels:
+        [
+            "bronze",
+            "gold",
+            "silver",
+            "diamond",
+            "platinum",
+            "platinum_plus",
+            "all"],
+    plan_types:
+        ["single",
+            "couple",
+            "parents",
+            "corporate",
+            "fam-of-4",
+            "smes",
+            "intl_coverage",
+            "all"],
+    hmo_ids: [],
+    plan_ids: []
+
 }
 
 export default function (state = initialState, action) {
