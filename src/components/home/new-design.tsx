@@ -144,12 +144,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       let plan_ids: string[] = [];
       let min: number = 0;
       let max: number = plans.length;
-      // indexes.push(Math.floor(Math.random() * max) + min);
-
-      // indexes.push(Math.floor(Math.random() * max) + min);
-
-      // indexes.push(Math.floor(Math.random() * max) + min);
-
       let rnd,
         qty = 3;
 
@@ -216,112 +210,9 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.changePage(data);
   };
 
-  // hmoBannerDiv(hmoId) {
-  //   let hmoArr;
-
-  //   let data;
-  //   if (hmoId) {
-  //     if (hmoId !== "hygeia") {
-  //       data = this.props.hmos.filter((hmo) => hmo.name.id == hmoArr[0].name);
-  //     } else {
-  //       data = this.props.hmos.filter((hmo) => hmo.name.id == "1");
-  //     }
-
-  //     return (
-  //       <Col
-  //         xs={24}
-  //         md={14}
-  //         className=" left-side-info banner-container provider-banner"
-  //       >
-  //         <div className="svg-and-text provider-data">
-  //           <div className="hmo-svg-img svg-img">
-  //             <img src={data[0].logo}></img>
-  //           </div>
-
-  //           <div className={styles.bannerContent} id="bannertext">
-  //             <p className={styles.textHeading}>
-  //               {this.props.provider_info["title"]}
-  //             </p>
-  //           </div>
-  //         </div>
-
-  //         <div className="banner-bottom">
-  //           <div className="row col-md-12">
-  //             <div className="col-md-4 card mr-3">
-  //               <img src={hospitalsvg} className="banner-icon" />
-  //               <div className="card-text">
-  //                 <p>Hospital Network</p>
-  //                 <h5>
-  //                   {data[0].provider_id
-  //                     ? JSON.parse(data[0].provider_id).length
-  //                     : ""}
-  //                 </h5>
-  //               </div>
-  //             </div>
-  //             <div className="col-md-4 card mr-3">
-  //               <span className="naira banner-icon">₦</span>
-  //               <div className="card-text">
-  //                 <p>Plans Starting from</p>
-  //                 <h5>
-  //                   {this.numberwithCommas(this.props.cheapest_plan_by_hmo)}
-  //                 </h5>
-  //               </div>
-  //             </div>
-  //             <div className="col-md-4 card">
-  //               <img src={ratiosvg} className="banner-icon" />
-  //               <div className="card-text">
-  //                 <p>Claim Ratio</p>
-  //                 {/* <h5>{`${
-  //                   (this.props.plansByHMO.length /
-  //                     this.props.plans.length) *
-  //                   100
-  //                 }%`}</h5> */}
-
-  //                 <h5>{`${
-  //                   (this.props.plansByHMO.length / this.props.plans.length) *
-  //                   100
-  //                 }%`}</h5>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </Col>
-  //     );
-  //   }
-  // }
-
   homeBannerDiv() {
-    // console.log("this.props.hmo", this.props.hmo);
-
     return (
       <Col xs={24} md={14} className="banner-container  left-side-info">
-        {/* 
-        <div className="view2-svg-and-text svg-and-text">
-          <Col xs={24} md={24} className="svg-img-div">
-            <div className="svg-img home-svg-img">
-              
-            </div>
-          </Col>
-          <Col xs={24} md={14} className="view2-banner-text banner-text">
-            <div className={styles.banner}>
-              <div className={styles.bannerContent} id="bannertext">
-                <p className={styles.textHeading}>
-                  Find Health Plans Starting
-                  <br />
-                  <span className={styles.headingSpan}>
-                    from
-                    {this.props.plans.length == 0 && "..."}
-                    {this.props.plans.length > 0 &&
-                      ` ₦${this.numberwithCommas(this.props.cheapest_plan)}`}
-                    /year
-                  </span>
-                </p>
-              </div>
-            </div>
-          </Col>
-        </div>
-        
-         */}
         <DataCaptureModal />
       </Col>
     );
@@ -461,27 +352,13 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     await this.props.filterByBudget_and_or_Type(params);
     if (this.props.responses.type.length > 0) {
-      // this.setState({
-      //   applied_filters: {
-      //     ...this.state.applied_filters,
-      //     plan_type: this.props.responses.type,
-      //   },
-      // });
       await this.updateAppliedFilters({
         key: "plan_type",
         value: this.props.responses.type,
       });
-
-      // console.log("this.props.responses.type", this.props.responses.type);
     }
 
     if (this.props.responses.budget.length > 0) {
-      // this.setState({
-      //   applied_filters: {
-      //     ...this.state.applied_filters,
-      //     budget: this.props.responses.budget,
-      //   },
-      // });
       this.updateAppliedFilters({
         key: "budget",
         value: this.props.responses.budget,
@@ -489,13 +366,6 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
 
     if (this.props.responses.price_range.length > 0) {
-      // this.setState({
-      //   applied_filters: {
-      //     ...this.state.applied_filters,
-      //     metal_level: this.props.responses.price_range,
-      //   },
-      // });
-
       this.updateAppliedFilters({
         key: "metal_level",
         value: this.props.responses.price_range,
@@ -1441,11 +1311,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  // defaultChecked={
-                  //   this.props.responses.type[
-                  //     this.props.responses.type.length - 1
-                  //   ] === "couple"
-                  // }
                   onClick={this.handleType}
                 ></input>
                 <span className="num-div-inner">
@@ -1464,15 +1329,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  // defaultChecked={
-                  //   this.props.responses.type[
-                  //     this.props.responses.type.length - 1
-                  //   ] === "fam-of-3"
-                  // }
                   onClick={this.handleType}
-                  // onClick={(e) =>
-                  //   this.handleType("fam-of-3")
-                  // }
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1493,11 +1350,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="fam-of-4"
                   name="numOfPeople"
-                  // defaultChecked={
-                  //   this.props.responses.type[
-                  //     this.props.responses.type.length - 1
-                  //   ] === "fam-of-4"
-                  // }
                   onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
@@ -1516,11 +1368,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="parents"
                   name="numOfPeople"
-                  // defaultChecked={
-                  //   this.props.responses.type[
-                  //     this.props.responses.type.length - 1
-                  //   ] === "parents"
-                  // }
                   onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
@@ -1543,7 +1390,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   defaultChecked={["others", "smes", "intl_coverage"].includes(
                     this.props.responses.type
                   )}
-                  //{this.props.responses.type === "others"}
                   onClick={(e) => {
                     this.toggleOthersInput();
                     this.handleType(e);
@@ -1680,7 +1526,6 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   renderMobileViewQuizPages() {
-    //console.log('m open')
     const page2 = (
       <div id="firstPage">
         <div className="form-group">
@@ -1754,11 +1599,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="single"
                   name="numOfPeople"
                   className="radio-group-num two"
-                  // defaultChecked={
-                  //   this.props.responses.type[
-                  //     this.props.responses.type.length - 1
-                  //   ] === "single"
-                  // }
                   onClick={this.handleType}
                   id="single"
                 ></input>
@@ -1778,11 +1618,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  // defaultChecked={
-                  //   this.props.responses.type[
-                  //     this.props.responses.type.length - 1
-                  //   ] === "couple"
-                  // }
                   onClick={this.handleType}
                 ></input>
                 <span className="num-div-inner">
@@ -1801,11 +1636,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  // defaultChecked={
-                  //   this.props.responses.type[
-                  //     this.props.responses.type.length - 1
-                  //   ] === "fam-of-3"
-                  // }
                   onClick={this.handleType}
                 ></input>
                 <span className="num-div-inner">
@@ -1827,11 +1657,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="fam-of-4"
                   name="numOfPeople"
-                  // defaultChecked={
-                  //   this.props.responses.type[
-                  //     this.props.responses.type.length - 1
-                  //   ] === "fam-of-4"
-                  // }
                   onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
@@ -1850,11 +1675,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   type="radio"
                   value="parents"
                   name="numOfPeople"
-                  // defaultChecked={
-                  //   this.props.responses.type[
-                  //     this.props.responses.type.length - 1
-                  //   ] === "parents"
-                  // }
                   onClick={this.handleType}
                   className="radio-group-num"
                 ></input>
@@ -1877,7 +1697,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   defaultChecked={["others", "smes", "intl_coverage"].includes(
                     this.props.responses.type
                   )}
-                  //{this.props.responses.type === "others"}
                   onClick={this.toggleOthersInput}
                 ></input>
                 <span className="num-div-inner">
@@ -1901,33 +1720,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                     <h3>{home_utils.steps[1].h3}</h3>
                   </div>
                 </Modal.Header>
-                <Modal.Body>
-                  {this.showOthersInput()}
-                  {/* <div className="form-group">
-                    <div className="col-md-6">
-                      {this.props.page != 1 ? (
-                        <button
-                          className="btn btn-primary btn-large view-plans btn-demo"
-                          onClick={this.handleNavigation}
-                          id="prev"
-                        >
-                          Previous
-                        </button>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <div className="col-md-6">
-                      <button
-                        className="btn btn-primary btn-large others-btn-cont view-plans btn-demo"
-                        onClick={this.handleNavigation}
-                        id="next"
-                      >
-                        Continue
-                      </button>
-                    </div>
-                  </div> */}
-                </Modal.Body>
+                <Modal.Body>{this.showOthersInput()}</Modal.Body>
               </Modal>
             </div>
           </div>
@@ -2026,24 +1819,13 @@ class NewContent extends React.Component<homeProps, homeState> {
         </div>
       </div>
     );
-    //console.log("this.props.page", this.props.page);
-    /*if (this.props.page === 0) {
-      return page2;
-    }
-    else*/ if (
-      this.props.page === 2
-      //|| this.props.page === 1
-    ) {
-      //console.log("page2");
+    if (this.props.page === 2) {
       return page2;
     } else if (this.props.page === 3) {
-      //console.log("page3");
       return page3;
     } else if (this.props.page === 4) {
-      //console.log"page4");
       return page4;
     }
-    //console.log("this.props.page before return", this.props.page);
     return <p>Not enough responses collected!</p>;
   }
 
@@ -2058,9 +1840,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   getClickedPlan = async (index, type) => {
-    let data =
-      //this.props.planServices[index];
-      this.props.plans[index];
+    let data = this.props.plans[index];
 
     console.log("data", data);
 
@@ -2083,14 +1863,8 @@ class NewContent extends React.Component<homeProps, homeState> {
         </h3>
         <h3 className="no-med no-med-r">No medicals required</h3>
 
-        <div
-          className={
-            //styles.optionsGroup +
-            " price-slider"
-          }
-        >
+        <div className={" price-slider"}>
           <p className={styles.sideBarHeadings}>
-            {/* What is your annual price range{" "} */}
             What is the maximum you can afford to pay per year?
             {this.props.responses.budget.length > 0 ? (
               <span className="price-range">
@@ -2106,12 +1880,10 @@ class NewContent extends React.Component<homeProps, homeState> {
             marks={this.marks}
             range
             tipFormatter={this.formatter}
-            // min={300000}
             min={5000}
             max={1000000}
             onAfterChange={this.eventHandlers.changeBudget}
             defaultValue={[100, 300000]}
-            //{this.props.responses.budget}
           />
         </div>
         <div className="form-group num-div">
@@ -2127,8 +1899,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="single"
                   name="numOfPeople"
                   className="radio-group-num"
-                  //uncommented onChange
-                  // onChange={this.handleType}
                   checked={
                     this.props.responses.type[
                       this.props.responses.type.length - 1
@@ -2166,8 +1936,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "couple"
                   }
                   onClick={this.handleType}
-                  //uncommented onChange
-                  // onChange={this.handleType}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2197,8 +1965,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "fam-of-4"
                   }
                   onClick={this.handleType}
-                  //uncommented onChange
-                  //onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2233,8 +1999,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "corporate"
                   }
                   onClick={this.handleType}
-                  //uncommented onChange
-                  //onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2265,8 +2029,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "parents"
                   }
                   onClick={this.handleType}
-                  //uncommented onChange
-                  // onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2293,7 +2055,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   name="numOfPeople"
                   className="radio-group-num"
                   checked={["others", "smes", "intl_coverage"].includes(
-                    //{this.props.responses.type === "others"}
                     this.props.responses.type
                   )}
                   onChange={this.handleType}
@@ -2337,17 +2098,6 @@ class NewContent extends React.Component<homeProps, homeState> {
         </div>
 
         <div className="form-group home-view-btn">
-          {/*<div className="col-md-12">
-            <button
-              className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={() => {
-                this.closeDesktopOnLoadModal();
-              }}
-            >
-              Compare top 3 plans
-            </button>
-          </div>*/}
-
           <div className="plan-c-title-right">
             <div className="lg-display--block plan-c-compare-button">
               <button
@@ -2425,12 +2175,7 @@ class NewContent extends React.Component<homeProps, homeState> {
           Compare and buy HMO plans in Nigeria from the comfort of your home
         </h3>
         <h3 className="no-med no-med-r">No medicals required</h3>
-        <div
-          className={
-            //styles.optionsGroup +
-            " price-slider"
-          }
-        >
+        <div className={" price-slider"}>
           <p className={styles.sideBarHeadings}>
             What is your price range?
             <span className="price-range">
@@ -2443,7 +2188,6 @@ class NewContent extends React.Component<homeProps, homeState> {
             marks={this.marks}
             range
             tipFormatter={this.formatter}
-            // min={300000}
             min={5000}
             max={1000000}
             onAfterChange={this.eventHandlers.changeBudget}
@@ -2469,7 +2213,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "single"
                   }
                   onClick={this.handleType}
-                  //onChange={this.handleType}
                   id="single"
                 ></input>
                 <span className="num-div-inner">
@@ -2501,7 +2244,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "couple"
                   }
                   onClick={this.handleType}
-                  // onChange={this.handleType}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2532,10 +2274,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "fam-of-3"
                   }
                   onClick={this.handleType}
-                  //onChange={this.handleType}
-                  // onClick={(e) =>
-                  //   this.handleType("fam-of-3")
-                  // }
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2569,7 +2307,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "fam-of-4"
                   }
                   onClick={this.handleType}
-                  // onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2600,7 +2337,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     ] === "parents"
                   }
                   onClick={this.handleType}
-                  // onChange={this.handleType}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -2627,7 +2363,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                   name="numOfPeople"
                   className="radio-group-num"
                   checked={["others", "smes", "intl_coverage"].includes(
-                    //{this.props.responses.type === "others"}
                     this.props.responses.type
                   )}
                   onClick={(e) => {
@@ -2674,10 +2409,7 @@ class NewContent extends React.Component<homeProps, homeState> {
           <div className="col-md-12">
             <button
               className="btn btn-primary btn-large view-plans btn-demo"
-              onClick={() => {
-                // this.mobileToggleModal();
-                //this.handleDesktopView();
-              }}
+              onClick={() => {}}
             >
               Continue
             </button>
@@ -2695,7 +2427,6 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   closeDesktopOnLoadModal = () => {
-    //console.log"close me");
     this.showDesktopHomeFrm();
     this.setState({
       show_desktop_on_load_modal: false,
@@ -2717,20 +2448,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       </Modal>
     );
   }
-
-  // mobileOnLoadModal() {
-  //   return (
-  //     <Modal
-  //       id="mobile-on-page-load-modal"
-  //       dialogClassName="custom-dialog"
-  //       className="mobile-modal center"
-  //       show={true}
-  //       onHide={this.mobileToggleModal}
-  //     >
-  //       <Modal.Body>{this.renderMobileQuizForm()}</Modal.Body>
-  //     </Modal>
-  //   );
-  // }
 
   hideDesktopHomeFrm() {
     this.setState({
@@ -2770,27 +2487,20 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
 
     this.setState({
-      // data: apiData,
-      // totalPage: apiData.length / pageSize,
       minIndex: 0,
       maxIndex: pageSize,
     });
   }
 
   componentWillMount() {
-    //console.log("will");
-    //let plansSection = document.getElementById("plans")!;
-    // plansSection.scrollIntoView({ behavior: "smooth" });
     document.addEventListener("scroll", this.trackScrolling);
   }
 
   componentWillUnmount() {
-    //window.removeEventListener("scroll", this.handleSticky);
     document.removeEventListener("scroll", this.trackScrolling);
   }
 
   marks = {
-    //300000: formatAsCurrency(300000),
     8000: formatAsCurrency(8000),
     1500000: formatAsCurrency(1500000),
     3000000: formatAsCurrency(3000000),
@@ -2805,7 +2515,6 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   };
 
-  // minBudget: any = this.formatBudget(300000);
   minBudget: any = this.formatBudget(8000);
 
   maxBudget: any = this.formatBudget(3000000);
@@ -2826,15 +2535,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
       let data = true;
       let budget = value;
-
-      //  await this.props.resetPlans(data);
       await this.props.updateBudget(budget);
-      //await this.props.getServices();
-      //this.props.filterByBudget(budget);
-
-      //this.handlePriceRangeTitle();
-
-      // this.filterByBudget_and_or_Type();
       await this.getRecommendedPlans();
     },
   };
@@ -2874,23 +2575,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   }
 
-  // updatePriceRange(title) {
-  //   let data = title;
-  //   this.props.updatePriceRange(data);
-  // }
-
   handlePriceRangeTitle() {
-    // console.log(
-    //   "hit handle",
-    //   "this.props.responses.budget[0]",
-    //   this.props.responses.budget[0],
-    //   "this.props.responses.budget[1]",
-    //   this.props.responses.budget[1],
-
-    //   "this.props.responses.price_range",
-    //   this.props.responses.price_range
-    // );
-
     if (
       this.props.responses.budget[1] > 0 &&
       this.props.responses.budget[1] <= 49999
@@ -2933,29 +2618,24 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   setPriceRangeBasedOnTitle = async (e) => {
     this.props.resetRange();
-    //console.log("e.target", e.target);
 
     this.setState({
-      range_selected: e, //.target.value,
+      range_selected: e,
     });
 
-    let title = e; //.target.value;
-    // console.log("title", title);
+    let title = e;
 
     switch (title) {
       case "bronze":
-        //this.eventHandlers.changeBudget([0, 20000]);
         await this.props.updatePriceRange("bronze");
 
         break;
 
       case "silver":
-        //this.eventHandlers.changeBudget([20001, 49999]);
         await this.props.updatePriceRange("silver");
         break;
 
       case "gold":
-        // this.eventHandlers.changeBudget([50000, 99999]);
         await this.props.updatePriceRange("gold");
 
         break;
@@ -2965,13 +2645,11 @@ class NewContent extends React.Component<homeProps, homeState> {
         break;
 
       case "platinum":
-        // this.eventHandlers.changeBudget([100000, 149000]);
         await this.props.updatePriceRange("platinum");
 
         break;
 
       case "platinum_plus":
-        //this.eventHandlers.changeBudget([150000, 1000000]);
         await this.props.updatePriceRange("platinum_plus");
 
         break;
@@ -2980,25 +2658,17 @@ class NewContent extends React.Component<homeProps, homeState> {
         await this.props.updatePriceRange("all");
         break;
       default:
-        //this.eventHandlers.changeBudget([0, 2000000]);
-
         break;
     }
-    //this.props.filterByPlanRange();
     this.filterByBudget_and_or_Type();
   };
 
   toggleShowFilter = () => {
-    // this.setState({
-    //   show_filter: !this.state.show_filter,
-    // });
     this.props.jump_to_filter_box && this.props.jumpToFilterBox();
     this.props.toggleFilterBox();
   };
 
   toggleMedMgtProgramsMultiselect = () => {
-    //console.log"toggle");
-
     this.setState({
       show_med_mgt_program_multiselect:
         !this.state.show_med_mgt_program_multiselect,
@@ -3019,22 +2689,6 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handlePlanRangeCheck(id) {
     this.props.handlePlanRangeCheck(id);
-    /* let arr: string[] = this.state.filter_params.plan_range_checked;
-
-    let isPlanRangeChecked: number = arr.indexOf(id);
-
-    if (isPlanRangeChecked > -1) {
-      arr.splice(isPlanRangeChecked, 1);
-    } else {
-      arr.push(id);
-    }
-
-    this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        plan_range_checked: arr,
-      },
-    });*/
   }
 
   handlePlanTypesCheck(id) {
@@ -3081,50 +2735,18 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handleMinRangeChange(val) {
     this.props.handleMinRangeChange(val);
-    /* console.log(
-      "this.state.filter_params.annual_range_min",
-
-      this.state.filter_params.annual_range_min
-    );
-
-    console.log("val", val);
-
-    this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        annual_range_min: val,
-      },
-    });*/
   }
 
   handleMaxRangeChange(val) {
     this.props.handleMaxRangeChange(val);
-    /* this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        annual_range_max: val,
-      },
-    });*/
   }
 
   handleTotalBenefitMinChange(val) {
     this.props.handleTotalBenefitMinChange(val);
-    /*this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        total_benefit_min: val,
-      },
-    });*/
   }
 
   handleTotalBenefitMaxChange(val) {
     this.props.handleTotalBenefitMaxChange(val);
-    /* this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        total_benefit_max: val,
-      },
-    });*/
   }
 
   filterByTotalBenefitLimit = async () => {
@@ -3149,27 +2771,10 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handlePlanIDChange(val) {
     this.props.handlePlanIDChange(val);
-    /* this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        planID: val,
-      },
-    });*/
   }
 
   async handleUserAddress() {
     this.getLocation();
-    /* this.props.enableSearchByProximity
-
-    let v = this.state.filter_params.enableSearchByProximity;
-    this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        enableSearchByProximity: !v,
-      },
-    });
-
-    */
   }
 
   updateBudgetWithFilterRange = () => {
@@ -3186,32 +2791,14 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handleMinDedChange(val) {
     this.props.handleMinDedChange(val);
-    /* this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        annual_deductible_min: val,
-      },
-    });*/
   }
 
   handleMaxDedChange(val) {
     this.props.handleMaxDedChange(val);
-    /* this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        annual_deductible_max: val,
-      },
-    });*/
   }
 
   handleHMOSelected(val) {
     this.props.handleHMOSelected(val);
-    /* this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        hmo_selected: val,
-      },
-    });*/
   }
 
   showCompareButton() {
@@ -3273,11 +2860,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   buildFilterQueryParams = async () => {
     let x = await Object.entries(this.props.applied_filters);
-    // console.log("x", x);
-
     let appliedFilters = x.filter((filt: any) => {
-      // console.log("filt[1]", filt[1]);
-
       if (filt[1]) {
         return filt[1].length > 0;
       }
@@ -3293,13 +2876,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       query_string +=
         "/search" + appliedFilters[i][0] + "/" + appliedFilters[i][1];
     }
-    // console.log("appliedFilters", appliedFilters);
-    // console.log("query_string", query_string);
-
-    // this.props.history.push({
-    //   pathname: query_string,
-    // });
-    //return query_string;
   };
 
   updateURL() {
@@ -3309,10 +2885,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       let params = this.buildFilterQueryParams();
       path = path + params;
     }
-
-    // this.props.history.push({
-    //   pathname: path,
-    // });
   }
 
   propsParams = this.props.params;
@@ -3355,7 +2927,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       sticky_styles: css,
     });
   }
-  // }
 
   isBottom(el) {
     return el ? el.getBoundingClientRect().top <= 120 : false;
@@ -3363,12 +2934,8 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   trackScrolling = () => {
     const wrappedElement = document.getElementById("plans-section");
-    //console.logwrappedElement, "wrappedElement");
-    // console.log("this.isBottom(wrappedElement)", this.isBottom(wrappedElement))
     if (this.isBottom(wrappedElement)) {
-      //console.log"sticky sticky");
       this.onScrollDownStickyPosition();
-      //document.removeEventListener("scroll", this.trackScrolling);
     } else {
       this.initialStickyPosition();
     }
@@ -3406,8 +2973,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   sumTotalBenefitLimit(in_limit, out_limit) {
-    let inLimit = this.stripNonNumeric(in_limit); //parseInt(in_limit.split("₦")[1]);
-    let outLimit = this.stripNonNumeric(out_limit); //parseInt(out_limit.split("₦")[1]);
+    let inLimit = this.stripNonNumeric(in_limit);
+    let outLimit = this.stripNonNumeric(out_limit);
 
     if (inLimit && outLimit) {
       return inLimit + outLimit;
@@ -3419,10 +2986,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       [e.target.name]: e.target.value,
     });
   };
-
-  // handlePlanID_HMOID_paramChange = () => {
-
-  // }
 
   getRecommendedPlans = async () => {
     this.props.jump_to_filter_box && this.props.jumpToFilterBox();
@@ -3437,16 +3000,11 @@ class NewContent extends React.Component<homeProps, homeState> {
       total_benefit_min,
       total_benefit_max,
       user_address,
-    } = this.props.filter_params; // updated this.state.filter_params;
-
-    // console.log("user_address", user_address);
-    // console.log("this.props.location", this.props.location);
+    } = this.props.filter_params;
 
     if (user_address) {
       await this.props.handleGeocoding(user_address);
     }
-
-    // console.log("this.props.location", this.props.location);
 
     let filterBoxParams = {
       range: plan_range_checked,
@@ -3467,7 +3025,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       doctors: this.props.responses.doctors,
       lat_lng: this.props.location,
       providers: this.props.responses.providers,
-      //lat_lng: this.state.filter_params.location,
     };
 
     const {
@@ -3497,17 +3054,9 @@ class NewContent extends React.Component<homeProps, homeState> {
     ) {
       this.resetTypeAndRangeFilters();
 
-      // console.log("filterBoxParams", filterBoxParams);
-
       await this.props.getRecommendedPlans(filterBoxParams);
 
       if (range.length > 0) {
-        // this.setState({
-        //   applied_filters: {
-        //     ...this.state.applied_filters,
-        //     metal_level: range,
-        //   },
-        // });
         this.updateAppliedFilters({
           key: "metal_level",
           value: range,
@@ -3515,12 +3064,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
 
       if (hmoID) {
-        // this.setState({
-        //   applied_filters: {
-        //     ...this.state.applied_filters,
-        //     hmoID,
-        //   },
-        // });
         this.updateAppliedFilters({
           key: "hmoID",
           value: hmoID,
@@ -3528,12 +3071,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
 
       if (planID) {
-        // this.setState({
-        //   applied_filters: {
-        //     ...this.state.applied_filters,
-        //     plan_ID: planID,
-        //   },
-        // });
         this.updateAppliedFilters({
           key: "plan_ID",
           value: planID,
@@ -3541,12 +3078,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
 
       if (benefits.length > 0) {
-        // this.setState({
-        //   applied_filters: {
-        //     ...this.state.applied_filters,
-        //     benefits,
-        //   },
-        // });
         this.updateAppliedFilters({
           key: "benefits",
           value: benefits,
@@ -3554,12 +3085,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
 
       if (total_benefit_range.length) {
-        // this.setState({
-        //   applied_filters: {
-        //     ...this.state.applied_filters,
-        //     total_benefit_range,
-        //   },
-        // });
         this.updateAppliedFilters({
           key: "total_benefit_range",
           value: total_benefit_range,
@@ -3567,12 +3092,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
 
       if (doctors.length) {
-        // this.setState({
-        //   applied_filters: {
-        //     ...this.state.applied_filters,
-        //     doctors,
-        //   },
-        // });
         this.updateAppliedFilters({
           key: "doctors",
           value: doctors,
@@ -3580,12 +3099,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
 
       if (lat_lng) {
-        // this.setState({
-        //   applied_filters: {
-        //     ...this.state.applied_filters,
-        //     lat_lng,
-        //   },
-        // });
         this.updateAppliedFilters({
           key: "lat_lng",
           value: lat_lng,
@@ -3593,12 +3106,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
 
       if (providers.length) {
-        // this.setState({
-        //   applied_filters: {
-        //     ...this.state.applied_filters,
-        //     providers,
-        //   },
-        // });
         this.updateAppliedFilters({
           key: "providers",
           value: providers,
@@ -3615,12 +3122,6 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.getPlanByID(planID);
     await this.props.resetInfiniteScrollData();
     if (planID) {
-      // this.setState({
-      //   applied_filters: {
-      //     ...this.state.applied_filters,
-      //     plan_ID: planID,
-      //   },
-      // });
       this.updateAppliedFilters({
         key: " plan_ID",
         value: planID,
@@ -3648,40 +3149,9 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   clearFilters = async () => {
-    // console.log("clear");
     this.props.jump_to_filter_box && this.props.jumpToFilterBox();
     this.props.resetSelectedDoctors();
     this.props.resetSelectedProviders();
-
-    /* this.setState({
-      applied_filters: {
-        metal_level: [],
-        hmoID: null,
-        plan_ID: null,
-        benefits: [],
-        total_benefit_range: [],
-        doctors: [],
-        lat_lng: [],
-        providers: [],
-        plan_type: [],
-        budget: [],
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        annual_range_min: "",
-        annual_range_max: "",
-        annual_deductible_min: "",
-        annual_deductible_max: "",
-        plan_types_checked: [],
-        plan_range_checked: [],
-        planID: "",
-        hmo_selected: "", // undefined,
-        mgt_program_selected: [],
-        providers_selected: [],
-        prescriptions_selected: [],
-        enableSearchByProximity: false,
-      },
-    }); */
 
     await this.props.resetFilterParams();
 
@@ -3692,7 +3162,6 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetInfiniteScrollData();
     this.props.is_filter_box_open && this.toggleShowFilter();
     await this.props.getServices();
-    // console.log("this.props.plans", this.props.plans);
 
     this.props.match.path === "/hmos/*"
       ? await this.props.updateInfiniteScrollData(
@@ -3718,8 +3187,6 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   goToDoctors = () => {
-    //console.log("this.props.doctors", this.props.doctors);
-
     if (this.props.doctors.length === 0) {
       this.props.getDoctors();
     }
@@ -3739,26 +3206,16 @@ class NewContent extends React.Component<homeProps, homeState> {
       current: 1,
       minIndex: 0,
       maxIndex: pageSize,
-      // infiniteScrollData:
-      //   this.props.match.path === "/hmos/*"
       //     ? this.props.plansByHMO.slice(0, pageSize)
-      //     : this.props.planServices.slice(0, pageSize),
     });
     let page = this.state.current;
     let plansByHMO = this.props.plansByHMO;
-    let allPlans =
-      //this.props.planServices;
-      this.props.plans;
+    let allPlans = this.props.plans;
 
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
-    //console.log("apiData", apiData);
-
     let start_index = (page - 1) * pageSize;
     let end_index = pageSize * page;
-
-    // console.log("start_index", start_index);
-    // console.log("end_index", end_index);
 
     this.setState({
       current: page,
@@ -3775,40 +3232,19 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   handlePageChange = async (page) => {
-    // console.log("page", page);
-
     let plansByHMO = this.props.plansByHMO;
-    let allPlans =
-      //this.props.planServices;
-      this.props.plans;
+    let allPlans = this.props.plans;
 
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
-    //console.log("apiData", apiData);
-
     let total_num_of_pages = apiData.length / pageSize;
-
-    //console.log("total_num_of_pages", total_num_of_pages);
 
     if (page < total_num_of_pages) {
       page = page + 1;
-
-      //console.log("page + 1", page);
-
-      //  setTimeout(() => {
-      // this.setState({
-      //   infiniteScrollData: this.state.infiniteScrollData.concat(
-      //     apiData.slice(start_index, end_index)
-      //   ),
-      // });
-      // }, 1500);
     }
 
     let start_index = (page - 1) * pageSize;
     let end_index = pageSize * page;
-
-    // console.log("start_index", start_index);
-    // console.log("end_index", end_index);
 
     this.setState({
       current: page,
@@ -3848,15 +3284,6 @@ class NewContent extends React.Component<homeProps, homeState> {
         position.coords.longitude,
       ]);
       await this.props.handleReverseGeocoding();
-      /* updated
-     
-     this.setState({
-        filter_params: {
-          ...this.state.filter_params,
-          location: `${position.coords.latitude}, ${position.coords.longitude}`,
-          user_address: this.props.user_address,
-        },
-      });*/
       this.props.setCoordinatesAndAddress(position);
     }
   };
@@ -3869,61 +3296,21 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handleAddressImput = (e) => {
     this.props.handleAddressImput(e.target.value);
-    /* this.setState({
-      filter_params: {
-        ...this.state.filter_params,
-        user_address: e.target.value,
-      },
-    });*/
   };
 
   clearDoctorsFilter = async () => {
     await this.props.resetSelectedDoctors();
-    this.props.clearDoctorsFilter();
-    /* updated
-   
-   this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        doctors: [],
-      },
-    });*/
     await this.getRecommendedPlans();
   };
 
   clearProvidersFilter = async () => {
     await this.props.resetSelectedProviders();
     this.props.clearProvidersFilter();
-    /* updated
-   
-   this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        providers: [],
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        providers_selected: [],
-      },
-    });*/
     await this.getRecommendedPlans();
   };
 
   clearBudgetFilter = async () => {
     this.props.clearBudgetFilter();
-    /* updated
-   
-   this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        budget: [],
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        annual_range_min: "",
-        annual_range_max: "",
-      },
-    });*/
 
     await this.eventHandlers.changeBudget([]);
     await this.props.resetBudget();
@@ -3932,114 +3319,41 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   clearPlanTypeFilter = async () => {
     this.props.clearPlanTypeFilter();
-    /* this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        plan_type: [],
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        plan_types_checked: [],
-      },
-    }); */
     await this.props.resetType();
     await this.getRecommendedPlans();
   };
 
   clearPlanMetalLevelFilter = async () => {
     this.props.clearPlanMetalLevelFilter();
-    /*  this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        metal_level: [],
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        plan_range_checked: [],
-      },
-    });*/
     await this.props.resetRange();
     await this.getRecommendedPlans();
   };
 
   clearPlanIDFilter = async () => {
     this.props.clearPlanIDFilter();
-    /*  this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        plan_ID: null,
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        planID: "",
-      },
-    }); */
     await this.props.resetPlanID();
     await this.getRecommendedPlans();
   };
 
   clearHMOIDFilter = async () => {
     this.props.clearHMOIDFilter();
-    /* this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        hmoID: null,
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        hmo_selected: "",
-      },
-    }); */
     await this.getRecommendedPlans();
   };
 
   clearProximityFilter = async () => {
     await this.props.resetLocation();
     this.props.clearProximityFilter();
-    /* this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        lat_lng: [],
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        location: undefined,
-        user_address: "",
-        enableSearchByProximity: false,
-      },
-    }); */
-
     await this.getRecommendedPlans();
   };
 
   clearBenefitsFilter = async () => {
     this.props.clearBenefitsFilter();
-    /* this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        benefits: [],
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        benefits_selected: [],
-      },
-    }); */
     await this.props.resetBenefits();
     await this.getRecommendedPlans();
   };
 
   clearTotalBenefitRangeFilter = async () => {
     this.props.clearTotalBenefitRangeFilter();
-    /* this.setState({
-      applied_filters: {
-        ...this.state.applied_filters,
-        total_benefit_range: [],
-      },
-      filter_params: {
-        ...this.state.filter_params,
-        total_benefit_range: [],
-      },
-    }); */
     await this.getRecommendedPlans();
   };
 
@@ -4112,43 +3426,19 @@ class NewContent extends React.Component<homeProps, homeState> {
       plan_type,
       budget,
     } = this.props.applied_filters;
-    //this.state.applied_filters;
 
     let plansByHMO = this.props.plansByHMO;
-    let allPlans =
-      //this.props.planServices;
-      this.props.plans;
-
-    // console.log("allPlans", allPlans);
-
-    //   console.log("apiData", apiData);
+    let allPlans = this.props.plans;
 
     let data = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
-    //this.state.maxIndex < data.length
-
-    // console.log("this.state.maxIndex", this.state.maxIndex);
-    //  console.log("data", data);
-
-    //  console.log("data", data);
-    // console.log("this.state.maxIndex", this.state.maxIndex);
-
     let apiData = this.props.infiniteScrollData;
-    //  console.log("apiData", apiData);
 
-    let {
-      //  data,
-      current,
-      minIndex,
-      maxIndex,
-      totalPage,
-    } = this.state;
+    let { current, minIndex, maxIndex, totalPage } = this.state;
 
     if (this.props.page != 0) {
     } else {
     }
-    // console.log("this.state.range_selected", this.state.range_selected);
-    //console.log"this.props", this.props);
 
     let med_mgt_programs_selected: string[] =
       this.props.filter_params["mgt_program_selected"];
@@ -4160,13 +3450,6 @@ class NewContent extends React.Component<homeProps, homeState> {
       this.props.filter_params["plan_range_checked"];
 
     let plans_to_compare: number[] = this.state.plans_to_compare;
-
-    // let plansWithPackages =
-    //   this.props.plans &&
-    //   this.props.plans.filter((plan) => plan.packages.length > 0);
-
-    // console.log("plan_range_checked", plan_range_checked);
-    // console.log("plan_types_checked", plan_types_checked);
 
     const {
       annual_range_min,
@@ -4183,32 +3466,25 @@ class NewContent extends React.Component<homeProps, homeState> {
       planID,
       enableSearchByProximity,
     } = this.props.filter_params;
-    //this.state.filter_params;
 
     let providersArr;
 
     let selected_providers = [...this.props.responses.providers];
-
-    //console.log("total_benefit_min", total_benefit_min);
-    //  console.log("total_benefit_max", total_benefit_max);
 
     return (
       <div className="home">
         <div className="banner-div">
           <div className="container home-c">
             <h1 className="tiny-descrptn">
-              {
-                //this.props.plansByHMO.length > 0
-                this.props.hmo.length > 0 &&
-                this.props.plansByHMO.length > 0 &&
-                this.props.match.path === "/hmos/*"
-                  ? `${this.props.hmo[0].name} plans starting from `
-                  : this.props.hmo.length > 0 &&
-                    this.props.plansByHMO.length === 0 &&
-                    this.props.match.path === "/hmos/*"
-                  ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
-                  : `Protect your health from just`
-              }
+              {this.props.hmo.length > 0 &&
+              this.props.plansByHMO.length > 0 &&
+              this.props.match.path === "/hmos/*"
+                ? `${this.props.hmo[0].name} plans starting from `
+                : this.props.hmo.length > 0 &&
+                  this.props.plansByHMO.length === 0 &&
+                  this.props.match.path === "/hmos/*"
+                ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
+                : `Protect your health from just`}
               {this.props.plansByHMO.length === 0 &&
               this.props.match.path === "/hmos/*" ? (
                 ""
@@ -4218,7 +3494,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                     <Spin className="cheapest-plan" />
                   ) : (
                     ` ₦${this.numberwithCommas(
-                      // this.props.plansByHMO.length > 0
                       this.props.hmo.length > 0 &&
                         this.props.match.path === "/hmos/*"
                         ? this.props.cheapest_plan_by_hmo
@@ -4228,25 +3503,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                 </span>
               )}
             </h1>
-
-            {/* if the path is /hmo and data has been fetched*/}
-            {/* {
-              this.props.match.params.id &&
-                this.props.plansByHMO.length > 0 && (
-                  <Row className="banner-content">
-                    {this.hmoBannerDiv(this.props.match.params.id)}
-
-                    <Col md={10} className="quiz">
-                      <div className="home-frm form-div">
-                        { this.renderDesktopQuizForm()}
-
-                        {this.renderMobileQuizForm()}
-                        
-                      </div>
-                    </Col>
-                  </Row>
-                )
-            } */}
 
             {/* if the path is /hmo and data is being fetched*/}
             {this.props.match.params.id && this.props.plans.length == 0 && (
@@ -4315,12 +3571,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                         : "hide-desktop-home-frm"
                     }
                   >
-                    {/* call desktop form 3 */ this.renderDesktopQuizForm()}
-
-                    {/* {this.renderMobileQuizForm()} */}
-                    {/* {call the desktop modal } */ this.desktopOnLoadModal()}
-                    {/* call desktop quiz modal 3  this.renderDesktopQuizModal()*/}
-                    {/* call mobile quiz modal 3 this.renderMobileQuizModal()*/}
+                    {this.renderDesktopQuizForm()}
+                    {this.desktopOnLoadModal()}
                   </div>
                 </Col>
               </Row>
@@ -4400,13 +3652,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                           ]
                         }
                       >
-                        {/* <option
-                          value="all"
-                          id="all"
-                          onClick={this.resetServices}
-                        >
-                          All
-                        </option> */}
                         {home_utils.plan_types.map((plan_type) => {
                           return (
                             <option
@@ -4928,7 +4173,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   type="button"
                                   onClick={() => {
                                     this.updateBudgetWithFilterRange();
-                                    //this.getRecommendedPlans();
                                   }}
                                 >
                                   Apply range
@@ -5655,43 +4899,6 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       this.props.filter_params.user_address
                                     }
                                   />
-
-                                  // <ul className="c-list--bare">
-                                  //   <li className="display--inline-block">
-                                  //     <div className="c-filter-tag margin-top--0">
-                                  //       <button
-                                  //         className="c-filter-tag__button"
-                                  //         //id="Asthma (43)-tag"
-                                  //         // onClick={() =>
-                                  //         //   this.handleMedMgtProgCheck(item)
-                                  //         // }
-                                  //       >
-                                  //         {/* <span className="">Deselect</span> */}
-                                  //         <span className="c-filter-tag__label">
-                                  //           {`Lat,Lng: ${location}`}
-                                  //         </span>
-                                  //         {/* <span className="c-filter-tag__clear-icon">
-                                  //     <svg
-                                  //       className="c-clear-icon"
-                                  //       width="15px"
-                                  //       height="15px"
-                                  //       viewBox="0 0 15 15"
-                                  //       version="1.1"
-                                  //       xmlns="http://www.w3.org/2000/svg"
-                                  //       focusable="false"
-                                  //       role="presentation"
-                                  //       pointer-events="none"
-                                  //     >
-                                  //       <path
-                                  //         className="c-clear-icon__x"
-                                  //         d="M14.6467778,11.2126037 C14.8818403,11.4476661 15,11.7342663 15,12.0711472 C15,12.4080282 14.8818403,12.6946283 14.6467778,12.9296908 L12.9296908,14.6467778 C12.6933713,14.8830973 12.4067711,15.001257 12.0698902,15.001257 C11.7342663,15.001257 11.4476661,14.8830973 11.2126037,14.6467778 L7.49937149,10.9348026 L3.7873963,14.6467778 C3.55233386,14.8830973 3.26573368,15.001257 2.92885276,15.001257 C2.59197184,15.001257 2.30662868,14.8830973 2.07030923,14.6467778 L0.353222157,12.9296908 C0.116902707,12.6946283 0,12.4080282 0,12.0711472 C0,11.7342663 0.116902707,11.4476661 0.353222157,11.2126037 L4.06519735,7.50062851 L0.353222157,3.78865331 C0.116902707,3.55233386 0,3.2669907 0,2.92885276 C0,2.59322886 0.116902707,2.30662868 0.353222157,2.07156624 L2.07030923,0.353222157 C2.30662868,0.118159725 2.59197184,0 2.92885276,0 C3.26573368,0 3.55233386,0.118159725 3.7873963,0.353222157 L7.49937149,4.06519735 L11.2126037,0.353222157 C11.4476661,0.118159725 11.7342663,0 12.0698902,0 C12.4067711,0 12.6933713,0.118159725 12.9296908,0.353222157 L14.6467778,2.07156624 C14.8818403,2.30662868 15,2.59322886 15,2.92885276 C15,3.2669907 14.8818403,3.55233386 14.6467778,3.78865331 L10.9348026,7.50062851 L14.6467778,11.2126037 Z"
-                                  //       ></path>
-                                  //     </svg>
-                                  //   </span> */}
-                                  //       </button>
-                                  //     </div>
-                                  //   </li>
-                                  // </ul>
                                 }
                               </div>
                             </fieldset>
@@ -6420,271 +5627,10 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       </div>
                                     </div>
                                   </div>
-
-                                  {/* 
-                                  <div className="prov-cat">
-                                    <div className="margin-right--1 prov-num">
-                                      <div
-                                        className={`${
-                                          window.screen.width > 500
-                                            ? "plan-card-cost-display--info-needed"
-                                            : "col--12  margin-y--1"
-                                        }`}
-                                      >
-                                        
-                                        <div className="justify-content--center display--flex">
-                                          <div
-                                            className="font-size--small font-weight--bold
-                              display--flex aligh-items--center
-                              "
-                                          >
-                                            Medical providers
-                                          </div>
-                                        </div>
-                                        <div className="font-size--h2">
-                                          <a
-                                            onClick={() =>
-                                              this.goToDetails(plan.service_id)
-                                            }
-                                            className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                                            //href={`/details/id/${plan.service_id}/#providers`}
-                                            href="#"
-                                          >
-                                            {this.props.responses.providers
-                                              .length > 0
-                                              ? `View All ${
-                                                  plan.hmo_id.providers
-                                                    ? plan.hmo_id.providers
-                                                        .length
-                                                    : ""
-                                                } Providers`
-                                              : `View Providers (${
-                                                  plan.hmo_id.providers
-                                                    ? plan.hmo_id.providers
-                                                        .length
-                                                    : ""
-                                                })`}
-                                          </a>
-
-                               
-                                        </div>
-                                        {this.props.responses.providers.length >
-                                          0 && (
-                                          <ul className="c-status-list c-list--bare">
-                                            {
-                                              // this.props.responses.providers
-                                              //   .filter((prov) => {
-                                              //     let namesArr = plan.hmo_id.providers.map(
-                                              //       (prvdr) => prvdr.provider_name
-                                              //     );
-
-                                              //     return namesArr.includes(
-                                              //       prov.provider_name
-                                              //     );
-                                              //   });
-
-                                              this.props.responses.providers.map(
-                                                (provider) => {
-                                                  providersArr = plan.hmo_id.providers.map(
-                                                    (prvdr) =>
-                                                      prvdr.provider_name
-                                                  );
-                                                  console.log(
-                                                    "provider.provider_name",
-                                                    provider.provider_name
-                                                  );
-                                                  console.log(
-                                                    "providersArr",
-                                                    providersArr
-                                                  );
-
-                                                  return (
-                                                    <li className="c-status-list__item font-size--small">
-                                                      <img
-                                                        src={
-                                                          providersArr.includes(
-                                                            provider.provider_name
-                                                          )
-                                                            ? check
-                                                            : uncheck
-                                                        }
-                                                        className="c-status-list__item__icon"
-                                                      />
-                                                      <span className="text-transform--capitalize">
-                                                        {provider.provider_name}
-                                                      </span>
-                                                    </li>
-                                                  );
-                                                }
-                                              )
-                                            }
-                                          </ul>
-                                        )}
-                                      </div>
-                                    </div>
-
-                                    <div className="prov-category">
-                                      <div
-                                        className={`${
-                                          window.screen.width > 500
-                                            ? "plan-card-cost-display--info-needed"
-                                            : "col--12"
-                                        }`}
-                                      >
-                                        
-                                        <div
-                                          className="font-size--small font-weight--bold
-                              display--flex aligh-items--center
-                              "
-                                        >
-                                          Hospital Category
-                                          
-                                        </div>
-
-                                        <div className="font-size--h2">
-                                          {plan.hospital_category[0].name
-                                            ? plan.hospital_category[0].name
-                                            : "N/A"}
-                                          
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                 */}
                                 </div>
                                 <div className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap hide display--none">
-                                  {/*                                   
                                   <div className="plan-card__cost-display">
-                                    <div
-                                      className="font-size--small font-weight--bold
-                              display--flex aligh-items--center
-                              "
-                                    >
-                                      Medical Providers
-                                      <button
-                                        type="button"
-                                        aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
-                                        className="tooltip-trigger padding--0"
-                                      >
-                                        <span className="tooltip-icon-container">
-                                          <FontAwesomeIcon
-                                            className="mt---2"
-                                            icon={faInfoCircle}
-                                          />
-                                        </span>
-                                      </button>
-                                    </div>
-                                    <div className="display--flex flex-wrap--wrap plan-flex-wrap">
-                                      <div className="cost-display__amount">
-                                        <div className="font-size--h2">
-                                          <a
-                                            onClick={() =>
-                                              this.goToDetails(plan.service_id)
-                                            }
-                                            className="c-button c-button--small font-weight--bold c-plan-filter-container__add-coverables qa-add-providers margin-top--1"
-                                            //href={`/details/id/${plan.service_id}/#providers`}
-                                            href="#"
-                                          >
-                                            {this.props.responses.providers
-                                              .length > 0
-                                              ? `View All ${
-                                                  plan.hmo_id.providers
-                                                    ? plan.hmo_id.providers
-                                                        .length
-                                                    : ""
-                                                } Providers`
-                                              : `View Providers (${
-                                                  plan.hmo_id.providers
-                                                    ? plan.hmo_id.providers
-                                                        .length
-                                                    : ""
-                                                })`}
-                                          </a>
-                                        </div>
-                                        
-                                        {this.props.responses.providers.length >
-                                          0 && (
-                                          <ul className="c-status-list c-list--bare">
-                                            {
-                                              this.props.responses.providers.map(
-                                                (provider) => {
-                                                  providersArr = plan.hmo_id.providers.map(
-                                                    (prvdr) =>
-                                                      prvdr.provider_name
-                                                  );
-                                                  console.log(
-                                                    "provider.provider_name",
-                                                    provider.provider_name
-                                                  );
-                                                  console.log(
-                                                    "providersArr",
-                                                    providersArr
-                                                  );
-
-                                                  return (
-                                                    <li className="c-status-list__item font-size--small">
-                                                      <img
-                                                        src={
-                                                          providersArr.includes(
-                                                            provider.provider_name
-                                                          )
-                                                            ? check
-                                                            : uncheck
-                                                        }
-                                                        className="c-status-list__item__icon"
-                                                      />
-                                                      <span className="text-transform--capitalize">
-                                                        {provider.provider_name}
-                                                      </span>
-                                                    </li>
-                                                  );
-                                                }
-                                              )
-                                            }
-                                          </ul>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
-                                  */}
-                                  {/* 
-                                  <div className="plan-card__cost-display">
-                                    <div
-                                      className="font-size--small font-weight--bold
-                              display--flex aligh-items--center"
-                                    >
-                                      Hospital Category
-                                      <button
-                                        type="button"
-                                        aria-label="Tooltip: The amount you pay for covered services before the plan starts to pay."
-                                        className="tooltip-trigger padding--0"
-                                      >
-                                        <span className="tooltip-icon-container">
-                                          <FontAwesomeIcon
-                                            className="mt---2"
-                                            icon={faInfoCircle}
-                                          />
-                                        </span>
-                                      </button>
-                                    </div>
-
-                                    <div className="display--flex flex-wrap--wrap plan-flex-wrap">
-                                      <div className="cost-display__amount">
-                                        <div className="font-size--h2">
-                                          {plan.hospital_category[0].name
-                                            ? plan.hospital_category[0].name
-                                            : "N/A"}
-                                        </div>
-                                        
-                                      </div>
-                                    </div>
-                                  </div>
- */}
-
-                                  <div className="plan-card__cost-display">
-                                    <div
-                                    //  className="plan-card-cost-display--info-needed"
-                                    >
+                                    <div>
                                       {/* fill--gray-lightest */}
                                       <div
                                         className="font-size--small font-weight--bold
@@ -6842,76 +5788,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     </div>
                                   </div>
                                 </div>
-                                {/* 
-                              <div
-                                className="plan-card__detail-section c-clearfix display--flex flex-wrap--wrap
-                          display--none sm-display--block
-                          "
-                              >
-                                <div className="font-size--small font-weight--bold display--flex align-items--center">
-                                  Benefit Limits
-                                  <button
-                                    type="button"
-                                    aria-label="Tooltip: Limits on Coverage"
-                                    className="tooltip-trigger padding--0"
-                                  >
-                                    <span className="tooltip-icon-container">
-                                      <FontAwesomeIcon
-                                        className="mt---2"
-                                        icon={faInfoCircle}
-                                      />
-                                    </span>
-                                  </button>
-                                </div>
-                                <div className="limits-row font-size--small">
-                                  <div className="limits-col--6 limits-lg-col--3 padding-top--1">
-                                    <div className="font-weight--bold color--gray">
-                                      In-patient Limit
-                                    </div>
-                                    <div className="">
-                                      {plan.in_patient_limit == "N/A"
-                                        ? "N/A"
-                                        : `₦${this.numberwithCommas(
-                                            this.stripNonNumeric(
-                                              plan.in_patient_limit
-                                            )
-                                          )}`}
-                                    </div>
-                                  </div>
 
-                                  <div className="limits-col--6 limits-lg-col--3 padding-top--1">
-                                    <div className="font-weight--bold color--gray">
-                                      Out-patient Limit
-                                    </div>
-                                    <div className="">
-                                      {plan.out_patient_limit == "N/A"
-                                        ? "N/A"
-                                        : `₦${this.numberwithCommas(
-                                            this.stripNonNumeric(
-                                              plan.out_patient_limit
-                                            )
-                                          )}`}
-                                    </div>
-                                  </div>
-
-                                  <div className="limits-col--6 limits-lg-col--3 padding-top--1">
-                                    <div className="font-weight--bold color--gray">
-                                      Age Limit
-                                    </div>
-                                    <div className="">
-                                      Not yet in Collection
-                                    </div>
-                                  </div>
-
-                                  <div className="limits-col--6 limits-lg-col--3 padding-top--1">
-                                    <div className="font-weight--bold color--gray">
-                                      Plan Range
-                                    </div>
-                                    <div className="">{plan.category}</div>
-                                  </div>
-                                </div>
-                              </div>
-    */}{" "}
                                 <div className="lg-display--none margin-top--2">
                                   <button
                                     className={`c-button c-check-button ${
