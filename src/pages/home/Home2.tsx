@@ -16,11 +16,11 @@ import { state } from "../../components/home/state";
 
 import {
   getHMOs,
-  // getPlans,
+   getPlans,
   getProviders,
-  getServices,
+  //getServices,
   getPlansByHMO,
-  getRecommendedPlans,
+  //getRecommendedPlans,
   getProviderInfo,
   getCheapestPlan,
   getCheapestPlanByHMO,
@@ -29,23 +29,24 @@ import {
   setIsFetchingProviders,
   setIsFetchingRecPlans,
   setIsFetchingServices,
-  filterByBudget,
+  //filterByBudget,
   getPlanByID,
-  filterByPlanType,
-  filterByBudget_and_or_Type,
-  filterByPlanRange,
+  //filterByPlanType,
+  //filterByBudget_and_or_Type,
+  //filterByPlanRange,
   getPlan,
   getSimilarPlans,
   togglePlanProviders,
   updateInfiniteScrollData,
   resetInfiniteScrollData,
-  filterByBenefits,
-  filterByTotalBenefitLimit,
+  //filterByBenefits,
+  //filterByTotalBenefitLimit,
   setLocation,
   getDoctors,
   handleGeocoding,
   handleReverseGeocoding,
   resetLocation,
+  getSpecialties
 } from "../../actions/fetchDataActions";
 
 import {
@@ -248,51 +249,42 @@ class Home extends Component<QuizProps, {}> {
   };
 
   async UNSAFE_componentWillMount() {
-    // console.log("this.props.match.path", this.props.match.path);
+    await this.props.getDoctors();
+    await this.props.getProviders();
+    await this.props.getPlans();
 
-    //   !localStorage["providers"] && (await this.props.getProviders());
-    //   !localStorage["plans"] && (await this.props.getPlans());
-    //!localStorage["services"] && (await this.props.getServices());
-    //   // this.getCheapestPlanByHMO();
-    //   const hmo = this.props.match.params ? this.props.match.params.id : "";
-    //console.log("!localStorage['services']", !localStorage["services"]);
+   // if (!localStorage["cheapest_plan"]) {
+     // await this.props.getCheapestPlan();
+    //}
 
-    if (!localStorage["services"]) {
-      await this.props.getServices();
-    }
-
-    if (!localStorage["cheapest_plan"]) {
-      await this.props.getCheapestPlan();
-    }
-
-    if (Object.keys(this.props.match.params).length) {
+   /* if (Object.keys(this.props.match.params).length) {
       this.parseParams();
       let idParamsObj = this.params.filter((param) => param.name == "id");
 
       if (idParamsObj.length > 0) {
         let id = idParamsObj[0].value;
-        // console.log("id", id);
 
         await this.props.getPlansByHMO(id);
         this.getCheapestPlanByHMO();
       }
-    }
+    } */
+    
+   /* if (this.props.plansByHMO.length || this.props.plans.length) {
+      this.props.match.path === "/hmos/*" ?  await this.props.updateInfiniteScrollData(
+        this.props.plansByHMO,
+        false,
+        null,
+        null
+      ) :  await this.props.updateInfiniteScrollData(
+        //this.props.planServices,
+        this.props.plans,
+        false,
+        null,
+        null)
+        
+    }*/
 
-    this.props.match.path === "/hmos/*"
-      ? await this.props.updateInfiniteScrollData(
-          this.props.plansByHMO,
-          false,
-          null,
-          null
-        )
-      : await this.props.updateInfiniteScrollData(
-          //this.props.planServices,
-          this.props.plans,
-          false,
-          null,
-          null
-        );
-    //  console.log("localStorage['services']", localStorage["services"]);
+
   }
 
   getCheapestPlanByHMO() {
@@ -329,8 +321,7 @@ const mapProps = (state: any) => ({
   //plans: state.fetchData.plans,
   //plan: state.fetchData.plan,
   //planServices: state.fetchData.services,
-  test: state,
-  plans: state.fetchData.services,
+  plans: state.fetchData.plans,
   hmos: state.fetchData.hmos,
   hmo: state.fetchData.hmo,
   responses: state.quiz.responses,
@@ -358,11 +349,11 @@ const mapProps = (state: any) => ({
 
 export default connect(mapProps, {
   getHMOs,
-  //getPlans,
+  getPlans,
   getProviders,
-  getServices,
+  //getServices,
   getPlansByHMO,
-  getRecommendedPlans,
+  //getRecommendedPlans,
   getCheapestPlan,
   getProviderInfo,
   getCheapestPlanByHMO,
@@ -402,15 +393,15 @@ export default connect(mapProps, {
   setPlansToCompareOnMobile,
   resetPlans,
   updatePriceRange,
-  filterByBudget,
+  //filterByBudget,
   getPlanByID,
-  filterByPlanType,
+  //filterByPlanType,
   setPlanID,
   setHMOID,
-  filterByBudget_and_or_Type,
+  //filterByBudget_and_or_Type,
   resetType,
   resetBudget,
-  filterByPlanRange,
+  //filterByPlanRange,
   resetRange,
   getPlan,
   getSimilarPlans,
@@ -419,8 +410,8 @@ export default connect(mapProps, {
   togglePlanProviders,
   updateInfiniteScrollData,
   resetInfiniteScrollData,
-  filterByBenefits,
-  filterByTotalBenefitLimit,
+  //filterByBenefits,
+  //filterByTotalBenefitLimit,
   toggleFilterBox,
   setLocation,
   getDoctors,
@@ -464,4 +455,5 @@ export default connect(mapProps, {
   setBenefits,
   setDoctors,
   jumpToFilterBox,
+  getSpecialties
 })(Home);

@@ -4,14 +4,17 @@ import { AUTH_SUCCESS, AUTH_FAIL, AUTH_ERROR } from "./types";
 
 const API_URL = process.env.REACT_APP_INSTACARE_REALM_URL;
 const CLIENT_SECRET = process.env.REACT_APP_CLIENT_SECRET;
-const CLIENT_ID = process.env.REACT_APP_CLIENT_ID
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+const DEV_LAB_API_URL = "localhost:5000"//process.env.REACT_APP_DEV_LAB_REALM_URL;
+const DEV_LAB_CLIENT_SECRET = process.env.REACT_APP_DEV_LAB_CLIENT_SECRET;
+const DEV_LAB_CLIENT_ID = process.env.REACT_APP_DEV_LAB_CLIENT_ID
 
 export const getToken = () => (dispatch) => {
     let enc = encodeURIComponent || escape;
 
     axios.post(
-        API_URL + "/oauth/token?scope=" + enc("*.*") + "&client_id=" +
-        enc(CLIENT_ID) + "&client_secret=" + enc(CLIENT_SECRET) + "&grant_type=" + enc(
+        DEV_LAB_API_URL + "/oauth/token?scope=" + enc("*.*") + "&client_id=" +
+        enc(DEV_LAB_CLIENT_ID) + "&client_secret=" + enc(DEV_LAB_CLIENT_SECRET) + "&grant_type=" + enc(
             "client_credentials"
         ),
         {

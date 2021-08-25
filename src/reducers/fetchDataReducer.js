@@ -36,7 +36,7 @@ import {
     FILTER_BY_DOCTOR,
     FILTER_BY_PROXIMITY,
     GET_DOCTORS,
-    GET_SUB_SPECIALTIES,
+    GET_SPECIALTIES,
     SET_LOCATION,
     HANDLE_GEOCODING,
     HANDLE_REVERSE_GEOCODING,
@@ -45,28 +45,29 @@ import {
     RESET_LOCATION,
     FILTER_PROVIDERS,
     FILTER_DOCTORS,
-    FILTER_BENEFITS
+    FILTER_BENEFITS,
+
+    IS_FETCHING_DATA
 } from "../actions/types";
 
 const initialState = {
     plans:
-        localStorage["plans"] ? JSON.parse(localStorage["plans"]) :
+      //  localStorage["plans"] ? JSON.parse(localStorage["plans"]) :
             [],
     hmos:
-        localStorage["hmos"] ? JSON.parse(localStorage["hmos"]) :
+       // localStorage["hmos"] ? JSON.parse(localStorage["hmos"]) :
             [],
     services:
-        localStorage["services"] ? JSON.parse(localStorage["services"]) :
+     //   localStorage["services"] ? JSON.parse(localStorage["services"]) :
             [],
     providers:
-        localStorage["providers"] ? JSON.parse(localStorage["providers"]) :
+      //  localStorage["providers"] ? JSON.parse(localStorage["providers"]) :
             [],
     doctors:
-        localStorage["doctors"] ? JSON.parse(localStorage["doctors"]) :
+       // localStorage["doctors"] ? JSON.parse(localStorage["doctors"]) :
             [],
 
     benefits:
-        // localStorage["benefits"] ? JSON.parse(localStorage["benefits"]) :
         [
             {
                 id: "accidents_emergencies",
@@ -197,8 +198,9 @@ const initialState = {
             // },
 
         ],
-    sub_specialties: localStorage["sub_specialties"] ?
-        JSON.parse(localStorage["sub_specialties"]) : [],
+    specialties: 
+    //localStorage["specialties"] ? JSON.parse(localStorage["specialties"]) :
+    [],
     plansByHMO: [],
     plan: [],
     similar_plans: [],
@@ -221,28 +223,27 @@ const initialState = {
     pageSize: 5,
     location: [],
     user_address: "",
-    providersDataSource: localStorage["providers"] ?
-        JSON.parse(localStorage["providers"]).map(
-            (provider) => provider.provider_name
-        ) : [],
-    doctorsDataSource: localStorage["doctors"] ?
-        JSON.parse(localStorage["doctors"]).map(
-            (doctor) => doctor.first_name + " " + doctor.last_name
-        ) : [],
-    benefitsDataSource: localStorage["benefits"] ?
-        JSON.parse(localStorage["benefits"]).map(
-            (benefit) => benefit.title
-        ) : [],
+    providersDataSource: 
+    localStorage["providers"] ? JSON.parse(localStorage["providers"]).map((provider) => provider.provider_name) : 
+        [],
+    doctorsDataSource: 
+        localStorage["doctors"] ? JSON.parse(localStorage["doctors"]).map((doctor) => doctor.first_name + " " + doctor.last_name) : 
+            [],
+    benefitsDataSource: 
+    localStorage["benefits"] ? JSON.parse(localStorage["benefits"]).map((benefit) => benefit.title) : 
+        [],
 }
 
 export default function (state = initialState, action) {
     switch (action.type) {
         case GET_PLANS:
-            localStorage["plans"] = JSON.stringify(action.payload)
+           // console.log("action.payload", action.payload);
+            //localStorage["plans"] = JSON.stringify(action.payload)
             return {
                 ...state,
                 plans: action.payload,
-                is_fetching_plans: false,
+                //is_fetching_plans: false,
+                is_fetching_data: false
 
             }
         case GET_PLAN:
@@ -253,7 +254,7 @@ export default function (state = initialState, action) {
             }
 
         case GET_HMOS:
-            localStorage["hmos"] = JSON.stringify(action.payload)
+            //localStorage["hmos"] = JSON.stringify(action.payload)
             return {
                 ...state,
                 hmos: action.payload,
@@ -267,8 +268,8 @@ export default function (state = initialState, action) {
             }
 
         case GET_PROVIDERS:
-            localStorage["providers"] = JSON.stringify(action.payload);
-            localStorage["providersDataSource"] = JSON.stringify(action.payload);
+           // localStorage["providers"] = JSON.stringify(action.payload);
+            //localStorage["providersDataSource"] = JSON.stringify(action.payload);
             return {
                 ...state,
                 providers: action.payload,
@@ -276,8 +277,8 @@ export default function (state = initialState, action) {
             }
 
         case GET_SERVICES:
-            localStorage["services"] = JSON.stringify(action.payload)
-            localStorage["benefits"] = JSON.stringify(state.benefits)
+           // localStorage["services"] = JSON.stringify(action.payload)
+           // localStorage["benefits"] = JSON.stringify(state.benefits)
             return {
                 ...state,
                 services: action.payload,
@@ -307,7 +308,7 @@ export default function (state = initialState, action) {
             }
 
         case GET_CHEAPEST_PLAN:
-            localStorage.setItem("cheapest_plan", action.data)
+           // localStorage.setItem("cheapest_plan", action.data)
             return {
                 ...state,
                 cheapest_plan: action.data
@@ -317,6 +318,12 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 similar_plans: action.payload
+            }
+
+        case IS_FETCHING_DATA:
+            return {
+                ...state,
+                is_fetching_data: true
             }
 
         case IS_FETCHING_PLANS_BY_HMO:
@@ -406,7 +413,7 @@ export default function (state = initialState, action) {
             }
 
         case SET_IS_INFINNITE_SCROLL_HAS_MORE:
-            localStorage[""] = JSON.stringify(action.payload);
+           // localStorage[""] = JSON.stringify(action.payload);
             return {
                 ...state,
                 infiniteScrollDataHasMore: !state.infiniteScrollDataHasMore
@@ -420,18 +427,18 @@ export default function (state = initialState, action) {
             }
 
         case GET_DOCTORS:
-            localStorage["doctors"] = JSON.stringify(action.payload)
-            localStorage["doctorsDataSource"] = JSON.stringify(action.payload)
+           // localStorage["doctors"] = JSON.stringify(action.payload)
+           // localStorage["doctorsDataSource"] = JSON.stringify(action.payload)
             return {
                 ...state,
                 doctors: action.payload
             }
 
-        case GET_SUB_SPECIALTIES:
-            localStorage["sub_specialties"] = JSON.stringify(action.payload)
+        case GET_SPECIALTIES:
+           // localStorage["specialties"] = JSON.stringify(action.payload)
             return {
                 ...state,
-                sub_specialties: action.payload
+                specialties: action.payload
             }
         case SET_LOCATION:
             return {

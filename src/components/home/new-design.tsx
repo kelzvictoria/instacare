@@ -117,16 +117,9 @@ class NewContent extends React.Component<homeProps, homeState> {
       budget: [],
     },
     trimmed_applied_filters: [],
-    //infiniteScrollData: this.props.infiniteScrollData,
-    // this.props.match.path === "/hmos/*"
-    //   ? this.props.plansByHMO.slice(0, pageSize)
-    //   : this.props.planServices.slice(0, pageSize),
   };
 
   toggleCompareTopThree = async () => {
-    // this.setState({
-    //   compare_top_three_plans: !this.state.compare_top_three_plans,
-    // });
     await this.props.compareTopThreePlans();
     this.topThreePlansToCompare();
     this.goToComparison();
@@ -166,9 +159,9 @@ class NewContent extends React.Component<homeProps, homeState> {
       plan_one = plans[indexes[0]];
       plan_two = plans[indexes[1]];
       plan_three = plans[indexes[2]];
-      plan_id_one = plan_one.service_id;
-      plan_id_two = plan_two.service_id;
-      plan_id_three = plan_three.service_id;
+      plan_id_one = plan_one.plan_id;
+      plan_id_two = plan_two.plan_id;
+      plan_id_three = plan_three.plan_id;
 
       plan_ids = [plan_id_one, plan_id_two, plan_id_three];
 
@@ -321,61 +314,19 @@ class NewContent extends React.Component<homeProps, homeState> {
       value: val.target ? val.target.id : val,
     };
     await this.props.updateType(data);
-    // await this.props.getServices();
-    // this.props.filterByPlanType(data.value);
+    //this.filterByBudget_and_or_Type();
+  }
 
-    this.filterByBudget_and_or_Type();
+  handleMetalLevel = async (val) => {
+    this.props.responses.price_range > 0 && this.props.resetRange();
+    await this.props.updatePriceRange(val);
+   // this.filterByBudget_and_or_Type();
   }
 
   updateAppliedFilters = async (data) => {
     await this.props.updateAppliedFilters(data);
     this.buildFilterQueryParams();
   };
-
-  async filterByBudget_and_or_Type() {
-    //console.log("in filt");
-
-    let range =
-      this.props.responses.price_range.length > 0
-        ? this.props.responses.price_range
-        : [];
-    let budget =
-      this.props.responses.budget.length > 0 ? this.props.responses.budget : [];
-    let type =
-      this.props.responses.type.length > 0 ? this.props.responses.type[0] : [];
-
-    let params = {
-      budget,
-      type,
-      range,
-    };
-    //call filter function
-    this.filterPlans();
-    // await this.props.filterByBudget_and_or_Type(params);
-    if (this.props.responses.type.length > 0) {
-      await this.updateAppliedFilters({
-        key: "plan_type",
-        value: this.props.responses.type,
-      });
-    }
-
-    if (this.props.responses.budget.length > 0) {
-      this.updateAppliedFilters({
-        key: "budget",
-        value: this.props.responses.budget,
-      });
-    }
-
-    if (this.props.responses.price_range.length > 0) {
-      this.updateAppliedFilters({
-        key: "metal_level",
-        value: this.props.responses.price_range,
-      });
-    }
-    await this.props.resetInfiniteScrollData();
-    this.infiniteScrollDataReInitOnFilterApplied();
-    this.props.is_filter_box_open && this.toggleShowFilter();
-  }
 
   handleAge(key, val) {
     let data = { key: key, value: val };
@@ -1830,13 +1781,13 @@ class NewContent extends React.Component<homeProps, homeState> {
     return <p>Not enough responses collected!</p>;
   }
 
-  goToDetails(serviceID) {
-    this.props.history.push({ pathname: `/details/id/${serviceID}` });
+  goToDetails(planID) {
+    this.props.history.push({ pathname: `/details/id/${planID}` });
   }
 
-  goToPlanProviders(serviceID) {
+  goToPlanProviders(planID) {
     this.props.history.push({
-      pathname: `/details/id/${serviceID}/#providers`,
+      pathname: `/details/id/${planID}/#providers`,
     });
   }
 
@@ -1845,11 +1796,11 @@ class NewContent extends React.Component<homeProps, homeState> {
 
     console.log("data", data);
 
-    let serviceID = data.service_id;
+    let planID = data.plan_id;
 
     await this.props.getPlan(data);
     this.props.getSimilarPlans(data);
-    type == "view" && this.goToDetails(serviceID);
+    type == "view" && this.goToDetails(planID);
   };
 
   renderDesktopQuizForm() {
@@ -2537,6 +2488,10 @@ class NewContent extends React.Component<homeProps, homeState> {
       let data = true;
       let budget = value;
       await this.props.updateBudget(budget);
+      // this.updateAppliedFilters({
+      //   key: "budget",
+      //   value: budget,
+      // });
       //call filter fuction
       //await this.getRecommendedPlans();
     },
@@ -2662,7 +2617,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       default:
         break;
     }
-    this.filterByBudget_and_or_Type();
+   // this.filterByBudget_and_or_Type();
   };
 
   toggleShowFilter = () => {
@@ -2750,26 +2705,6 @@ class NewContent extends React.Component<homeProps, homeState> {
   handleTotalBenefitMaxChange(val) {
     this.props.handleTotalBenefitMaxChange(val);
   }
-
-  filterByTotalBenefitLimit = async () => {
-    const { total_benefit_min, total_benefit_max } = this.state.filter_params;
-    if (total_benefit_min && total_benefit_max) {
-      this.props.filterByTotalBenefitLimit([
-        total_benefit_min,
-        total_benefit_max,
-      ]);
-    }
-
-    await this.props.resetInfiniteScrollData();
-    this.infiniteScrollDataReInitOnFilterApplied();
-    this.props.is_filter_box_open && this.toggleShowFilter();
-  };
-
-  filterByBenefits = async () => {
-    if (this.props.responses.benefits.length > 0) {
-      this.props.filterByBenefits(this.props.responses.benefits);
-    }
-  };
 
   handlePlanIDChange(val) {
     this.props.handlePlanIDChange(val);
@@ -3037,177 +2972,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   filterPlans = () => {
-    let plans = this.multiPropsFilter(
-      this.props.plans,
-      this.filterParamsSelected()
-    );
-    console.log("plans", plans);
 
-    return plans;
-  };
-
-  multiPropsFilter = (plans, filters) => {
-    const filterKeys = Object.keys(filters);
-
-    console.log("filters", filters, "filterKeys", filterKeys);
-
-    /* let final = plans.filter((plan) => {
-      return filterKeys.every((key) => {
-        if (!filters[key].length) return true;
-        if (Array.isArray(plan[key])) {
-          return plan[key].some((keyEle) => filters[key].includes(keyEle));
-        }
-        return filters[key].includes(plan[key]);
-      });
-    });
-    console.log("final", final);
-
-    return final; */
-  };
-
-  getRecommendedPlans = async () => {
-    this.props.jump_to_filter_box && this.props.jumpToFilterBox();
-
-    const {
-      plan_range_checked,
-      plan_types_checked,
-      annual_range_min,
-      annual_range_max,
-
-      hmo_selected,
-      total_benefit_min,
-      total_benefit_max,
-      user_address,
-    } = this.props.filter_params;
-
-    if (user_address) {
-      await this.props.handleGeocoding(user_address);
-    }
-
-    let filterBoxParams = {
-      range: plan_range_checked,
-      type: plan_types_checked,
-      budget:
-        annual_range_min && annual_range_max
-          ? [annual_range_min, annual_range_max]
-          : this.props.responses.budget.length > 0
-          ? this.props.responses.budget
-          : [],
-      planID: this.props.filter_params.planID,
-      hmoID: hmo_selected,
-      benefits: this.props.responses.benefits,
-      total_benefit_range:
-        total_benefit_min && total_benefit_max
-          ? [total_benefit_min, total_benefit_max]
-          : [],
-      doctors: this.props.responses.doctors,
-      lat_lng: this.props.location,
-      providers: this.props.responses.providers,
-    };
-
-    const {
-      range,
-      budget,
-      type,
-      hmoID,
-      planID,
-      benefits,
-      total_benefit_range,
-      doctors,
-      lat_lng,
-      providers,
-    } = filterBoxParams;
-
-    if (
-      range.length > 0 ||
-      budget.length > 0 ||
-      type.length > 0 ||
-      hmoID ||
-      planID ||
-      benefits.length > 0 ||
-      total_benefit_range.length > 0 ||
-      doctors.length > 0 ||
-      lat_lng ||
-      providers.length > 0
-    ) {
-      this.resetTypeAndRangeFilters();
-
-      //call filter fuction
-      this.filterPlans();
-      // await this.props.getRecommendedPlans(filterBoxParams);
-
-      if (range.length > 0) {
-        this.updateAppliedFilters({
-          key: "metal_level",
-          value: range,
-        });
-      }
-
-      if (hmoID) {
-        this.updateAppliedFilters({
-          key: "hmoID",
-          value: hmoID,
-        });
-      }
-
-      if (planID) {
-        this.updateAppliedFilters({
-          key: "plan_ID",
-          value: planID,
-        });
-      }
-
-      if (benefits.length > 0) {
-        this.updateAppliedFilters({
-          key: "benefits",
-          value: benefits,
-        });
-      }
-
-      if (total_benefit_range.length) {
-        this.updateAppliedFilters({
-          key: "total_benefit_range",
-          value: total_benefit_range,
-        });
-      }
-
-      if (doctors.length) {
-        this.updateAppliedFilters({
-          key: "doctors",
-          value: doctors,
-        });
-      }
-
-      if (lat_lng) {
-        this.updateAppliedFilters({
-          key: "lat_lng",
-          value: lat_lng,
-        });
-      }
-
-      if (providers.length) {
-        this.updateAppliedFilters({
-          key: "providers",
-          value: providers,
-        });
-      }
-
-      await this.props.resetInfiniteScrollData();
-      await this.infiniteScrollDataReInitOnFilterApplied();
-      this.props.is_filter_box_open && this.toggleShowFilter();
-    }
-  };
-
-  getPlanByID = async (planID) => {
-    await this.props.getPlanByID(planID);
-    await this.props.resetInfiniteScrollData();
-    if (planID) {
-      this.updateAppliedFilters({
-        key: " plan_ID",
-        value: planID,
-      });
-    }
-    this.infiniteScrollDataReInitOnFilterApplied();
   };
 
   resetServices() {
@@ -3221,11 +2986,14 @@ class NewContent extends React.Component<homeProps, homeState> {
         this.props.filter_params.plan_types_checked.length - 1
       ]
     );
+
+    //call filter function
+    /*
     this.setPriceRangeBasedOnTitle(
       this.props.filter_params.plan_range_checked[
         this.props.filter_params.plan_range_checked.length - 1
       ]
-    );
+    ); */
   }
 
   clearFilters = async () => {
@@ -3381,7 +3149,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   clearDoctorsFilter = async () => {
     await this.props.resetSelectedDoctors();
     //call filter fuction
-    this.filterPlans();
+   
     // await this.getRecommendedPlans();
   };
 
@@ -3390,7 +3158,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.clearProvidersFilter();
 
     //call filter fuction
-    this.filterPlans();
+    
     // await this.getRecommendedPlans();
   };
 
@@ -3401,7 +3169,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetBudget();
 
     //call filter fuction
-    this.filterPlans();
+    
     // await this.getRecommendedPlans();
   };
 
@@ -3410,7 +3178,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetType();
 
     //call filter fuction
-    this.filterPlans();
+    
     // await this.getRecommendedPlans();
   };
 
@@ -3419,7 +3187,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetRange();
 
     //call filter fuction
-    this.filterPlans();
+   
     // await this.getRecommendedPlans();
   };
 
@@ -3428,7 +3196,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetPlanID();
 
     //call filter fuction
-    this.filterPlans();
+    
     // await this.getRecommendedPlans();
   };
 
@@ -3436,7 +3204,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.clearHMOIDFilter();
 
     //call filter fuction
-    this.filterPlans();
+    
     //await this.getRecommendedPlans();
   };
 
@@ -3445,7 +3213,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.clearProximityFilter();
 
     //call filter fuction
-    this.filterPlans();
+    
     // await this.getRecommendedPlans();
   };
 
@@ -3454,7 +3222,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetBenefits();
 
     //call filter fuction
-    this.filterPlans();
+    
     // await this.getRecommendedPlans();
   };
 
@@ -3462,7 +3230,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.clearTotalBenefitRangeFilter();
 
     //call filter fuction
-    this.filterPlans();
+    
     //await this.getRecommendedPlans();
   };
 
@@ -3517,6 +3285,24 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   };
 
+  handleBudgetChange = () => {
+
+  }
+
+  handlePlanMetalLevelChange = () => {
+
+  }
+
+  handlePlanTypeChange = () => {
+
+  }
+
+  applyFilters = () => {
+
+  }
+
+
+
   render() {
     //  console.log("this.props.infiniteScrollData", this.props.infiniteScrollData);
     // console.log("this.state.applied_filters", this.state.applied_filters);
@@ -3542,6 +3328,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     let data = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
     let apiData = this.props.infiniteScrollData;
+    console.log("apiData", apiData);
+    
 
     let { current, minIndex, maxIndex, totalPage } = this.state;
 
@@ -3753,7 +3541,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                       <select
                         className="c-field rh-plan-type-select"
                         onChange={(e) => {
-                          this.changeType(e.target.value);
+                          //this.changeType(e.target.value);
+                          this.handleType(e.target.value);
+
                         }}
                         value={
                           this.props.responses.type[
@@ -3784,8 +3574,11 @@ class NewContent extends React.Component<homeProps, homeState> {
                       </label>
                       <select
                         className="c-field c-field--medium rh-sort-by-select"
-                        onChange={(e) =>
-                          this.setPriceRangeBasedOnTitle(e.target.value)
+                        onChange={
+
+                          (e) => this.handleMetalLevel(e.target.value)
+                          //call filter function
+                          //this.setPriceRangeBasedOnTitle(e.target.value)
                         }
                         value={
                           this.props.responses.price_range[
@@ -4366,7 +4159,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       ? false
                                       : true
                                   }
-                                  onClick={this.filterByTotalBenefitLimit}
+                                 // onClick={this.filterByTotalBenefitLimit}
                                   type="button"
                                 >
                                   Apply range
@@ -4763,8 +4556,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                             disabled={planID !== undefined ? false : true}
                             type="button"
                             onClick={() => {
-                              //this.props.getServices();
-                              this.getPlanByID(planID);
+                          
+                             // this.getPlanByID(planID);
                               this.props.is_filter_box_open &&
                                 this.toggleShowFilter();
                             }}
@@ -5233,7 +5026,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       type="button"
                       onClick={() => {
                         //call filter fuction
-                        this.filterPlans();
+                        
 
                         //this.getRecommendedPlans();
                       }}
@@ -5251,7 +5044,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         type="button"
                         onClick={() => {
                           //call filter fuction
-                          this.filterPlans();
+                         
                           //this.getRecommendedPlans();
                         }}
                       >
@@ -5324,7 +5117,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     <header className="plan-card-title">
                                       <div className="plan-c-provider font-weight--bold">
                                         {/* Hygeia */}
-                                        {plan.hmo_id && plan.hmo_id.name}
+                                        {plan.hmo && plan.hmo.name}
                                       </div>
                                       <h2 className="plan-c-name font-weight--normal margin-y--1">
                                         <a
@@ -5341,20 +5134,20 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
                                         <li
                                           className="c-plan-title__info-item"
-                                          key={plan.id}
+                                          key={plan.plan_id}
                                         >
                                           {plan.plan_id &&
-                                            plan.plan_id.category &&
-                                            plan.plan_id.category.map(
-                                              (cat, i) => {
+                                            plan.plan_type &&
+                                            plan.plan_type.map(
+                                              (type, i) => {
                                                 return (
                                                   <span key={i} className="">
                                                     {" "}
-                                                    {cat.name}
-                                                    {plan.plan_id.category
+                                                    {type}
+                                                    {plan.plan_type
                                                       .length > 1 &&
                                                       i <
-                                                        plan.plan_id.category
+                                                        plan.plan_type
                                                           .length -
                                                           1 &&
                                                       ", "}
@@ -5367,7 +5160,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           <span className="">
                                             <span>
                                               {/* {plan.hmo_id && plan.hmo_id.hmo_id} */}
-                                              {plan.category}
+                                              {plan.metal_level}
                                             </span>
                                           </span>
                                         </li>
@@ -5375,7 +5168,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           Plan ID:
                                           <span className="font-weight--bold">
                                             {
-                                              plan.service_id
+                                              plan.plan_id
                                               // plan.plan_id && plan.plan_id.category
                                               //   ? plan.plan_id.plan_id
                                               //   : plan.plan_id
@@ -5394,7 +5187,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           plans_to_compare &&
                                           // plans_to_compare.includes(i)
                                           plans_to_compare.includes(
-                                            plan.service_id
+                                            plan.plan_id
                                           )
                                             ? "c-check-button--checked c-button--secondary"
                                             : ""
@@ -5402,7 +5195,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         onClick={() => {
                                           //this.handleCheckedPlanToCompare(i);
                                           this.handleCheckedPlanToCompare(
-                                            plan.service_id
+                                            plan.plan_id
                                           );
                                         }}
                                       >
@@ -5593,8 +5386,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           <li className="c-status-list__item font-size--small">
                                             <img
                                               src={
-                                                plan.surgeries !== "No" &&
-                                                plan.surgeries !== ""
+                                                plan.benefits.includes("surgeries")
                                                   ? check
                                                   : uncheck
                                               }
@@ -5607,8 +5399,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           <li className="c-status-list__item font-size--small">
                                             <img
                                               src={
-                                                plan.telemedicine !== "No" &&
-                                                plan.telemedicine !== ""
+                                                plan.benefits.includes("telemedicine") 
                                                   ? check
                                                   : uncheck
                                               }
@@ -5621,10 +5412,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           <li className="c-status-list__item font-size--small">
                                             <img
                                               src={
-                                                plan.congenital_abnormalities !==
-                                                  "No" &&
-                                                plan.congenital_abnormalities !==
-                                                  ""
+                                                plan.benefits.includes("congenital_abnormalities") 
                                                   ? check
                                                   : uncheck
                                               }
@@ -5641,10 +5429,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             <li className="c-status-list__item font-size--small">
                                               <img
                                                 src={
-                                                  plan.hospital_admissions !==
-                                                    "No" &&
-                                                  plan.hospital_admissions !==
-                                                    ""
+                                                  plan.benefits.includes("hospital_admissions") 
                                                     ? check
                                                     : uncheck
                                                 }
@@ -5658,8 +5443,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             <li className="c-status-list__item font-size--small">
                                               <img
                                                 src={
-                                                  plan.optical_care !== "No" &&
-                                                  plan.optical_care !== ""
+                                                  plan.benefits.includes("optical_care")
                                                     ? check
                                                     : uncheck
                                                 }
@@ -5673,9 +5457,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             <li className="c-status-list__item font-size--small">
                                               <img
                                                 src={
-                                                  plan.lab_investigations !==
-                                                    "No" &&
-                                                  plan.lab_investigations !== ""
+                                                  plan.benefits.includes("lab_investigations") 
                                                     ? check
                                                     : uncheck
                                                 }
@@ -5693,10 +5475,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             <li className="c-status-list__item font-size--small">
                                               <img
                                                 src={
-                                                  plan.accidents_emergencies !==
-                                                    "No" &&
-                                                  plan.accidents_emergencies !==
-                                                    ""
+                                                  plan.benefits.includes("accidents_emergencies") 
                                                     ? check
                                                     : uncheck
                                                 }
@@ -5710,8 +5489,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             <li className="c-status-list__item font-size--small">
                                               <img
                                                 src={
-                                                  plan.cancer_care !== "No" &&
-                                                  plan.cancer_care !== ""
+                                                  plan.benefits.includes("cancer_care") 
                                                     ? check
                                                     : uncheck
                                                 }
@@ -5724,9 +5502,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             <li className="c-status-list__item font-size--small">
                                               <img
                                                 src={
-                                                  plan.covid_19_treatment !==
-                                                    "No" &&
-                                                  plan.covid_19_treatment !== ""
+                                                  plan.benefits.includes("covid_19_treatment") 
                                                     ? check
                                                     : uncheck
                                                 }
@@ -5765,9 +5541,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         </button>
                                       </div>
                                       <div className="font-size--h2">
-                                        {plan.hospital_category[0].name
-                                          ? plan.hospital_category[0].name
-                                          : "N/A"}
+                                        {/* {plan.providers.category[0] ?
+                                        plan.providers.category[0] 
+                                          : "N/A"} */}
                                         {/* ₦2,000 */}
                                       </div>
                                     </div>
@@ -5833,7 +5609,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                           <a
                                             onClick={() => {
                                               this.goToPlanProviders(
-                                                plan.service_id
+                                                plan.plan_id
                                               );
                                               this.props.togglePlanProviders();
                                             }}
@@ -5844,14 +5620,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             {this.props.responses.providers
                                               .length > 0
                                               ? `View All ${
-                                                  plan.hmo_id.providers
-                                                    ? plan.hmo_id.providers
+                                                  plan.hmo.providers
+                                                    ? plan.hmo.providers
                                                         .length
                                                     : ""
                                                 } Providers`
                                               : `View Providers (${
-                                                  plan.hmo_id.providers
-                                                    ? plan.hmo_id.providers
+                                                  plan.hmo.providers
+                                                    ? plan.hmo.providers
                                                         .length
                                                     : ""
                                                 })`}
@@ -5864,9 +5640,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                                             {this.props.responses.providers.map(
                                               (provider) => {
                                                 providersArr =
-                                                  plan.hmo_id.providers.map(
+                                                  plan.hmo.providers.map(
                                                     (prvdr) =>
-                                                      prvdr.provider_name
+                                                      prvdr.name
                                                   );
                                                 /* console.log(
                                                   "provider.provider_name",
@@ -5882,7 +5658,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                                     <img
                                                       src={
                                                         providersArr.includes(
-                                                          provider.provider_name
+                                                          provider.name
                                                         )
                                                           ? check
                                                           : uncheck
@@ -5890,7 +5666,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                                                       className="c-status-list__item__icon"
                                                     />
                                                     <span className="text-transform--capitalize">
-                                                      {provider.provider_name}
+                                                      {provider.name}
                                                     </span>
                                                   </li>
                                                 );
@@ -5908,14 +5684,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                                     className={`c-button c-check-button ${
                                       plans_to_compare &&
                                       // plans_to_compare.includes(i)
-                                      plans_to_compare.includes(plan.service_id)
+                                      plans_to_compare.includes(plan.plan_id)
                                         ? "c-check-button--checked c-button--secondary"
                                         : ""
                                     } `}
                                     onClick={() => {
                                       // this.handleCheckedPlanToCompare(i);
                                       this.handleCheckedPlanToCompare(
-                                        plan.service_id
+                                        plan.plan_id
                                       );
                                     }}
                                   >

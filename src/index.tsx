@@ -14,8 +14,6 @@ import "./fontawesome";
 import "./modal.css";
 //import $ from "jquery";
 import * as serviceWorker from "./serviceWorker";
-
-import Home from "./pages/home/Home";
 import ErrorPage from "./pages/error-page/ErrorPage";
 import Quiz from "./pages/quiz/Quiz";
 import Compare from "./pages/compare/Compare";
@@ -34,8 +32,8 @@ import Prescriptions from "./pages/prescriptions/Prescriptions";
 import { getToken } from "../src/actions/authActions";
 import {
   getProviders,
-  //getPlans,
-  getServices,
+  getPlans,
+  //getServices,
   getCheapestPlan,
 } from "../src/actions/fetchDataActions";
 import Doctors from "./pages/doctors/Doctors";

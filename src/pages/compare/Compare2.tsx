@@ -40,7 +40,7 @@ import {
   getPlanDetail,
   getProviders,
   //getPlans,
-  getServices,
+  //getServices,
   getCheapestPlan,
   //getPlan,
 } from "../../actions/fetchDataActions";
@@ -6274,7 +6274,7 @@ export default connect(mapProps, {
   getPlanDetail,
   getProviders,
   // getPlans,
-  getServices,
+  //getServices,
   getCheapestPlan,
   addCompareURLParam,
   removeCompareURLParam,

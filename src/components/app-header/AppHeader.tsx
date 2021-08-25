@@ -7,7 +7,7 @@ import { withRouter, RouteComponentProps } from "react-router";
 
 import {
   resetInfiniteScrollData,
-  getServices
+ // getServices
 } from "../../actions/fetchDataActions";
 
 import { connect } from "react-redux";
@@ -87,5 +87,5 @@ const mapProps = (state: any) => ({
 
 export default withRouter(connect(mapProps, {
   resetInfiniteScrollData,
-  getServices
+ // getServices
 })(AppHeader));

@@ -20,7 +20,9 @@ import {
   jumpToFilterBox,
 } from "../../actions/userInputActions";
 
-import { filterByBenefits } from "../../actions/fetchDataActions";
+import { 
+ //filterByBenefits
+ } from "../../actions/fetchDataActions";
 
 export interface BenefitsProps {
   [x: string]: any;
@@ -290,7 +292,7 @@ export default connect(mapProps, {
   updateTextResponse,
   filterBenefits,
   setBenefits,
-  filterByBenefits,
+  //filterByBenefits,
   resetTextResponse,
   jumpToFilterBox,
 })(Benefits);

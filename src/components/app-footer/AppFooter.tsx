@@ -18,7 +18,7 @@ import { resetType, updateType } from "../../actions/userInputActions";
 
 import {
   getHMOs,
-  filterByBudget_and_or_Type,
+  //filterByBudget_and_or_Type,
 } from "../../actions/fetchDataActions";
 
 import { connect } from "react-redux";
@@ -473,6 +473,6 @@ const mapProps = (state: any) => {
 export default connect(mapProps, {
   resetType,
   updateType,
-  filterByBudget_and_or_Type,
+  //filterByBudget_and_or_Type,
   resetInfiniteScrollData,
 })(AppFooter);
