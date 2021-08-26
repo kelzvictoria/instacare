@@ -46,7 +46,8 @@ import {
   handleGeocoding,
   handleReverseGeocoding,
   resetLocation,
-  getSpecialties
+  getSpecialties,
+  filterPlans
 } from "../../actions/fetchDataActions";
 
 import {
@@ -322,6 +323,8 @@ const mapProps = (state: any) => ({
   //plan: state.fetchData.plan,
   //planServices: state.fetchData.services,
   plans: state.fetchData.plans,
+  filtered_plans: state.fetchData.filtered_plans,
+  is_filter_applied: state.fetchData.is_filter_applied,
   hmos: state.fetchData.hmos,
   hmo: state.fetchData.hmo,
   responses: state.quiz.responses,
@@ -455,5 +458,6 @@ export default connect(mapProps, {
   setBenefits,
   setDoctors,
   jumpToFilterBox,
-  getSpecialties
+  getSpecialties,
+  filterPlans
 })(Home);

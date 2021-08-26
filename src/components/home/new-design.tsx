@@ -132,7 +132,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     );
 
     if (this.props.compare_top_three_plans) {
-      let plans = this.props.plans;
+      let plans =  this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans;
       let indexes: number[] = [];
       let plan_ids: string[] = [];
       let min: number = 0;
@@ -269,13 +269,13 @@ class NewContent extends React.Component<homeProps, homeState> {
     if (this.props.responses.type == "couple") {
       data = 1;
       this.props.updateNumOfPeople(data);
-    } else if (this.props.responses.type == "fam-of-4") {
+    } else if (this.props.responses.type == "couple") {
       data = 3;
       this.props.updateNumOfPeople(data);
     } else if (this.props.responses.type == "fam-of-3") {
       data = 2;
       this.props.updateNumOfPeople(data);
-    } else if (this.props.responses.type == "parents") {
+    } else if (this.props.responses.type == "senior_citizen") {
       data = 1;
       this.props.updateNumOfPeople(data);
     } else if (this.props.responses.type == "others") {
@@ -307,19 +307,23 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   }
 
-  async handleType(val) {
-    this.props.responses.type.length > 0 && this.props.resetType();
+  async handleType(val, is_filter_box) {
+    //this.props.responses.type.length > 0
+    !is_filter_box && this.props.resetType();
     let data = {
       key: "type",
       value: val.target ? val.target.id : val,
     };
     await this.props.updateType(data);
+   !is_filter_box && this.filterPlans()
     //this.filterByBudget_and_or_Type();
   }
 
-  handleMetalLevel = async (val) => {
-    this.props.responses.price_range > 0 && this.props.resetRange();
+  handleMetalLevel = async (val, is_filter_box) => {
+    //this.props.responses.price_range > 0 
+    !is_filter_box && this.props.resetRange();
     await this.props.updatePriceRange(val);
+    !is_filter_box && this.filterPlans()
    // this.filterByBudget_and_or_Type();
   }
 
@@ -1106,8 +1110,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   showParentsInput() {
-    const parentsInput = (
-      <div id="parents-control">
+    const senior_citizenInput = (
+      <div id="senior_citizen-control">
         <div className="col-md-6">
           <label>Age of the Eldest member</label>
           <select
@@ -1130,7 +1134,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         <div className="col-md-6"></div>
       </div>
     );
-    return parentsInput;
+    return senior_citizenInput;
   }
 
   showCouplesInput() {
@@ -1236,7 +1240,7 @@ class NewContent extends React.Component<homeProps, homeState> {
               <label>
                 <input
                   type="radio"
-                  value="single"
+                  value="individual"
                   name="numOfPeople"
                   className="radio-group-num here"
                   // defaultChecked={
@@ -1244,8 +1248,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                   //     this.props.responses.type.length - 1
                   //   ] === "single"
                   // }
-                  onClick={this.handleType}
-                  id="single"
+                  onClick={() => this.handleType("individual", false)}
+                  id="individual"
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1263,7 +1267,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("couple", false)}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1281,7 +1285,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("fam-of-3", false)}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1298,16 +1302,16 @@ class NewContent extends React.Component<homeProps, homeState> {
             <div className="radios num-of-people">
               <label>
                 <input
-                  id="fam-of-4"
+                  id="family"
                   type="radio"
-                  value="fam-of-4"
+                  value="family"
                   name="numOfPeople"
-                  onClick={this.handleType}
+                  onClick={() =>this.handleType("family", false)}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
                   <span>
-                    <i className="gender icons-gender male fam-of-4"></i>
+                    <i className="gender icons-gender male couple"></i>
                   </span>
                   <span id="num-text" className="num-text">
                     Me + My wife & 2 kids
@@ -1316,16 +1320,16 @@ class NewContent extends React.Component<homeProps, homeState> {
               </label>
               <label>
                 <input
-                  id="parents"
+                  id="senior_citizen"
                   type="radio"
-                  value="parents"
+                  value="senior_citizen"
                   name="numOfPeople"
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("senior_citizen", false)}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
                   <span>
-                    <i className="gender icons-gender male parents"></i>
+                    <i className="gender icons-gender male senior_citizen"></i>
                   </span>
                   <span id="num-text" className="num-text">
                     My Parents
@@ -1339,12 +1343,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={["others", "smes", "intl_coverage"].includes(
+                  defaultChecked={["others", "group", "intl_coverage"].includes(
                     this.props.responses.type
                   )}
                   onClick={(e) => {
                     this.toggleOthersInput();
-                    this.handleType(e);
+                    this.handleType(e, false);
                   }}
                 ></input>
                 <span className="num-div-inner">
@@ -1376,7 +1380,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
         <div className="form-group single-age-input" id="single-input">
           <div className="col-md-6">
-            {this.props.responses.type == "single"
+            {this.props.responses.type == "individual"
               ? this.showSingleInput()
               : ""}
           </div>
@@ -1396,16 +1400,16 @@ class NewContent extends React.Component<homeProps, homeState> {
         </div>
 
         <div
-          className="form-group fam-of-4-input col-md-12"
-          id="fam-of-4-input"
+          className="form-group couple-input col-md-12"
+          id="couple-input"
         >
-          {this.props.responses.type == "fam-of-4"
+          {this.props.responses.type == "couple"
             ? this.showFamOf4Input()
             : ""}
         </div>
 
-        <div className="form-group parents-age" id="parents-age">
-          {this.props.responses.type == "parents"
+        <div className="form-group senior_citizen-age" id="senior_citizen-age">
+          {this.props.responses.type == "senior_citizen"
             ? this.showParentsInput()
             : ""}
         </div>
@@ -1548,11 +1552,11 @@ class NewContent extends React.Component<homeProps, homeState> {
               <label>
                 <input
                   type="radio"
-                  value="single"
+                  value="individual"
                   name="numOfPeople"
                   className="radio-group-num two"
-                  onClick={this.handleType}
-                  id="single"
+                  onClick={() => this.handleType("individual", false)}
+                  id="individual"
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1570,7 +1574,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="couple"
                   name="numOfPeople"
                   className="radio-group-num"
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("couple", false)}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1588,7 +1592,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="fam-of-3"
                   name="numOfPeople"
                   className="radio-group-num"
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("fam-of-3", false)}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1605,16 +1609,16 @@ class NewContent extends React.Component<homeProps, homeState> {
             <div className="radios num-of-people">
               <label>
                 <input
-                  id="fam-of-4"
+                  id="family"
                   type="radio"
-                  value="fam-of-4"
+                  value="family"
                   name="numOfPeople"
-                  onClick={this.handleType}
+                  onClick={()=>this.handleType("family", false)}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
                   <span>
-                    <i className="gender icons-gender male fam-of-4"></i>
+                    <i className="gender icons-gender male couple"></i>
                   </span>
                   <span id="num-text" className="num-text">
                     Me + My wife & 2 kids
@@ -1623,16 +1627,16 @@ class NewContent extends React.Component<homeProps, homeState> {
               </label>
               <label>
                 <input
-                  id="parents"
+                  id="senior_citizen"
                   type="radio"
-                  value="parents"
+                  value="senior_citizen"
                   name="numOfPeople"
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("senior_citizen", false)}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
                   <span>
-                    <i className="gender icons-gender male parents"></i>
+                    <i className="gender icons-gender male senior_citizen"></i>
                   </span>
                   <span id="num-text" className="num-text">
                     My Parents
@@ -1646,7 +1650,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  defaultChecked={["others", "smes", "intl_coverage"].includes(
+                  defaultChecked={["others", "group", "intl_coverage"].includes(
                     this.props.responses.type
                   )}
                   onClick={this.toggleOthersInput}
@@ -1680,7 +1684,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
         <div className="form-group single-age-input" id="single-input">
           <div className="col-md-6">
-            {this.props.responses.type == "single"
+            {this.props.responses.type == "individual"
               ? this.showSingleInput()
               : ""}
           </div>
@@ -1700,16 +1704,16 @@ class NewContent extends React.Component<homeProps, homeState> {
         </div>
 
         <div
-          className="form-group fam-of-4-input col-md-12"
-          id="fam-of-4-input"
+          className="form-group couple-input col-md-12"
+          id="couple-input"
         >
-          {this.props.responses.type == "fam-of-4"
+          {this.props.responses.type == "couple"
             ? this.showFamOf4Input()
             : ""}
         </div>
 
-        <div className="form-group parents-age" id="parents-age">
-          {this.props.responses.type == "parents"
+        <div className="form-group senior_citizen-age" id="senior_citizen-age">
+          {this.props.responses.type == "senior_citizen"
             ? this.showParentsInput()
             : ""}
         </div>
@@ -1792,7 +1796,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   getClickedPlan = async (index, type) => {
-    let data = this.props.plans[index];
+    let data = (this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans)[index];
 
     console.log("data", data);
 
@@ -1848,16 +1852,16 @@ class NewContent extends React.Component<homeProps, homeState> {
               <label>
                 <input
                   type="radio"
-                  value="single"
+                  value="individual"
                   name="numOfPeople"
                   className="radio-group-num"
                   checked={
                     this.props.responses.type[
                       this.props.responses.type.length - 1
-                    ] === "single"
+                    ] === "individual"
                   }
-                  onClick={this.handleType}
-                  id="single"
+                  onClick={() => this.handleType("individual", false)}
+                  id="individual"
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1866,7 +1870,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <span
                     id="num-text"
                     className={
-                      this.props.responses.type == "single"
+                      this.props.responses.type == "individual"
                         ? "num-text num-text-active"
                         : "num-text"
                     }
@@ -1887,7 +1891,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       this.props.responses.type.length - 1
                     ] === "couple"
                   }
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("couple", false)}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -1907,26 +1911,26 @@ class NewContent extends React.Component<homeProps, homeState> {
               </label>
               <label>
                 <input
-                  id="fam-of-4"
+                  id="family"
                   type="radio"
-                  value="fam-of-4"
+                  value="family"
                   name="numOfPeople"
                   checked={
                     this.props.responses.type[
                       this.props.responses.type.length - 1
-                    ] === "fam-of-4"
+                    ] === "family"
                   }
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("family", false)}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
                   <span>
-                    <i className="gender icons-gender male fam-of-4 household-num"></i>
+                    <i className="gender icons-gender male couple household-num"></i>
                   </span>
                   <span
                     id="num-text"
                     className={
-                      this.props.responses.type == "fam-of-4"
+                      this.props.responses.type == "family"
                         ? "num-text num-text-active"
                         : "num-text"
                     }
@@ -1950,12 +1954,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                       this.props.responses.type.length - 1
                     ] === "corporate"
                   }
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("corporate", false)}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
                   <span>
-                    <i className="gender icons-gender male fam-of-4 household-num"></i>
+                    <i className="gender icons-gender male couple household-num"></i>
                   </span>
                   <span
                     id="num-text"
@@ -1971,16 +1975,16 @@ class NewContent extends React.Component<homeProps, homeState> {
               </label>
               <label>
                 <input
-                  id="parents"
+                  id="senior_citizen"
                   type="radio"
-                  value="parents"
+                  value="senior_citizen"
                   name="numOfPeople"
                   checked={
                     this.props.responses.type[
                       this.props.responses.type.length - 1
-                    ] === "parents"
+                    ] === "senior_citizen"
                   }
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("senior_citizen", false)}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
@@ -1990,7 +1994,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <span
                     id="num-text"
                     className={
-                      this.props.responses.type == "parents"
+                      this.props.responses.type == "senior_citizen"
                         ? "num-text num-text-active"
                         : "num-text"
                     }
@@ -2006,13 +2010,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={["others", "smes", "intl_coverage"].includes(
+                  checked={["others", "group", "intl_coverage"].includes(
                     this.props.responses.type
                   )}
-                  onChange={this.handleType}
+                  onChange={(e)=> this.handleType(e, false)}
                   onClick={(e) => {
                     this.toggleOthersInput();
-                    this.handleType(e);
+                    this.handleType(e, false);
                   }}
                 ></input>
                 <span className="num-div-inner">
@@ -2156,16 +2160,16 @@ class NewContent extends React.Component<homeProps, homeState> {
               <label>
                 <input
                   type="radio"
-                  value="single"
+                  value="individual"
                   name="numOfPeople"
                   className="radio-group-num"
                   checked={
                     this.props.responses.type[
                       this.props.responses.type.length - 1
-                    ] === "single"
+                    ] === "individual"
                   }
-                  onClick={this.handleType}
-                  id="single"
+                  onClick={()=>this.handleType("individual", false)}
+                  id="individual"
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2174,7 +2178,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   <span
                     id="num-text"
                     className={
-                      this.props.responses.type == "single"
+                      this.props.responses.type == "individual"
                         ? "num-text num-text-active"
                         : "num-text"
                     }
@@ -2195,7 +2199,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       this.props.responses.type.length - 1
                     ] === "couple"
                   }
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("couple", false)}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2213,6 +2217,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                   </span>
                 </span>
               </label>
+{/*               
               <label>
                 <input
                   id="fam-of-3"
@@ -2243,32 +2248,33 @@ class NewContent extends React.Component<homeProps, homeState> {
                   </span>
                 </span>
               </label>
+             */}
             </div>
           </div>
           <div className="col-md-12">
             <div className="radios num-of-people">
               <label>
                 <input
-                  id="fam-of-4"
+                  id="family"
                   type="radio"
-                  value="fam-of-4"
+                  value="family"
                   name="numOfPeople"
                   checked={
                     this.props.responses.type[
                       this.props.responses.type.length - 1
-                    ] === "fam-of-4"
+                    ] === "family"
                   }
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("family", false)}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
                   <span>
-                    <i className="gender icons-gender male fam-of-4 household-num"></i>
+                    <i className="gender icons-gender male couple household-num"></i>
                   </span>
                   <span
                     id="num-text"
                     className={
-                      this.props.responses.type == "fam-of-4"
+                      this.props.responses.type == "family"
                         ? "num-text num-text-active"
                         : "num-text"
                     }
@@ -2279,26 +2285,26 @@ class NewContent extends React.Component<homeProps, homeState> {
               </label>
               <label>
                 <input
-                  id="parents"
+                  id="senior_citizen"
                   type="radio"
-                  value="parents"
+                  value="senior_citizen"
                   name="numOfPeople"
                   checked={
                     this.props.responses.type[
                       this.props.responses.type.length - 1
-                    ] === "parents"
+                    ] === "senior_citizen"
                   }
-                  onClick={this.handleType}
+                  onClick={() => this.handleType("senior_citizen", false)}
                   className="radio-group-num"
                 ></input>
                 <span className="num-div-inner">
                   <span>
-                    <i className="gender icons-gender male parents household-num"></i>
+                    <i className="gender icons-gender male senior_citizen household-num"></i>
                   </span>
                   <span
                     id="num-text"
                     className={
-                      this.props.responses.type == "parents"
+                      this.props.responses.type == "senior_citizen"
                         ? "num-text num-text-active"
                         : "num-text"
                     }
@@ -2314,14 +2320,14 @@ class NewContent extends React.Component<homeProps, homeState> {
                   value="others"
                   name="numOfPeople"
                   className="radio-group-num"
-                  checked={["others", "smes", "intl_coverage"].includes(
+                  checked={["others", "group", "intl_coverage"].includes(
                     this.props.responses.type
                   )}
                   onClick={(e) => {
                     this.toggleOthersInput();
-                    this.handleType(e);
+                    this.handleType(e, false);
                   }}
-                  onChange={this.handleType}
+                  onChange={(e) => this.handleType(e, false)}
                 ></input>
                 <span className="num-div-inner">
                   <span>
@@ -2494,6 +2500,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       // });
       //call filter fuction
       //await this.getRecommendedPlans();
+      await this.filterPlans();
     },
   };
   formatter(value: number) {
@@ -2518,17 +2525,17 @@ class NewContent extends React.Component<homeProps, homeState> {
   changeType(val) {
     if (
       [
-        "single",
+        "individual",
         "couple",
-        "parents",
+        "senior_citizen",
         "corporate",
-        "fam-of-4",
-        "smes",
+        "couple",
+        "group",
         "intl_coverage",
         "all",
       ].includes(val)
     ) {
-      this.handleType(val);
+    //  this.handleType(val);
     }
   }
 
@@ -2645,11 +2652,13 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   handlePlanRangeCheck(id) {
-    this.props.handlePlanRangeCheck(id);
+    //this.props.handlePlanRangeCheck(id);
+    this.handleMetalLevel(id, true)
   }
 
   handlePlanTypesCheck(id) {
-    this.props.handlePlanTypesCheck(id);
+    //this.props.handlePlanTypesCheck(id);
+    this.handleType(id, true)
     /* let arr: string[] = this.state.filter_params.plan_types_checked;
     let isPlanChecked: number = arr.indexOf(id);
 
@@ -2735,6 +2744,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   handleHMOSelected(val) {
+    console.log("val", val);
+    
     this.props.handleHMOSelected(val);
   }
 
@@ -2971,8 +2982,155 @@ class NewContent extends React.Component<homeProps, homeState> {
     return filters;
   };
 
-  filterPlans = () => {
+  filterPlans = async () => {
+    this.props.jump_to_filter_box && this.props.jumpToFilterBox();
 
+    const {
+      plan_range_checked,
+      plan_types_checked,
+      annual_range_min,
+      annual_range_max,
+
+      hmo_selected,
+      total_benefit_min,
+      total_benefit_max,
+      user_address,
+    } = this.props.filter_params;
+
+    if (user_address) {
+      await this.props.handleGeocoding(user_address);
+    }
+
+    let filterBoxParams = {
+      metal_level: this.props.responses.price_range,//plan_range_checked,
+      plan_type: this.props.responses.type,//plan_types_checked,
+      budget:
+        annual_range_min && annual_range_max
+          ? [annual_range_min, annual_range_max]
+          : this.props.responses.budget.length > 0
+          ? this.props.responses.budget
+          : [],
+      plan_id: this.props.filter_params.planID,
+      hmo: hmo_selected,
+      //hmo_id: hmo_selected,
+      benefits: this.props.responses.benefits,
+      total_benefit_range:
+        total_benefit_min && total_benefit_max
+          ? [total_benefit_min, total_benefit_max]
+          : [],
+      doctors: this.props.responses.doctors,
+      lat_lng: this.props.location,
+      providers: this.props.responses.providers,
+    };
+
+    const {
+      metal_level,
+      budget,
+      plan_type,
+      //hmo_id,
+      hmo,
+      plan_id,
+      benefits,
+      total_benefit_range,
+      doctors,
+      lat_lng,
+      providers,
+    } = filterBoxParams;
+
+    if (
+      metal_level.length > 0 ||
+      budget.length > 0 ||
+      plan_type.length > 0 ||
+      hmo ||
+      //hmo_id ||
+      plan_id ||
+      benefits.length > 0 ||
+      total_benefit_range.length > 0 ||
+      doctors.length > 0 ||
+      lat_lng ||
+      providers.length > 0
+    ) {
+      this.resetTypeAndRangeFilters();
+
+      await this.props.filterPlans(filterBoxParams);
+
+      if (budget.length > 0) {
+        this.updateAppliedFilters({
+          key: "budget",
+          value: budget,
+        });
+      }
+
+      if (plan_type.length > 0) {
+        this.updateAppliedFilters({
+          key: "plan_type",
+          value: plan_type,
+        });
+      }
+
+      if (metal_level.length > 0) {
+        this.updateAppliedFilters({
+          key: "metal_level",
+          value: metal_level,
+        });
+      }
+
+      if (
+        hmo
+       // hmo_id
+        ) {
+        this.updateAppliedFilters({
+          key: "hmoID",
+          value: hmo//hmo_id,
+        });
+      }
+
+      if (plan_id) {
+        this.updateAppliedFilters({
+          key: "plan_ID",
+          value: plan_id,
+        });
+      }
+
+      if (benefits.length > 0) {
+        this.updateAppliedFilters({
+          key: "benefits",
+          value: benefits,
+        });
+      }
+
+      if (total_benefit_range.length) {
+        this.updateAppliedFilters({
+          key: "total_benefit_range",
+          value: total_benefit_range,
+        });
+      }
+
+      if (doctors.length) {
+        this.updateAppliedFilters({
+          key: "doctors",
+          value: doctors,
+        });
+      }
+
+      if (lat_lng) {
+        this.updateAppliedFilters({
+          key: "lat_lng",
+          value: lat_lng,
+        });
+      }
+
+      if (providers.length) {
+        this.updateAppliedFilters({
+          key: "providers",
+          value: providers,
+        });
+      }
+
+      await this.props.resetInfiniteScrollData();
+      await this.infiniteScrollDataReInitOnFilterApplied();
+      this.props.is_filter_box_open && this.toggleShowFilter();
+    }
   };
 
   resetServices() {
@@ -3020,7 +3178,7 @@ class NewContent extends React.Component<homeProps, homeState> {
         )
       : await this.props.updateInfiniteScrollData(
           // this.props.planServices,
-          this.props.plans,
+          this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans,
 
           false,
           null,
@@ -3058,7 +3216,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     });
     let page = this.state.current;
     let plansByHMO = this.props.plansByHMO;
-    let allPlans = this.props.plans;
+    let allPlans = this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans;
 
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
@@ -3081,7 +3239,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handlePageChange = async (page) => {
     let plansByHMO = this.props.plansByHMO;
-    let allPlans = this.props.plans;
+    let allPlans = this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans;
 
     let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
@@ -3323,12 +3481,12 @@ class NewContent extends React.Component<homeProps, homeState> {
     } = this.props.applied_filters;
 
     let plansByHMO = this.props.plansByHMO;
-    let allPlans = this.props.plans;
+    let allPlans = this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans;
 
     let data = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
 
     let apiData = this.props.infiniteScrollData;
-    console.log("apiData", apiData);
+   // console.log("apiData", apiData);
     
 
     let { current, minIndex, maxIndex, totalPage } = this.state;
@@ -3341,10 +3499,12 @@ class NewContent extends React.Component<homeProps, homeState> {
       this.props.filter_params["mgt_program_selected"];
 
     let plan_types_checked: string[] =
-      this.props.filter_params["plan_types_checked"];
+      //this.props.filter_params["plan_types_checked"];
+      [...this.props.responses.type]
 
     let plan_range_checked: string[] =
-      this.props.filter_params["plan_range_checked"];
+      //this.props.filter_params["plan_range_checked"];
+      [...this.props.responses.price_range]
 
     let plans_to_compare: number[] = this.state.plans_to_compare;
 
@@ -3402,7 +3562,7 @@ class NewContent extends React.Component<homeProps, homeState> {
             </h1>
 
             {/* if the path is /hmo and data is being fetched*/}
-            {this.props.match.params.id && this.props.plans.length == 0 && (
+            {this.props.match.params.id && (this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans).length == 0 && (
               <Row className="banner-content">
                 <Col
                   xs={24}
@@ -3542,7 +3702,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         className="c-field rh-plan-type-select"
                         onChange={(e) => {
                           //this.changeType(e.target.value);
-                          this.handleType(e.target.value);
+                          this.handleType(e.target.value, false);
 
                         }}
                         value={
@@ -3570,13 +3730,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                       } display--inline-block rh-sort-by-div`}
                     >
                       <label className="c-label margin-top--0 rh-sort-by">
-                        <span className="drop-ds-label">Plan range</span>
+                        <span className="drop-ds-label">Plan metal</span>
                       </label>
                       <select
                         className="c-field c-field--medium rh-sort-by-select"
                         onChange={
 
-                          (e) => this.handleMetalLevel(e.target.value)
+                          (e) => this.handleMetalLevel(e.target.value, false)
                           //call filter function
                           //this.setPriceRangeBasedOnTitle(e.target.value)
                         }
@@ -3716,7 +3876,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                           onClick={this.clearHMOIDFilter}
                         >
                           <span className="c-filter-tag__label">
-                            {`HMO ID: ${hmoID}`}
+                            {`HMO: ${hmoID}`}
                           </span>
                           <span className="c-filter-tag__clear-icon">
                             <svg
@@ -4180,20 +4340,20 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   className="c-choice c-choice--small"
                                   type="checkbox"
                                   name=""
-                                  value="single"
+                                  value="individual"
                                   onChange={() =>
-                                    this.handlePlanTypesCheck("single")
+                                    this.handlePlanTypesCheck("individual")
                                   }
                                   checked={
                                     plan_types_checked
-                                      ? plan_types_checked.includes("single")
+                                      ? plan_types_checked.includes("individual")
                                       : false
                                   }
                                 />
                                 <label
                                   className="c-label"
                                   onClick={() =>
-                                    this.handlePlanTypesCheck("single")
+                                    this.handlePlanTypesCheck("individual")
                                   }
                                 >
                                   <span className="">Individual</span>
@@ -4205,20 +4365,20 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   className="c-choice c-choice--small"
                                   type="checkbox"
                                   name=""
-                                  value="fam-of-4"
+                                  value="family"
                                   onChange={() =>
-                                    this.handlePlanTypesCheck("fam-of-4")
+                                    this.handlePlanTypesCheck("family")
                                   }
                                   checked={
                                     plan_types_checked
-                                      ? plan_types_checked.includes("fam-of-4")
+                                      ? plan_types_checked.includes("family")
                                       : false
                                   }
                                 />
                                 <label
                                   className="c-label"
                                   onClick={() =>
-                                    this.handlePlanTypesCheck("fam-of-4")
+                                    this.handlePlanTypesCheck("family")
                                   }
                                 >
                                   <span className="">Family</span>
@@ -4258,20 +4418,20 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   className="c-choice c-choice--small"
                                   type="checkbox"
                                   name=""
-                                  value="parents"
+                                  value="senior_citizen"
                                   onChange={() =>
-                                    this.handlePlanTypesCheck("parents")
+                                    this.handlePlanTypesCheck("senior_citizen")
                                   }
                                   checked={
                                     plan_types_checked
-                                      ? plan_types_checked.includes("parents")
+                                      ? plan_types_checked.includes("senior_citizen")
                                       : false
                                   }
                                 />
                                 <label
                                   className="c-label"
                                   onClick={() =>
-                                    this.handlePlanTypesCheck("parents")
+                                    this.handlePlanTypesCheck("senior_citizen")
                                   }
                                 >
                                   <span className="">
@@ -4286,20 +4446,20 @@ class NewContent extends React.Component<homeProps, homeState> {
                                   className="c-choice c-choice--small"
                                   type="checkbox"
                                   name=""
-                                  value="smes"
+                                  value="group"
                                   onChange={() =>
-                                    this.handlePlanTypesCheck("smes")
+                                    this.handlePlanTypesCheck("group")
                                   }
                                   checked={
                                     plan_types_checked
-                                      ? plan_types_checked.includes("smes")
+                                      ? plan_types_checked.includes("group")
                                       : false
                                   }
                                 />
                                 <label
                                   className="c-label"
                                   onClick={() =>
-                                    this.handlePlanTypesCheck("smes")
+                                    this.handlePlanTypesCheck("group")
                                   }
                                 >
                                   <span className="">
@@ -4373,7 +4533,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         <div className="l-lg-col--6 c-plan-filter-container">
                           <div className="fill--gray-lightest padding--2">
                             <fieldset className="c-fieldset margin-top--0">
-                              <legend className="c-label">Plan Range</legend>
+                              <legend className="c-label">Plan Metal</legend>
 
                               <div className="">
                                 <input
@@ -4575,8 +4735,12 @@ class NewContent extends React.Component<homeProps, homeState> {
                               className="c-field"
                               id="select_hmo_filter"
                               value={this.props.filter_params.hmo_selected}
-                              onChange={(e) =>
+                              onChange={(e) => {
+                                console.log("e.target", e.target);
+                                
                                 this.handleHMOSelected(e.target.value)
+                              }
+                                
                               }
                             >
                               <option value="">Select an HMO</option>
@@ -4763,7 +4927,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                     <div className="l-lg-col--4">
                       <div className="l-form-row">
                         <div className="l-lg-col--12 c-plan-filter-container">
-                          <div className="fill--gray-lightest padding--2 margin-top--2">
+                          <div className="fill--gray-lightest padding--2"> {/* margin-top--2 */}
                             <fieldset className="c-fieldset margin-top--0">
                               <legend className="c-label">
                                 <span className="bolden-it">
@@ -5027,7 +5191,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                       onClick={() => {
                         //call filter fuction
                         
-
+                        this.filterPlans()
                         //this.getRecommendedPlans();
                       }}
                     >

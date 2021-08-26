@@ -365,13 +365,13 @@ export const plan_types = [
         max_num: 1000
     },
     {
-        id: "single",
+        id: "individual",
         name: "Individual",
         max_num: 1
     },
 
     {
-        id: "fam-of-4",
+        id: "family",
         name: "Family",
         max_num: ""
     },
@@ -382,12 +382,12 @@ export const plan_types = [
         max_num: "2"
     },
     {
-        id: "parents",
+        id: "senior_citizen",
         name: "Senior Citizens",
         max_num: ""
     },
     {
-        id: "smes",
+        id: "group",
         name: "SMES and Small Groups",
         max_num: ""
     },

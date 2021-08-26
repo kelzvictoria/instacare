@@ -67,7 +67,12 @@ export const getPlans = () => async (dispatch, getState) => {
                  plans[i].metal_level =  plans[i].metal_level.id;
                  if (plans[i].hmo) {
                     plans[i].hmo =  plans[i].hmo.data;
+                    //plans[i].hmo_id = [plans[i].hmo.id];
+                    plans[i].hmo = [plans[i].hmo.name];
+
                     plans[i].hmo.providers = providers.filter(p => p.hmo.includes(plans[i].hmo.id));
+                    plans[i].providers = plans[i].hmo.providers.map(p => p.id);
+                    plans[i].doctors = [].concat.apply([],plans[i].hmo.providers.map(p => p.doctors)).map(d => d.id); 
                  }              
             }
            dispatch({
@@ -91,6 +96,152 @@ export const getPlans = () => async (dispatch, getState) => {
     })
     }
 
+}
+
+export const multiPropsFilter = (plans, filters) => async (dispatch, getState) => {
+    const filterKeys = Object.keys(filters);
+
+    let status;
+    let nearbyPlans = [];
+    let p = 0.017453292519943295;    // Math.PI / 180
+    let r = 10; //in km
+    let d;
+    let c = Math.cos;
+
+    return await plans.filter(plan => {
+        let plan_tbr = stripNonNumeric(plan.in_patient_limit) + stripNonNumeric(plan.out_patient_limit);
+        return filterKeys.every(key => {
+            if (!filters[key].length) {
+                return true;
+            }
+            status = false
+            if (plan[key] !== undefined) {
+                if (filters[key][0] === "all" & key === "metal_level") {
+                    filters[key] = ["bronze", "silver", "gold", "diamond", "platinum", "platinum_plus"]
+                }
+
+                if (filters[key][0] === "all" & key === "plan_type") {
+                    filters[key] = ["individual", "couple", "family", "senior_citizens", "group", "corporate", "intl_coverage"]
+                }
+
+                console.log("filters[key]", filters[key], "plan[key]", plan[key]);      
+
+                if (Array.isArray(plan[key])) {
+                    if (plan[key].some(keyEle => filters[key].includes(keyEle))) {
+                       // console.log("is arr", plan["name"]);
+                        status = true;
+                    }
+                } if (filters[key].includes(plan[key])) {
+                   // console.log("is string", plan["name"]);
+                    status = true
+                }
+            } else if(key === "budget" && (
+                stripNonNumeric(plan.price) >= filters[key][0]
+                 && stripNonNumeric(plan.price) <= filters[key][1]
+            )) {
+               // console.log("key", key);
+                status = true;
+            } else if (key === "total_benefit_range" && (
+                plan_tbr >= filters[key][0] && plan_tbr <= filters[key][1]
+            )) {
+                status = true
+            }
+            // else {
+            //     status = false
+            // }
+            return status
+        })
+    })
+}
+
+export const filterPlans = (filtersApplied) => async (dispatch, getState) => {
+    console.log("filtersApplied", filtersApplied);
+    //dispatch(getPlans());
+   const allPlans = getState().fetchData.plans;
+   const filtered = getState().fetchData.filtered_plans
+    const plans =  //filtered.length ? filtered : allPlans; 
+    getState().fetchData.plans;
+   console.log("plans", plans);
+    let recommended_plans;
+    let filteredPlans = await dispatch(multiPropsFilter(plans, filtersApplied));
+   /* if (!filteredPlans.length) {
+        filteredPlans = plans
+    } */
+    console.log("filteredPlans", filteredPlans);
+    // !filteredPlans.length ?
+    //     recommended_plans = plans : recommended_plans = filteredPlans;
+    
+     let final;
+    
+     let arr = [];
+   /* if (filtersApplied["total_benefit_range"].length > 0) {
+
+        let tbl = await filteredPlans.filter(plan => {
+            let plan_tbr = stripNonNumeric(plan.in_patient_limit) + stripNonNumeric(plan.Out_patient_limit);
+            return plan_tbr >= filtersApplied["total_benefit_range"][0] && plan_tbr <= filtersApplied["total_benefit_range"][1]
+        })
+        arr.push(...tbl)
+    }
+
+    */
+
+    if (filtersApplied["lat_lng"].length > 0) {
+        let nearbyPlans = [];
+        let p = 0.017453292519943295;    // Math.PI / 180
+        let r = 10; //in km
+        let d;
+        let c = Math.cos;
+
+        let packages = arr.length > 0 ? arr : filteredPlans;
+        for (let i = 0; i < packages.length; i++) {
+            for (let j = 0; j < packages[i].hmo.providers.length; j++) {
+                if (packages[i].hmo.providers[j].gps) {
+
+                    let lat1, lat2, lng1, lng2;
+                    lat1 = filtersApplied["lat_lng"][0];
+                    lng1 = filtersApplied["lat_lng"][1];
+
+                    lat2 = packages[i].hmo.providers[j].gps.latitude.toFixed(6);
+                    lng2 = packages[i].hmo.providers[j].gps.longitude.toFixed(6);
+
+                    let a = 0.5 - c((lat2 - lat1) * p) / 2 +
+                        c(lat1 * p) * c(lat2 * p) *
+                        (1 - c((lng2 - lng1) * p)) / 2;
+
+                    d = 12742 * Math.asin(Math.sqrt(a)); // 2 * R = 12742; R = 6371 km
+
+                    if (d < r) {
+                        let plans_in_nearby_plans_arr = nearbyPlans.map(n => n.plan_id);
+                        if (!plans_in_nearby_plans_arr.includes(packages[i].plan_id)) {
+                            nearbyPlans.push(packages[i]);
+                        }
+
+                    }
+                }
+
+            }
+        }
+        arr = nearbyPlans;
+    }
+
+   /* if (filtersApplied["budget"].length > 0) {
+        let packages = arr.length > 0 ? arr : filteredPlans;
+        let bdgt = await packages.filter(p => {
+            return (stripNonNumeric(p.price) >= filtersApplied["budget"][0] 
+                && stripNonNumeric(p.price) <= filtersApplied["budget"][1])
+        });
+
+        arr = bdgt.length ? bdgt : packages ;
+    } */
+
+    final = arr.length ? arr: filteredPlans
+    console.log("final", final);
+    dispatch({
+        type: GET_RECOMMENDED_PLANS,
+        payload: final
+    })
+
+  
 }
 
 export const getPlan = (plan) => (dispatch) => {

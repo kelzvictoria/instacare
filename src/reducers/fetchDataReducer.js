@@ -54,6 +54,8 @@ const initialState = {
     plans:
       //  localStorage["plans"] ? JSON.parse(localStorage["plans"]) :
             [],
+    filtered_plans: [],
+    is_filter_applied: true,
     hmos:
        // localStorage["hmos"] ? JSON.parse(localStorage["hmos"]) :
             [],
@@ -242,6 +244,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 plans: action.payload,
+                is_filter_applied: false,
                 //is_fetching_plans: false,
                 is_fetching_data: false
 
@@ -290,7 +293,9 @@ export default function (state = initialState, action) {
             //console.log("action.payload", action.payload);
             return {
                 ...state,
-                services: action.payload,
+                //plans: action.payload,
+                filtered_plans: action.payload,
+                is_filter_applied: true,
                 is_fetching_recommended_plans: false
             }
 

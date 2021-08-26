@@ -229,9 +229,10 @@ export const updateGender = (payload) => (dispatch, getState) => {
 }
 
 export const updateType = (data) => (dispatch, getState) => {
-    // console.log("data", data);
+   // console.log("data", data);
+    //console.log("getState().quiz.responses.type", getState().quiz.responses.type);
     let types = [...getState().quiz.responses.type];
-    // console.log("types", types);
+     //console.log("prev types", types);
 
     let isTypeChecked = types.indexOf(data.value);
 
@@ -245,7 +246,8 @@ export const updateType = (data) => (dispatch, getState) => {
         types.push(data.value)
     }
 
-    // CAN_LOG && console.log("types", types);
+    // CAN_LOG && 
+    //console.log("updated types", types);
 
     dispatch({
         type: UPDATE_TYPE,
