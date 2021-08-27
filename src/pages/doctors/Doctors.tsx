@@ -38,7 +38,7 @@ class Doctors extends Component<DoctorsProps> {
 
     let tempDoctors: any[] = [];
     let doctors = await this.props.doctors.map(
-      (doctor) => `${doctor.first_name + " " + doctor.last_name}`
+      (doctor) => doctor.name
     );
 
     doctors.forEach((item: string) => {
@@ -72,10 +72,10 @@ class Doctors extends Component<DoctorsProps> {
     let info = this.props.doctors.filter((doctor) => {
       console.log(
         "firstname lastname",
-        doctor.first_name + " " + doctor.last_name
+        doctor.name
       );
 
-      return `${doctor.first_name + " " + doctor.last_name}` === name;
+      return doctor.name === name;
     }); //home_utils.doctorsInfo
 
     await this.setState({
@@ -91,7 +91,7 @@ class Doctors extends Component<DoctorsProps> {
     let arr: string[] =
       this.props.responses.doctors.length > 0
         ? this.props.responses.doctors.map(
-            (d) => d.first_name + " " + d.last_name
+            (d) => d.name
           )
         : [...this.state.selected_doctors];
 
@@ -244,16 +244,13 @@ class Doctors extends Component<DoctorsProps> {
                               className="c-filter-tag__button"
                               onClick={() =>
                                 this.addDoctorToSelectedList(
-                                  selected_doctor["first_name"] +
-                                    " " +
-                                    selected_doctor["last_name"]
+                                  selected_doctor["name"]
                                 )
                               }
                             >
                               <span className="c-filter-tag__label">
-                                {selected_doctor["first_name"] +
-                                  " " +
-                                  selected_doctor["last_name"]}
+                                {selected_doctor["name"]
+                                  }
                               </span>
                               <span className="c-filter-tag__clear-icon">
                                 <svg

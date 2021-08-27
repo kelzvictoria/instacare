@@ -3011,16 +3011,16 @@ class NewContent extends React.Component<homeProps, homeState> {
           ? this.props.responses.budget
           : [],
       plan_id: this.props.filter_params.planID,
-      hmo: hmo_selected,
+      hmo_name: hmo_selected,
       //hmo_id: hmo_selected,
-      benefits: this.props.responses.benefits,
+      benefits: this.props.responses.benefits.map(b => b.id),
       total_benefit_range:
         total_benefit_min && total_benefit_max
           ? [total_benefit_min, total_benefit_max]
           : [],
-      doctors: this.props.responses.doctors,
+      doctors: this.props.responses.doctors.map(d => d.id),
       lat_lng: this.props.location,
-      providers: this.props.responses.providers,
+      providers: this.props.responses.providers.map(p => p.id),
     };
 
     const {
@@ -3028,7 +3028,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       budget,
       plan_type,
       //hmo_id,
-      hmo,
+      hmo_name,
       plan_id,
       benefits,
       total_benefit_range,
@@ -3041,7 +3041,7 @@ class NewContent extends React.Component<homeProps, homeState> {
       metal_level.length > 0 ||
       budget.length > 0 ||
       plan_type.length > 0 ||
-      hmo ||
+      hmo_name ||
       //hmo_id ||
       plan_id ||
       benefits.length > 0 ||
@@ -3076,12 +3076,12 @@ class NewContent extends React.Component<homeProps, homeState> {
       }
 
       if (
-        hmo
+        hmo_name
        // hmo_id
         ) {
         this.updateAppliedFilters({
           key: "hmoID",
-          value: hmo//hmo_id,
+          value: hmo_name//hmo_id,
         });
       }
 
@@ -3133,8 +3133,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     }
   };
 
-  resetServices() {
-    this.props.getServices();
+  resetPlans() {
+    this.props.getPlans();
   }
 
   resetTypeAndRangeFilters() {
@@ -3144,8 +3144,10 @@ class NewContent extends React.Component<homeProps, homeState> {
         this.props.filter_params.plan_types_checked.length - 1
       ]
     );
+    
 
     //call filter function
+   // this.filterPlans()
     /*
     this.setPriceRangeBasedOnTitle(
       this.props.filter_params.plan_range_checked[
@@ -3159,15 +3161,16 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.resetSelectedDoctors();
     this.props.resetSelectedProviders();
 
-    await this.props.resetFilterParams();
-
     await this.eventHandlers.changeBudget([]);
     this.props.resetBudget();
     this.props.resetType();
     this.props.resetRange();
+    await this.props.resetFilterParams();
+
+  
     await this.props.resetInfiniteScrollData();
     this.props.is_filter_box_open && this.toggleShowFilter();
-    await this.props.getServices();
+    await this.props.getPlans();
 
     this.props.match.path === "/hmos/*"
       ? await this.props.updateInfiniteScrollData(
@@ -3267,9 +3270,15 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   componentDidUpdate(prevProps) {
-    if (this.props.jump_to_filter_box && this.props.is_filter_box_open) {
+    let box =  document.getElementById("filter-box");
+    if (box) {
+        if (this.props.jump_to_filter_box && this.props.is_filter_box_open) {
       document.getElementById("filter-box")!.scrollIntoView();
     }
+
+    
+    }
+  
   }
 
   getLocation = () => {
@@ -3306,7 +3315,9 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   clearDoctorsFilter = async () => {
     await this.props.resetSelectedDoctors();
+    
     //call filter fuction
+  //  this.filterPlans()
    
     // await this.getRecommendedPlans();
   };
@@ -3316,7 +3327,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.clearProvidersFilter();
 
     //call filter fuction
-    
+   // this.filterPlans()
     // await this.getRecommendedPlans();
   };
 
@@ -3327,7 +3338,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetBudget();
 
     //call filter fuction
-    
+   // this.filterPlans()
     // await this.getRecommendedPlans();
   };
 
@@ -3336,7 +3347,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetType();
 
     //call filter fuction
-    
+  await  this.filterPlans()
     // await this.getRecommendedPlans();
   };
 
@@ -3345,7 +3356,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetRange();
 
     //call filter fuction
-   
+   await this.filterPlans()
     // await this.getRecommendedPlans();
   };
 
@@ -3354,15 +3365,15 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetPlanID();
 
     //call filter fuction
-    
+   await this.filterPlans()
     // await this.getRecommendedPlans();
   };
 
   clearHMOIDFilter = async () => {
-    this.props.clearHMOIDFilter();
+    await this.props.clearHMOIDFilter();
 
     //call filter fuction
-    
+   await this.filterPlans()
     //await this.getRecommendedPlans();
   };
 
@@ -3371,7 +3382,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.clearProximityFilter();
 
     //call filter fuction
-    
+   await this.filterPlans()
     // await this.getRecommendedPlans();
   };
 
@@ -3380,7 +3391,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     await this.props.resetBenefits();
 
     //call filter fuction
-    
+   await this.filterPlans()
     // await this.getRecommendedPlans();
   };
 
@@ -3388,13 +3399,13 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.clearTotalBenefitRangeFilter();
 
     //call filter fuction
-    
+   await this.filterPlans()
     //await this.getRecommendedPlans();
   };
 
   handleSelectedProviders = async (provider) => {
     let selection: string[] = this.props.responses.providers.map(
-      (p) => p.provider_name
+      (p) => p.name
     );
     let isInSelection: number = selection.indexOf(provider);
 
@@ -3403,7 +3414,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     if (isInSelection > -1) {
       selection.splice(isInSelection, 1);
       providers = this.props.responses.providers.filter(
-        (p) => p.provider_name !== provider
+        (p) => p.name !== provider
       );
       await this.props.setProviders(providers);
     }
@@ -3411,7 +3422,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   handleSelectedDoctors = async (doctor) => {
     let selection: string[] = this.props.responses.doctors.map(
-      (d) => d.first_name + " " + d.last_name
+      (d) => d.name
     );
 
     let isInSelection: number = selection.indexOf(doctor);
@@ -3421,7 +3432,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     if (isInSelection > -1) {
       selection.splice(isInSelection, 1);
       doctors = this.props.responses.doctors.filter(
-        (d) => d.first_name + " " + d.last_name !== doctor
+        (d) => d.name
       );
       await this.props.setDoctors(doctors);
     }
@@ -3706,7 +3717,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
                         }}
                         value={
-                          this.props.responses.type[
+                         !this.props.responses.type.length ? "all" : this.props.responses.type[
                             this.props.responses.type.length - 1
                           ]
                         }
@@ -3741,7 +3752,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                           //this.setPriceRangeBasedOnTitle(e.target.value)
                         }
                         value={
-                          this.props.responses.price_range[
+                         !this.props.responses.price_range.length ? "all" : this.props.responses.price_range[
                             this.props.responses.price_range.length - 1
                           ] //{this.state.range_selected}
                         }
@@ -3943,7 +3954,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         >
                           <span className="c-filter-tag__label">
                             {`Benefit(s): ${benefits.map(
-                              (b: any) => b.title,
+                              (b: any) => b,
                               ", "
                             )}`}
                           </span>
@@ -4018,7 +4029,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         >
                           <span className="c-filter-tag__label">
                             {`Doctor(s): ${doctors.map(
-                              (d: any) => d.first_name + " " + d.last_name,
+                              (d: any) => d,
                               ", "
                             )}`}
                           </span>
@@ -4087,7 +4098,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         >
                           <span className="c-filter-tag__label">
                             {`Provider(s): ${providers.map(
-                              (p: any) => p.provider_name,
+                              (p: any) => p,
                               ", "
                             )}`}
                           </span>
@@ -4716,7 +4727,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                             disabled={planID !== undefined ? false : true}
                             type="button"
                             onClick={() => {
-                          
+                              this.filterPlans()
                              // this.getPlanByID(planID);
                               this.props.is_filter_box_open &&
                                 this.toggleShowFilter();
@@ -4996,13 +5007,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                                         //id="Asthma (43)-tag"
                                         onClick={() =>
                                           this.handleSelectedProviders(
-                                            prov.provider_name
+                                            prov.name
                                           )
                                         }
                                       >
                                         {/* <span className="">Deselect</span> */}
                                         <span className="c-filter-tag__label">
-                                          {prov.provider_name}
+                                          {prov.name}
                                         </span>
                                         <span className="c-filter-tag__clear-icon">
                                           <svg
@@ -5123,17 +5134,13 @@ class NewContent extends React.Component<homeProps, homeState> {
                                       //id="Asthma (43)-tag"
                                       onClick={() =>
                                         this.handleSelectedDoctors(
-                                          doctor.first_name +
-                                            " " +
-                                            doctor.last_name
+                                          doctor.name
                                         )
                                       }
                                     >
                                       {/* <span className="">Deselect</span> */}
                                       <span className="c-filter-tag__label">
-                                        {doctor.first_name +
-                                          " " +
-                                          doctor.last_name}
+                                        {doctor.name}
                                       </span>
                                       <span className="c-filter-tag__clear-icon">
                                         <svg
@@ -5208,7 +5215,7 @@ class NewContent extends React.Component<homeProps, homeState> {
                         type="button"
                         onClick={() => {
                           //call filter fuction
-                         
+                          this.filterPlans()
                           //this.getRecommendedPlans();
                         }}
                       >

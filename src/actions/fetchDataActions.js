@@ -68,7 +68,7 @@ export const getPlans = () => async (dispatch, getState) => {
                  if (plans[i].hmo) {
                     plans[i].hmo =  plans[i].hmo.data;
                     //plans[i].hmo_id = [plans[i].hmo.id];
-                    plans[i].hmo = [plans[i].hmo.name];
+                    plans[i].hmo_name = [plans[i].hmo.name];
 
                     plans[i].hmo.providers = providers.filter(p => p.hmo.includes(plans[i].hmo.id));
                     plans[i].providers = plans[i].hmo.providers.map(p => p.id);

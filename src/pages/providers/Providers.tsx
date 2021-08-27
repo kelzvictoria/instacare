@@ -41,7 +41,7 @@ class Providers extends Component<ProvidersProps> {
     );
 
     let providers = await this.props.providers.map(
-      (provider) => provider.provider_name
+      (provider) => provider.name
     );
     console.log("providers", providers);
     console.log("searchText", searchText);
@@ -68,7 +68,7 @@ class Providers extends Component<ProvidersProps> {
 
   getProviderInfo = async (name) => {
     let info = this.props.providers.filter(
-      (provider) => provider.provider_name === name
+      (provider) => provider.name === name
     );
 
     await this.setState({
@@ -84,7 +84,7 @@ class Providers extends Component<ProvidersProps> {
   addProviderToSelectedList = async (prov_name) => {
     let arr: string[] =
       this.props.responses.providers.length > 0
-        ? this.props.responses.providers.map((p) => p.provider_name)
+        ? this.props.responses.providers.map((p) => p.name)
         : [...this.state.selected_providers];
 
     let data_arr: string[] =
@@ -97,7 +97,7 @@ class Providers extends Component<ProvidersProps> {
     if (isProviderSelected > -1) {
       console.log(">-1");
       arr = arr.filter((a) => a !== prov_name);
-      data_arr = data_arr.filter((d) => d["provider_name"] !== prov_name);
+      data_arr = data_arr.filter((d) => d["name"] !== prov_name);
     } else {
       // console.log("def");
       // console.log(
@@ -218,12 +218,12 @@ class Providers extends Component<ProvidersProps> {
                               className="c-filter-tag__button"
                               onClick={() =>
                                 this.addProviderToSelectedList(
-                                  selected_provider["provider_name"]
+                                  selected_provider["name"]
                                 )
                               }
                             >
                               <span className="c-filter-tag__label">
-                                {selected_provider["provider_name"]}
+                                {selected_provider["name"]}
                               </span>
                               <span className="c-filter-tag__clear-icon">
                                 <svg

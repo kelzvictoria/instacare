@@ -276,6 +276,7 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 providers: action.payload,
+                providersDataSource: action.payload.map((provider) => provider.name),
                 is_fetching_providers: false
             }
 
@@ -436,7 +437,8 @@ export default function (state = initialState, action) {
            // localStorage["doctorsDataSource"] = JSON.stringify(action.payload)
             return {
                 ...state,
-                doctors: action.payload
+                doctors: action.payload,
+                doctorsDataSource: action.payload.map((d) => d.name)
             }
 
         case GET_SPECIALTIES:
