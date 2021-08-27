@@ -28,7 +28,7 @@ import Modal from "react-bootstrap/Modal";
 import {
   getPlanDetail,
   getProviders,
-  //getPlans,
+  getPlans,
  // getServices,
   getCheapestPlan,
   getPlan,
@@ -138,7 +138,7 @@ class PlanDetails extends Component<DetailsProps> {
   };
 
   // getClickedPlan = async (planID, type) => {
-  //   let data = this.props.plans.filter((plan) => plan.service_id === planID)[0];
+  //   let data = this.props.plans.filter((plan) => plan.plan_id === planID)[0];
   //   await this.props.getPlan(data);
   // };
 
@@ -149,11 +149,11 @@ class PlanDetails extends Component<DetailsProps> {
   getClickedPlan = async (index, type) => {
     console.log("index", index);
 
-    let data = this.props.plans.filter((p) => p.service_id === index)[0]; //this.props.plans[index];
+    let data = this.props.plans.filter((p) => p.plan_id === index)[0]; //this.props.plans[index];
     console.log("this.props.plans", this.props.plans);
     console.log("data", data);
 
-    let serviceID = data.service_id;
+    let serviceID = data.plan_id;
 
     await this.props.getPlan(data);
     this.props.getSimilarPlans(data);
@@ -172,8 +172,8 @@ class PlanDetails extends Component<DetailsProps> {
         });
         console.log("id", id);
         await this.props.getProviders();
-        // await this.props.getPlans();
-        await this.props.getServices();
+        await this.props.getPlans();
+        //await this.props.getServices();
         await this.props.getPlanDetail(id);
         this.props.getCheapestPlan();
       }
@@ -310,10 +310,10 @@ class PlanDetails extends Component<DetailsProps> {
                     <header className="md-display--flex justify--content-between align-items--center border-bottom--1 padding-bottom--2 ">
                       <header className="c-plan-title">
                         <div className="c-plan-title__issuer font-weight--bold">
-                          {plan.hmo_id.name}
+                          {plan.hmo.name}
                         </div>
                         <h2 className="c-plan-title__name font-weight--normal margin-y--1 font-size--h1">
-                          {/* <a href={`details/${plan.service_id}`} target="_self"> */}
+                          {/* <a href={`details/${plan.plan_id}`} target="_self"> */}
                           {plan.name}
                           {/* </a> */}
                         </h2>
@@ -321,14 +321,14 @@ class PlanDetails extends Component<DetailsProps> {
                         <ul className="c-plan-title__info c-list--bare font-size--small plan-c-info">
                           <li className="c-plan-title__info-item" key={plan.id}>
                             {plan.plan_id &&
-                              plan.plan_id.category &&
-                              plan.plan_id.category.map((cat, i) => {
+                              plan.plan_type &&
+                              plan.plan_type.map((cat, i) => {
                                 return (
                                   <span className="">
                                     {" "}
-                                    {cat.name}
-                                    {plan.plan_id.category.length > 1 &&
-                                      i < plan.plan_id.category.length - 1 &&
+                                    {cat}
+                                    {plan.plan_type.length > 1 &&
+                                      i < plan.plan_type.length - 1 &&
                                       ", "}
                                   </span>
                                 );
@@ -337,8 +337,8 @@ class PlanDetails extends Component<DetailsProps> {
                           <li className="c-plan-title__info-item">
                             <span className="">
                               <span>
-                                {/* {plan.hmo_id && plan.hmo_id.hmo_id} */}
-                                {plan.category}
+                                {/* {plan.hmo && plan.hmo.hmo} */}
+                                {plan.metal_level}
                               </span>
                             </span>
                           </li>
@@ -346,10 +346,10 @@ class PlanDetails extends Component<DetailsProps> {
                             Plan ID:
                             <span className="font-weight--bold">
                               {
-                                // plan.plan_id && plan.plan_id.category
+                                // plan.plan_id && plan.plan_type
                                 //   ? plan.plan_id.plan_id
                                 //   : plan.plan_id
-                                plan.service_id
+                                plan.plan_id
                               }
                             </span>
                           </li>
@@ -361,7 +361,7 @@ class PlanDetails extends Component<DetailsProps> {
                           href="#"
                           role="button"
                           onClick={() => {
-                            this.getClickedPlan(plan.service_id, "buy");
+                            this.getClickedPlan(plan.plan_id, "buy");
                             this.props.toggleDataCaptureModal(true);
                           }}
                         >
@@ -380,21 +380,23 @@ class PlanDetails extends Component<DetailsProps> {
                             <tr>
                               <th scope="row">Price</th>
                               <td>
-                                <span>{plan.price}</span>
+                                <span>₦
+                                            {this.numberwithCommas(
+                                              stripNonNumeric(plan.price))}</span>
                               </td>
                             </tr>
 
                             <tr>
                               <th scope="row">HMO</th>
                               <td>
-                                <span>{plan.hmo_id.name}</span>
+                                <span>{plan.hmo.name}</span>
                               </td>
                             </tr>
 
                             <tr>
                               <th scope="row">Plan metal level</th>
                               <td>
-                                <span>{plan.category}</span>
+                                <span>{plan.metal_level}</span>
                               </td>
                             </tr>
                             <tr>
@@ -402,15 +404,15 @@ class PlanDetails extends Component<DetailsProps> {
                               <td>
                                 <span>
                                   {plan.plan_id &&
-                                    plan.plan_id.category &&
-                                    plan.plan_id.category.map((cat, i) => {
+                                    plan.plan_type &&
+                                    plan.plan_type.map((cat, i) => {
                                       return (
                                         <b className="">
                                           {" "}
-                                          {cat.name}
-                                          {plan.plan_id.category.length > 1 &&
+                                          {cat}
+                                          {plan.plan_type.length > 1 &&
                                             i <
-                                              plan.plan_id.category.length -
+                                              plan.plan_type.length -
                                                 1 &&
                                             ", "}
                                         </b>
@@ -1245,7 +1247,7 @@ class PlanDetails extends Component<DetailsProps> {
                               : ""
                           } valign--top`}
                         >
-                          {plan.hmo_id.providers.map((provider) => {
+                          {plan.hmo.providers.map((provider) => {
                             return (
                               <tr className="border-bottom--2">
                                 <th scope="row">
@@ -1292,11 +1294,11 @@ class PlanDetails extends Component<DetailsProps> {
                                         <li>
                                           <div className="box_block">
                                             <div className="plan-c-provider font-weight--bold">
-                                              {similar_plan.hmo_id.name["text"]}
+                                              {similar_plan.hmo.name["text"]}
                                             </div>
                                             <h2 className="plan-c-name font-weight--normal margin-y--1">
                                               <a
-                                                href={`/details/id/${similar_plan.service_id}`}
+                                                href={`/details/id/${similar_plan.plan_id}`}
                                               >
                                                 {similar_plan.name}
                                               </a>
@@ -1313,16 +1315,16 @@ class PlanDetails extends Component<DetailsProps> {
                                           </p>
                                           <ul>
                                             <li>
-                                              {similar_plan.hmo_id.name}
+                                              {similar_plan.hmo.name}
                                               {/* {similar_plan.plan_id &&
-                                        similar_plan.plan_id.category &&
-                                        similar_plan.plan_id.category.map(
+                                        similar_plan.plan_type &&
+                                        similar_plan.plan_type.map(
                                           (cat, i) => {
                                             return (
                                               <b className="">
                                                 {" "}
-                                                {cat.name}
-                                                {similar_plan.plan_id.category
+                                                {cat}
+                                                {similar_plan.plan_type
                                                   .length > 1 &&
                                                   i <
                                                     similar_plan.plan_id
@@ -1336,8 +1338,8 @@ class PlanDetails extends Component<DetailsProps> {
                                        <span>Sum Insured</span>  */}
                                             </li>
                                             <li>
-                                              {similar_plan.hmo_id.providers
-                                                ? similar_plan.hmo_id.providers
+                                              {similar_plan.hmo.providers
+                                                ? similar_plan.hmo.providers
                                                     .length
                                                 : 0}{" "}
                                               <span>Hospitals</span>
@@ -1409,7 +1411,7 @@ class PlanDetails extends Component<DetailsProps> {
 const mapProps = (state: any) => {
   return {
     collapse_providers: state.fetchData.collapse_providers,
-    plans: state.fetchData.services,
+    plans: state.fetchData.plans,
     plan: state.fetchData.plan,
     similar_plans: state.fetchData.similar_plans,
     responses: state.quiz.responses,
@@ -1419,7 +1421,7 @@ const mapProps = (state: any) => {
 export default connect(mapProps, {
   getPlanDetail,
   getProviders,
-  // getPlans,
+   getPlans,
   getPlan,
  // getServices,
   getCheapestPlan,

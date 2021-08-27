@@ -52,21 +52,21 @@ import {
 
 const initialState = {
     plans:
-      //  localStorage["plans"] ? JSON.parse(localStorage["plans"]) :
+        localStorage["plans"] ? JSON.parse(localStorage["plans"]) :
             [],
     filtered_plans: [],
     is_filter_applied: true,
     hmos:
-       // localStorage["hmos"] ? JSON.parse(localStorage["hmos"]) :
+        localStorage["hmos"] ? JSON.parse(localStorage["hmos"]) :
             [],
     services:
      //   localStorage["services"] ? JSON.parse(localStorage["services"]) :
             [],
     providers:
-      //  localStorage["providers"] ? JSON.parse(localStorage["providers"]) :
+        localStorage["providers"] ? JSON.parse(localStorage["providers"]) :
             [],
     doctors:
-       // localStorage["doctors"] ? JSON.parse(localStorage["doctors"]) :
+        localStorage["doctors"] ? JSON.parse(localStorage["doctors"]) :
             [],
 
     benefits:
@@ -240,7 +240,7 @@ export default function (state = initialState, action) {
     switch (action.type) {
         case GET_PLANS:
            // console.log("action.payload", action.payload);
-            //localStorage["plans"] = JSON.stringify(action.payload)
+            localStorage["plans"] = JSON.stringify(action.payload)
             return {
                 ...state,
                 plans: action.payload,
@@ -257,7 +257,7 @@ export default function (state = initialState, action) {
             }
 
         case GET_HMOS:
-            //localStorage["hmos"] = JSON.stringify(action.payload)
+            localStorage["hmos"] = JSON.stringify(action.payload)
             return {
                 ...state,
                 hmos: action.payload,
@@ -271,8 +271,8 @@ export default function (state = initialState, action) {
             }
 
         case GET_PROVIDERS:
-           // localStorage["providers"] = JSON.stringify(action.payload);
-            //localStorage["providersDataSource"] = JSON.stringify(action.payload);
+            localStorage["providers"] = JSON.stringify(action.payload);
+            localStorage["providersDataSource"] = JSON.stringify(action.payload);
             return {
                 ...state,
                 providers: action.payload,
@@ -281,8 +281,8 @@ export default function (state = initialState, action) {
             }
 
         case GET_SERVICES:
-           // localStorage["services"] = JSON.stringify(action.payload)
-           // localStorage["benefits"] = JSON.stringify(state.benefits)
+            localStorage["services"] = JSON.stringify(action.payload)
+            localStorage["benefits"] = JSON.stringify(state.benefits)
             return {
                 ...state,
                 services: action.payload,
@@ -411,7 +411,7 @@ export default function (state = initialState, action) {
             }
 
         case UPDATE_INFINITE_SCROLL_DATA:
-            //  localStorage["infiniteScrollData"] = JSON.stringify(action.payload)
+              localStorage["infiniteScrollData"] = JSON.stringify(action.payload)
             // console.log("action.payload", action.payload);
             return {
                 ...state,
@@ -419,7 +419,7 @@ export default function (state = initialState, action) {
             }
 
         case SET_IS_INFINNITE_SCROLL_HAS_MORE:
-           // localStorage[""] = JSON.stringify(action.payload);
+            localStorage[""] = JSON.stringify(action.payload);
             return {
                 ...state,
                 infiniteScrollDataHasMore: !state.infiniteScrollDataHasMore
@@ -433,8 +433,8 @@ export default function (state = initialState, action) {
             }
 
         case GET_DOCTORS:
-           // localStorage["doctors"] = JSON.stringify(action.payload)
-           // localStorage["doctorsDataSource"] = JSON.stringify(action.payload)
+            localStorage["doctors"] = JSON.stringify(action.payload)
+           localStorage["doctorsDataSource"] = JSON.stringify(action.payload)
             return {
                 ...state,
                 doctors: action.payload,
@@ -442,7 +442,7 @@ export default function (state = initialState, action) {
             }
 
         case GET_SPECIALTIES:
-           // localStorage["specialties"] = JSON.stringify(action.payload)
+            localStorage["specialties"] = JSON.stringify(action.payload)
             return {
                 ...state,
                 specialties: action.payload

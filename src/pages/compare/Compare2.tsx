@@ -39,7 +39,7 @@ import {
   getSimilarPlans,
   getPlanDetail,
   getProviders,
-  //getPlans,
+  getPlans,
   //getServices,
   getCheapestPlan,
   //getPlan,
@@ -150,13 +150,18 @@ class ComparePlans extends Component<ComparisonProps> {
 
     await this.props.getProviders();
     //await this.props.getPlans();
-    await this.props.getServices();
+    await this.props.getPlans();
 
     let firstPlanID = paramsArr[0];
     console.log("firstPlanID", firstPlanID);
-
+    console.log("this.props.plans", this.props.plans);
+    
     let firstPlan = this.props.plans.filter(
-      (plan) => plan.service_id === firstPlanID
+      (plan) => {
+        console.log("plan.plan_id", plan.plan_id, "firstPlanID", firstPlanID );
+        
+        return plan.plan_id === firstPlanID
+      }
     )[0];
     console.log("firstPlan", firstPlan);
 
@@ -324,7 +329,7 @@ class ComparePlans extends Component<ComparisonProps> {
     }
     this.updateURL();
     let firstPlan = await this.props.plans.filter(
-      (plan) => plan.service_id === this.state.plans_to_compare[0]
+      (plan) => plan.plan_id === this.state.plans_to_compare[0]
     )[0];
     console.log("firstPlan", firstPlan);
     this.setState({
@@ -335,7 +340,7 @@ class ComparePlans extends Component<ComparisonProps> {
   };
 
   getClickedPlan = async (planID, type) => {
-    let data = this.props.plans.filter((plan) => plan.service_id === planID)[0];
+    let data = this.props.plans.filter((plan) => plan.plan_id === planID)[0];
     await this.props.getPlan(data);
   };
 
@@ -347,9 +352,9 @@ class ComparePlans extends Component<ComparisonProps> {
     let planTwoID = this.state.plans_to_compare[1];
     let planThreeID = this.state.plans_to_compare[2];
 
-    let first = plans.filter((plan) => plan.service_id === planOneID)[0];
-    let second = plans.filter((plan) => plan.service_id === planTwoID)[0];
-    let third = plans.filter((plan) => plan.service_id === planThreeID)[0];
+    let first = plans.filter((plan) => plan.plan_id === planOneID)[0];
+    let second = plans.filter((plan) => plan.plan_id === planTwoID)[0];
+    let third = plans.filter((plan) => plan.plan_id === planThreeID)[0];
 
     console.log(
       "this.state.current_page",
@@ -567,11 +572,11 @@ class ComparePlans extends Component<ComparisonProps> {
                         <header className="c-plan-title">
                           <div className="c-plan-title__issuer font-weight--bold">
                             {this.state.current_page === 1
-                              ? first.hmo_id.name
+                              ? first.hmo.name
                               : this.state.current_page === 2
-                              ? second.hmo_id.name
+                              ? second.hmo.name
                               : this.state.current_page === 3
-                              ? third.hmo_id.name
+                              ? third.hmo.name
                               : ""}
                           </div>
                           <h2 className="c-plan-title__name font-weight--normal margin-y--1">
@@ -592,11 +597,11 @@ class ComparePlans extends Component<ComparisonProps> {
                           onClick={() => {
                             this.getClickedPlan(
                               this.state.current_page === 1
-                                ? first.service_id
+                                ? first.plan_id
                                 : this.state.current_page === 2
-                                ? second.service_id
+                                ? second.plan_id
                                 : this.state.current_page === 3
-                                ? third.service_id
+                                ? third.plan_id
                                 : "",
                               "buy"
                             );
@@ -621,7 +626,11 @@ class ComparePlans extends Component<ComparisonProps> {
                                         : "display--none"
                                     }
                                   >
-                                    <span>{first.price}</span>
+                                    <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(
+                                    first.price))}</span>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
@@ -632,7 +641,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                           : "display--none"
                                       }
                                     >
-                                      <span>{second.price}</span>
+                                      <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(second.price))}</span>
                                     </td>
                                   )}
                                   {this.state.plans_to_compare[2] !==
@@ -644,7 +656,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                           : "display--none"
                                       }
                                     >
-                                      <span>{third.price}</span>
+                                      <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(third.price))}</span>
                                     </td>
                                   )}
                                 </tr>
@@ -658,7 +673,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                         : "display--none"
                                     }
                                   >
-                                    <span>{first.hmo_id.name}</span>
+                                    <span>{first.hmo.name}</span>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
@@ -669,7 +684,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                           : "display--none"
                                       }
                                     >
-                                      <span>{second.hmo_id.name}</span>
+                                      <span>{second.hmo.name}</span>
                                     </td>
                                   )}
                                   {this.state.plans_to_compare[2] !==
@@ -681,7 +696,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                           : "display--none"
                                       }
                                     >
-                                      <span>{third.hmo_id.name}</span>
+                                      <span>{third.hmo.name}</span>
                                     </td>
                                   )}
                                 </tr>
@@ -695,7 +710,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                         : "display--none"
                                     }
                                   >
-                                    <span>{first.category}</span>
+                                    <span>{first.metal_level}</span>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
@@ -706,7 +721,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                           : "display--none"
                                       }
                                     >
-                                      <span>{second.category}</span>
+                                      <span>{second.metal_level}</span>
                                     </td>
                                   )}
                                   {this.state.plans_to_compare[2] !==
@@ -718,7 +733,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                           : "display--none"
                                       }
                                     >
-                                      <span>{third.category}</span>
+                                      <span>{third.metal_level}</span>
                                     </td>
                                   )}
                                 </tr>
@@ -733,16 +748,16 @@ class ComparePlans extends Component<ComparisonProps> {
                                   >
                                     <span>
                                       {first.plan_id &&
-                                        first.plan_id.category &&
-                                        first.plan_id.category.map((cat, i) => {
+                                        first.plan_type &&
+                                        first.plan_type.map((cat, i) => {
                                           return (
                                             <b className="">
                                               {" "}
-                                              {cat.name}
-                                              {first.plan_id.category.length >
+                                              {cat}
+                                              {first.plan_type.length >
                                                 1 &&
                                                 i <
-                                                  first.plan_id.category
+                                                  first.plan_type
                                                     .length -
                                                     1 &&
                                                 ", "}
@@ -762,17 +777,17 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <span>
                                         {second.plan_id &&
-                                          second.plan_id.category &&
-                                          second.plan_id.category.map(
+                                          second.plan_type &&
+                                          second.plan_type.map(
                                             (cat, i) => {
                                               return (
                                                 <b className="">
                                                   {" "}
-                                                  {cat.name}
-                                                  {second.plan_id.category
+                                                  {cat}
+                                                  {second.plan_type
                                                     .length > 1 &&
                                                     i <
-                                                      second.plan_id.category
+                                                      second.plan_type
                                                         .length -
                                                         1 &&
                                                     ", "}
@@ -794,17 +809,17 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <span>
                                         {third.plan_id &&
-                                          third.plan_id.category &&
-                                          third.plan_id.category.map(
+                                          third.plan_type &&
+                                          third.plan_type.map(
                                             (cat, i) => {
                                               return (
                                                 <b className="">
                                                   {" "}
-                                                  {cat.name}
-                                                  {third.plan_id.category
+                                                  {cat}
+                                                  {third.plan_type
                                                     .length > 1 &&
                                                     i <
-                                                      third.plan_id.category
+                                                      third.plan_type
                                                         .length -
                                                         1 &&
                                                     ", "}
@@ -830,7 +845,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   >
                                     <a
                                       className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                      href={`/details/id/${first.service_id}`}
+                                      href={`/details/id/${first.plan_id}`}
                                       role="button"
                                     >
                                       View providers
@@ -847,7 +862,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <a
                                         className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                        href={`/details/id/${second.service_id}`}
+                                        href={`/details/id/${second.plan_id}`}
                                         role="button"
                                       >
                                         View providers
@@ -865,7 +880,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <a
                                         className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                        href={`/details/id/${third.service_id}`}
+                                        href={`/details/id/${third.plan_id}`}
                                         role="button"
                                       >
                                         View providers
@@ -1757,7 +1772,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   >
                                     <div className="c-star-rating">
                                       <span>
-                                        {first.hospital_category[0].name}
+                                        {first.hmo.providers.map(h => h.category[0], ", ")}
                                       </span>
                                     </div>
                                   </td>
@@ -1772,7 +1787,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <div className="c-star-rating">
                                         <span>
-                                          {second.hospital_category[0].name}
+                                          {second.hmo.providers.map(h => h.category[0], ", ")}
                                         </span>
                                       </div>
                                     </td>
@@ -1788,7 +1803,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     >
                                       <div className="c-star-rating">
                                         <span>
-                                          {third.hospital_category[0].name}
+                                          {third.hmo.providers.map(h => h.category[0], ", ")}
                                         </span>
                                       </div>
                                     </td>
@@ -2685,10 +2700,10 @@ class ComparePlans extends Component<ComparisonProps> {
                           <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
                             <div className="c-compare-title__info padding--1">
                               <div className="font-size--small font-weight--bold">
-                                {first.hmo_id.name}
+                                {first.hmo.name}
                               </div>
                               <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                                <a href={`/details/id/${first.service_id}`}>
+                                <a href={`/details/id/${first.plan_id}`}>
                                   {first.name}
                                 </a>
                               </h2>
@@ -2698,7 +2713,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   type="button"
                                   onClick={() => {
                                     this.getClickedPlan(
-                                      first.service_id,
+                                      first.plan_id,
                                       "buy"
                                     );
                                     this.props.toggleDataCaptureModal(true);
@@ -2742,10 +2757,10 @@ class ComparePlans extends Component<ComparisonProps> {
                             <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
                               <div className="c-compare-title__info padding--1">
                                 <div className="font-size--small font-weight--bold">
-                                  {second.hmo_id.name}
+                                  {second.hmo.name}
                                 </div>
                                 <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                                  <a href={`/details/id/${second.service_id}`}>
+                                  <a href={`/details/id/${second.plan_id}`}>
                                     {second.name}
                                   </a>
                                 </h2>
@@ -2755,7 +2770,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     type="button"
                                     onClick={() => {
                                       this.getClickedPlan(
-                                        second.service_id,
+                                        second.plan_id,
                                         "buy"
                                       );
                                       this.props.toggleDataCaptureModal(true);
@@ -2799,10 +2814,10 @@ class ComparePlans extends Component<ComparisonProps> {
                             <div className="l-col display--flex justify-content--between border--1 padding--0 c-compare-title__card">
                               <div className="c-compare-title__info padding--1">
                                 <div className="font-size--small font-weight--bold">
-                                  {third.hmo_id.name}
+                                  {third.hmo.name}
                                 </div>
                                 <h2 className="font-size--h4 leading--heading font-weight--normal margin-y--1">
-                                  <a href={`/details/id/${third.service_id}`}>
+                                  <a href={`/details/id/${third.plan_id}`}>
                                     {third.name}
                                   </a>
                                 </h2>
@@ -2812,7 +2827,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     type="button"
                                     onClick={() => {
                                       this.getClickedPlan(
-                                        third.service_id,
+                                        third.plan_id,
                                         "buy"
                                       );
                                       this.props.toggleDataCaptureModal(true);
@@ -2862,18 +2877,27 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">Price</th>
                                   <td>
-                                    <span>{first.price}</span>
+                                    <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(first.price))}</span>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
-                                      <span>{second.price}</span>
+                                      <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(second.price))}</span>
                                     </td>
                                   )}
                                   {this.state.plans_to_compare[2] !==
                                     undefined && (
                                     <td>
-                                      <span>{third.price}</span>
+                                      <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(third.price))}</span>
                                     </td>
                                   )}
                                 </tr>
@@ -2881,18 +2905,18 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">HMO</th>
                                   <td>
-                                    <span>{first.hmo_id.name}</span>
+                                    <span>{first.hmo.name}</span>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
-                                      <span>{second.hmo_id.name}</span>
+                                      <span>{second.hmo.name}</span>
                                     </td>
                                   )}
                                   {this.state.plans_to_compare[2] !==
                                     undefined && (
                                     <td>
-                                      <span>{third.hmo_id.name}</span>
+                                      <span>{third.hmo.name}</span>
                                     </td>
                                   )}
                                 </tr>
@@ -2900,18 +2924,18 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">Plan metal level</th>
                                   <td>
-                                    <span>{first.category}</span>
+                                    <span>{first.metal_level}</span>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
-                                      <span>{second.category}</span>
+                                      <span>{second.metal_level}</span>
                                     </td>
                                   )}
                                   {this.state.plans_to_compare[2] !==
                                     undefined && (
                                     <td>
-                                      <span>{third.category}</span>
+                                      <span>{third.metal_level}</span>
                                     </td>
                                   )}
                                 </tr>
@@ -2920,16 +2944,16 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <td>
                                     <span>
                                       {first.plan_id &&
-                                        first.plan_id.category &&
-                                        first.plan_id.category.map((cat, i) => {
+                                        first.plan_type &&
+                                        first.plan_type.map((cat, i) => {
                                           return (
                                             <b className="">
                                               {" "}
-                                              {cat.name}
-                                              {first.plan_id.category.length >
+                                              {cat}
+                                              {first.plan_type.length >
                                                 1 &&
                                                 i <
-                                                  first.plan_id.category
+                                                  first.plan_type
                                                     .length -
                                                     1 &&
                                                 ", "}
@@ -2943,17 +2967,17 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <span>
                                         {second.plan_id &&
-                                          second.plan_id.category &&
-                                          second.plan_id.category.map(
+                                          second.plan_type &&
+                                          second.plan_type.map(
                                             (cat, i) => {
                                               return (
                                                 <b className="">
                                                   {" "}
-                                                  {cat.name}
-                                                  {second.plan_id.category
+                                                  {cat}
+                                                  {second.plan_type
                                                     .length > 1 &&
                                                     i <
-                                                      second.plan_id.category
+                                                      second.plan_type
                                                         .length -
                                                         1 &&
                                                     ", "}
@@ -2969,17 +2993,17 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <span>
                                         {third.plan_id &&
-                                          third.plan_id.category &&
-                                          third.plan_id.category.map(
+                                          third.plan_type &&
+                                          third.plan_type.map(
                                             (cat, i) => {
                                               return (
                                                 <b className="">
                                                   {" "}
-                                                  {cat.name}
-                                                  {third.plan_id.category
+                                                  {cat}
+                                                  {third.plan_type
                                                     .length > 1 &&
                                                     i <
-                                                      third.plan_id.category
+                                                      third.plan_type
                                                         .length -
                                                         1 &&
                                                     ", "}
@@ -2994,18 +3018,18 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">Plan ID</th>
                                   <td>
-                                    <span>{first.service_id}</span>
+                                    <span>{first.plan_id}</span>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
-                                      <span>{second.service_id}</span>
+                                      <span>{second.plan_id}</span>
                                     </td>
                                   )}
                                   {this.state.plans_to_compare[2] !==
                                     undefined && (
                                     <td>
-                                      <span>{third.service_id}</span>
+                                      <span>{third.plan_id}</span>
                                     </td>
                                   )}
                                 </tr>
@@ -3016,7 +3040,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <td>
                                     <a
                                       className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                      href={`/details/id/${first.service_id}`}
+                                      href={`/details/id/${first.plan_id}`}
                                       role="button"
                                     >
                                       View medical providers
@@ -3027,7 +3051,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <a
                                         className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                        href={`/details/id/${second.service_id}`}
+                                        href={`/details/id/${second.plan_id}`}
                                         role="button"
                                       >
                                         View medical providers
@@ -3039,7 +3063,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <a
                                         className="c-button c-button--small print-display--none padding-x--2 margin-y--1"
-                                        href={`/details/id/${third.service_id}`}
+                                        href={`/details/id/${third.plan_id}`}
                                         role="button"
                                       >
                                         View medical providers
@@ -4043,7 +4067,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <td>
                                     <div className="c-star-rating">
                                       <span>
-                                        {first.hospital_category[0].name}
+                                        {first.hmo.providers.map(h => h.category[0], ", ")}
                                       </span>
                                     </div>
                                   </td>
@@ -4052,7 +4076,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <div className="c-star-rating">
                                         <span>
-                                          {second.hospital_category[0].name}
+                                          {second.hmo.providers.map(h => h.category[0], ", ")}
                                         </span>
                                       </div>
                                     </td>
@@ -4062,7 +4086,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <div className="c-star-rating">
                                         <span>
-                                          {third.hospital_category[0].name}
+                                          {third.hmo.providers.map(h => h.category[0], ", ")}
                                         </span>
                                       </div>
                                     </td>
@@ -5024,6 +5048,7 @@ class ComparePlans extends Component<ComparisonProps> {
                             </table>
                           </div>
                         </section>
+{/* 
 
                         <section className="c-detail-section margin-bottom--4">
                           <h2 className="border-bottom--1 border--dark padding-bottom--2">
@@ -5554,7 +5579,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                   <td>
                                     <div className="c-star-rating">
                                       <span>
-                                        {first.hospital_category[0].name}
+                                        {first.hmo.providers.map(h => h.category[0], ", ")}
                                       </span>
                                     </div>
                                   </td>
@@ -5563,7 +5588,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <div className="c-star-rating">
                                         <span>
-                                          {second.hospital_category[0].name}
+                                          {second.hmo.providers.map(h => h.category[0], ", ")}
                                         </span>
                                       </div>
                                     </td>
@@ -5573,7 +5598,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <div className="c-star-rating">
                                         <span>
-                                          {third.hospital_category[0].name}
+                                          {third.hmo.providers.map(h => h.category[0], ", ")}
                                         </span>
                                       </div>
                                     </td>
@@ -6137,6 +6162,8 @@ class ComparePlans extends Component<ComparisonProps> {
                             </table>
                           </div>
                         </section>
+                     
+                      */}
                       </div>
                     </div>
                   </div>{" "}
@@ -6159,7 +6186,7 @@ class ComparePlans extends Component<ComparisonProps> {
                               this.props.similar_plans.map(
                                 (similar_plan, i) => {
                                   return plans_to_compare.includes(
-                                    similar_plan.service_id
+                                    similar_plan.plan_id
                                     //i
                                     // .toString()
                                   ) === false ? (
@@ -6168,11 +6195,11 @@ class ComparePlans extends Component<ComparisonProps> {
                                         <li>
                                           <div className="box_block">
                                             <div className="plan-c-provider font-weight--bold">
-                                              {similar_plan.hmo_id.name["text"]}
+                                              {similar_plan.hmo.name["text"]}
                                             </div>
                                             <h2 className="plan-c-name font-weight--normal margin-y--1">
                                               <a
-                                                href={`/details/id/${similar_plan.service_id}`}
+                                                href={`/details/id/${similar_plan.plan_id}`}
                                               >
                                                 {similar_plan.name}
                                               </a>
@@ -6188,10 +6215,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                             / year
                                           </p>
                                           <ul>
-                                            <li>{similar_plan.hmo_id.name}</li>
+                                            <li>{similar_plan.hmo.name}</li>
                                             <li>
-                                              {similar_plan.hmo_id.providers
-                                                ? similar_plan.hmo_id.providers
+                                              {similar_plan.hmo.providers
+                                                ? similar_plan.hmo.providers
                                                     .length
                                                 : 0}{" "}
                                               <span>Hospitals</span>
@@ -6211,12 +6238,12 @@ class ComparePlans extends Component<ComparisonProps> {
                                               //   i.toString()
                                               // );
                                               this.handleCheckedPlanToCompare(
-                                                similar_plan.service_id
+                                                similar_plan.plan_id
                                               );
 
                                               this.updateUrlParams(
                                                 "add",
-                                                similar_plan.service_id
+                                                similar_plan.plan_id
                                               );
                                             }}
                                           >
@@ -6257,7 +6284,7 @@ class ComparePlans extends Component<ComparisonProps> {
 
 const mapProps = (state: any) => {
   return {
-    plans: state.fetchData.services,
+    plans: state.fetchData.plans,
     plan: state.fetchData.plan,
     checked_plans_list: state.compare.checked_plans_list,
     compare_plans_desktop_indexes: state.compare.compare_plans_desktop_indexes,
@@ -6273,7 +6300,7 @@ export default connect(mapProps, {
   getSimilarPlans,
   getPlanDetail,
   getProviders,
-  // getPlans,
+  getPlans,
   //getServices,
   getCheapestPlan,
   addCompareURLParam,
