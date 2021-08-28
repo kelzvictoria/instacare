@@ -178,14 +178,10 @@ class AppFooter extends Component<FooterProps, {}> {
   }
 
   infiniteScrollDataReInitOnFilterApplied = async () => {
-    this.setState({
+   /* this.setState({
       current: 1,
       minIndex: 0,
       maxIndex: pageSize,
-      // infiniteScrollData:
-      //   this.props.match.path === "/hmos/*"
-      //     ? this.props.plansByHMO.slice(0, pageSize)
-      //     : this.props.planServices.slice(0, pageSize),
     });
 
     let page = this.state.current;
@@ -213,7 +209,7 @@ class AppFooter extends Component<FooterProps, {}> {
       true,
       start_index,
       end_index
-    );
+    ); */
   };
 
   goToHome = () => {
@@ -260,7 +256,7 @@ class AppFooter extends Component<FooterProps, {}> {
                       <li key={i}>
                         <div className="box_block sponsor-img">
                           {/* <h2 className=""> */}
-                          <a href={`/hmos/id/${hmo.hmo_id}`}>
+                          <a href={`/hmos/id/${hmo.id}`}>
                             {/* {hmo.name} */}
                             <img src={hmo.logo} />
                           </a>
@@ -324,7 +320,7 @@ class AppFooter extends Component<FooterProps, {}> {
                     >
                       {this.props.hmos.map((hmo, i) => (
                         <li key={i}>
-                          <a href={`/hmos/id/${hmo.hmo_id}`}>{hmo.name}</a>
+                          <a href={`/hmos/id/${hmo.id}`}>{hmo.name}</a>
                         </li>
                       ))}
                     </ul>
@@ -344,7 +340,7 @@ class AppFooter extends Component<FooterProps, {}> {
                         <a
                           href="#"
                           onClick={() => {
-                            this.changeType("single");
+                            this.changeType("individual");
                             // this.goToHome();
                           }}
                         >
@@ -355,7 +351,7 @@ class AppFooter extends Component<FooterProps, {}> {
                         <a
                           href="#"
                           onClick={() => {
-                            this.changeType("fam-of-4");
+                            this.changeType("family");
                             // this.goToHome();
                           }}
                         >
@@ -379,7 +375,7 @@ class AppFooter extends Component<FooterProps, {}> {
                         <a
                           href="#"
                           onClick={() => {
-                            this.changeType("parents");
+                            this.changeType("senior_citizen");
                             // this.goToHome();
                           }}
                         >
@@ -390,7 +386,7 @@ class AppFooter extends Component<FooterProps, {}> {
                         <a
                           href="#"
                           onClick={() => {
-                            this.changeType("smes");
+                            this.changeType("group");
                             // this.goToHome();
                           }}
                         >

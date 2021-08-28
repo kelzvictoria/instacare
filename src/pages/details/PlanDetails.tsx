@@ -21,6 +21,9 @@ import {
   faCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
+import check from "../../svgs/check.svg";
+import uncheck from "../../svgs/uncheck.svg";
+
 import * as home_utils from "../../utils/homeUtils";
 
 import Modal from "react-bootstrap/Modal";
@@ -194,7 +197,7 @@ class PlanDetails extends Component<DetailsProps> {
                 <div>
                   <a
                     className="c-button c-button--transparent c-plan-nav-bar__back-link padding--0 text-decoration--underline"
-                    href="#"
+                    // href="#"
                     onClick={this.goToPlans}
                     target="_self"
                     role="button"
@@ -539,7 +542,17 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.accidents_emergencies}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("accidents_emergencies")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                     
+                                {/* <span>{plan.accidents_emergencies}</span> */}
                               </div>
                             </td>
                           </tr>
@@ -550,7 +563,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.evacuations}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("evacuations")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -595,7 +617,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.dental_care}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("dental_care")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                               
                               </div>
                             </td>
                           </tr>
@@ -608,7 +639,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.optical_care}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("optical_care")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                               
                               </div>
                             </td>
                           </tr>
@@ -659,7 +699,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.additional_ammunization}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("additional_ammunization")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                               
                               </div>
                             </td>
                           </tr>
@@ -672,7 +721,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.routine_immunization}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("routine_immunization")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -721,7 +779,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.admission_feeding}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("admission_feeding")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                               
                               </div>
                             </td>
                           </tr>
@@ -747,7 +814,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.admissions_per_annum}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("admissions_per_annum")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -796,7 +872,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.antenatal_care_delivery}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("antenatal_care_delivery")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -809,7 +894,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.fertility_services}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("fertility_services")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                               
                               </div>
                             </td>
                           </tr>
@@ -822,7 +916,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.family_planning_services}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("family_planning_services")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                             
                               </div>
                             </td>
                           </tr>
@@ -835,7 +938,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.neonatal_care}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("neonatal_care")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -848,7 +960,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.postnatal_care}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("postnatal_care")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -912,7 +1033,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.hiv_aids_treatment}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("hiv_aids_treatment")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -963,7 +1093,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.outpatient_prescribed_drugs}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("outpatient_prescribed_drugs")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                               
                               </div>
                             </td>
                           </tr>
@@ -1014,7 +1153,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.lab_investigations}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("lab_investigations")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                              
                               </div>
                             </td>
                           </tr>
@@ -1027,7 +1175,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.renal_dialysis}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("renal_dialysis")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -1040,7 +1197,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.ultrasound_plans}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("ultrasound_plans")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -1053,7 +1219,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.plain_contrast_xrays}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("plain_contrast_xrays")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -1104,7 +1279,15 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.general_consultation}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("general_consultation")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
                               </div>
                             </td>
                           </tr>
@@ -1117,7 +1300,15 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.specialist_consultation}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("specialist_consultation")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
                               </div>
                             </td>
                           </tr>
@@ -1130,7 +1321,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.physiotherapy}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("physiotherapy")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                               
                               </div>
                             </td>
                           </tr>
@@ -1179,7 +1379,15 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.intensive_care}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("intensive_care")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
                               </div>
                             </td>
                           </tr>
@@ -1192,7 +1400,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.covid_19_treatment}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("covid_19_treatment")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                                
                               </div>
                             </td>
                           </tr>
@@ -1205,7 +1422,16 @@ class PlanDetails extends Component<DetailsProps> {
                             </th>
                             <td>
                               <div className="c-star-rating">
-                                <span>{plan.plastic_surgeries}</span>
+                              <img
+                                  src={
+                                    plan.benefits.includes("plastic_surgeries")
+                                      ? check
+                                      : uncheck
+                                  }
+                                  className=""
+                                  alt=""
+                                      />
+                               
                               </div>
                             </td>
                           </tr>
@@ -1252,7 +1478,7 @@ class PlanDetails extends Component<DetailsProps> {
                               <tr className="border-bottom--2">
                                 <th scope="row">
                                   <span className="display--block">
-                                    {provider.provider_name}
+                                    {provider.name}
                                   </span>
                                 </th>
                                 {/* <td>
@@ -1262,7 +1488,7 @@ class PlanDetails extends Component<DetailsProps> {
                             </td> */}
                                 <td>
                                   <div className="c-star-rating">
-                                    <span>{provider.address}</span>
+                                    <span>{`${provider.address}, ${provider.city}${provider.city !== provider.state && ", " + provider.state}` }</span>
                                   </div>
                                 </td>
                               </tr>

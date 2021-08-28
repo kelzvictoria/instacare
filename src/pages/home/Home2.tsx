@@ -47,7 +47,8 @@ import {
   handleReverseGeocoding,
   resetLocation,
   getSpecialties,
-  filterPlans
+  filterPlans,
+  setIsFetchingData
 } from "../../actions/fetchDataActions";
 
 import {
@@ -250,6 +251,7 @@ class Home extends Component<QuizProps, {}> {
   };
 
   async UNSAFE_componentWillMount() {
+   !localStorage["plans"] && await this.props.setIsFetchingData(true);
     await this.props.getDoctors();
     await this.props.getProviders();
     await this.props.getPlans();
@@ -258,7 +260,7 @@ class Home extends Component<QuizProps, {}> {
      // await this.props.getCheapestPlan();
     //}
 
-   /* if (Object.keys(this.props.match.params).length) {
+    if (Object.keys(this.props.match.params).length) {
       this.parseParams();
       let idParamsObj = this.params.filter((param) => param.name == "id");
 
@@ -268,9 +270,13 @@ class Home extends Component<QuizProps, {}> {
         await this.props.getPlansByHMO(id);
         this.getCheapestPlanByHMO();
       }
-    } */
+    } 
     
-   /* if (this.props.plansByHMO.length || this.props.plans.length) {
+    console.log("this.props.plansByHMO", this.props.plansByHMO);
+    
+    if (this.props.plansByHMO.length || this.props.plans.length) {
+      console.log("inf");
+      
       this.props.match.path === "/hmos/*" ?  await this.props.updateInfiniteScrollData(
         this.props.plansByHMO,
         false,
@@ -283,7 +289,7 @@ class Home extends Component<QuizProps, {}> {
         null,
         null)
         
-    }*/
+    }
 
 
   }
@@ -459,5 +465,6 @@ export default connect(mapProps, {
   setDoctors,
   jumpToFilterBox,
   getSpecialties,
-  filterPlans
+  filterPlans,
+  setIsFetchingData
 })(Home);

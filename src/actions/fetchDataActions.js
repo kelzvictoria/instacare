@@ -52,7 +52,7 @@ const GOOGLE_MAPS_API_KEY = "AIzaSyBzVuBuJJ7S4g8gVjy-udL823dQTShK16I";
 const OPEN_CAGE_DATA_API_KEY = "6b7ff1e8e7834c6f91ff3c02903ca44c";
 
 export const getPlans = () => async (dispatch, getState) => { 
-    dispatch(setIsFetchingData()) 
+   // dispatch(setIsFetchingData()) 
     if (!getState().fetchData.providers.length) {
          await dispatch(getProviders());
     }
@@ -83,12 +83,11 @@ export const getPlans = () => async (dispatch, getState) => {
             dispatch(getHMOs());
             dispatch(getSpecialties());
 
-            dispatch(updateInfiniteScrollData(
-                //this.props.planServices,
-                plans,
-                false,
-                null,
-                null))
+            // dispatch(updateInfiniteScrollData(
+            //     plans,
+            //     false,
+            //     null,
+            //     null))
         }
        
     }).catch(error=> {
@@ -264,9 +263,9 @@ export const getPlanDetail = (planID) => async (dispatch, getState) => {
 
 export const getSimilarPlans = (plan) => async (dispatch, getState) => {
     if (plan) {
-        await dispatch(getPlans())
-        if (plan.plan_id.category) {
-            let type = plan.plan_id.category.map(cat => cat.name.toLowerCase());
+       // await dispatch(getPlans())
+        if (plan.plan_type) {
+            let type = plan.plan_type.map(t => t.toLowerCase());
 
             let planID = plan.plan_id;
 
@@ -274,7 +273,7 @@ export const getSimilarPlans = (plan) => async (dispatch, getState) => {
 
             let packages = getState().fetchData.plans;
 
-            let res = groupPlansByType(packages, type);
+            let res =  groupPlansByType(packages, type);
             //console.log("res", res);
 
             let similar_plans = res.filter(plan => {
@@ -407,7 +406,7 @@ export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
             type: IS_FETCHING_PLANS_BY_HMO,
             data: true
         });
-        let HMO = getState().fetchData.hmos.filter(hmo => hmo.hmo_id === hmoId)
+        let HMO = getState().fetchData.hmos.filter(hmo => hmo.id === hmoId)
         // console.log("plansByHMO", plansByHMO);
 
         await dispatch({
@@ -415,7 +414,7 @@ export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
             payload: HMO
         })
 
-        plansByHMO = getState().fetchData.plans.filter(plan => plan.hmo_id.hmo_id === hmoId)
+        plansByHMO = getState().fetchData.plans.filter(plan => plan.hmo.id === hmoId)
 
         dispatch({
             type: GET_PLANS_BY_HMO,
@@ -480,10 +479,10 @@ export const setIsFetchingPlans = () => (dispatch) => {
     })
 }
 
-export const setIsFetchingData = () => (dispatch) => {
+export const setIsFetchingData = (val) => (dispatch) => {
     dispatch({
         type: IS_FETCHING_DATA,
-        payload: true
+        payload: val
     })
 }
 
@@ -542,15 +541,15 @@ const groupPlansByType = (packages, type) => {
         console.log("packages", packages);
     if (packages.length > 0) {
         for (let i = 0; i < packages.length; i++) {
-            let categoryArr = packages[i].plan_id.category;
+            let typesArr = packages[i].plan_type;
 
-            let individualPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "individual" || cat.name.toLowerCase() === "individuals").length > 0;
-            let groupPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "group").length > 0;
-            let corporatePlans = categoryArr.filter(cat => cat.name.toLowerCase() === "corporate").length > 0;
-            let familyPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "family").length > 0;
-            let couplePlans = categoryArr.filter(cat => cat.name.toLowerCase() === "couple").length > 0;
-            let internationalPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "international").length > 0;
-            let seniorCitizenPlans = categoryArr.filter(cat => cat.name.toLowerCase() === "senior citizen").length > 0;
+            let individualPlans = typesArr.filter(t => t.toLowerCase() === "individual" || t.toLowerCase() === "individuals").length > 0;
+            let groupPlans = typesArr.filter(t => t.toLowerCase() === "group").length > 0;
+            let corporatePlans = typesArr.filter(t => t.toLowerCase() === "corporate").length > 0;
+            let familyPlans = typesArr.filter(t => t.toLowerCase() === "family").length > 0;
+            let couplePlans = typesArr.filter(t => t.toLowerCase() === "couple").length > 0;
+            let internationalPlans = typesArr.filter(t => t.toLowerCase() === "international").length > 0;
+            let seniorCitizenPlans = typesArr.filter(t => t.toLowerCase() === "senior citizen").length > 0;
 
             if (individualPlans) {
                 individual_plans.push(packages[i])

@@ -153,17 +153,16 @@ class ComparePlans extends Component<ComparisonProps> {
     await this.props.getPlans();
 
     let firstPlanID = paramsArr[0];
-    console.log("firstPlanID", firstPlanID);
-    console.log("this.props.plans", this.props.plans);
+    console.log("firstPlanID", firstPlanID, "this.props.plans", this.props.plans);
     
     let firstPlan = this.props.plans.filter(
       (plan) => {
-        console.log("plan.plan_id", plan.plan_id, "firstPlanID", firstPlanID );
+        console.log("plan.plan_id", plan.plan_id, "firstPlanID", firstPlanID, "status", plan.plan_id === firstPlanID );
         
         return plan.plan_id === firstPlanID
       }
     )[0];
-    console.log("firstPlan", firstPlan);
+    console.log("firstPlanID", firstPlan);
 
     await this.props.getSimilarPlans(firstPlan);
     this.props.getCheapestPlan();
@@ -184,7 +183,7 @@ class ComparePlans extends Component<ComparisonProps> {
   }
 
   goToPlans = () => {
-    this.props.history.push({ pathname: "/#plans" });
+    this.props.history.push({ pathname: "/" });
   };
 
   numberwithCommas = (value) => {
@@ -356,18 +355,20 @@ class ComparePlans extends Component<ComparisonProps> {
     let second = plans.filter((plan) => plan.plan_id === planTwoID)[0];
     let third = plans.filter((plan) => plan.plan_id === planThreeID)[0];
 
-    console.log(
-      "this.state.current_page",
-      this.state.current_page,
-      "this.state.num_of_pages",
-      this.state.num_of_pages
-    );
+
+
+    // console.log(
+    //   "this.state.current_page",
+    //   this.state.current_page,
+    //   "this.state.num_of_pages",
+    //   this.state.num_of_pages
+    // );
 
     console.log("this.props.params", this.props.params);
 
-    //console.log("first", first);
-    // console.log("second", second);
-    // console.log("third", third);
+    console.log("first", first);
+     console.log("second", second);
+     console.log("third", third);
 
     return (
       <div className="side-by-side_comparison c-plan-details-page">
@@ -3151,9 +3152,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.accidents_emergencies !==
-                                            "No" &&
-                                          first.accidents_emergencies !== ""
+                                          first.benefits.includes("accidents_emergencies")
                                             ? check
                                             : uncheck
                                         }
@@ -3168,10 +3167,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.accidents_emergencies !==
-                                              "No" &&
-                                            second.accidents_emergencies !== ""
-                                              ? check
+                                            second.benefits.includes("accidents_emergencies")
+                                            ? check
                                               : uncheck
                                           }
                                           className=""
@@ -3186,9 +3183,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.accidents_emergencies !==
-                                              "No" &&
-                                            third.accidents_emergencies !== ""
+                                            third.benefits.includes("accidents_emergencies") 
                                               ? check
                                               : uncheck
                                           }
@@ -3209,9 +3204,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.additional_ammunization !==
-                                            "No" &&
-                                          first.additional_ammunization !== ""
+                                          first.benefits.includes("additional_immunization") 
                                             ? check
                                             : uncheck
                                         }
@@ -3226,10 +3219,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.additional_ammunization !==
-                                              "No" &&
-                                            second.additional_ammunization !==
-                                              ""
+                                            second.benefits.includes("additional_immunization") 
                                               ? check
                                               : uncheck
                                           }
@@ -3245,9 +3235,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.additional_ammunization !==
-                                              "No" &&
-                                            third.additional_ammunization !== ""
+                                            third.benefits.includes("additional_immunization")
                                               ? check
                                               : uncheck
                                           }
@@ -3268,8 +3256,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.admission_feeding !== "No" &&
-                                          first.admission_feeding !== ""
+                                          first.benefits.includes("admission_feeding") 
                                             ? check
                                             : uncheck
                                         }
@@ -3284,8 +3271,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.admission_feeding !== "No" &&
-                                            second.admission_feeding !== ""
+                                            second.benefits.includes("admission_feeding") 
                                               ? check
                                               : uncheck
                                           }
@@ -3301,8 +3287,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.admission_feeding !== "No" &&
-                                            third.admission_feeding !== ""
+                                            third.benefits.includes("admission_feeding") 
                                               ? check
                                               : uncheck
                                           }
@@ -3323,8 +3308,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.admissions_per_annum !== "No" &&
-                                          first.admissions_per_annum !== ""
+                                          first.benefits.includes("admissions_per_annum") 
                                             ? check
                                             : uncheck
                                         }
@@ -3339,9 +3323,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.admissions_per_annum !==
-                                              "No" &&
-                                            second.admissions_per_annum !== ""
+                                            second.benefits.includes("admissions_per_annum ")
                                               ? check
                                               : uncheck
                                           }
@@ -3357,9 +3339,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.admissions_per_annum !==
-                                              "No" &&
-                                            third.admissions_per_annum !== ""
+                                            third.benefits.includes("admissions_per_annum")
                                               ? check
                                               : uncheck
                                           }
@@ -3381,9 +3361,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.antenatal_care_delivery !==
-                                            "No" &&
-                                          first.antenatal_care_delivery !== ""
+                                          first.benefits.includes("antenatal_care_delivery")
                                             ? check
                                             : uncheck
                                         }
@@ -3398,10 +3376,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.antenatal_care_delivery !==
-                                              "No" &&
-                                            second.antenatal_care_delivery !==
-                                              ""
+                                            second.benefits.includes("antenatal_care_delivery")
                                               ? check
                                               : uncheck
                                           }
@@ -3417,9 +3392,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.antenatal_care_delivery !==
-                                              "No" &&
-                                            third.antenatal_care_delivery !== ""
+                                            third.benefits.includes("antenatal_care_delivery")
                                               ? check
                                               : uncheck
                                           }
@@ -3441,8 +3414,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.cancer_care !== "No" &&
-                                          first.cancer_care !== ""
+                                          first.benefits.includes("cancer_care")
                                             ? check
                                             : uncheck
                                         }
@@ -3457,8 +3429,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.cancer_care !== "No" &&
-                                            second.cancer_care !== ""
+                                            second.benefits.includes("cancer_care")
                                               ? check
                                               : uncheck
                                           }
@@ -3474,8 +3445,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.cancer_care !== "No" &&
-                                            third.cancer_care !== ""
+                                            third.benefits.includes("cancer_care")
                                               ? check
                                               : uncheck
                                           }
@@ -3496,8 +3466,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.covid_19_treatment !== "No" &&
-                                          first.covid_19_treatment !== ""
+                                          first.benefits.includes("covid_19_treatment")
                                             ? check
                                             : uncheck
                                         }
@@ -3512,9 +3481,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.covid_19_treatment !==
-                                              "No" &&
-                                            second.covid_19_treatment !== ""
+                                            second.benefits.includes("covid_19_treatment")
                                               ? check
                                               : uncheck
                                           }
@@ -3530,8 +3497,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.covid_19_treatment !== "No" &&
-                                            third.covid_19_treatment !== ""
+                                            third.benefits.includes("covid_19_treatment")
                                               ? check
                                               : uncheck
                                           }
@@ -3553,8 +3519,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.dental_care !== "No" &&
-                                          first.dental_care !== ""
+                                          first.benefits.includes("dental_care")
                                             ? check
                                             : uncheck
                                         }
@@ -3569,8 +3534,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.dental_care !== "No" &&
-                                            second.dental_care !== ""
+                                            second.benefits.includes("dental_care")
                                               ? check
                                               : uncheck
                                           }
@@ -3586,8 +3550,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.dental_care !== "No" &&
-                                            third.dental_care !== ""
+                                            third.benefits.includes("dental_care")
                                               ? check
                                               : uncheck
                                           }
@@ -3609,8 +3572,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.plastic_surgeries !== "No" &&
-                                          first.plastic_surgeries !== ""
+                                          first.benefits.includes("plastic_surgeries")
                                             ? check
                                             : uncheck
                                         }
@@ -3625,8 +3587,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.plastic_surgeries !== "No" &&
-                                            second.plastic_surgeries !== ""
+                                            second.benefits.includes("plastic_surgeries")
                                               ? check
                                               : uncheck
                                           }
@@ -3642,8 +3603,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.plastic_surgeries !== "No" &&
-                                            third.plastic_surgeries !== ""
+                                            third.benefits.includes("plastic_surgeries")
                                               ? check
                                               : uncheck
                                           }
@@ -3665,8 +3625,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.ent_care !== "No" &&
-                                          first.ent_care !== ""
+                                          first.benefits.includes("ent_care")
                                             ? check
                                             : uncheck
                                         }
@@ -3681,8 +3640,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.ent_care !== "No" &&
-                                            second.ent_care !== ""
+                                            second.benefits.includes("ent_care")
                                               ? check
                                               : uncheck
                                           }
@@ -3698,8 +3656,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.ent_care !== "No" &&
-                                            third.ent_care !== ""
+                                            third.benefits.includes("ent_care")
                                               ? check
                                               : uncheck
                                           }
@@ -3721,8 +3678,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.evacuations !== "No" &&
-                                          first.evacuations !== ""
+                                          first.benefits.includes("evacuations")
                                             ? check
                                             : uncheck
                                         }
@@ -3737,8 +3693,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.evacuations !== "No" &&
-                                            second.evacuations !== ""
+                                            second.benefits.includes("evacuations")
                                               ? check
                                               : uncheck
                                           }
@@ -3754,8 +3709,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.evacuations !== "No" &&
-                                            third.evacuations !== ""
+                                            third.benefits.includes("evacuations")
                                               ? check
                                               : uncheck
                                           }
@@ -3777,9 +3731,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.family_planning_services !==
-                                            "No" &&
-                                          first.family_planning_services !== ""
+                                          first.benefits.includes("family_planning_services")
                                             ? check
                                             : uncheck
                                         }
@@ -3794,10 +3746,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.family_planning_services !==
-                                              "No" &&
-                                            second.family_planning_services !==
-                                              ""
+                                            second.benefits.includes("family_planning_services")
                                               ? check
                                               : uncheck
                                           }
@@ -3813,11 +3762,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.family_planning_services !==
-                                              "No" &&
-                                            third.family_planning_services !==
-                                              ""
-                                              ? check
+                                            third.benefits.includes("family_planning_services ")
+                                            ? check
                                               : uncheck
                                           }
                                           className=""
@@ -3838,8 +3784,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.fertility_services !== "No" &&
-                                          first.fertility_services !== ""
+                                          first.benefits.includes("fertility_services")
                                             ? check
                                             : uncheck
                                         }
@@ -3854,9 +3799,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.fertility_services !==
-                                              "No" &&
-                                            second.fertility_services !== ""
+                                            second.benefits.includes("fertility_services")
                                               ? check
                                               : uncheck
                                           }
@@ -3872,8 +3815,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.fertility_services !== "No" &&
-                                            third.fertility_services !== ""
+                                            third.benefits.includes("fertility_services")
                                               ? check
                                               : uncheck
                                           }
@@ -3895,8 +3837,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.general_consultation !== "No" &&
-                                          first.general_consultation !== ""
+                                          first.benefits.includes("general_consultation")
                                             ? check
                                             : uncheck
                                         }
@@ -3911,9 +3852,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.general_consultation !==
-                                              "No" &&
-                                            second.general_consultation !== ""
+                                            second.benefits.includes("general_consultation")
                                               ? check
                                               : uncheck
                                           }
@@ -3929,9 +3868,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.general_consultation !==
-                                              "No" &&
-                                            third.general_consultation !== ""
+                                            third.benefits.includes("general_consultation") 
                                               ? check
                                               : uncheck
                                           }
@@ -3953,8 +3890,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.hiv_aids_treatment !== "No" &&
-                                          first.hiv_aids_treatment !== ""
+                                          first.benefits.includes("hiv_aids_treatment")
                                             ? check
                                             : uncheck
                                         }
@@ -3969,9 +3905,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.hiv_aids_treatment !==
-                                              "No" &&
-                                            second.hiv_aids_treatment !== ""
+                                            second.benefits.includes("hiv_aids_treatment")
                                               ? check
                                               : uncheck
                                           }
@@ -3987,8 +3921,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.hiv_aids_treatment !== "No" &&
-                                            third.hiv_aids_treatment !== ""
+                                            third.benefits.includes("hiv_aids_treatment")
                                               ? check
                                               : uncheck
                                           }
@@ -4010,8 +3943,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.hospital_admissions !== "No" &&
-                                          first.hospital_admissions !== ""
+                                          first.benefits.includes("hospital_admissions")
                                             ? check
                                             : uncheck
                                         }
@@ -4026,9 +3958,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.hospital_admissions !==
-                                              "No" &&
-                                            second.hospital_admissions !== ""
+                                            second.benefits.includes("hospital_admissions")
                                               ? check
                                               : uncheck
                                           }
@@ -4044,9 +3974,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.hospital_admissions !==
-                                              "No" &&
-                                            third.hospital_admissions !== ""
+                                            third.benefits.includes("hospital_admissions")
                                               ? check
                                               : uncheck
                                           }
@@ -4065,10 +3993,22 @@ class ComparePlans extends Component<ComparisonProps> {
                                     </span>
                                   </th>
                                   <td>
-                                    <div className="c-star-rating">
-                                      <span>
-                                        {first.hmo.providers.map(h => h.category[0], ", ")}
-                                      </span>
+                                    <div className="c-star-rating t">
+                                      
+                                        {
+                                          first.hmo.providers.map((h) =>
+                                            h.category[0], ", ").map((c, i) => <span> {c} 
+                                            {first.hmo.providers.map((h) =>
+                                            h.category[0], ", ")
+                                              .length > 1 &&
+                                              i <
+                                              first.hmo.providers.map((h) =>
+                                              h.category[0], ", ")
+                                                  .length -
+                                                  1 &&
+                                              ", "}</span>)
+                                        }
+                                      
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
@@ -4076,7 +4016,19 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <div className="c-star-rating">
                                         <span>
-                                          {second.hmo.providers.map(h => h.category[0], ", ")}
+                                        {
+                                          second.hmo.providers.map((h) =>
+                                            h.category[0], ", ").map((c, i) => <span> {c} 
+                                            {second.hmo.providers.map((h) =>
+                                            h.category[0], ", ")
+                                              .length > 1 &&
+                                              i <
+                                              second.hmo.providers.map((h) =>
+                                              h.category[0], ", ")
+                                                  .length -
+                                                  1 &&
+                                              ", "}</span>)
+                                        }
                                         </span>
                                       </div>
                                     </td>
@@ -4086,7 +4038,19 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <div className="c-star-rating">
                                         <span>
-                                          {third.hmo.providers.map(h => h.category[0], ", ")}
+                                        {
+                                          third.hmo.providers.map((h) =>
+                                            h.category[0], ", ").map((c, i) => <span> {c} 
+                                            {third.hmo.providers.map((h) =>
+                                            h.category[0], ", ")
+                                              .length > 1 &&
+                                              i <
+                                              third.hmo.providers.map((h) =>
+                                              h.category[0], ", ")
+                                                  .length -
+                                                  1 &&
+                                              ", "}</span>)
+                                        }
                                         </span>
                                       </div>
                                     </td>
@@ -4101,14 +4065,18 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
-                                      <span>{first.in_patient_limit}</span>
+                                      <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(first.in_patient_limit))}</span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{second.in_patient_limit}</span>
+                                        <span>₦{this.numberwithCommas(
+                                          stripNonNumeric(second.in_patient_limit))}</span>
                                       </div>
                                     </td>
                                   )}
@@ -4116,7 +4084,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{third.in_patient_limit}</span>
+                                        <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(third.in_patient_limit))}</span>
                                       </div>
                                     </td>
                                   )}
@@ -4132,8 +4103,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.intensive_care !== "No" &&
-                                          first.intensive_care !== ""
+                                          first.benefits.includes("intensive_care")
                                             ? check
                                             : uncheck
                                         }
@@ -4148,8 +4118,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.intensive_care !== "No" &&
-                                            second.intensive_care !== ""
+                                            second.benefits.includes("intensive_care")
                                               ? check
                                               : uncheck
                                           }
@@ -4165,8 +4134,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.intensive_care !== "No" &&
-                                            third.intensive_care !== ""
+                                            third.benefits.includes("intensive_care")
                                               ? check
                                               : uncheck
                                           }
@@ -4181,15 +4149,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                 <tr>
                                   <th scope="row">
                                     <span className="display--block">
-                                      Intermediate Surgeries
+                                     Telemedicine
                                     </span>
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.telemedicine !== "No" &&
-                                          first.telemedicine !== ""
+                                          first.benefits.includes("telemedicine")
                                             ? check
                                             : uncheck
                                         }
@@ -4204,8 +4171,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.telemedicine !== "No" &&
-                                            second.telemedicine !== ""
+                                            second.benefits.includes("telemedicine")
                                               ? check
                                               : uncheck
                                           }
@@ -4221,9 +4187,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.telemedicine !== "No" &&
-                                            third.telemedicine !== ""
-                                              ? check
+                                            third.benefits.includes("telemedicine")
+                                            ? check
                                               : uncheck
                                           }
                                           className=""
@@ -4244,8 +4209,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.lab_investigations !== "No" &&
-                                          first.lab_investigations !== ""
+                                          first.benefits.includes("lab_investigations")
                                             ? check
                                             : uncheck
                                         }
@@ -4260,9 +4224,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.lab_investigations !==
-                                              "No" &&
-                                            second.lab_investigations !== ""
+                                            second.benefits.includes("lab_investigations")
                                               ? check
                                               : uncheck
                                           }
@@ -4278,8 +4240,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.lab_investigations !== "No" &&
-                                            third.lab_investigations !== ""
+                                            third.benefits.includes("lab_investigations")
                                               ? check
                                               : uncheck
                                           }
@@ -4301,9 +4262,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.congenital_abnormalities !==
-                                            "No" &&
-                                          first.congenital_abnormalities !== ""
+                                          first.benefits.includes("congenital_abnormalities")
                                             ? check
                                             : uncheck
                                         }
@@ -4318,10 +4277,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.congenital_abnormalities !==
-                                              "No" &&
-                                            second.congenital_abnormalities !==
-                                              ""
+                                            second.benefits.includes("congenital_abnormalities")
                                               ? check
                                               : uncheck
                                           }
@@ -4337,10 +4293,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.congenital_abnormalities !==
-                                              "No" &&
-                                            third.congenital_abnormalities !==
-                                              ""
+                                            third.benefits.includes("congenital_abnormalities")
                                               ? check
                                               : uncheck
                                           }
@@ -4362,9 +4315,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.mental_health_services !==
-                                            "No" &&
-                                          first.mental_health_services !== ""
+                                          first.benefits.includes("mental_health_services")
                                             ? check
                                             : uncheck
                                         }
@@ -4379,9 +4330,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.mental_health_services !==
-                                              "No" &&
-                                            second.mental_health_services !== ""
+                                            second.benefits.includes("mental_health_services")
                                               ? check
                                               : uncheck
                                           }
@@ -4397,9 +4346,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.mental_health_services !==
-                                              "No" &&
-                                            third.mental_health_services !== ""
+                                            third.benefits.includes("mental_health_services")
                                               ? check
                                               : uncheck
                                           }
@@ -4421,8 +4368,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.surgeries !== "No" &&
-                                          first.surgeries !== ""
+                                          first.benefits.includes("surgeries")
                                             ? check
                                             : uncheck
                                         }
@@ -4437,8 +4383,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.surgeries !== "No" &&
-                                            second.surgeries !== ""
+                                            second.benefits.includes("surgeries")
                                               ? check
                                               : uncheck
                                           }
@@ -4454,8 +4399,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.surgeries !== "No" &&
-                                            third.surgeries !== ""
+                                            third.benefits.includes("surgeries")
                                               ? check
                                               : uncheck
                                           }
@@ -4477,8 +4421,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.neonatal_care !== "No" &&
-                                          first.neonatal_care !== ""
+                                          first.benefits.includes("neonatal_care")
                                             ? check
                                             : uncheck
                                         }
@@ -4493,8 +4436,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.neonatal_care !== "No" &&
-                                            second.neonatal_care !== ""
+                                            second.benefits.includes("neonatal_care")
                                               ? check
                                               : uncheck
                                           }
@@ -4510,8 +4452,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.neonatal_care !== "No" &&
-                                            third.neonatal_care !== ""
+                                            third.benefits.includes("neonatal_care")
                                               ? check
                                               : uncheck
                                           }
@@ -4533,8 +4474,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.optical_care !== "No" &&
-                                          first.optical_care !== ""
+                                          first.benefits.includes("optical_care")
                                             ? check
                                             : uncheck
                                         }
@@ -4549,8 +4489,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.optical_care !== "No" &&
-                                            second.optical_care !== ""
+                                            second.benefits.includes("optical_care")
                                               ? check
                                               : uncheck
                                           }
@@ -4566,8 +4505,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.optical_care !== "No" &&
-                                            third.optical_care !== ""
+                                            third.benefits.includes("optical_care")
                                               ? check
                                               : uncheck
                                           }
@@ -4587,14 +4525,20 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
-                                      <span>{first.out_patient_limit}</span>
+                                      <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(first.out_patient_limit))}</span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{second.out_patient_limit}</span>
+                                        <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(second.out_patient_limit))}</span>
                                       </div>
                                     </td>
                                   )}
@@ -4602,7 +4546,10 @@ class ComparePlans extends Component<ComparisonProps> {
                                     undefined && (
                                     <td>
                                       <div className="c-star-rating">
-                                        <span>{third.out_patient_limit}</span>
+                                        <span>₦{
+                                    
+                                    this.numberwithCommas(
+                                      stripNonNumeric(third.out_patient_limit))}</span>
                                       </div>
                                     </td>
                                   )}
@@ -4618,14 +4565,15 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.physiotherapy !== "No" &&
-                                          first.physiotherapy !== ""
+                                          first.benefits.includes("physiotherapy")
                                             ? check
                                             : uncheck
                                         }
                                         className=""
                                         alt=""
                                       />
+
+                                     
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
@@ -4634,8 +4582,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.physiotherapy !== "No" &&
-                                            second.physiotherapy !== ""
+                                            second.benefits.includes("physiotherapy")
                                               ? check
                                               : uncheck
                                           }
@@ -4651,8 +4598,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.physiotherapy !== "No" &&
-                                            third.physiotherapy !== ""
+                                            third.benefits.includes("physiotherapy")
                                               ? check
                                               : uncheck
                                           }
@@ -4674,8 +4620,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.plain_contrast_xrays !== "No" &&
-                                          first.plain_contrast_xrays !== ""
+                                          first.benefits.includes("plain_contrast_xrays")
                                             ? check
                                             : uncheck
                                         }
@@ -4690,9 +4635,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.plain_contrast_xrays !==
-                                              "No" &&
-                                            second.plain_contrast_xrays !== ""
+                                            second.benefits.includes("plain_contrast_xrays")
                                               ? check
                                               : uncheck
                                           }
@@ -4708,9 +4651,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.plain_contrast_xrays !==
-                                              "No" &&
-                                            third.plain_contrast_xrays !== ""
+                                            third.benefits.includes("plain_contrast_xrays")
                                               ? check
                                               : uncheck
                                           }
@@ -4732,8 +4673,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.postnatal_care !== "No" &&
-                                          first.postnatal_care !== ""
+                                          first.benefits.includes("postnatal_care")
                                             ? check
                                             : uncheck
                                         }
@@ -4748,8 +4688,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.postnatal_care !== "No" &&
-                                            second.postnatal_care !== ""
+                                            second.benefits.includes("postnatal_care")
                                               ? check
                                               : uncheck
                                           }
@@ -4765,8 +4704,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.postnatal_care !== "No" &&
-                                            third.postnatal_care !== ""
+                                            third.benefits.includes("postnatal_care")
                                               ? check
                                               : uncheck
                                           }
@@ -4788,10 +4726,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.outpatient_prescribed_drugs !==
-                                            "No" &&
-                                          first.outpatient_prescribed_drugs !==
-                                            ""
+                                          first.benefits.includes("outpatient_prescribed_drugs")
+                                            
                                             ? check
                                             : uncheck
                                         }
@@ -4806,10 +4742,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.outpatient_prescribed_drugs !==
-                                              "No" &&
-                                            second.outpatient_prescribed_drugs !==
-                                              ""
+                                            second.benefits.includes("outpatient_prescribed_drugs")
                                               ? check
                                               : uncheck
                                           }
@@ -4825,11 +4758,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.outpatient_prescribed_drugs !==
-                                              "No" &&
-                                            third.outpatient_prescribed_drugs !==
-                                              ""
-                                              ? check
+                                            third.benefits.includes("outpatient_prescribed_drugs")
+                                            ? check
                                               : uncheck
                                           }
                                           className=""
@@ -4850,8 +4780,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.renal_dialysis !== "No" &&
-                                          first.renal_dialysis !== ""
+                                          first.benefits.includes("renal_dialysis")
                                             ? check
                                             : uncheck
                                         }
@@ -4866,8 +4795,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.renal_dialysis !== "No" &&
-                                            second.renal_dialysis !== ""
+                                            second.benefits.includes("renal_dialysis")
                                               ? check
                                               : uncheck
                                           }
@@ -4883,8 +4811,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.renal_dialysis !== "No" &&
-                                            third.renal_dialysis !== ""
+                                            third.benefits.includes("renal_dialysis")
                                               ? check
                                               : uncheck
                                           }
@@ -4904,7 +4831,16 @@ class ComparePlans extends Component<ComparisonProps> {
                                   </th>
                                   <td>
                                     <div className="c-star-rating">
-                                      <span>{first.routine_immunization}</span>
+                                      <span>
+                                      <img
+                                        src={
+                                          first.benefits.includes("routine_immunization")? check
+                                              : uncheck
+                                        }
+                                        className=""
+                                        alt=""
+                                      />
+                                        </span>
                                     </div>
                                   </td>
                                   {this.state.plans_to_compare[1] !==
@@ -4912,7 +4848,14 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <div className="c-star-rating">
                                         <span>
-                                          {second.routine_immunization}
+                                        <img
+                                        src={
+                                          second.benefits.includes("routine_immunization")? check
+                                              : uncheck
+                                        }
+                                        className=""
+                                        alt=""
+                                      />
                                         </span>
                                       </div>
                                     </td>
@@ -4922,7 +4865,15 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <td>
                                       <div className="c-star-rating">
                                         <span>
-                                          {third.routine_immunization}
+                                        <img
+                                        src={
+                                          third.benefits.includes("routine_immunization")? check
+                                              : uncheck
+                                        }
+                                        className=""
+                                        alt=""
+                                      />
+                                          
                                         </span>
                                       </div>
                                     </td>
@@ -4939,11 +4890,8 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.specialist_consultation !==
-                                            "No" &&
-                                          first.specialist_consultation !== ""
-                                            ? check
-                                            : uncheck
+                                          first.benefits.includes("specialist_consultation")? check
+                                          : uncheck
                                         }
                                         className=""
                                         alt=""
@@ -4956,10 +4904,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.specialist_consultation !==
-                                              "No" &&
-                                            second.specialist_consultation !==
-                                              ""
+                                            second.benefits.includes("specialist_consultation ")
                                               ? check
                                               : uncheck
                                           }
@@ -4975,9 +4920,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.specialist_consultation !==
-                                              "No" &&
-                                            third.specialist_consultation !== ""
+                                            third.benefits.includes("specialist_consultation")
                                               ? check
                                               : uncheck
                                           }
@@ -4999,8 +4942,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     <div className="c-star-rating">
                                       <img
                                         src={
-                                          first.ultrasound_scans !== "No" &&
-                                          first.ultrasound_scans !== ""
+                                          first.benefits.includes("ultrasound_scans")
                                             ? check
                                             : uncheck
                                         }
@@ -5015,8 +4957,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            second.ultrasound_scans !== "No" &&
-                                            second.ultrasound_scans !== ""
+                                            second.benefits.includes("ultrasound_scans")
                                               ? check
                                               : uncheck
                                           }
@@ -5032,8 +4973,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                       <div className="c-star-rating">
                                         <img
                                           src={
-                                            third.ultrasound_scans !== "No" &&
-                                            third.ultrasound_scans !== ""
+                                            third.benefits.includes("ultrasound_scans") 
                                               ? check
                                               : uncheck
                                           }
@@ -6180,7 +6120,7 @@ class ComparePlans extends Component<ComparisonProps> {
                           Users who compared these plans also compared the below{" "}
                         </h4>
                         <div className="box-mob-slider">
-                          <div className="slider-new ">
+                          <div className="slider-new similar-slider-new">
                             {this.props.similar_plans.length > 0 ? (
                               plans_to_compare.length > 0 &&
                               this.props.similar_plans.map(
@@ -6190,7 +6130,7 @@ class ComparePlans extends Component<ComparisonProps> {
                                     //i
                                     // .toString()
                                   ) === false ? (
-                                    <div className="box-new">
+                                    <div className="box-new similar-box-new">
                                       <ul className="similar_plan_ul">
                                         <li>
                                           <div className="box_block">

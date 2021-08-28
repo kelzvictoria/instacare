@@ -5432,7 +5432,7 @@ span.plan-2 {
 
 .slider-new div {
   padding: 0;
-  /* width: 340px; */
+  width: 340px;
   margin-right: 35px;
 }
 
@@ -6513,4 +6513,12 @@ div#box-mob-slider {
 
 .c-list--bare li {
   padding-bottom: 0.5rem !important;
+}
+
+/* .similar-slider-new div.similar-box-new {
+  width: 340px !important;
+} */
+
+.box-new.sponsor-box-new {
+  width: initial;
 }

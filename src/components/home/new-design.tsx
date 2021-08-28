@@ -1822,15 +1822,18 @@ class NewContent extends React.Component<homeProps, homeState> {
         <div className={" price-slider"}>
           <p className={styles.sideBarHeadings}>
             What is the maximum you can afford to pay per year?
-            {this.props.responses.budget.length > 0 ? (
-              <span className="price-range">
-                ( {this.formatter(this.minbudgett)} -{" "}
-                {this.formatter(this.maxbudgett)}){" ?"}
-              </span>
-            ) : (
-              ""
-            )}
+            
+            
           </p>
+          <span className="price-range" style={{ marginLeft: 15 + "px"}}>
+             {  
+             this.props.responses.budget.length > 0 ? 
+             
+            ` ${this.formatter(this.minbudgett)}  -
+                ${this.formatter(this.maxbudgett)}` : 
+              "Price range in naira"
+             }
+             </span>
           <Slider
             style={{ width: "80%", margin: "0px auto" }}
             marks={this.marks}
@@ -3211,6 +3214,8 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   infiniteScrollDataReInitOnFilterApplied = async () => {
+    console.log("in here");
+    
     this.setState({
       current: 1,
       minIndex: 0,
@@ -3558,7 +3563,9 @@ class NewContent extends React.Component<homeProps, homeState> {
                 ""
               ) : (
                 <span className={styles.headingSpan}>
-                  {this.props.is_fetching_data && !this.props.cheapest_plan ? (
+                  {
+                  //this.props.is_fetching_data &&
+                   !this.props.cheapest_plan ? (
                     <Spin className="cheapest-plan" />
                   ) : (
                     ` ₦${this.numberwithCommas(
@@ -3598,7 +3605,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                       ""
                     ) : (
                       <span className={styles.headingSpan}>
-                        {this.props.is_fetching_data &&
+                        {
+                        this.props.is_fetching_data &&
                         !this.props.cheapest_plan ? (
                           <Spin className="cheapest-plan" />
                         ) : (

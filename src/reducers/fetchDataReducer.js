@@ -287,7 +287,7 @@ export default function (state = initialState, action) {
                 ...state,
                 services: action.payload,
                 is_fetching_services: false,
-                is_fetching_data: false
+                //is_fetching_data: false
             }
 
         case GET_RECOMMENDED_PLANS:
@@ -314,7 +314,7 @@ export default function (state = initialState, action) {
             }
 
         case GET_CHEAPEST_PLAN:
-           // localStorage.setItem("cheapest_plan", action.data)
+            localStorage.setItem("cheapest_plan", action.data)
             return {
                 ...state,
                 cheapest_plan: action.data
@@ -329,7 +329,7 @@ export default function (state = initialState, action) {
         case IS_FETCHING_DATA:
             return {
                 ...state,
-                is_fetching_data: true
+                is_fetching_data: action.payload
             }
 
         case IS_FETCHING_PLANS_BY_HMO:
@@ -343,14 +343,14 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 is_fetching_plans: action.payload,
-                is_fetching_data: action.payload
+               // is_fetching_data: action.payload
             }
 
         case IS_FETCHING_HMOS:
             return {
                 ...state,
                 is_fetching_hmos: action.payload,
-                is_fetching_data: action.payload
+               // is_fetching_data: action.payload
             }
 
         case IS_FETCHING_SERVICES:

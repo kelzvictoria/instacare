@@ -1714,9 +1714,15 @@ button.tooltip-trigger {
 
 .c-details-table td,
 .c-details-table th {
-  padding: 16px 8px;
+  /* padding: 16px 8px; */
+  padding: 8px 8px;
   text-align: left;
 }
+
+/* .c-details-table td,
+.c-details-table th {
+  color: #046791;
+} */
 
 .c-details-table td {
   line-height: 1.7;
@@ -1892,7 +1898,12 @@ h2.border-bottom--1.border--dark.padding-bottom--2 {
 .service-in-view {
   /* border-style: dashed;
   border-color: #046791; */
-  border: 2px dashed #046b99;
+  border: 1px dashed #046b99;
+}
+
+.service-in-view th {
+  font-weight: 500 !important;
+  color: #046791;
 }
 .pag-div {
   display: flex;
