@@ -83,11 +83,11 @@ export const getPlans = () => async (dispatch, getState) => {
             dispatch(getHMOs());
             dispatch(getSpecialties());
 
-            // dispatch(updateInfiniteScrollData(
-            //     plans,
-            //     false,
-            //     null,
-            //     null))
+            dispatch(updateInfiniteScrollData(
+                plans,
+                false,
+                null,
+                null))
         }
        
     }).catch(error=> {
