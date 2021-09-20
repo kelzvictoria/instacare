@@ -70,6 +70,8 @@ export class App extends React.Component {
             <Switch>
               {/* <Route exact path="/" component={Home} /> */}
               <Route exact path="/" component={Home2} />
+              <Route exact path="/filter" component={Home2} />
+              <Route exact path="/filter/*" component={Home2} />
               <Route exact path="/search/*" component={Home2} />
               <Route path="/quiz" component={Quiz} />
               <Route path="/compare-old" component={Compare} />

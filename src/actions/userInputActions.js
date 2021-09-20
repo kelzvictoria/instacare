@@ -114,7 +114,13 @@ import {
     CLEAR_BENEFITS_FILTER,
     CLEAR_TOTAL_BENEFIT_RANGE_FILTER,
     UPDATE_APPLIED_FILTERS,
-    TOGGLE_JUMP_TO_FILTER_BOX
+    TOGGLE_JUMP_TO_FILTER_BOX,
+
+    SET_IS_UPDATING_URL_PARAMS,
+    UPDATE_URL_PARAMS,
+    SET_DEEP_LINK_PARAMS_ARR,
+
+    UPDATE_PAGE_INDEX
 } from "./types"
 import { CAN_LOG } from "../utils/homeUtils";
 
@@ -824,7 +830,7 @@ export const handleHMOSelected = (val) => (dispatch, getState) => {
     })
 }
 
-export const resetFilterParams = () => (dispatch, getState) => {
+export const resetFilterParams =  () => async (dispatch, getState) => {
     let applied_filters = {
         metal_level: [],
         hmoID: null,
@@ -855,13 +861,15 @@ export const resetFilterParams = () => (dispatch, getState) => {
         enableSearchByProximity: false,
     }
 
-    dispatch({
+  await dispatch({
         type: RESET_FILTER_PARAMS,
         payload: {
             filter_params,
             applied_filters
         }
     })
+   // dispatch(updateURLParams());
+
 }
 
 export const setCoordinatesAndAddress = (position) => (dispatch, getState) => {
@@ -1071,15 +1079,47 @@ export const clearTotalBenefitRangeFilter = () => (dispatch, getState) => {
     })
 }
 
-export const updateAppliedFilters = (filter) => (dispatch, getState) => {
-    dispatch({
+export const updateAppliedFilters = (filter) => async (dispatch, getState) => {
+   // console.log("filter", filter);
+  
+   await dispatch({
         type: UPDATE_APPLIED_FILTERS,
         payload: filter
+    })
+
+    dispatch(updateURLParams());
+}
+
+export const setIsUpdatingURLParams = () => async (dispatch, getState) => {
+    dispatch({
+        type: SET_IS_UPDATING_URL_PARAMS,
+        payload: true
+    })
+}
+
+export const updateURLParams = () => async (dispatch, getState) => {
+    //dispatch(setIsFetchingPlans());
+    dispatch({
+        type: UPDATE_URL_PARAMS,
+    })
+}
+
+export const setDeepLinkParamsArr = (payload) => (dispatch, getState) => {
+    dispatch({
+        type: SET_DEEP_LINK_PARAMS_ARR,
+        payload
     })
 }
 
 export const jumpToFilterBox = () => (dispatch, getState) => {
     dispatch({
         type: TOGGLE_JUMP_TO_FILTER_BOX,
+    })
+}
+
+export const updatePageIndex = (payload) => (dispatch, getState) => {
+    dispatch({
+        type: UPDATE_PAGE_INDEX,
+        payload
     })
 }

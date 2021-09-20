@@ -67,13 +67,13 @@ class Doctors extends Component<DoctorsProps> {
   };
 
   getDoctorInfo = async (name) => {
-    console.log("name", name);
+   // console.log("name", name);
 
     let info = this.props.doctors.filter((doctor) => {
-      console.log(
-        "firstname lastname",
-        doctor.name
-      );
+      // console.log(
+      //   "firstname lastname",
+      //   doctor.name
+      // );
 
       return doctor.name === name;
     }); //home_utils.doctorsInfo
@@ -101,17 +101,17 @@ class Doctors extends Component<DoctorsProps> {
         : [...this.state.selected_doctors_data];
 
     // console.log("data_arr", data_arr);
-    console.log("arr", arr);
-    console.log("doctor_name", doctor_name);
+   // console.log("arr", arr);
+  //  console.log("doctor_name", doctor_name);
 
     let isDoctorSelected: number = arr.indexOf(doctor_name);
 
     if (isDoctorSelected > -1) {
-      console.log("rem");
+     // console.log("rem");
       arr.splice(isDoctorSelected, 1);
       data_arr.splice(isDoctorSelected, 1);
     } else {
-      console.log("add");
+     // console.log("add");
       if (this.state.search_arg) {
         arr.push(doctor_name);
         data_arr.push(this.state.search_arg);
@@ -167,12 +167,12 @@ class Doctors extends Component<DoctorsProps> {
       this.state.selected_doctors.length === 0
         ? this.props.responses.doctors
         : this.state.selected_doctors_data;
-    console.log(
-      "selected_doctors_data",
-      selected_doctors_data,
-      "this.state",
-      this.state
-    );
+    // console.log(
+    //   "selected_doctors_data",
+    //   selected_doctors_data,
+    //   "this.state",
+    //   this.state
+    // );
 
     return (
       <div className="main-body-content">

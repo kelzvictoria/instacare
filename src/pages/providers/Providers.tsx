@@ -140,6 +140,8 @@ class Providers extends Component<ProvidersProps> {
   render() {
     // console.log("this.state", this.state);
 
+    console.log("this.props.providersDataSource", this.props.providersDataSource);
+    
     let providers_arr: string[] = this.state.selected_providers;
     let selected_providers_data =
       this.props.responses.providers.length > 0 &&

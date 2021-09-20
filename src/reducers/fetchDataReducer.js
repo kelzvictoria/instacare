@@ -47,7 +47,9 @@ import {
     FILTER_DOCTORS,
     FILTER_BENEFITS,
 
-    IS_FETCHING_DATA
+    IS_FETCHING_DATA,
+    UPDATE_URL_PARAMS,
+    TOGGLE_IS_FILTER_DEEP_LINK
 } from "../actions/types";
 
 const initialState = {
@@ -226,14 +228,16 @@ const initialState = {
     location: [],
     user_address: "",
     providersDataSource: 
-    localStorage["providers"] ? JSON.parse(localStorage["providers"]).map((provider) => provider.provider_name) : 
+    localStorage["providers"] ? JSON.parse(localStorage["providers"]).map((provider) => provider.name) : 
         [],
     doctorsDataSource: 
-        localStorage["doctors"] ? JSON.parse(localStorage["doctors"]).map((doctor) => doctor.first_name + " " + doctor.last_name) : 
+        localStorage["doctors"] ? JSON.parse(localStorage["doctors"]).map((doctor) => doctor.name) : 
             [],
     benefitsDataSource: 
     localStorage["benefits"] ? JSON.parse(localStorage["benefits"]).map((benefit) => benefit.title) : 
         [],
+    url_params: [],
+    is_filter_deep_link: false
 }
 
 export default function (state = initialState, action) {
@@ -447,6 +451,7 @@ export default function (state = initialState, action) {
                 ...state,
                 specialties: action.payload
             }
+
         case SET_LOCATION:
             return {
                 ...state,
@@ -486,6 +491,7 @@ export default function (state = initialState, action) {
                 }
             }
             break;
+        
         case FILTER_DOCTORS:
             console.log("action.payload", action.payload);
             if (action.payload) {
@@ -509,7 +515,16 @@ export default function (state = initialState, action) {
                 }
             }
             break;
-        default:
+
+        case TOGGLE_IS_FILTER_DEEP_LINK:
+            return {
+                ...state,
+                is_filter_deep_link: !state.is_filter_deep_link
+            }
+
+            break;
+
+            default:
             return state
 
     }

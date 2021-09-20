@@ -48,7 +48,7 @@ export interface homeProps {
 
 export interface homeState {}
 
-const pageSize = 5;
+//const pageSize = 5;
 const antIcon = <Icon type="loading" style={{ fontSize: 80 }} spin />;
 
 class NewContent extends React.Component<homeProps, homeState> {
@@ -2430,8 +2430,7 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   async UNSAFE_componentWillMount() {
-    //this.handlePlanTypesCheck(this.props.responses.type);
-    //this.handlePlanRangeCheck(this.props.responses.price_range);
+   // console.log("this.props.deep_link_params_arr", this.props.deep_link_params_arr);
   }
 
   componentDidMount() {
@@ -2447,10 +2446,16 @@ class NewContent extends React.Component<homeProps, homeState> {
       //this.mobileOnLoadModal();
     }
 
-    this.setState({
+   /* this.setState({
       minIndex: 0,
       maxIndex: pageSize,
-    });
+    }); */
+
+    this.props.updatePageIndex({
+      current: 1,
+      minIndex: 0,
+      maxIndex: this.props.pageSize
+    })
   }
 
   componentWillMount() {
@@ -3021,9 +3026,15 @@ class NewContent extends React.Component<homeProps, homeState> {
         total_benefit_min && total_benefit_max
           ? [total_benefit_min, total_benefit_max]
           : [],
-      doctors: this.props.responses.doctors.map(d => d.id),
+      doctors: this.props.responses.doctors.map(d => 
+        d.name
+        //d.id
+        ),
       lat_lng: this.props.location,
-      providers: this.props.responses.providers.map(p => p.id),
+      providers: this.props.responses.providers.map(p => 
+        p.name
+       // p.id
+        ),
     };
 
     const {
@@ -3134,6 +3145,13 @@ class NewContent extends React.Component<homeProps, homeState> {
       await this.infiniteScrollDataReInitOnFilterApplied();
       this.props.is_filter_box_open && this.toggleShowFilter();
     }
+
+    if (this.props.filter_url ) {
+      //console.log("this.props.history", this.props.history);
+      this.props.history.push({
+        pathname: this.props.filter_url
+      })
+    }
   };
 
   resetPlans() {
@@ -3141,22 +3159,11 @@ class NewContent extends React.Component<homeProps, homeState> {
   }
 
   resetTypeAndRangeFilters() {
-    //updated
     this.changeType(
       this.props.filter_params.plan_types_checked[
         this.props.filter_params.plan_types_checked.length - 1
       ]
     );
-    
-
-    //call filter function
-   // this.filterPlans()
-    /*
-    this.setPriceRangeBasedOnTitle(
-      this.props.filter_params.plan_range_checked[
-        this.props.filter_params.plan_range_checked.length - 1
-      ]
-    ); */
   }
 
   clearFilters = async () => {
@@ -3175,7 +3182,8 @@ class NewContent extends React.Component<homeProps, homeState> {
     this.props.is_filter_box_open && this.toggleShowFilter();
     await this.props.getPlans();
 
-    this.props.match.path === "/hmos/*"
+    //this.props.match.path === "/hmos/*"
+    this.props.match.params['0'].split("/")[0] === "hmoID"
       ? await this.props.updateInfiniteScrollData(
           this.props.plansByHMO,
           false,
@@ -3190,6 +3198,14 @@ class NewContent extends React.Component<homeProps, homeState> {
           null,
           null
         );
+
+   await this.props.updateURLParams();
+   if (this.props.filter_url ) {
+    console.log("this.props.history", this.props.history);
+    this.props.history.push({
+      pathname: this.props.filter_url
+    })
+  }
   };
 
   goToProviders = () => {
@@ -3214,28 +3230,50 @@ class NewContent extends React.Component<homeProps, homeState> {
   };
 
   infiniteScrollDataReInitOnFilterApplied = async () => {
-    console.log("in here");
+  //  console.log("in here");
     
-    this.setState({
+   /* this.setState({
       current: 1,
       minIndex: 0,
       maxIndex: pageSize,
-      //     ? this.props.plansByHMO.slice(0, pageSize)
-    });
-    let page = this.state.current;
+    }); */
+    this.props.updatePageIndex(
+      {
+        current: 1,
+        minIndex: 0,
+        maxIndex: this.props.pageSize,
+      }
+    )
+    let page = this.props.current;
     let plansByHMO = this.props.plansByHMO;
     let allPlans = this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans;
 
-    let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+    let apiData = //this.props.match.path === "/hmos/*"
+    allPlans;
+     
+    if (this.props.match.params['0']) {
+      if (this.props.match.params['0'].split("/")[0] === "hmoID") {
+        apiData = plansByHMO
+      }
+    } 
+    
 
-    let start_index = (page - 1) * pageSize;
-    let end_index = pageSize * page;
+    let start_index = (page - 1) * this.props.pageSize;
+    let end_index = this.props.pageSize * page;
 
-    this.setState({
+   /* this.setState({
       current: page,
       minIndex: start_index,
       maxIndex: end_index,
-    });
+    });*/
+
+    this.props.updatePageIndex(
+      {
+        current: page,
+        minIndex: start_index,
+        maxIndex: end_index,
+      }
+    )
 
     await this.props.updateInfiniteScrollData(
       apiData,
@@ -3249,22 +3287,36 @@ class NewContent extends React.Component<homeProps, homeState> {
     let plansByHMO = this.props.plansByHMO;
     let allPlans = this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans;
 
-    let apiData = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+    let apiData = allPlans;
 
-    let total_num_of_pages = apiData.length / pageSize;
+    if (this.props.match.params['0']) { 
+      if (this.props.match.params['0'].split("/")[0] === "hmoID") {
+        apiData = plansByHMO
+      } 
+    }
+    //this.props.match.path === "/hmos/*"  
+
+
+    let total_num_of_pages = apiData.length / this.props.pageSize;
 
     if (page < total_num_of_pages) {
       page = page + 1;
     }
 
-    let start_index = (page - 1) * pageSize;
-    let end_index = pageSize * page;
+    let start_index = (page - 1) * this.props.pageSize;
+    let end_index = this.props.pageSize * page;
 
-    this.setState({
+   /* this.setState({
       current: page,
       minIndex: start_index,
       maxIndex: end_index,
-    });
+    }); */
+
+    this.props.updatePageIndex({
+      current: page,
+      minIndex: start_index,
+      maxIndex: end_index,
+    })
 
     await this.props.updateInfiniteScrollData(
       apiData,
@@ -3279,11 +3331,7 @@ class NewContent extends React.Component<homeProps, homeState> {
     if (box) {
         if (this.props.jump_to_filter_box && this.props.is_filter_box_open) {
       document.getElementById("filter-box")!.scrollIntoView();
-    }
-
-    
-    }
-  
+    }}
   }
 
   getLocation = () => {
@@ -3320,6 +3368,7 @@ class NewContent extends React.Component<homeProps, homeState> {
 
   clearDoctorsFilter = async () => {
     await this.props.resetSelectedDoctors();
+    this.props.clearDoctorsFilter()
     
     //call filter fuction
   //  this.filterPlans()
@@ -3499,13 +3548,20 @@ class NewContent extends React.Component<homeProps, homeState> {
     let plansByHMO = this.props.plansByHMO;
     let allPlans = this.props.is_filter_applied ? this.props.filtered_plans : this.props.plans;
 
-    let data = this.props.match.path === "/hmos/*" ? plansByHMO : allPlans;
+    let data = 
+    //this.props.match.path === "/hmos/*"
+    //this.props.match.params['0'].split("/")[0] === "hmoID"
+    // ? plansByHMO : 
+     allPlans;
+
+//     this.props.match.params['0'] && console.log(this.props.match.params['0'].split('/')[0] === 'hmoID', "data", data);
+     
 
     let apiData = this.props.infiniteScrollData;
    // console.log("apiData", apiData);
     
 
-    let { current, minIndex, maxIndex, totalPage } = this.state;
+   // let { current, minIndex, maxIndex, totalPage } = this.state;
 
     if (this.props.page != 0) {
     } else {
@@ -3543,38 +3599,75 @@ class NewContent extends React.Component<homeProps, homeState> {
     let providersArr;
 
     let selected_providers = [...this.props.responses.providers];
+   // this.props.match.params['0'] && console.log("this.props.match.params['0'].split('/')[0]", this.props.match.params['0'].split("/")[0]);
+
+    let isHMOView = false;
+     if (this.props.match.params['0']) {
+      if (this.props.match.params['0'].split("/")[0] === "hmoID") {
+        isHMOView = true
+      } 
+     }
+    
+   // console.log("data.length", data.length, "isHMOView", isHMOView, "this.props.is_fetching_data", this.props.is_fetching_data, "this.props.cheapest_plan_by_hmo", this.props.cheapest_plan_by_hmo);
+    
 
     return (
       <div className="home">
         <div className="banner-div">
           <div className="container home-c">
             <h1 className="tiny-descrptn">
-              {this.props.hmo.length > 0 &&
-              this.props.plansByHMO.length > 0 &&
-              this.props.match.path === "/hmos/*"
-                ? `${this.props.hmo[0].name} plans starting from `
-                : this.props.hmo.length > 0 &&
-                  this.props.plansByHMO.length === 0 &&
-                  this.props.match.path === "/hmos/*"
-                ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
+              {
+              //this.props.hmo.length > 0 &&
+              //this.props.plansByHMO
+              //data.length > 0 &&
+              isHMOView
+              //this.props.match.path === "/hmos/*"
+                ? `${/*this.props.hmo[0].name*/ this.props.match.params['0'].split("/")[1]}
+                 plans starting from `
+                : //this.props.hmo.length > 0 &&
+                  //this.props.plansByHMO.length
+                  data.length === 0 &&
+                  isHMOView &&
+                  !this.props.is_fetching_data
+                  //this.props.match.path === "/hmos/*"
+                ? `Sorry, there are currently no ${/*this.props.hmo[0].name*/ this.props.match.params['0'].split("/")[1]} plans.`
                 : `Protect your health from just`}
-              {this.props.plansByHMO.length === 0 &&
-              this.props.match.path === "/hmos/*" ? (
+              {
+             /* this.props.plansByHMO.length === 0 &&
+              isHMOView
+              
+               ? (
                 ""
-              ) : (
+              ) :
+               this.props.is_fetching_data  ?
+              "":*/
+              (
                 <span className={styles.headingSpan}>
                   {
                   //this.props.is_fetching_data &&
-                   !this.props.cheapest_plan ? (
+                /*   !this.props.cheapest_plan ? (
                     <Spin className="cheapest-plan" />
                   ) : (
                     ` ₦${this.numberwithCommas(
-                      this.props.hmo.length > 0 &&
-                        this.props.match.path === "/hmos/*"
+                     // this.props.hmo.length > 0
+                     data.length &&
+                        isHMOView
+              //this.props.match.path === "/hmos/*"
                         ? this.props.cheapest_plan_by_hmo
                         : this.props.cheapest_plan
                     )} per year`
-                  )}
+                  ) */
+                  
+                  !isHMOView && this.props.cheapest_plan ?
+                  ` ₦${this.numberwithCommas(this.props.cheapest_plan
+                    )} per year`
+
+                  :isHMOView && this.props.cheapest_plan_by_hmo ?
+                  ` ₦${this.numberwithCommas(this.props.cheapest_plan_by_hmo
+                    )} per year`
+
+                  :  <Spin className="cheapest-plan" />
+                  }
                 </span>
               )}
             </h1>
@@ -3592,16 +3685,20 @@ class NewContent extends React.Component<homeProps, homeState> {
                       //this.props.plansByHMO.length > 0
                       this.props.hmo.length > 0 &&
                       this.props.plansByHMO.length > 0 &&
-                      this.props.match.path === "/hmos/*"
+                      isHMOView
+              //this.props.match.path === "/hmos/*"
                         ? `${this.props.hmo[0].name} plans starting from `
                         : this.props.hmo.length > 0 &&
                           this.props.plansByHMO.length === 0 &&
-                          this.props.match.path === "/hmos/*"
+                          isHMOView
+              //this.props.match.path === "/hmos/*"
                         ? `Sorry, there are currently no ${this.props.hmo[0].name} plans.`
                         : `Protect your health from just`
                     }
                     {this.props.plansByHMO.length === 0 &&
-                    this.props.match.path === "/hmos/*" ? (
+                    isHMOView
+              //this.props.match.path === "/hmos/*"
+               ? (
                       ""
                     ) : (
                       <span className={styles.headingSpan}>
@@ -3613,7 +3710,8 @@ class NewContent extends React.Component<homeProps, homeState> {
                           ` ₦${this.numberwithCommas(
                             // this.props.plansByHMO.length > 0
                             this.props.hmo.length > 0 &&
-                              this.props.match.path === "/hmos/*"
+                              isHMOView
+              //this.props.match.path === "/hmos/*"
                               ? this.props.cheapest_plan_by_hmo
                               : this.props.cheapest_plan
                           )} per year`
@@ -5263,12 +5361,13 @@ class NewContent extends React.Component<homeProps, homeState> {
             <InfiniteScroll
               dataLength={this.props.infiniteScrollData.length}
               next={() => {
-                this.handlePageChange(this.state.current);
+                this.handlePageChange(
+                  this.props.current
+                  //this.state.current
+                  );
               }}
               hasMore={
-                data.length > 1 && this.state.maxIndex < data.length
-                  ? true
-                  : false
+                data.length > 1 && this.props.maxIndex /*this.state.maxIndex */< data.length ? true : false
               }
               loader={<h4>Loading more plans...</h4>}
             >

@@ -39,7 +39,10 @@ import {
     HANDLE_REVERSE_GEOCODING,
     RESET_LOCATION,
 
-    IS_FETCHING_DATA
+    IS_FETCHING_DATA,
+    SET_IS_UPDATING_URL_PARAMS,
+    UPDATE_URL_PARAMS,
+    TOGGLE_IS_FILTER_DEEP_LINK
 } from "../actions/types";
 import { returnErrors } from "../actions/errorActions"
 
@@ -58,7 +61,7 @@ export const getPlans = () => async (dispatch, getState) => {
     }
     let providers = getState().fetchData.providers
     if (providers.length) {
-            console.log("providers", providers);
+    //console.log("providers", providers);
      axios.get(`${DEV_LABS_API_URL}/api/data/plans`
     ).then(res => {
         if (res.data.length) {
@@ -71,8 +74,14 @@ export const getPlans = () => async (dispatch, getState) => {
                     plans[i].hmo_name = [plans[i].hmo.name];
 
                     plans[i].hmo.providers = providers.filter(p => p.hmo.includes(plans[i].hmo.id));
-                    plans[i].providers = plans[i].hmo.providers.map(p => p.id);
-                    plans[i].doctors = [].concat.apply([],plans[i].hmo.providers.map(p => p.doctors)).map(d => d.id); 
+                    plans[i].providers = plans[i].hmo.providers.map(p =>
+                        p.name
+                        // p.id
+                         );
+                    plans[i].doctors = [].concat.apply([],plans[i].hmo.providers.map(p => p.doctors)).map(d => 
+                        d.name
+                        //d.id
+                        ); 
                  }              
             }
            dispatch({
@@ -123,7 +132,7 @@ export const multiPropsFilter = (plans, filters) => async (dispatch, getState) =
                     filters[key] = ["individual", "couple", "family", "senior_citizens", "group", "corporate", "intl_coverage"]
                 }
 
-                console.log("filters[key]", filters[key], "plan[key]", plan[key]);      
+               // console.log("filters[key]", filters[key], "plan[key]", plan[key]);      
 
                 if (Array.isArray(plan[key])) {
                     if (plan[key].some(keyEle => filters[key].includes(keyEle))) {
@@ -160,29 +169,15 @@ export const filterPlans = (filtersApplied) => async (dispatch, getState) => {
    const filtered = getState().fetchData.filtered_plans
     const plans =  //filtered.length ? filtered : allPlans; 
     getState().fetchData.plans;
-   console.log("plans", plans);
+   //console.log("plans", plans);
     let recommended_plans;
     let filteredPlans = await dispatch(multiPropsFilter(plans, filtersApplied));
-   /* if (!filteredPlans.length) {
-        filteredPlans = plans
-    } */
+
     console.log("filteredPlans", filteredPlans);
-    // !filteredPlans.length ?
-    //     recommended_plans = plans : recommended_plans = filteredPlans;
-    
+
      let final;
     
      let arr = [];
-   /* if (filtersApplied["total_benefit_range"].length > 0) {
-
-        let tbl = await filteredPlans.filter(plan => {
-            let plan_tbr = stripNonNumeric(plan.in_patient_limit) + stripNonNumeric(plan.Out_patient_limit);
-            return plan_tbr >= filtersApplied["total_benefit_range"][0] && plan_tbr <= filtersApplied["total_benefit_range"][1]
-        })
-        arr.push(...tbl)
-    }
-
-    */
 
     if (filtersApplied["lat_lng"].length > 0) {
         let nearbyPlans = [];
@@ -214,34 +209,22 @@ export const filterPlans = (filtersApplied) => async (dispatch, getState) => {
                         if (!plans_in_nearby_plans_arr.includes(packages[i].plan_id)) {
                             nearbyPlans.push(packages[i]);
                         }
-
                     }
                 }
-
             }
         }
         arr = nearbyPlans;
     }
-
-   /* if (filtersApplied["budget"].length > 0) {
-        let packages = arr.length > 0 ? arr : filteredPlans;
-        let bdgt = await packages.filter(p => {
-            return (stripNonNumeric(p.price) >= filtersApplied["budget"][0] 
-                && stripNonNumeric(p.price) <= filtersApplied["budget"][1])
-        });
-
-        arr = bdgt.length ? bdgt : packages ;
-    } */
 
     final = arr.length ? arr: filteredPlans
     console.log("final", final);
     dispatch({
         type: GET_RECOMMENDED_PLANS,
         payload: final
-    })
-
-  
+    }) 
 }
+
+
 
 export const getPlan = (plan) => (dispatch) => {
     dispatch({
@@ -353,7 +336,7 @@ export const getHMOs = () => async (dispatch, getState) => {
                         }
                     }
                 }
-                console.log("hmos", hmos);
+                //console.log("hmos", hmos);
                 dispatch({
                     type: GET_HMOS,
                     payload: hmos
@@ -398,15 +381,15 @@ export const getProviders = () => async (dispatch, getState) => {
         })
 }
 
-export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
+export const getPlansByHMO = (/*hmoId*/ hmo_name) => async (dispatch, getState) => {
     let plansByHMO;
 
-    if (hmoId) {
+    if (hmo_name) {
         dispatch({
             type: IS_FETCHING_PLANS_BY_HMO,
             data: true
         });
-        let HMO = getState().fetchData.hmos.filter(hmo => hmo.id === hmoId)
+        let HMO = getState().fetchData.hmos.filter(hmo => hmo.name === hmo_name)
         // console.log("plansByHMO", plansByHMO);
 
         await dispatch({
@@ -414,7 +397,8 @@ export const getPlansByHMO = (hmoId) => async (dispatch, getState) => {
             payload: HMO
         })
 
-        plansByHMO = getState().fetchData.plans.filter(plan => plan.hmo.id === hmoId)
+        plansByHMO = getState().fetchData.plans.filter(plan => plan.hmo.name === hmo_name)
+        console.log("plansByHMO", plansByHMO);
 
         dispatch({
             type: GET_PLANS_BY_HMO,
@@ -902,4 +886,10 @@ export const handleGeocoding = (address) => async (dispatch) => {
 
             })
         })
+}
+
+export const toggleIsFilterDeepLink = () => async (dispatch) => {
+    dispatch({
+        type: TOGGLE_IS_FILTER_DEEP_LINK
+    })
 }

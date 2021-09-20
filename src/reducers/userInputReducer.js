@@ -107,7 +107,11 @@ import {
     CLEAR_BENEFITS_FILTER,
     CLEAR_TOTAL_BENEFIT_RANGE_FILTER,
     UPDATE_APPLIED_FILTERS,
-    TOGGLE_JUMP_TO_FILTER_BOX
+    TOGGLE_JUMP_TO_FILTER_BOX,
+    UPDATE_URL_PARAMS,
+    SET_DEEP_LINK_PARAMS_ARR,
+
+    UPDATE_PAGE_INDEX
 } from "../actions/types";
 
 const initialState = {
@@ -247,8 +251,13 @@ const initialState = {
             "intl_coverage",
             "all"],
     hmo_ids: [],
-    plan_ids: []
-
+    plan_ids: [],
+    filter_url: "",
+    deep_link_params_arr: [],
+    current: 1,
+    minIndex: 0,
+    maxIndex: 0,
+    pageSize: 5
 }
 
 export default function (state = initialState, action) {
@@ -266,7 +275,7 @@ export default function (state = initialState, action) {
             }
 
         case UPDATE_PRICE_RANGE:
-            console.log("action.payload", action.payload);
+            //console.log("action.payload", action.payload);
             return {
                 ...state,
                 responses: {
@@ -841,6 +850,58 @@ export default function (state = initialState, action) {
                 jump_to_filter_box: !state.jump_to_filter_box
             }
 
+        case UPDATE_URL_PARAMS:
+             console.log("state.applied_filters", state.applied_filters);
+            let appliedFilters = [];
+            const keys = Object.keys(state.applied_filters);
+            for (let filter in state.applied_filters) {
+                console.log("filter", filter);
+                if (state.applied_filters[filter]) {
+                    console.log("filter", filter);
+                        if (
+                    ( typeof state.applied_filters[filter] === "object" && state.applied_filters[filter].length) ||
+                    (typeof state.applied_filters[filter] === "string" &&  state.applied_filters[filter] )
+                    ) {
+                    appliedFilters.push({
+                        name: filter,
+                        filter_value: state.applied_filters[filter]
+                    })
+                }
+                }
+                
+            }
+            console.log("appliedFilters", appliedFilters);
+
+            let filter_params = "/";
+
+            if (appliedFilters.length) {
+                filter_params += "filter"
+                for ( let i = appliedFilters.length; i > 0; i--) {
+                    filter_params += "/" + appliedFilters[i - 1].name + "/" + appliedFilters[i - 1].filter_value
+                }
+            }
+            console.log("filter_params", filter_params);
+            // console.log("keys", keys);
+            return {
+                ...state,
+                filter_url: filter_params
+            }
+                
+        case SET_DEEP_LINK_PARAMS_ARR:
+           // console.log("action.payload", action.payload);
+            return {
+                ...state,
+                deep_link_params_arr: action.payload
+            }  
+            
+        case UPDATE_PAGE_INDEX:
+            const { current, minIndex, maxIndex } = action.payload
+            return {
+                ...state,
+                current,
+                minIndex,
+                maxIndex
+            }
         default:
             return state
 

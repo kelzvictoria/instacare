@@ -320,7 +320,9 @@ class AppFooter extends Component<FooterProps, {}> {
                     >
                       {this.props.hmos.map((hmo, i) => (
                         <li key={i}>
-                          <a href={`/hmos/id/${hmo.id}`}>{hmo.name}</a>
+                          {/* <a href={`/hmos/id/${hmo.id}`}>{hmo.name}</a> */}
+                          <a href={`/filter/hmoID/${hmo.name}`}>{hmo.name}</a>
+
                         </li>
                       ))}
                     </ul>
@@ -338,22 +340,22 @@ class AppFooter extends Component<FooterProps, {}> {
                       </li>
                       <li>
                         <a
-                          href="#"
-                          onClick={() => {
+                          href="/filter/plan_type/individual"
+                         /* onClick={() => {
                             this.changeType("individual");
-                            // this.goToHome();
-                          }}
+                            
+                          }} */
                         >
                           Health Insurance for Indidivuals
                         </a>
                       </li>
                       <li>
                         <a
-                          href="#"
-                          onClick={() => {
+                          href="/filter/plan_type/family"
+                         /* onClick={() => {
                             this.changeType("family");
-                            // this.goToHome();
-                          }}
+                          }} */
+                          
                         >
                           Health Insurance for Family
                         </a>
@@ -361,11 +363,10 @@ class AppFooter extends Component<FooterProps, {}> {
 
                       <li>
                         <a
-                          href="#"
-                          onClick={() => {
+                          href="/filter/plan_type/couple"
+                         /* onClick={() => {
                             this.changeType("couple");
-                            // this.goToHome();
-                          }}
+                          }} */
                         >
                           Health Insurance for Couples
                         </a>
@@ -373,33 +374,33 @@ class AppFooter extends Component<FooterProps, {}> {
 
                       <li>
                         <a
-                          href="#"
-                          onClick={() => {
+                          href="/filter/plan_type/senior_citizen"
+                         /* onClick={() => {
                             this.changeType("senior_citizen");
-                            // this.goToHome();
                           }}
+                          */
                         >
                           Health Insurance for Senior Citizens
                         </a>
                       </li>
                       <li>
                         <a
-                          href="#"
-                          onClick={() => {
+                          href="/filter/plan_type/group"
+                         /* onClick={() => {
                             this.changeType("group");
-                            // this.goToHome();
                           }}
+                          */
                         >
                           Health Insurance for S.M.E.s
                         </a>
                       </li>
                       <li>
                         <a
-                          href="#"
-                          onClick={() => {
+                          href="/filter/plan_type/corporate"
+                         /* onClick={() => {
                             this.changeType("corporate");
-                            // this.goToHome();
                           }}
+                          */
                         >
                           Health Insurance for Corporate and Large Groups
                         </a>
