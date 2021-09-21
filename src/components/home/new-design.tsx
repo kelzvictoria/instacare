@@ -3599,7 +3599,6 @@ class NewContent extends React.Component<homeProps, homeState> {
     let providersArr;
 
     let selected_providers = [...this.props.responses.providers];
-   // this.props.match.params['0'] && console.log("this.props.match.params['0'].split('/')[0]", this.props.match.params['0'].split("/")[0]);
 
     let isHMOView = false;
      if (this.props.match.params['0']) {
