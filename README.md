@@ -72,6 +72,7 @@ A web application for comparing and purchasing Health Insurance Plans
 ### Built With
 
 - [React.js](https://reactjs.org/)
+- [Typescript](https://www.typescriptlang.org/)
 - [Redux.js](https://redux.js.org/)
 - [Formelo](https://formelo.com/)
 
