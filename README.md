@@ -63,7 +63,7 @@
 
 ## About The Project
 
-[![InstaCare Screen Shot][project-img1.png]](https://useinstacare.com)
+[![InstaCare Screen Shot][project-screenshot]](https://useinstacare.com)
 
 A web application for comparing and purchasing Health Insurance Plans
 
