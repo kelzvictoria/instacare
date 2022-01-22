@@ -12,7 +12,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/kelzvictoria/instacare">
+  <a href="https://useinstacare.com">
     <img src="logo-alt.png" alt="Logo"
       height="30">
   </a>
@@ -63,7 +63,7 @@
 
 ## About The Project
 
-[![InstaCare Screen Shot][project-img1]](https://github.com/kelzvictoria/instacare)
+[![InstaCare Screen Shot][project-img1]](https://useinstacare.com)
 
 A web application for comparing and purchasing Health Insurance Plans
 
